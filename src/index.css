@@ -60,3 +60,41 @@
     scrollbar-width: none;
   }
 }
+
+
+@layer components {
+  /* Cursor-following glow for service cards */
+  .svc-card {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+  }
+  .svc-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    opacity: 0;
+    background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(44, 103, 158, 0.14), transparent 42%);
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+  }
+  .svc-card:hover::before {
+    opacity: 1;
+  }
+}
+
+@layer utilities {
+  /* Subtle tech dot grid */
+  .tech-dots {
+    background-image: radial-gradient(rgba(44, 103, 158, 0.12) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+  /* Tech line grid (for dark cards) */
+  .tech-grid {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+    background-size: 34px 34px;
+  }
+}
