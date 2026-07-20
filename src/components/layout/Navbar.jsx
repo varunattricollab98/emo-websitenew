@@ -76,10 +76,22 @@ export default function Navbar() {
         <Logo />
 
         {/* Desktop menu */}
-        <div className="hidden lg:flex items-center gap-8">
+        <div className="hidden lg:flex items-center gap-7">
+          <NavLink to="/" end className={navLinkClass}>
+            Home
+          </NavLink>
           <NavLink to="/virtual-office" className={navLinkClass}>
             Virtual Office
           </NavLink>
+          <NavLink to="/ca-services" className={navLinkClass}>
+            CA Services
+          </NavLink>
+          <Link
+            to="/#locations"
+            className="text-sm font-semibold text-navy-dark transition-colors hover:text-primary"
+          >
+            Locations
+          </Link>
 
           <div
             className="relative"
@@ -131,9 +143,6 @@ export default function Navbar() {
             </AnimatePresence>
           </div>
 
-          <NavLink to="/ca-services" className={navLinkClass}>
-            CA Services
-          </NavLink>
           <NavLink to="/list-your-space" className={navLinkClass}>
             List Your Space
           </NavLink>
@@ -173,7 +182,15 @@ export default function Navbar() {
             className="lg:hidden overflow-hidden border-t border-primary-100 bg-white"
           >
             <div className="container-custom flex flex-col gap-1 py-4">
+              <MobileLink to="/" end>Home</MobileLink>
               <MobileLink to="/virtual-office">Virtual Office</MobileLink>
+              <MobileLink to="/ca-services">CA Services</MobileLink>
+              <Link
+                to="/#locations"
+                className="rounded-xl px-3 py-3 font-semibold text-navy-dark transition-colors hover:bg-primary-50"
+              >
+                Locations
+              </Link>
               <p className="px-3 pt-3 pb-1 text-xs font-bold uppercase tracking-wider text-slate-400">
                 All Solutions
               </p>
@@ -188,8 +205,6 @@ export default function Navbar() {
                 </Link>
               ))}
               <div className="my-2 h-px bg-primary-100" />
-              <MobileLink to="/pricing">Pricing</MobileLink>
-              <MobileLink to="/about">About</MobileLink>
               <MobileLink to="/list-your-space">List Your Space</MobileLink>
               <MobileLink to="/contact">Contact Us</MobileLink>
               <a
@@ -207,10 +222,11 @@ export default function Navbar() {
   )
 }
 
-function MobileLink({ to, children }) {
+function MobileLink({ to, children, end }) {
   return (
     <NavLink
       to={to}
+      end={end}
       className={({ isActive }) =>
         `rounded-xl px-3 py-3 font-semibold transition-colors ${
           isActive ? 'bg-primary-50 text-primary' : 'text-navy-dark hover:bg-primary-50'
