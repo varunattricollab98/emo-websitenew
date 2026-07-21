@@ -11,38 +11,49 @@ import {
 } from 'lucide-react'
 import Reveal from '../ui/Reveal'
 import Counter from '../ui/Counter'
-import SmartImage from '../ui/SmartImage'
 
 const reasons = [
   {
     icon: IndianRupee,
     title: 'Lowest Price, Zero Hidden Costs',
     desc: 'Transparent, all-inclusive pricing from ₹699/mo. The price you see is the price you pay — no surprise add-ons at checkout.',
+    chip: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+    glow: 'rgba(16,185,129,0.35)',
   },
   {
     icon: BadgeCheck,
     title: '98.7% Document Approval Rate',
     desc: 'GST & company registration papers cleared the first time — one of the highest first-attempt approval rates in the industry.',
+    chip: 'linear-gradient(135deg, #3c82c2 0%, #11417c 100%)',
+    glow: 'rgba(44,103,158,0.38)',
   },
   {
     icon: Star,
     title: 'Rated 4.9/5 by 5,000+ Businesses',
     desc: 'Trusted by founders, D2C sellers and enterprises across India, with a 4.9-star Google rating.',
+    chip: 'linear-gradient(135deg, #fbbf24 0%, #d97706 100%)',
+    glow: 'rgba(245,158,11,0.38)',
   },
   {
     icon: MapPin,
     title: 'Real, Verified Premium Addresses',
     desc: 'Every address is a genuine, physically verified commercial premise — purpose-built for virtual office & GST use.',
+    chip: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)',
+    glow: 'rgba(139,92,246,0.34)',
   },
   {
     icon: Headset,
     title: 'Dedicated After-Sales Support',
     desc: 'A real relationship manager stays with you well beyond setup — for renewals, KYC and any authority query.',
+    chip: 'linear-gradient(135deg, #22d3ee 0%, #0891b2 100%)',
+    glow: 'rgba(34,211,238,0.34)',
   },
   {
     icon: ShieldCheck,
     title: 'Refund Assurance',
     desc: '100% refund if your GST gets rejected — so you can get started with complete confidence and zero risk.',
+    chip: 'linear-gradient(135deg, #38bdf8 0%, #2c679e 100%)',
+    glow: 'rgba(56,189,248,0.34)',
   },
 ]
 
@@ -105,12 +116,13 @@ function ApprovalRing() {
         <defs>
           <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#7db8e8" />
+            <stop offset="55%" stopColor="#34d399" />
             <stop offset="100%" stopColor="#f4c04e" />
           </linearGradient>
         </defs>
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-4xl font-extrabold text-white">
+        <span className="text-4xl font-extrabold text-white drop-shadow">
           <Counter to={98.7} suffix="%" decimals={1} />
         </span>
         <span className="mt-1 text-[11px] font-semibold uppercase tracking-wider text-primary-100">
@@ -124,14 +136,17 @@ function ApprovalRing() {
 export default function WhyChooseHome() {
   return (
     <section className="section-padding relative overflow-hidden bg-surface-light">
-      {/* subtle tech dot backdrop */}
+      {/* tech dot backdrop + faint multi-colour glows (subtle, on-brand) */}
       <div className="pointer-events-none absolute inset-0 tech-dots opacity-50 [mask-image:radial-gradient(ellipse_75%_55%_at_50%_25%,#000,transparent)]" />
+      <div className="pointer-events-none absolute -left-24 top-1/4 h-80 w-80 rounded-full bg-primary-300/25 blur-3xl" />
+      <div className="pointer-events-none absolute right-1/4 -top-10 h-64 w-64 rounded-full bg-gold/10 blur-3xl" />
+      <div className="pointer-events-none absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-violet-300/15 blur-3xl" />
 
       <div className="container-custom relative">
         {/* ===== executive split header ===== */}
         <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
           <div>
-            <span className="inline-flex items-center gap-2 rounded-full border border-primary-200/70 bg-white px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-primary shadow-soft">
+            <span className="inline-flex items-center gap-2 rounded-full border border-primary-200/70 bg-white/80 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-primary shadow-soft backdrop-blur">
               <span className="h-1.5 w-1.5 rounded-full bg-primary" />
               Why EaseMyOffice
             </span>
@@ -148,21 +163,32 @@ export default function WhyChooseHome() {
 
         {/* ===== main bento ===== */}
         <div className="mt-12 grid gap-5 lg:grid-cols-12">
-          {/* Left: numbered feature cards */}
+          {/* Left: crystal-glass feature cards with colour accents */}
           <div className="grid gap-4 sm:grid-cols-2 lg:col-span-8">
             {reasons.map((r, i) => (
               <Reveal key={r.title} delay={i * 0.05}>
                 <div
                   onMouseMove={trackGlow}
-                  className="svc-card group relative h-full rounded-2xl border border-primary-100/70 bg-white p-6 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-card-hover"
+                  className="svc-card group relative h-full overflow-hidden rounded-2xl border border-white/70 bg-white/60 p-6 shadow-card backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover"
                 >
-                  {/* top gradient hairline reveals on hover */}
-                  <span className="pointer-events-none absolute inset-x-6 top-0 h-px scale-x-0 bg-gradient-to-r from-transparent via-primary to-transparent opacity-0 transition-all duration-300 group-hover:scale-x-100 group-hover:opacity-100" />
+                  {/* soft coloured glow blob per card */}
+                  <div
+                    className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full opacity-50 blur-2xl transition-opacity duration-300 group-hover:opacity-80"
+                    style={{ background: r.glow }}
+                  />
+                  {/* crystal glossy sheen */}
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/70 via-white/10 to-transparent" />
+                  {/* bright top edge */}
+                  <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/90 to-transparent" />
+
                   <div className="relative flex items-center justify-between">
-                    <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary-gradient text-white shadow-card ring-1 ring-primary-200/50 transition-transform duration-300 group-hover:scale-110">
+                    <span
+                      className="inline-flex h-12 w-12 items-center justify-center rounded-xl text-white shadow-card ring-1 ring-white/40 transition-transform duration-300 group-hover:scale-110"
+                      style={{ background: r.chip }}
+                    >
                       <r.icon className="h-6 w-6" />
                     </span>
-                    <span className="font-mono text-sm font-semibold text-primary-200">
+                    <span className="font-mono text-sm font-semibold text-slate-300">
                       {String(i + 1).padStart(2, '0')}
                     </span>
                   </div>
@@ -173,24 +199,23 @@ export default function WhyChooseHome() {
             ))}
           </div>
 
-          {/* Right: dark trust console */}
+          {/* Right: crystal dark trust console (no photo) */}
           <motion.div
             initial={{ opacity: 0, y: 32 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.6 }}
-            className="relative flex flex-col overflow-hidden rounded-3xl p-7 shadow-card-hover sm:p-8 lg:col-span-4"
+            className="relative flex flex-col overflow-hidden rounded-3xl p-7 shadow-card-hover ring-1 ring-white/10 sm:p-8 lg:col-span-4"
             style={{ background: 'linear-gradient(160deg, #0a1a30 0%, #11417c 55%, #2c679e 120%)' }}
           >
-            {/* faded office texture + tech grid + glows */}
-            <SmartImage
-              src="https://easemyoffice.in/wp-content/uploads/2024/09/pexels-photo-1102341.webp"
-              alt=""
-              className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-[0.12] mix-blend-luminosity"
-            />
-            <div className="pointer-events-none absolute inset-0 tech-grid opacity-[0.07]" />
-            <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-primary-300/25 blur-3xl" />
-            <div className="pointer-events-none absolute -left-12 -bottom-12 h-52 w-52 rounded-full bg-gold/10 blur-3xl" />
+            {/* tech grid + multi-colour mesh glows (crystal, colourful) */}
+            <div className="pointer-events-none absolute inset-0 tech-grid opacity-[0.08]" />
+            <div className="pointer-events-none absolute -right-16 -top-20 h-60 w-60 rounded-full bg-primary-300/30 blur-3xl" />
+            <div className="pointer-events-none absolute -left-14 top-1/3 h-52 w-52 rounded-full bg-violet-500/20 blur-3xl" />
+            <div className="pointer-events-none absolute -bottom-14 right-0 h-56 w-56 rounded-full bg-gold/15 blur-3xl" />
+            {/* glossy diagonal sheen */}
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/15 via-transparent to-transparent" />
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent" />
 
             <div className="relative flex h-full flex-col">
               <div className="inline-flex w-fit items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-xs font-semibold text-white backdrop-blur">
@@ -222,12 +247,12 @@ export default function WhyChooseHome() {
 
               {/* footer assurances */}
               <div className="mt-auto flex flex-wrap gap-2 pt-6">
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-[11px] font-semibold text-white backdrop-blur">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-[11px] font-semibold text-white ring-1 ring-white/10 backdrop-blur">
                   <Clock className="h-3.5 w-3.5 text-gold" />
                   Ready in 2–3 days
                 </span>
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-[11px] font-semibold text-white backdrop-blur">
-                  <ShieldCheck className="h-3.5 w-3.5 text-gold" />
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-[11px] font-semibold text-white ring-1 ring-white/10 backdrop-blur">
+                  <ShieldCheck className="h-3.5 w-3.5 text-emerald-300" />
                   100% refund if GST rejected
                 </span>
               </div>
@@ -246,7 +271,7 @@ export default function WhyChooseHome() {
           <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
             {brands.map((b, i) => (
               <Reveal key={b} delay={i * 0.04}>
-                <div className="group flex items-center justify-center gap-2 rounded-xl border border-primary-100/60 bg-white px-4 py-4 shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-card">
+                <div className="group flex items-center justify-center gap-2 rounded-xl border border-white/70 bg-white/60 px-4 py-4 shadow-soft backdrop-blur-xl transition-all hover:-translate-y-0.5 hover:shadow-card">
                   <span className="text-base font-extrabold tracking-tight text-navy/70 transition-colors group-hover:text-primary sm:text-lg">
                     {b}
                   </span>
