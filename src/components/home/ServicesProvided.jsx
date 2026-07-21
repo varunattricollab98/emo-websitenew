@@ -10,9 +10,20 @@ import {
   ArrowRight,
   ArrowUpRight,
   Sparkles,
+  Clock,
+  MapPin,
+  ShieldCheck,
+  Star,
 } from 'lucide-react'
 import SectionHeading from '../ui/SectionHeading'
 import SmartImage from '../ui/SmartImage'
+
+const trustBadges = [
+  { icon: Clock, label: 'Ready in 2–3 days' },
+  { icon: MapPin, label: '250+ prime locations' },
+  { icon: ShieldCheck, label: '100% refund if GST rejected' },
+  { icon: Star, label: '4.9★ rated by 5,000+' },
+]
 
 const compactCards = [
   {
@@ -20,6 +31,7 @@ const compactCards = [
     icon: CalendarClock,
     title: 'Meeting Rooms',
     desc: 'Book conference & training rooms by the hour.',
+    tag: 'Hourly booking',
     to: '/meeting-rooms',
   },
   {
@@ -27,6 +39,7 @@ const compactCards = [
     icon: FileCheck2,
     title: 'GST Registration',
     desc: 'Fast, compliant GST registration with expert support.',
+    tag: 'Expert-assisted',
     to: '/ca-services',
   },
   {
@@ -34,6 +47,7 @@ const compactCards = [
     icon: Landmark,
     title: 'Company Registration',
     desc: 'Incorporate your Pvt Ltd, LLP or OPC end-to-end.',
+    tag: 'Pvt Ltd · LLP · OPC',
     to: '/ca-services',
   },
 ]
@@ -57,7 +71,20 @@ export default function ServicesProvided() {
           subtitle="From a compliant business address to full company setup — discover and book everything in one place."
         />
 
-        <div className="mt-14 grid gap-5 lg:grid-cols-3">
+        {/* quick trust badges */}
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-2.5">
+          {trustBadges.map((b) => (
+            <span
+              key={b.label}
+              className="inline-flex items-center gap-2 rounded-full border border-primary-100 bg-white/80 px-4 py-2 text-sm font-semibold text-navy shadow-soft backdrop-blur"
+            >
+              <b.icon className="h-4 w-4 text-primary" />
+              {b.label}
+            </span>
+          ))}
+        </div>
+
+        <div className="mt-12 grid gap-5 lg:grid-cols-3">
           {/* ===== Featured card — Virtual Office (dark, techy, with photo) ===== */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
@@ -84,6 +111,10 @@ export default function ServicesProvided() {
                   </span>
                   <span className="font-mono text-sm font-semibold text-white/30">01</span>
                 </div>
+
+                <span className="mt-5 inline-flex items-baseline gap-1 rounded-full bg-gold/15 px-3 py-1 text-xs font-bold text-gold ring-1 ring-gold/30">
+                  Starts at ₹699<span className="font-medium text-gold/80">/mo</span>
+                </span>
 
                 <div className="mt-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 text-white ring-1 ring-white/20 backdrop-blur transition-transform duration-500 group-hover:scale-110">
                   <Building2 className="h-7 w-7" />
@@ -201,6 +232,9 @@ export default function ServicesProvided() {
                   </div>
                   <h3 className="mt-6 text-xl font-bold text-navy-dark">{s.title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-slate-600">{s.desc}</p>
+                  <span className="mt-4 inline-flex items-center rounded-full bg-primary-50 px-3 py-1 text-xs font-semibold text-primary">
+                    {s.tag}
+                  </span>
                 </div>
                 <span className="relative mt-6 inline-flex items-center gap-1 text-sm font-semibold text-primary">
                   Explore
