@@ -1,6 +1,36 @@
 import { motion } from 'framer-motion'
-import { Mail, Headset, UserCog, PhoneCall, Building2, Package } from 'lucide-react'
+import { Mail, Headset, UserCog, PhoneCall, Building2, Package, Check, X } from 'lucide-react'
 import SmartImage from '../ui/SmartImage'
+
+// comparison table (from landing page) — value can be true (✓), false (✗) or a string
+const comparison = [
+  { label: 'Monthly cost', emo: 'From ₹699', coworking: '₹8,000 – 15,000', traditional: '₹40,000+' },
+  { label: 'Setup time', emo: '2–3 days', coworking: '1–2 weeks', traditional: '30–60 days' },
+  { label: 'Business compliance registration documents', emo: true, coworking: 'Sometimes', traditional: true },
+  { label: 'Company (MCA) registration', emo: true, coworking: false, traditional: true },
+  { label: 'Pan-India presence', emo: true, coworking: false, traditional: false },
+  { label: 'Mail & courier handling', emo: true, coworking: true, traditional: true },
+  { label: 'No long lock-in', emo: true, coworking: false, traditional: false },
+  { label: 'Dedicated account manager', emo: true, coworking: false, traditional: false },
+]
+
+function Cell({ value, highlight = false }) {
+  if (value === true)
+    return (
+      <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+        <Check className="h-4 w-4" strokeWidth={3} />
+      </span>
+    )
+  if (value === false)
+    return (
+      <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-red-50 text-red-400">
+        <X className="h-4 w-4" strokeWidth={3} />
+      </span>
+    )
+  return (
+    <span className={highlight ? 'font-bold text-primary-800' : 'text-slate-500'}>{value}</span>
+  )
+}
 
 const benefits = [
   {
@@ -94,6 +124,66 @@ export default function WhyVirtualOffice() {
             </motion.div>
           ))}
         </div>
+
+        {/* ===== Comparison table ===== */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.55 }}
+          className="mx-auto mt-20 max-w-5xl"
+        >
+          <div className="text-center">
+            <h3 className="text-2xl font-extrabold text-white sm:text-3xl">
+              Why a virtual office beats the alternatives
+            </h3>
+            <p className="mt-3 text-base text-blue-100/80">
+              Same compliance. Same prestige. A fraction of the cost.
+            </p>
+          </div>
+
+          <div className="mt-10 overflow-hidden rounded-3xl bg-white shadow-card-hover ring-1 ring-white/50">
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[640px] border-collapse text-left text-sm">
+                <thead>
+                  <tr className="border-b border-primary-100">
+                    <th className="px-6 py-5" />
+                    <th className="bg-primary-50/70 px-5 py-5 text-center">
+                      <span className="inline-flex items-center gap-2 text-base font-extrabold text-primary-800">
+                        EaseMyOffice
+                        <span className="rounded-full bg-gold px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white shadow-gold-glow">
+                          Best
+                        </span>
+                      </span>
+                    </th>
+                    <th className="px-5 py-5 text-center text-base font-bold text-navy-dark">
+                      Coworking
+                    </th>
+                    <th className="px-5 py-5 text-center text-base font-bold text-navy-dark">
+                      Traditional Office
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {comparison.map((row) => (
+                    <tr key={row.label} className="border-b border-primary-100/60 last:border-0">
+                      <td className="px-6 py-4 font-medium text-slate-600">{row.label}</td>
+                      <td className="bg-primary-50/50 px-5 py-4 text-center">
+                        <Cell value={row.emo} highlight />
+                      </td>
+                      <td className="px-5 py-4 text-center">
+                        <Cell value={row.coworking} />
+                      </td>
+                      <td className="px-5 py-4 text-center">
+                        <Cell value={row.traditional} />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   )
