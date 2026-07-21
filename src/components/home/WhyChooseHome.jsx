@@ -1,11 +1,11 @@
 import { motion } from 'framer-motion'
 import {
   BadgeCheck,
-  Clock,
   MapPin,
-  UserCheck,
   IndianRupee,
   Star,
+  Headset,
+  ShieldCheck,
 } from 'lucide-react'
 import SectionHeading from '../ui/SectionHeading'
 import Reveal from '../ui/Reveal'
@@ -14,29 +14,34 @@ import SmartImage from '../ui/SmartImage'
 
 const reasons = [
   {
-    icon: BadgeCheck,
-    title: '99% Approval Rate',
-    desc: 'GST & registration documents accepted the first time, every time.',
+    icon: IndianRupee,
+    title: 'Lowest Price, Zero Hidden Costs',
+    desc: 'Transparent, all-inclusive pricing from ₹699/mo. The price you see is the price you pay — no surprise add-ons at checkout.',
   },
   {
-    icon: Clock,
-    title: 'Ready in 2-3 Days',
-    desc: 'Get a fully compliant business address without the wait.',
+    icon: BadgeCheck,
+    title: '98.7% Document Approval Rate',
+    desc: 'GST & company registration papers cleared the first time — one of the highest first-attempt approval rates in the industry.',
+  },
+  {
+    icon: Star,
+    title: 'Rated 4.9/5 by 5,000+ Businesses',
+    desc: 'Trusted by founders, D2C sellers and enterprises across India, with a 4.9-star Google rating.',
   },
   {
     icon: MapPin,
-    title: '250+ Locations / 28 States',
-    desc: 'Premium addresses in every major business hub across India.',
+    title: 'Real, Verified Premium Addresses',
+    desc: 'Every address is a genuine, physically verified commercial premise — purpose-built for virtual office & GST use.',
   },
   {
-    icon: UserCheck,
-    title: 'Dedicated Manager',
-    desc: 'A compliance expert guides you through every step.',
+    icon: Headset,
+    title: 'Dedicated After-Sales Support',
+    desc: 'A real relationship manager stays with you well beyond setup — for renewals, KYC and any authority query.',
   },
   {
-    icon: IndianRupee,
-    title: 'Transparent Pricing',
-    desc: 'Simple plans from ₹699/mo. No hidden charges, ever.',
+    icon: ShieldCheck,
+    title: 'Refund Assurance',
+    desc: 'Clear, fair refund terms so you can get started with complete confidence and zero risk.',
   },
 ]
 
@@ -55,7 +60,7 @@ const clusterStats = [
   { value: 5000, suffix: '+', label: 'Businesses served' },
   { value: 250, suffix: '+', label: 'Locations' },
   { value: 28, suffix: '', label: 'States covered' },
-  { value: 99, suffix: '%', label: 'Approval rate' },
+  { value: 98.7, suffix: '%', decimals: 1, label: 'Approval rate' },
 ]
 
 export default function WhyChooseHome() {
@@ -116,7 +121,7 @@ export default function WhyChooseHome() {
                     className="rounded-2xl border border-white/10 bg-white/10 p-5 backdrop-blur"
                   >
                     <p className="text-3xl font-extrabold text-white sm:text-4xl">
-                      <Counter to={s.value} suffix={s.suffix} />
+                      <Counter to={s.value} suffix={s.suffix} decimals={s.decimals || 0} />
                     </p>
                     <p className="mt-1 text-sm font-medium text-primary-100">{s.label}</p>
                   </div>
