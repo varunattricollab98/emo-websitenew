@@ -41,7 +41,7 @@ const reasons = [
   {
     icon: ShieldCheck,
     title: 'Refund Assurance',
-    desc: 'Clear, fair refund terms so you can get started with complete confidence and zero risk.',
+    desc: '100% refund if your GST gets rejected — so you can get started with complete confidence and zero risk.',
   },
 ]
 
