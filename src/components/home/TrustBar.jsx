@@ -1,21 +1,21 @@
 import { useState } from 'react'
 
-// Real client logos (served from /public/logos). src=null falls back to a wordmark chip.
+// Real client logos (served from /public/logos). Verizon first (marquee start).
 const logos = [
   { name: 'Verizon', src: '/logos/verizon.png' },
   { name: 'IndiaMART', src: '/logos/indiamart.png' },
   { name: "Dr. Reddy's", src: '/logos/drreddys.png' },
   { name: 'Udaan', src: '/logos/udaan.png' },
   { name: 'Shiprocket', src: '/logos/shiprocket.svg' },
-  { name: 'Omnicuris', src: '/logos/omnicuris.png' },
   { name: 'HomeLane', src: '/logos/homelane.svg' },
+  { name: 'Omnicuris', src: '/logos/omnicuris.png' },
+  { name: 'Kalki Fashion', src: '/logos/kalki.png' },
+  { name: 'XpressBees', src: '/logos/xpressbees.png' },
   { name: 'Fitelo', src: '/logos/fitelo.svg' },
   { name: 'EarthtronEV', src: '/logos/earthtronev.webp' },
   { name: 'Tuckit', src: '/logos/tuckit.png' },
   { name: 'Rudra Gas', src: '/logos/rudragas.jpg' },
   { name: 'Bizz Stay', src: '/logos/bizzstay.png' },
-  { name: 'Kalki Fashion', src: null },
-  { name: 'XpressBees', src: null },
 ]
 
 // duplicated once for a seamless infinite loop
@@ -24,17 +24,17 @@ const marqueeLogos = [...logos, ...logos]
 function LogoChip({ logo }) {
   const [failed, setFailed] = useState(false)
   return (
-    <div className="flex h-16 w-40 flex-none items-center justify-center rounded-xl border border-primary-100/60 bg-white px-5 shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-card">
+    <div className="flex h-24 w-52 flex-none items-center justify-center rounded-xl border border-primary-100/60 bg-white px-6 shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-card">
       {logo.src && !failed ? (
         <img
           src={logo.src}
           alt={`${logo.name} logo`}
           loading="lazy"
           onError={() => setFailed(true)}
-          className="max-h-8 w-auto max-w-full object-contain opacity-90 transition-opacity duration-300 hover:opacity-100"
+          className="max-h-14 w-auto max-w-full object-contain opacity-90 transition-opacity duration-300 hover:opacity-100"
         />
       ) : (
-        <span className="whitespace-nowrap text-base font-extrabold tracking-tight text-slate-400">
+        <span className="whitespace-nowrap text-lg font-extrabold tracking-tight text-slate-400">
           {logo.name}
         </span>
       )}
