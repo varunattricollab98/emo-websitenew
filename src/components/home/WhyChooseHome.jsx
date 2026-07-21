@@ -8,9 +8,18 @@ import {
   ShieldCheck,
   Clock,
   ArrowUpRight,
+  ArrowRight,
+  Check,
 } from 'lucide-react'
 import Reveal from '../ui/Reveal'
 import Counter from '../ui/Counter'
+import Button from '../ui/Button'
+
+const included = [
+  'End-to-end paperwork handled for you',
+  'One address for GST, MCA & mailing',
+  'Dedicated relationship manager',
+]
 
 const reasons = [
   {
@@ -245,16 +254,39 @@ export default function WhyChooseHome() {
                 ))}
               </div>
 
-              {/* footer assurances */}
-              <div className="mt-auto flex flex-wrap gap-2 pt-6">
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-[11px] font-semibold text-white ring-1 ring-white/10 backdrop-blur">
-                  <Clock className="h-3.5 w-3.5 text-gold" />
-                  Ready in 2–3 days
-                </span>
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-[11px] font-semibold text-white ring-1 ring-white/10 backdrop-blur">
-                  <ShieldCheck className="h-3.5 w-3.5 text-emerald-300" />
-                  100% refund if GST rejected
-                </span>
+              {/* what's included — glassy checklist fills the panel */}
+              <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur">
+                <p className="text-[11px] font-bold uppercase tracking-wider text-primary-100/80">
+                  Every plan includes
+                </p>
+                <div className="mt-3 space-y-2.5">
+                  {included.map((item) => (
+                    <div key={item} className="flex items-center gap-2.5 text-sm text-blue-50/90">
+                      <span className="inline-flex h-5 w-5 flex-none items-center justify-center rounded-full bg-emerald-400/20 text-emerald-300 ring-1 ring-emerald-300/30">
+                        <Check className="h-3 w-3" />
+                      </span>
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* footer assurances + CTA */}
+              <div className="mt-auto pt-6">
+                <div className="flex flex-wrap gap-2">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-[11px] font-semibold text-white ring-1 ring-white/10 backdrop-blur">
+                    <Clock className="h-3.5 w-3.5 text-gold" />
+                    Ready in 2–3 days
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-[11px] font-semibold text-white ring-1 ring-white/10 backdrop-blur">
+                    <ShieldCheck className="h-3.5 w-3.5 text-emerald-300" />
+                    100% refund if GST rejected
+                  </span>
+                </div>
+                <Button to="/contact" variant="white" className="mt-5 w-full">
+                  Get your business address
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
               </div>
             </div>
           </motion.div>
