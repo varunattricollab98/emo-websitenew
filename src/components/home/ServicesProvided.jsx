@@ -12,16 +12,9 @@ import {
   Sparkles,
 } from 'lucide-react'
 import SectionHeading from '../ui/SectionHeading'
+import SmartImage from '../ui/SmartImage'
 
-// Small cards (bento)
-const cards = [
-  {
-    n: '02',
-    icon: Users,
-    title: 'Coworking Spaces',
-    desc: 'Flexible desks, private cabins & hot seats across India.',
-    to: '/coworking',
-  },
+const compactCards = [
   {
     n: '03',
     icon: CalendarClock,
@@ -65,7 +58,7 @@ export default function ServicesProvided() {
         />
 
         <div className="mt-14 grid gap-5 lg:grid-cols-3">
-          {/* ===== Featured card — Virtual Office (dark, techy) ===== */}
+          {/* ===== Featured card — Virtual Office (dark, techy, with photo) ===== */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -75,15 +68,15 @@ export default function ServicesProvided() {
           >
             <Link
               to="/virtual-office"
-              className="group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl p-8 lg:p-10"
+              className="group relative grid h-full overflow-hidden rounded-3xl lg:grid-cols-[1.25fr_0.75fr]"
               style={{ background: 'linear-gradient(135deg, #0f1a2e 0%, #11417c 55%, #1a5aa0 100%)' }}
             >
               {/* tech grid + glow */}
               <div className="pointer-events-none absolute inset-0 tech-grid opacity-40" />
-              <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-primary-400/30 blur-3xl transition-transform duration-500 group-hover:scale-125" />
-              <div className="pointer-events-none absolute bottom-0 left-1/3 h-40 w-40 rounded-full bg-emerald-400/10 blur-3xl" />
+              <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-primary-400/30 blur-3xl transition-transform duration-500 group-hover:scale-125" />
 
-              <div className="relative">
+              {/* content */}
+              <div className="relative p-7 lg:p-8">
                 <div className="flex items-center justify-between">
                   <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-white backdrop-blur">
                     <Sparkles className="h-3.5 w-3.5 text-gold" />
@@ -92,19 +85,18 @@ export default function ServicesProvided() {
                   <span className="font-mono text-sm font-semibold text-white/30">01</span>
                 </div>
 
-                <div className="mt-8 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-white/10 text-white shadow-glow ring-1 ring-white/20 backdrop-blur transition-transform duration-500 group-hover:scale-110">
-                  <Building2 className="h-8 w-8" />
+                <div className="mt-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 text-white ring-1 ring-white/20 backdrop-blur transition-transform duration-500 group-hover:scale-110">
+                  <Building2 className="h-7 w-7" />
                 </div>
 
-                <h3 className="mt-6 text-2xl font-extrabold text-white lg:text-3xl">Virtual Office</h3>
-                <p className="mt-3 max-w-md text-[15px] leading-relaxed text-blue-100/80">
+                <h3 className="mt-5 text-2xl font-extrabold text-white">Virtual Office</h3>
+                <p className="mt-2.5 max-w-sm text-sm leading-relaxed text-blue-100/80">
                   A premium, GST-compliant business address in 250+ prime locations — perfect for
-                  company registration, GST, APOB & mailing. Ready in 2–3 days.
+                  company registration, GST, APOB &amp; mailing. Ready in 2–3 days.
                 </p>
 
-                {/* feature chips */}
-                <div className="mt-6 flex flex-wrap gap-2">
-                  {['GST Registration', 'Company Registration', 'APOB', 'Mail Handling'].map((c) => (
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {['GST', 'Company Reg', 'APOB', 'Mail Handling'].map((c) => (
                     <span
                       key={c}
                       className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium text-blue-100/90"
@@ -113,18 +105,36 @@ export default function ServicesProvided() {
                     </span>
                   ))}
                 </div>
+
+                <div className="mt-7 flex items-center gap-2 text-sm font-bold text-white">
+                  Explore Virtual Office
+                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-white text-navy-dark transition-transform duration-300 group-hover:translate-x-1">
+                    <ArrowRight className="h-4 w-4" />
+                  </span>
+                </div>
               </div>
 
-              <div className="relative mt-8 flex items-center gap-2 text-sm font-bold text-white">
-                Explore Virtual Office
-                <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-white text-navy-dark transition-transform duration-300 group-hover:translate-x-1">
-                  <ArrowRight className="h-4 w-4" />
-                </span>
+              {/* photo panel (desktop) */}
+              <div className="relative hidden lg:block">
+                <SmartImage
+                  src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=800&q=80"
+                  alt="Premium office space"
+                  className="h-full w-full object-cover"
+                />
+                {/* blend overlay so photo merges into the dark card */}
+                <div
+                  className="pointer-events-none absolute inset-0"
+                  style={{
+                    background:
+                      'linear-gradient(90deg, #11417c 0%, rgba(17,65,124,0.55) 30%, rgba(17,65,124,0.08) 100%)',
+                  }}
+                />
+                <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/5" />
               </div>
             </Link>
           </motion.div>
 
-          {/* ===== Coworking (tall accent card) ===== */}
+          {/* ===== Coworking (photo card) ===== */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -132,29 +142,40 @@ export default function ServicesProvided() {
             transition={{ duration: 0.5, delay: 0.08 }}
           >
             <Link
-              to={cards[0].to}
-              onMouseMove={trackGlow}
-              className="svc-card group flex h-full flex-col justify-between rounded-3xl border border-primary-100 bg-white p-8 shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/40 hover:shadow-card-hover"
+              to="/coworking"
+              className="group flex h-full flex-col overflow-hidden rounded-3xl border border-primary-100 bg-white shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/40 hover:shadow-card-hover"
             >
-              <div className="relative">
-                <div className="flex items-center justify-between">
-                  <span className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-gradient text-white shadow-card transition-transform duration-300 group-hover:scale-110">
-                    <Users className="h-7 w-7" />
-                  </span>
-                  <span className="font-mono text-sm font-semibold text-primary-200">{cards[0].n}</span>
-                </div>
-                <h3 className="mt-6 text-xl font-bold text-navy-dark">{cards[0].title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-600">{cards[0].desc}</p>
+              {/* photo header */}
+              <div className="relative h-36 overflow-hidden">
+                <div className="absolute inset-0 bg-primary-gradient" />
+                <SmartImage
+                  src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=800&q=80"
+                  alt="Coworking space"
+                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+                <span className="absolute right-3 top-3 font-mono text-xs font-semibold text-white/70">02</span>
+                <span className="absolute left-3 top-3 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-white/90 text-primary shadow-card backdrop-blur">
+                  <Users className="h-5 w-5" />
+                </span>
               </div>
-              <span className="relative mt-6 inline-flex items-center gap-1 text-sm font-semibold text-primary">
-                Explore
-                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </span>
+              <div className="flex flex-1 flex-col justify-between p-6">
+                <div>
+                  <h3 className="text-xl font-bold text-navy-dark">Coworking Spaces</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                    Flexible desks, private cabins &amp; hot seats across India.
+                  </p>
+                </div>
+                <span className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-primary">
+                  Explore
+                  <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </span>
+              </div>
             </Link>
           </motion.div>
 
           {/* ===== 3 compact cards ===== */}
-          {cards.slice(1).map((s, i) => (
+          {compactCards.map((s, i) => (
             <motion.div
               key={s.title}
               initial={{ opacity: 0, y: 24 }}
@@ -165,7 +186,7 @@ export default function ServicesProvided() {
               <Link
                 to={s.to}
                 onMouseMove={trackGlow}
-                className="svc-card group flex h-full flex-col justify-between rounded-3xl border border-primary-100 bg-white p-8 shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/40 hover:shadow-card-hover"
+                className="svc-card group flex h-full flex-col justify-between rounded-3xl border border-primary-100 bg-white p-7 shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/40 hover:shadow-card-hover"
               >
                 <div className="relative">
                   <div className="flex items-center justify-between">
