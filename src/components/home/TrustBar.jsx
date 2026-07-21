@@ -3,6 +3,7 @@ import { useState } from 'react'
 // Real client logos (served from /public/logos). Verizon first (marquee start).
 const logos = [
   { name: 'Verizon', src: '/logos/verizon.png' },
+  { name: 'Kinetic Green', src: '/logos/kineticgreen.png' },
   { name: 'IndiaMART', src: '/logos/indiamart.png' },
   { name: "Dr. Reddy's", src: '/logos/drreddys.png' },
   { name: 'Udaan', src: '/logos/udaan.png' },
