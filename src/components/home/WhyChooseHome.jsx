@@ -10,6 +10,7 @@ import {
 import SectionHeading from '../ui/SectionHeading'
 import Reveal from '../ui/Reveal'
 import Counter from '../ui/Counter'
+import SmartImage from '../ui/SmartImage'
 
 const reasons = [
   {
@@ -95,6 +96,12 @@ export default function WhyChooseHome() {
             transition={{ duration: 0.6 }}
             className="relative overflow-hidden rounded-3xl bg-navy-gradient p-8 shadow-card-hover sm:p-10"
           >
+            {/* subtle office photo texture */}
+            <SmartImage
+              src="https://easemyoffice.in/wp-content/uploads/2024/09/pexels-photo-1102341.webp"
+              alt=""
+              className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-[0.18] mix-blend-luminosity"
+            />
             <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-primary/30 blur-3xl" />
             <div className="pointer-events-none absolute -left-12 -bottom-12 h-52 w-52 rounded-full bg-primary-800/40 blur-3xl" />
             <div className="relative">

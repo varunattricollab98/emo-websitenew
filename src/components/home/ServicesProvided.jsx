@@ -69,11 +69,11 @@ export default function ServicesProvided() {
             <Link
               to="/virtual-office"
               className="group relative grid h-full overflow-hidden rounded-3xl lg:grid-cols-[1.25fr_0.75fr]"
-              style={{ background: 'linear-gradient(135deg, #0f1a2e 0%, #11417c 55%, #1a5aa0 100%)' }}
+              style={{ background: 'linear-gradient(115deg, #0a1a30 0%, #11417c 48%, #2c679e 100%)' }}
             >
-              {/* tech grid + glow */}
-              <div className="pointer-events-none absolute inset-0 tech-grid opacity-40" />
-              <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-primary-400/30 blur-3xl transition-transform duration-500 group-hover:scale-125" />
+              {/* very faded tech grid + soft glow */}
+              <div className="pointer-events-none absolute inset-0 tech-grid opacity-[0.07] [mask-image:linear-gradient(90deg,#000,transparent_55%)]" />
+              <div className="pointer-events-none absolute -right-10 -top-16 h-56 w-56 rounded-full bg-primary-300/20 blur-3xl transition-transform duration-500 group-hover:scale-125" />
 
               {/* content */}
               <div className="relative p-7 lg:p-8">
@@ -117,19 +117,23 @@ export default function ServicesProvided() {
               {/* photo panel (desktop) */}
               <div className="relative hidden lg:block">
                 <SmartImage
-                  src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=800&q=80"
-                  alt="Premium office space"
+                  src="https://easemyoffice.in/wp-content/uploads/2024/09/Millenia-Business-Park-Chennai.webp"
+                  alt="Premium business address"
                   className="h-full w-full object-cover"
                 />
-                {/* blend overlay so photo merges into the dark card */}
+                {/* smooth blue → photo blend so the image melts into the card */}
                 <div
                   className="pointer-events-none absolute inset-0"
                   style={{
                     background:
-                      'linear-gradient(90deg, #11417c 0%, rgba(17,65,124,0.55) 30%, rgba(17,65,124,0.08) 100%)',
+                      'linear-gradient(90deg, #11417c 0%, rgba(17,65,124,0.96) 12%, rgba(17,65,124,0.6) 38%, rgba(17,65,124,0.22) 68%, rgba(17,65,124,0.05) 100%)',
                   }}
                 />
-                <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/5" />
+                {/* soft bottom depth fade */}
+                <div
+                  className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3"
+                  style={{ background: 'linear-gradient(0deg, rgba(10,26,48,0.5), transparent)' }}
+                />
               </div>
             </Link>
           </motion.div>
@@ -149,7 +153,7 @@ export default function ServicesProvided() {
               <div className="relative h-36 overflow-hidden">
                 <div className="absolute inset-0 bg-primary-gradient" />
                 <SmartImage
-                  src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=800&q=80"
+                  src="https://easemyoffice.in/wp-content/uploads/2024/09/coworking-1024x576-1.webp"
                   alt="Coworking space"
                   className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
