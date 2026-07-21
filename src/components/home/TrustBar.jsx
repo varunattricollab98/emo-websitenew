@@ -1,16 +1,44 @@
-const brands = [
-  'Verizon',
-  'IndiaMART',
-  'Shiprocket',
-  'Udaan',
-  'Omnicuris',
-  'Xpressbees',
-  'Kalki Fashion',
-  "Dr. Reddy's",
+import { useState } from 'react'
+
+// Real client logos (served from /public/logos). src=null falls back to a wordmark chip.
+const logos = [
+  { name: 'Verizon', src: '/logos/verizon.png' },
+  { name: 'IndiaMART', src: '/logos/indiamart.png' },
+  { name: "Dr. Reddy's", src: '/logos/drreddys.png' },
+  { name: 'Udaan', src: '/logos/udaan.png' },
+  { name: 'Shiprocket', src: '/logos/shiprocket.svg' },
+  { name: 'Omnicuris', src: '/logos/omnicuris.png' },
+  { name: 'HomeLane', src: '/logos/homelane.svg' },
+  { name: 'Fitelo', src: '/logos/fitelo.svg' },
+  { name: 'EarthtronEV', src: '/logos/earthtronev.webp' },
+  { name: 'Tuckit', src: '/logos/tuckit.png' },
+  { name: 'Kalki Fashion', src: null },
+  { name: 'XpressBees', src: null },
 ]
 
 // duplicated once for a seamless infinite loop
-const marqueeBrands = [...brands, ...brands]
+const marqueeLogos = [...logos, ...logos]
+
+function LogoChip({ logo }) {
+  const [failed, setFailed] = useState(false)
+  return (
+    <div className="flex h-16 w-40 flex-none items-center justify-center rounded-xl border border-primary-100/60 bg-white px-5 shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-card">
+      {logo.src && !failed ? (
+        <img
+          src={logo.src}
+          alt={`${logo.name} logo`}
+          loading="lazy"
+          onError={() => setFailed(true)}
+          className="max-h-8 w-auto max-w-full object-contain opacity-90 transition-opacity duration-300 hover:opacity-100"
+        />
+      ) : (
+        <span className="whitespace-nowrap text-base font-extrabold tracking-tight text-slate-400">
+          {logo.name}
+        </span>
+      )}
+    </div>
+  )
+}
 
 export default function TrustBar() {
   return (
@@ -22,14 +50,9 @@ export default function TrustBar() {
 
         {/* marquee track with soft edge fade */}
         <div className="group marquee-mask relative mt-7 overflow-hidden">
-          <div className="flex w-max animate-marquee items-center gap-4 group-hover:[animation-play-state:paused]">
-            {marqueeBrands.map((b, i) => (
-              <span
-                key={`${b}-${i}`}
-                className="inline-flex items-center whitespace-nowrap rounded-full border border-primary-100/70 bg-white px-6 py-2.5 text-lg font-bold text-slate-400 shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:text-primary hover:shadow-card sm:text-xl"
-              >
-                {b}
-              </span>
+          <div className="flex w-max animate-marquee items-center gap-5 group-hover:[animation-play-state:paused]">
+            {marqueeLogos.map((logo, i) => (
+              <LogoChip key={`${logo.name}-${i}`} logo={logo} />
             ))}
           </div>
         </div>
