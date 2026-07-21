@@ -6,7 +6,6 @@ import WhyChooseHome from '../components/home/WhyChooseHome'
 import TopCoworking from '../components/home/TopCoworking'
 import LovedLocations from '../components/home/LovedLocations'
 import ChooseByRequirement from '../components/home/ChooseByRequirement'
-import WhyVirtualOffice from '../components/home/WhyVirtualOffice'
 import TransparentPricing from '../components/home/TransparentPricing'
 import ThreeStepSetup from '../components/home/ThreeStepSetup'
 import BookYourSpace from '../components/home/BookYourSpace'
@@ -34,7 +33,6 @@ export default function Home() {
       <TopCoworking />
       <LovedLocations />
       <ChooseByRequirement />
-      <WhyVirtualOffice />
       <TransparentPricing />
       <ThreeStepSetup />
       <BookYourSpace />
