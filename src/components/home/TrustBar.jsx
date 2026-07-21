@@ -9,22 +9,29 @@ const brands = [
   "Dr. Reddy's",
 ]
 
+// duplicated once for a seamless infinite loop
+const marqueeBrands = [...brands, ...brands]
+
 export default function TrustBar() {
   return (
     <section className="border-y border-primary-100 bg-white">
-      <div className="container-custom py-10">
+      <div className="py-10">
         <p className="text-center text-sm font-semibold uppercase tracking-widest text-slate-400">
           Trusted by 5,000+ businesses across India
         </p>
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-x-10 gap-y-4">
-          {brands.map((b) => (
-            <span
-              key={b}
-              className="text-lg font-bold text-slate-400 transition-colors hover:text-primary sm:text-xl"
-            >
-              {b}
-            </span>
-          ))}
+
+        {/* marquee track with soft edge fade */}
+        <div className="group marquee-mask relative mt-7 overflow-hidden">
+          <div className="flex w-max animate-marquee items-center gap-4 group-hover:[animation-play-state:paused]">
+            {marqueeBrands.map((b, i) => (
+              <span
+                key={`${b}-${i}`}
+                className="inline-flex items-center whitespace-nowrap rounded-full border border-primary-100/70 bg-white px-6 py-2.5 text-lg font-bold text-slate-400 shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:text-primary hover:shadow-card sm:text-xl"
+              >
+                {b}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
     </section>
