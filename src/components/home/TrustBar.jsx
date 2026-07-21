@@ -47,7 +47,7 @@ export default function TrustBar() {
   return (
     <section className="border-y border-primary-100 bg-white">
       <div className="py-10">
-        <p className="text-center text-sm font-semibold uppercase tracking-widest text-slate-400">
+        <p className="text-center text-sm font-bold uppercase tracking-widest text-navy/80">
           Trusted by 5,000+ businesses across India
         </p>
 
