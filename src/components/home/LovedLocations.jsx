@@ -84,8 +84,8 @@ export default function LovedLocations() {
     <section id="locations" className="section-padding scroll-mt-24 bg-surface-light">
       <div className="container-custom">
         <SectionHeading
-          eyebrow="Client-Loved Locations"
-          title="Client-Loved Locations"
+          eyebrow="Locations"
+          title="Explore Our Most-Loved Locations by Clients"
           subtitle="Highest-rated business addresses across India — loved by founders and sellers alike."
         />
 
