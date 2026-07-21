@@ -54,9 +54,9 @@ export default function TopCoworking() {
     <section className="section-padding bg-white">
       <div className="container-custom">
         <SectionHeading
-          eyebrow="Top Coworking Spaces"
-          title="Top Coworking Spaces"
-          subtitle="Most-booked workspaces this week — handpicked, verified and ready to move in."
+          eyebrow="Most-Loved Locations"
+          title="Explore Our Most-Loved Locations"
+          subtitle="Handpicked, highest-rated workspaces and business addresses our clients love — verified and ready to move in."
         />
 
         <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">

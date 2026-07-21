@@ -29,7 +29,7 @@ const popularCities = ['Delhi', 'Mumbai', 'Bangalore', 'Gurgaon', 'Hyderabad', '
 
 const trustRow = [
   { icon: Star, label: '4.9/5 Google' },
-  { icon: Building2, label: '15,000+ businesses' },
+  { icon: Building2, label: '5,000+ businesses' },
   { icon: MapPin, label: '250+ locations' },
   { icon: ShieldCheck, label: '28 states' },
 ]

@@ -33,7 +33,7 @@ export default function BookYourSpace() {
                 Ready to Set Up Your Business Address?
               </h2>
               <p className="mt-4 max-w-lg text-lg text-primary-100">
-                Join 15,000+ businesses. Get a GST-compliant address in 2-3 days.
+                Join 5,000+ businesses. Get a GST-compliant address in 2-3 days.
               </p>
               <div className="mt-8 flex flex-wrap gap-4">
                 <a

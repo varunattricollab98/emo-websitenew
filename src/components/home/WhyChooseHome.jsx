@@ -52,7 +52,7 @@ const brands = [
 ]
 
 const clusterStats = [
-  { value: 15000, suffix: '+', label: 'Businesses served' },
+  { value: 5000, suffix: '+', label: 'Businesses served' },
   { value: 250, suffix: '+', label: 'Locations' },
   { value: 28, suffix: '', label: 'States covered' },
   { value: 99, suffix: '%', label: 'Approval rate' },
@@ -67,7 +67,7 @@ export default function WhyChooseHome() {
           <div>
             <SectionHeading
               eyebrow="Why EaseMyOffice"
-              title="Why 15,000+ Businesses Choose EaseMyOffice"
+              title="Why 5,000+ Businesses Choose EaseMyOffice"
               subtitle="Trusted by founders, sellers and enterprises for compliant addresses and hassle-free setup."
               align="left"
             />
@@ -107,7 +107,7 @@ export default function WhyChooseHome() {
             <div className="relative">
               <div className="inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-1.5 text-xs font-semibold text-white backdrop-blur">
                 <Star className="h-4 w-4 fill-gold text-gold" />
-                Rated 4.9/5 by 15,000+ clients
+                Rated 4.9/5 by 5,000+ clients
               </div>
               <div className="mt-8 grid grid-cols-2 gap-5">
                 {clusterStats.map((s) => (
