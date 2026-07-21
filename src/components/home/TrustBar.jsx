@@ -12,6 +12,8 @@ const logos = [
   { name: 'Fitelo', src: '/logos/fitelo.svg' },
   { name: 'EarthtronEV', src: '/logos/earthtronev.webp' },
   { name: 'Tuckit', src: '/logos/tuckit.png' },
+  { name: 'Rudra Gas', src: '/logos/rudragas.jpg' },
+  { name: 'Bizz Stay', src: '/logos/bizzstay.png' },
   { name: 'Kalki Fashion', src: null },
   { name: 'XpressBees', src: null },
 ]
