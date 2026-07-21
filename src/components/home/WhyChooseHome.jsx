@@ -195,7 +195,7 @@ export default function WhyChooseHome() {
             <div className="relative flex h-full flex-col">
               <div className="inline-flex w-fit items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-xs font-semibold text-white backdrop-blur">
                 <Star className="h-4 w-4 fill-gold text-gold" />
-                Rated 4.9/5 by 5,000+ clients
+                Highly rated 4.9 on Google
               </div>
 
               {/* hero ring */}
