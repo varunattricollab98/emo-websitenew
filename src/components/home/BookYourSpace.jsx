@@ -30,7 +30,7 @@ export default function BookYourSpace() {
             {/* copy + CTAs */}
             <div>
               <h2 className="text-3xl font-extrabold text-white text-balance sm:text-4xl">
-                Ready to Set Up Your Business Address?
+                Let&apos;s Get in Touch to Bring You the Best Premium Virtual Office Address
               </h2>
               <p className="mt-4 max-w-lg text-lg text-primary-100">
                 Join 5,000+ businesses. Get a GST-compliant address in 2-3 days.

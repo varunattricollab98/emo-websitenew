@@ -7,7 +7,6 @@ import {
   Headset,
   ShieldCheck,
   Clock,
-  ArrowUpRight,
   ArrowRight,
   Check,
 } from 'lucide-react'
@@ -64,17 +63,6 @@ const reasons = [
     chip: 'linear-gradient(135deg, #38bdf8 0%, #2c679e 100%)',
     glow: 'rgba(56,189,248,0.34)',
   },
-]
-
-const brands = [
-  'Verizon',
-  'IndiaMART',
-  'Shiprocket',
-  'Udaan',
-  'Omnicuris',
-  'Xpressbees',
-  'Kalki Fashion',
-  "Dr. Reddy's",
 ]
 
 const miniStats = [
@@ -290,28 +278,6 @@ export default function WhyChooseHome() {
               </div>
             </div>
           </motion.div>
-        </div>
-
-        {/* ===== Trusted by brands ===== */}
-        <div className="mt-16">
-          <div className="flex items-center gap-4">
-            <p className="whitespace-nowrap text-xs font-bold uppercase tracking-wider text-slate-400">
-              Trusted by leading brands
-            </p>
-            <span className="h-px flex-1 bg-gradient-to-r from-primary-200/60 to-transparent" />
-          </div>
-          <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {brands.map((b, i) => (
-              <Reveal key={b} delay={i * 0.04}>
-                <div className="group flex items-center justify-center gap-2 rounded-xl border border-white/70 bg-white/60 px-4 py-4 shadow-soft backdrop-blur-xl transition-all hover:-translate-y-0.5 hover:shadow-card">
-                  <span className="text-base font-extrabold tracking-tight text-navy/70 transition-colors group-hover:text-primary sm:text-lg">
-                    {b}
-                  </span>
-                  <ArrowUpRight className="h-3.5 w-3.5 text-transparent transition-colors group-hover:text-primary/50" />
-                </div>
-              </Reveal>
-            ))}
-          </div>
         </div>
       </div>
     </section>

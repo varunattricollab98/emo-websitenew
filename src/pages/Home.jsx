@@ -1,14 +1,16 @@
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import HeroSearch from '../components/home/HeroSearch'
-import ServicesProvided from '../components/home/ServicesProvided'
-import WhyChooseHome from '../components/home/WhyChooseHome'
-import TopCoworking from '../components/home/TopCoworking'
 import LovedLocations from '../components/home/LovedLocations'
-import ChooseByRequirement from '../components/home/ChooseByRequirement'
-import WhyVirtualOffice from '../components/home/WhyVirtualOffice'
-import TransparentPricing from '../components/home/TransparentPricing'
+import TrustBar from '../components/home/TrustBar'
+import WhyChooseHome from '../components/home/WhyChooseHome'
+import ServicesProvided from '../components/home/ServicesProvided'
+import TopCoworking from '../components/home/TopCoworking'
 import ThreeStepSetup from '../components/home/ThreeStepSetup'
+import ChooseByRequirement from '../components/home/ChooseByRequirement'
+import TransparentPricing from '../components/home/TransparentPricing'
+import WhyVirtualOffice from '../components/home/WhyVirtualOffice'
+import HomeFAQ from '../components/home/HomeFAQ'
 import BookYourSpace from '../components/home/BookYourSpace'
 
 export default function Home() {
@@ -29,14 +31,16 @@ export default function Home() {
   return (
     <>
       <HeroSearch />
-      <ServicesProvided />
-      <WhyChooseHome />
-      <TopCoworking />
       <LovedLocations />
-      <ChooseByRequirement />
-      <WhyVirtualOffice />
-      <TransparentPricing />
+      <TrustBar />
+      <WhyChooseHome />
+      <ServicesProvided />
+      <TopCoworking />
       <ThreeStepSetup />
+      <ChooseByRequirement />
+      <TransparentPricing />
+      <WhyVirtualOffice />
+      <HomeFAQ />
       <BookYourSpace />
     </>
   )
