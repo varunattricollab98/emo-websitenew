@@ -100,11 +100,11 @@ export default function ServicesProvided() {
           transition={{ duration: 0.6, ease: 'easeOut' }}
           className="mx-auto max-w-3xl text-center"
         >
-          {/* eyebrow with pulsing dot */}
-          <span className="inline-flex items-center gap-2.5 rounded-full border border-primary-200/70 bg-primary-50/70 px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.22em] text-primary">
-            <span className="relative flex h-2 w-2">
+          {/* premium eyebrow — larger, standout pill */}
+          <span className="inline-flex items-center gap-2.5 rounded-full border border-primary-200 bg-gradient-to-r from-primary-50 via-white to-primary-50 px-5 py-2.5 text-sm font-bold uppercase tracking-[0.18em] text-primary shadow-soft ring-1 ring-primary-100/60">
+            <span className="relative flex h-2.5 w-2.5">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary/50" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
+              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-primary" />
             </span>
             Services We Provide
           </span>
