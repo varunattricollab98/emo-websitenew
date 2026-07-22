@@ -86,6 +86,66 @@ const spaces = [
     image:
       'https://images.unsplash.com/photo-1531973576160-7125cd663d86?auto=format&fit=crop&w=800&q=80',
   },
+  {
+    name: 'Salt Lake — Business Hub',
+    city: 'Kolkata',
+    slug: 'kolkata',
+    rating: 4.7,
+    price: '899',
+    badge: null,
+    image:
+      'https://images.unsplash.com/photo-1577412647305-991150c7d163?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    name: 'SG Highway — Workspace',
+    city: 'Ahmedabad',
+    slug: 'ahmedabad',
+    rating: 4.6,
+    price: '799',
+    badge: null,
+    image:
+      'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    name: 'Malviya Nagar — Centre',
+    city: 'Jaipur',
+    slug: 'jaipur',
+    rating: 4.7,
+    price: '799',
+    badge: 'Trending',
+    image:
+      'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    name: 'Infopark — Tech Hub',
+    city: 'Kochi',
+    slug: 'kochi',
+    rating: 4.6,
+    price: '799',
+    badge: null,
+    image:
+      'https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    name: 'Vijay Nagar — Business Centre',
+    city: 'Indore',
+    slug: 'indore',
+    rating: 4.6,
+    price: '799',
+    badge: null,
+    image:
+      'https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    name: 'IT Park — Workspace',
+    city: 'Chandigarh',
+    slug: 'chandigarh',
+    rating: 4.8,
+    price: '899',
+    badge: null,
+    image:
+      'https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=800&q=80',
+  },
 ]
 
 const amenities = [
