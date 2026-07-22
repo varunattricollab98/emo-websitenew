@@ -4,7 +4,7 @@ import Reveal from '../ui/Reveal'
 import Badge from '../ui/Badge'
 
 const rows = [
-  { label: 'Monthly cost', emo: 'From ₹699', cowork: '₹8,000 – ₹15,000', trad: '₹40,000+' },
+  { label: 'Monthly cost', emo: 'From ₹799', cowork: '₹8,000 – ₹15,000', trad: '₹40,000+' },
   { label: 'Setup time', emo: '2-3 days', cowork: '1-2 weeks', trad: '1-2 months' },
   { label: 'GST documents included', emo: true, cowork: 'partial', trad: false },
   { label: 'Company registration', emo: true, cowork: false, trad: true },

@@ -113,7 +113,7 @@ export default function ServicesProvided() {
                 </div>
 
                 <span className="mt-5 inline-flex items-baseline gap-1 rounded-full bg-gold/15 px-3 py-1 text-xs font-bold text-gold ring-1 ring-gold/30">
-                  Starts at ₹699<span className="font-medium text-gold/80">/mo</span>
+                  Starts at ₹799<span className="font-medium text-gold/80">/mo</span>
                 </span>
 
                 <div className="mt-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 text-white ring-1 ring-white/20 backdrop-blur transition-transform duration-500 group-hover:scale-110">

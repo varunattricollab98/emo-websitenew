@@ -4,10 +4,10 @@ import SmartImage from '../ui/SmartImage'
 
 // comparison table (from landing page) — value can be true (✓), false (✗) or a string
 const comparison = [
-  { label: 'Monthly cost', emo: 'From ₹699', coworking: '₹8,000 – 15,000', traditional: '₹40,000+' },
+  { label: 'Monthly cost', emo: 'From ₹799', coworking: '₹8,000 – 15,000', traditional: '₹40,000+' },
   { label: 'Setup time', emo: '2–3 days', coworking: '1–2 weeks', traditional: '30–60 days' },
   { label: 'Business compliance registration documents', emo: true, coworking: 'Sometimes', traditional: true },
-  { label: 'Company (MCA) registration', emo: true, coworking: false, traditional: true },
+  { label: 'Company (MCA) registration', emo: true, coworking: true, traditional: true },
   { label: 'Pan-India presence', emo: true, coworking: false, traditional: false },
   { label: 'Mail & courier handling', emo: true, coworking: true, traditional: true },
   { label: 'No long lock-in', emo: true, coworking: false, traditional: false },
