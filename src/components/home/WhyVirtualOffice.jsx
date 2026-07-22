@@ -1,5 +1,18 @@
 import { motion } from 'framer-motion'
-import { Mail, Headset, UserCog, PhoneCall, Building2, Package, Check, X } from 'lucide-react'
+import {
+  Wallet,
+  Building2,
+  Mail,
+  Globe,
+  ShieldCheck,
+  Award,
+  Wrench,
+  CalendarClock,
+  Car,
+  MapPinned,
+  Check,
+  X,
+} from 'lucide-react'
 import SmartImage from '../ui/SmartImage'
 
 // comparison table (from landing page) — value can be true (✓), false (✗) or a string
@@ -34,34 +47,54 @@ function Cell({ value, highlight = false }) {
 
 const benefits = [
   {
-    icon: Mail,
-    title: 'Smart Mail Management',
-    desc: 'Receive, organise and forward all your important business mail and documents — handled for you, hassle-free.',
-  },
-  {
-    icon: Headset,
-    title: 'Dedicated Customer Assistance',
-    desc: 'A responsive support team is always ready to help you whenever you need guidance or quick answers.',
-  },
-  {
-    icon: UserCog,
-    title: 'Virtual Office Assistance',
-    desc: 'Get professional admin support to manage your day-to-day operational tasks efficiently and on time.',
-  },
-  {
-    icon: PhoneCall,
-    title: 'Business Call Handling',
-    desc: 'Professional call-answering and forwarding so you never miss an important client communication.',
+    icon: Wallet,
+    title: 'Significant Cost Savings',
+    desc: 'No rent, no security deposit and nothing to maintain — you simply pay for the plan you pick, with zero extra overheads.',
   },
   {
     icon: Building2,
-    title: 'Premium Business Address',
-    desc: 'Build instant credibility with a prestigious commercial address in prime locations — at minimal setup cost.',
+    title: 'Prime Business Address',
+    desc: 'Get listed with a genuine commercial city address instead of a home one — it instantly adds weight when clients or banks look you up.',
   },
   {
-    icon: Package,
-    title: 'Courier & Package Handling',
-    desc: 'Secure receipt and safe handling of parcels, couriers and documents delivered on your behalf.',
+    icon: Mail,
+    title: 'Mail & Correspondence Handled',
+    desc: 'Your letters, government notices and courier parcels are received and kept safe at the address until you collect them.',
+  },
+  {
+    icon: Globe,
+    title: 'Work From Anywhere',
+    desc: 'Your business address stays fixed while you work from wherever suits you — home, a cafe or a completely different city.',
+  },
+  {
+    icon: ShieldCheck,
+    title: 'GST & Registration Ready',
+    desc: 'Fully usable for GST registration, MCA incorporation and state-level filings — with a 98.7% first-attempt approval rate across India.',
+  },
+  {
+    icon: Award,
+    title: 'Stronger Business Image',
+    desc: 'A credible commercial address builds instant trust with clients, banks and partners — even before the first conversation begins.',
+  },
+  {
+    icon: Wrench,
+    title: 'Zero Maintenance',
+    desc: 'Housekeeping, upkeep and repairs at the location are all the centre’s job — you carry no operational duties at the address.',
+  },
+  {
+    icon: CalendarClock,
+    title: 'On-Demand Meeting Rooms',
+    desc: 'Need to host a client or your team? Book a meeting room at the location and pay only for the hours you actually use.',
+  },
+  {
+    icon: Car,
+    title: 'No Daily Commute',
+    desc: 'No office means no daily travel — those saved hours go straight back into growing your business and time with family.',
+  },
+  {
+    icon: MapPinned,
+    title: 'Expand Across India Instantly',
+    desc: 'Registering in a new state? Just pick a location and activate it — no lease, no deposit and no weeks of setup.',
   },
 ]
 
@@ -106,24 +139,22 @@ export default function WhyVirtualOffice() {
           </p>
         </motion.div>
 
-        {/* benefits grid */}
-        <div className="mx-auto mt-14 grid max-w-5xl gap-4 sm:grid-cols-2">
+        {/* benefits grid — compact 5-up */}
+        <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {benefits.map((b, i) => (
             <motion.div
               key={b.title}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.45, delay: i * 0.06 }}
-              className="group flex items-start gap-4 rounded-2xl border border-white/10 bg-white/[0.06] p-5 backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:border-white/25 hover:bg-white/[0.1]"
+              transition={{ duration: 0.4, delay: (i % 5) * 0.05 }}
+              className="group flex h-full flex-col rounded-2xl border border-white/10 bg-white/[0.06] p-5 backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:border-white/25 hover:bg-white/[0.1]"
             >
-              <span className="inline-flex h-12 w-12 flex-none items-center justify-center rounded-xl bg-white/10 text-white ring-1 ring-white/15 transition-transform duration-300 group-hover:scale-110">
-                <b.icon className="h-6 w-6" />
+              <span className="inline-flex h-11 w-11 flex-none items-center justify-center rounded-xl bg-gold/15 text-gold ring-1 ring-gold/25 transition-transform duration-300 group-hover:scale-110">
+                <b.icon className="h-5 w-5" />
               </span>
-              <div>
-                <h3 className="text-base font-bold text-white">{b.title}</h3>
-                <p className="mt-1 text-sm leading-relaxed text-blue-100/70">{b.desc}</p>
-              </div>
+              <h3 className="mt-4 text-sm font-bold text-white">{b.title}</h3>
+              <p className="mt-1.5 text-xs leading-relaxed text-blue-100/70">{b.desc}</p>
             </motion.div>
           ))}
         </div>
