@@ -48,26 +48,26 @@ export default function ThreeStepSetup() {
         />
 
         <div className="relative mt-20">
-          {/* ===== animated connector (desktop) ===== */}
+          {/* ===== animated green progress connector (desktop) ===== */}
           <div className="pointer-events-none absolute inset-x-[16.66%] top-10 hidden lg:block">
             {/* base track */}
             <div className="absolute inset-x-0 top-1/2 h-[3px] -translate-y-1/2 rounded-full bg-primary-100" />
-            {/* gradient fill draws in on scroll */}
+            {/* green fill draws forward on scroll */}
             <motion.div
               className="absolute inset-x-0 top-1/2 h-[3px] origin-left -translate-y-1/2 rounded-full"
-              style={{ background: 'linear-gradient(90deg, #2c679e, #8b5cf6, #f59e0b)' }}
+              style={{ background: 'linear-gradient(90deg, #34d399, #10b981, #059669)' }}
               initial={{ scaleX: 0 }}
               whileInView={{ scaleX: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 1.4, ease: 'easeInOut' }}
+              transition={{ duration: 1.6, ease: 'easeInOut' }}
             />
-            {/* travelling glow dot */}
+            {/* green pulse continuously flowing forward toward the final step */}
             <motion.span
-              className="absolute top-1/2 h-3.5 w-3.5 -translate-y-1/2 rounded-full bg-gold"
-              style={{ boxShadow: '0 0 14px 5px rgba(245,158,11,0.55)' }}
+              className="absolute top-1/2 h-3.5 w-3.5 -translate-y-1/2 rounded-full bg-accent-green"
+              style={{ boxShadow: '0 0 14px 5px rgba(16,185,129,0.6)' }}
               initial={{ left: '0%' }}
-              animate={{ left: ['0%', '100%', '0%'] }}
-              transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+              animate={{ left: ['0%', '100%'] }}
+              transition={{ duration: 2.6, repeat: Infinity, ease: 'easeInOut', repeatDelay: 0.4 }}
             />
           </div>
 
