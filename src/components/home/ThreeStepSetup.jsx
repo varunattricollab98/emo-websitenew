@@ -101,18 +101,9 @@ export default function ThreeStepSetup() {
                   >
                     <s.icon className="h-9 w-9" />
                   </span>
-                  {/* clean step badge — white with the step's accent */}
-                  <span className="absolute -right-2.5 -top-2.5 inline-flex h-8 w-8 items-center justify-center">
-                    <span
-                      className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-30"
-                      style={{ backgroundColor: s.color }}
-                    />
-                    <span
-                      className="relative inline-flex h-8 w-8 items-center justify-center rounded-full border-2 bg-white text-sm font-extrabold shadow-card"
-                      style={{ color: s.color, borderColor: s.color }}
-                    >
-                      {i + 1}
-                    </span>
+                  {/* clean rounded step badge — neutral navy, crisp on any icon */}
+                  <span className="absolute -right-3 -top-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-navy-gradient text-sm font-extrabold text-white shadow-card ring-[3px] ring-white">
+                    {i + 1}
                   </span>
                 </motion.div>
 
