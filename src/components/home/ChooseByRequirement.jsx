@@ -82,7 +82,7 @@ const needs = [
 
 export default function ChooseByRequirement() {
   return (
-    <section className="section-padding relative overflow-hidden bg-white">
+    <section className="section-padding relative overflow-hidden bg-surface-light">
       {/* subtle tech backdrop + glows */}
       <div className="pointer-events-none absolute inset-0 tech-dots opacity-50 [mask-image:radial-gradient(ellipse_70%_60%_at_50%_30%,#000,transparent)]" />
       <div className="pointer-events-none absolute -right-24 top-1/4 h-72 w-72 rounded-full bg-primary-300/15 blur-3xl" />

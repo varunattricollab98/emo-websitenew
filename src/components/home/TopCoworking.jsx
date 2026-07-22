@@ -190,7 +190,7 @@ export default function TopCoworking() {
   }, [])
 
   return (
-    <section className="section-padding bg-white">
+    <section className="section-padding bg-surface-light">
       <div className="container-custom">
         <SectionHeading
           eyebrow="Premium Workspaces"

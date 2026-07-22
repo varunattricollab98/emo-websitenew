@@ -73,7 +73,7 @@ const guarantees = [
 
 export default function TransparentPricing() {
   return (
-    <section className="section-padding relative overflow-hidden bg-surface-light">
+    <section className="section-padding relative overflow-hidden bg-white">
       {/* tech backdrop + glows */}
       <div className="pointer-events-none absolute inset-0 tech-dots opacity-50 [mask-image:radial-gradient(ellipse_70%_60%_at_50%_25%,#000,transparent)]" />
       <div className="pointer-events-none absolute left-1/2 top-1/3 h-72 w-72 -translate-x-1/2 rounded-full bg-gold/10 blur-3xl" />

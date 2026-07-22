@@ -35,7 +35,7 @@ function MarketChip({ m }) {
 
 export default function MarketplacesGST() {
   return (
-    <section className="section-padding relative overflow-hidden bg-surface-light">
+    <section className="section-padding relative overflow-hidden bg-white">
       {/* subtle tech dot backdrop */}
       <div className="pointer-events-none absolute inset-0 tech-dots opacity-50 [mask-image:radial-gradient(ellipse_70%_60%_at_50%_30%,#000,transparent)]" />
 
