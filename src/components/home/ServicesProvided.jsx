@@ -14,7 +14,6 @@ import {
   ShieldCheck,
   Star,
 } from 'lucide-react'
-import SectionHeading from '../ui/SectionHeading'
 import SmartImage from '../ui/SmartImage'
 
 const trustBadges = [
@@ -93,22 +92,44 @@ export default function ServicesProvided() {
       <div className="pointer-events-none absolute inset-0 tech-dots opacity-50 [mask-image:radial-gradient(ellipse_70%_60%_at_50%_30%,#000,transparent)]" />
 
       <div className="container-custom relative">
-        <SectionHeading
-          eyebrow="Services We Provide"
-          title="Everything Your Business Needs, One Platform"
-          subtitle="From a compliant business address to full company setup — discover and book everything in one place."
-        />
+        {/* ===== premium header ===== */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+          className="mx-auto max-w-3xl text-center"
+        >
+          {/* eyebrow with pulsing dot */}
+          <span className="inline-flex items-center gap-2.5 rounded-full border border-primary-200/70 bg-primary-50/70 px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.22em] text-primary">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary/50" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
+            </span>
+            Services We Provide
+          </span>
 
-        {/* quick trust badges */}
-        <div className="mx-auto mt-10 flex max-w-4xl flex-wrap items-center justify-center gap-3 sm:gap-4">
+          {/* two-tone heading */}
+          <h2 className="mt-6 text-4xl font-extrabold leading-[1.08] tracking-tight text-navy-dark text-balance sm:text-5xl">
+            Everything Your Business Needs,
+            <br className="hidden sm:block" />{' '}
+            <span className="gradient-text">One Platform</span>
+          </h2>
+
+          <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-500 sm:text-lg">
+            From a compliant business address to full company setup — discover and book everything
+            in one place.
+          </p>
+        </motion.div>
+
+        {/* trust badges — one balanced row (2×2 on mobile) */}
+        <div className="mx-auto mt-9 grid max-w-3xl grid-cols-2 gap-3 lg:flex lg:max-w-none lg:flex-wrap lg:justify-center lg:gap-3">
           {trustBadges.map((b) => (
             <span
               key={b.label}
-              className="inline-flex items-center gap-2.5 rounded-full border border-primary-100/80 bg-white px-5 py-2.5 text-sm font-semibold text-navy shadow-soft"
+              className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full border border-primary-100/80 bg-white px-4 py-2.5 text-sm font-semibold text-navy shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-card"
             >
-              <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-primary-50 text-primary">
-                <b.icon className="h-3.5 w-3.5" />
-              </span>
+              <b.icon className="h-4 w-4 flex-none text-primary" />
               {b.label}
             </span>
           ))}
