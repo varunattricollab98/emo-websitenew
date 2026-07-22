@@ -11,6 +11,7 @@ const steps = [
     chip: '250+ locations',
     grad: 'linear-gradient(135deg, #3c82c2 0%, #11417c 100%)',
     glow: 'rgba(44,103,158,0.45)',
+    color: '#2c679e',
   },
   {
     icon: FileText,
@@ -19,6 +20,7 @@ const steps = [
     chip: '100% online',
     grad: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)',
     glow: 'rgba(139,92,246,0.45)',
+    color: '#6d28d9',
   },
   {
     icon: KeyRound,
@@ -27,6 +29,7 @@ const steps = [
     chip: 'Ready in 2–3 days',
     grad: 'linear-gradient(135deg, #fbbf24 0%, #d97706 100%)',
     glow: 'rgba(245,158,11,0.5)',
+    color: '#d97706',
   },
 ]
 
@@ -67,7 +70,7 @@ export default function ThreeStepSetup() {
               style={{ boxShadow: '0 0 14px 5px rgba(16,185,129,0.6)' }}
               initial={{ left: '0%' }}
               animate={{ left: ['0%', '100%'] }}
-              transition={{ duration: 2.6, repeat: Infinity, ease: 'easeInOut', repeatDelay: 0.4 }}
+              transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', repeatDelay: 0.8 }}
             />
           </div>
 
@@ -98,10 +101,16 @@ export default function ThreeStepSetup() {
                   >
                     <s.icon className="h-9 w-9" />
                   </span>
-                  {/* number badge with pulse */}
-                  <span className="absolute -right-2 -top-2 inline-flex h-8 w-8 items-center justify-center">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold/50" />
-                    <span className="relative inline-flex h-8 w-8 items-center justify-center rounded-full bg-gold text-sm font-extrabold text-white shadow-gold-glow ring-2 ring-white">
+                  {/* clean step badge — white with the step's accent */}
+                  <span className="absolute -right-2.5 -top-2.5 inline-flex h-8 w-8 items-center justify-center">
+                    <span
+                      className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-30"
+                      style={{ backgroundColor: s.color }}
+                    />
+                    <span
+                      className="relative inline-flex h-8 w-8 items-center justify-center rounded-full border-2 bg-white text-sm font-extrabold shadow-card"
+                      style={{ color: s.color, borderColor: s.color }}
+                    >
                       {i + 1}
                     </span>
                   </span>
