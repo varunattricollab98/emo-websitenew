@@ -12,6 +12,7 @@ import {
   MapPinned,
   Check,
   X,
+  Crown,
 } from 'lucide-react'
 import SmartImage from '../ui/SmartImage'
 
@@ -167,9 +168,16 @@ export default function WhyVirtualOffice() {
           transition={{ duration: 0.55 }}
           className="mx-auto mt-20 max-w-5xl"
         >
-          <div className="text-center">
-            <h3 className="text-2xl font-extrabold text-white sm:text-3xl">
-              Why a virtual office beats the alternatives
+          <div className="mx-auto max-w-2xl text-center">
+            <span className="inline-flex items-center gap-2.5 rounded-full border border-white/25 bg-white/10 px-6 py-2 text-sm font-bold uppercase tracking-[0.16em] text-white backdrop-blur">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold/60" />
+                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-gold" />
+              </span>
+              Head-to-Head
+            </span>
+            <h3 className="mt-5 text-3xl font-extrabold leading-tight text-white sm:text-4xl">
+              Why a Virtual Office <span className="gold-text">Beats the Alternatives</span>
             </h3>
             <p className="mt-3 text-base text-blue-100/80">
               Same compliance. Same prestige. A fraction of the cost.
@@ -180,29 +188,35 @@ export default function WhyVirtualOffice() {
             <div className="overflow-x-auto">
               <table className="w-full min-w-[640px] border-collapse text-left text-sm">
                 <thead>
-                  <tr className="border-b border-primary-100">
+                  <tr>
                     <th className="px-6 py-5" />
-                    <th className="bg-primary-50/70 px-5 py-5 text-center">
-                      <span className="inline-flex items-center gap-2 text-base font-extrabold text-primary-800">
-                        EaseMyOffice
-                        <span className="rounded-full bg-gold px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white shadow-gold-glow">
+                    {/* highlighted EaseMyOffice column header */}
+                    <th className="relative bg-gradient-to-b from-primary-50 to-white px-5 py-6 text-center">
+                      <span className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-gold to-gold-dark" />
+                      <span className="inline-flex flex-col items-center gap-1.5">
+                        <span className="text-base font-extrabold text-primary-800">EaseMyOffice</span>
+                        <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-gold to-gold-dark px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white shadow-gold-glow">
+                          <Crown className="h-3 w-3" />
                           Best
                         </span>
                       </span>
                     </th>
-                    <th className="px-5 py-5 text-center text-base font-bold text-navy-dark">
+                    <th className="px-5 py-6 text-center text-base font-bold text-navy-dark">
                       Coworking
                     </th>
-                    <th className="px-5 py-5 text-center text-base font-bold text-navy-dark">
+                    <th className="px-5 py-6 text-center text-base font-bold text-navy-dark">
                       Traditional Office
                     </th>
                   </tr>
                 </thead>
                 <tbody>
                   {comparison.map((row) => (
-                    <tr key={row.label} className="border-b border-primary-100/60 last:border-0">
-                      <td className="px-6 py-4 font-medium text-slate-600">{row.label}</td>
-                      <td className="bg-primary-50/50 px-5 py-4 text-center">
+                    <tr
+                      key={row.label}
+                      className="group border-t border-primary-100/60 transition-colors hover:bg-slate-50/70"
+                    >
+                      <td className="px-6 py-4 font-semibold text-navy-dark">{row.label}</td>
+                      <td className="bg-primary-50/60 px-5 py-4 text-center transition-colors group-hover:bg-primary-100/50">
                         <Cell value={row.emo} highlight />
                       </td>
                       <td className="px-5 py-4 text-center">
