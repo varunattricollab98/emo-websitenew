@@ -34,8 +34,8 @@ export default function SectionHeading({
   }
 
   const eyebrowClass = light
-    ? 'inline-flex items-center gap-3 rounded-full border border-white/25 bg-white/10 px-7 py-3.5 text-base font-bold uppercase tracking-[0.18em] text-white shadow-soft backdrop-blur'
-    : 'inline-flex items-center gap-3 rounded-full border border-primary-200 bg-gradient-to-r from-primary-50 via-white to-primary-50 px-7 py-3.5 text-base font-bold uppercase tracking-[0.18em] text-primary shadow-soft ring-1 ring-primary-100/60'
+    ? 'inline-flex items-center gap-3 rounded-full border border-white/25 bg-white/10 px-9 py-2.5 text-base font-bold uppercase tracking-[0.18em] text-white shadow-soft backdrop-blur'
+    : 'inline-flex items-center gap-3 rounded-full border border-primary-200 bg-gradient-to-r from-primary-50 via-white to-primary-50 px-9 py-2.5 text-base font-bold uppercase tracking-[0.18em] text-primary shadow-soft ring-1 ring-primary-100/60'
 
   return (
     <motion.div

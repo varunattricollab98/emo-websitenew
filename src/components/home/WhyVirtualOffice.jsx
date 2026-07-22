@@ -90,7 +90,7 @@ export default function WhyVirtualOffice() {
           transition={{ duration: 0.5 }}
           className="mx-auto max-w-2xl text-center"
         >
-          <span className="inline-flex items-center gap-3 rounded-full border border-white/25 bg-white/10 px-7 py-3.5 text-base font-bold uppercase tracking-[0.18em] text-white shadow-soft backdrop-blur">
+          <span className="inline-flex items-center gap-3 rounded-full border border-white/25 bg-white/10 px-9 py-2.5 text-base font-bold uppercase tracking-[0.18em] text-white shadow-soft backdrop-blur">
             <span className="relative flex h-3 w-3">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold/60" />
               <span className="relative inline-flex h-3 w-3 rounded-full bg-gold" />
