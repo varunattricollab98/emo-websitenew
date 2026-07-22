@@ -150,7 +150,7 @@ export default function WhyChooseHome() {
               </span>
               Why EaseMyOffice
             </span>
-            <h2 className="mt-5 text-3xl font-extrabold leading-[1.1] tracking-tight text-navy-dark sm:text-4xl lg:text-[2.6rem]">
+            <h2 className="mt-5 text-3xl font-extrabold leading-[1.2] tracking-tight text-navy-dark sm:text-4xl lg:text-[2.6rem] lg:leading-[1.18]">
               Why 5,000+ businesses<br className="hidden sm:block" /> choose{' '}
               <span className="gradient-text">EaseMyOffice</span>
             </h2>

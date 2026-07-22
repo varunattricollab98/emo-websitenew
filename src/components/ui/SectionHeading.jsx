@@ -63,7 +63,7 @@ export default function SectionHeading({
         </div>
       )}
       <h2
-        className={`text-3xl font-extrabold leading-[1.1] tracking-tight text-balance sm:text-4xl lg:text-[2.75rem] ${
+        className={`text-3xl font-extrabold leading-[1.2] tracking-tight text-balance sm:text-4xl lg:text-[2.75rem] lg:leading-[1.18] ${
           light ? 'text-white' : 'text-navy-dark'
         }`}
       >
