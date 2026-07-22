@@ -35,7 +35,7 @@ const compactCards = [
     to: '/meeting-rooms',
     chip: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)',
     image:
-      'https://images.unsplash.com/photo-1517502884422-41eaead166d4?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1600494603989-9650cf6ddd3d?auto=format&fit=crop&w=800&q=80',
   },
   {
     n: '04',
@@ -46,7 +46,7 @@ const compactCards = [
     to: '/ca-services',
     chip: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
     image:
-      'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=800&q=80',
   },
   {
     n: '05',
@@ -56,9 +56,14 @@ const compactCards = [
     tag: 'Pvt Ltd · LLP · OPC',
     to: '/ca-services',
     chip: 'linear-gradient(135deg, #fbbf24 0%, #d97706 100%)',
-    image: 'https://easemyoffice.in/wp-content/uploads/2024/09/mumbai5.webp',
+    image:
+      'https://images.unsplash.com/photo-1573497491208-6b1acb260507?auto=format&fit=crop&w=800&q=80',
   },
 ]
+
+// shared premium frame: crisp corners, strong lift shadow, defined inner + outer edge
+const cardFrame =
+  'group relative overflow-hidden rounded-2xl shadow-card-hover ring-1 ring-navy-dark/10 transition-all duration-300 hover:-translate-y-1.5 hover:ring-primary/40'
 
 export default function ServicesProvided() {
   return (
@@ -89,7 +94,7 @@ export default function ServicesProvided() {
         </div>
 
         <div className="mt-12 grid gap-5 lg:grid-cols-3">
-          {/* ===== Featured card — Virtual Office (dark, techy, with photo) ===== */}
+          {/* ===== Featured card — Virtual Office (distinct flagship) ===== */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -99,16 +104,15 @@ export default function ServicesProvided() {
           >
             <Link
               to="/virtual-office"
-              className="group relative grid h-full overflow-hidden rounded-3xl ring-1 ring-white/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover lg:grid-cols-[1.25fr_0.75fr]"
+              className="group relative grid h-full overflow-hidden rounded-2xl shadow-card-hover ring-1 ring-white/10 transition-all duration-300 hover:-translate-y-1 lg:grid-cols-[1.25fr_0.75fr]"
               style={{ background: 'linear-gradient(115deg, #0a1a30 0%, #11417c 48%, #2c679e 100%)' }}
             >
-              {/* faded tech grid + soft glows + glossy sheen */}
               <div className="pointer-events-none absolute inset-0 tech-grid opacity-[0.07] [mask-image:linear-gradient(90deg,#000,transparent_55%)]" />
               <div className="pointer-events-none absolute -right-10 -top-16 h-56 w-56 rounded-full bg-primary-300/20 blur-3xl transition-transform duration-500 group-hover:scale-125" />
               <div className="pointer-events-none absolute -left-10 bottom-0 h-48 w-48 rounded-full bg-gold/10 blur-3xl" />
-              <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent" />
+              {/* premium inner frame */}
+              <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/15" />
 
-              {/* content */}
               <div className="relative p-7 lg:p-8">
                 <div className="flex items-center justify-between">
                   <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-white backdrop-blur">
@@ -173,7 +177,7 @@ export default function ServicesProvided() {
             </Link>
           </motion.div>
 
-          {/* ===== Coworking (cinematic full-image card) ===== */}
+          {/* ===== Coworking (cinematic image card) ===== */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -182,18 +186,18 @@ export default function ServicesProvided() {
           >
             <Link
               to="/coworking"
-              className="group relative flex h-full min-h-[280px] flex-col justify-end overflow-hidden rounded-3xl shadow-card ring-1 ring-primary-100/60 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover"
+              className={`${cardFrame} flex h-full min-h-[300px] flex-col justify-end`}
             >
               <SmartImage
                 src="https://easemyoffice.in/wp-content/uploads/2024/09/coworking-1024x576-1.webp"
                 alt="Coworking space"
                 className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
-              {/* cinematic overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-navy-dark via-navy-dark/45 to-navy-dark/10" />
+              <div className="absolute inset-0 bg-gradient-to-t from-navy-dark via-navy-dark/55 to-navy-dark/5" />
+              <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/20" />
               <span className="absolute right-4 top-4 font-mono text-sm font-semibold text-white/70">02</span>
-              <span className="absolute left-4 top-4 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-white/15 text-white ring-1 ring-white/30 backdrop-blur">
-                <Users className="h-5 w-5" />
+              <span className="absolute left-4 top-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-white/15 text-white ring-1 ring-white/30 backdrop-blur">
+                <Users className="h-6 w-6" />
               </span>
 
               <div className="relative p-6 text-white">
@@ -219,7 +223,7 @@ export default function ServicesProvided() {
             </Link>
           </motion.div>
 
-          {/* ===== 3 compact cards (crystal glass + colour accents) ===== */}
+          {/* ===== 3 image cards ===== */}
           {compactCards.map((s, i) => (
             <motion.div
               key={s.title}
@@ -228,17 +232,14 @@ export default function ServicesProvided() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.12 + i * 0.06 }}
             >
-              <Link
-                to={s.to}
-                className="group relative flex h-full min-h-[300px] flex-col justify-end overflow-hidden rounded-3xl shadow-card ring-1 ring-primary-100/60 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover"
-              >
+              <Link to={s.to} className={`${cardFrame} flex h-full min-h-[300px] flex-col justify-end`}>
                 <SmartImage
                   src={s.image}
                   alt={s.title}
                   className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
-                {/* cinematic overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-navy-dark via-navy-dark/45 to-navy-dark/10" />
+                <div className="absolute inset-0 bg-gradient-to-t from-navy-dark via-navy-dark/55 to-navy-dark/5" />
+                <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/20" />
                 <span className="absolute right-4 top-4 font-mono text-sm font-semibold text-white/70">{s.n}</span>
                 <span
                   className="absolute left-4 top-4 inline-flex h-12 w-12 items-center justify-center rounded-xl text-white shadow-card ring-1 ring-white/30 transition-transform duration-300 group-hover:scale-110"
@@ -270,16 +271,14 @@ export default function ServicesProvided() {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="lg:col-span-3"
           >
-            <Link
-              to="/ca-services"
-              className="group relative flex min-h-[240px] flex-col justify-end overflow-hidden rounded-3xl shadow-card ring-1 ring-primary-100/60 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover"
-            >
+            <Link to="/ca-services" className={`${cardFrame} flex min-h-[240px] flex-col justify-end`}>
               <SmartImage
-                src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=1200&q=80"
+                src="https://images.unsplash.com/photo-1505664194779-8beaceb93744?auto=format&fit=crop&w=1200&q=80"
                 alt="Trademark & ITR filing"
                 className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-navy-dark via-navy-dark/70 to-navy-dark/20" />
+              <div className="absolute inset-0 bg-gradient-to-r from-navy-dark via-navy-dark/70 to-navy-dark/25" />
+              <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/20" />
               <span className="absolute right-5 top-5 font-mono text-sm font-semibold text-white/60">06</span>
               <span
                 className="absolute left-5 top-5 inline-flex h-12 w-12 items-center justify-center rounded-xl text-white shadow-card ring-1 ring-white/30 transition-transform duration-300 group-hover:scale-110"
