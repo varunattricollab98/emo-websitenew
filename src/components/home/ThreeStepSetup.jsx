@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { MapPinned, FileText, KeyRound, ArrowRight } from 'lucide-react'
+import { MapPinned, FileText, KeyRound, ArrowRight, Check } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import SectionHeading from '../ui/SectionHeading'
 
@@ -101,12 +101,12 @@ export default function ThreeStepSetup() {
                   >
                     <s.icon className="h-9 w-9" />
                   </span>
-                  {/* gradient step badge — matches each step's colour */}
+                  {/* gradient checkmark badge — completed-step feel */}
                   <span
-                    className="absolute -right-3 -top-3 inline-flex h-9 w-9 items-center justify-center rounded-full text-sm font-extrabold text-white shadow-card ring-[3px] ring-white"
+                    className="absolute -right-3 -top-3 inline-flex h-9 w-9 items-center justify-center rounded-full text-white shadow-card ring-[3px] ring-white"
                     style={{ background: s.grad }}
                   >
-                    {i + 1}
+                    <Check className="h-5 w-5" strokeWidth={3} />
                   </span>
                 </motion.div>
 
