@@ -1,88 +1,97 @@
 import { useRef, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Star, Wifi, Users, Coffee, ArrowRight, Flame, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Star, ShieldCheck, Users, Mail, ArrowRight, Flame, ChevronLeft, ChevronRight } from 'lucide-react'
 import SectionHeading from '../ui/SectionHeading'
 import SmartImage from '../ui/SmartImage'
 
+// Real cities, business districts & starting prices from the site's data (cities.js)
 const spaces = [
   {
-    name: 'Prime Business Hub — Koramangala',
-    city: 'Bangalore',
-    rating: 4.8,
-    price: '6,999',
-    badge: 'Most Sold',
-    image:
-      'https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    name: 'The Workspace — Cyber City',
-    city: 'Gurgaon',
-    rating: 4.9,
-    price: '8,499',
-    badge: 'Trending',
-    image:
-      'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    name: 'Metro Coworking — Andheri East',
+    name: 'Andheri East — Business Hub',
     city: 'Mumbai',
-    rating: 4.7,
-    price: '7,499',
-    badge: null,
+    slug: 'mumbai',
+    rating: 4.9,
+    price: '1,199',
+    badge: 'Most Sold',
     image:
       'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=800&q=80',
   },
   {
-    name: 'Startup Nest — HITEC City',
-    city: 'Hyderabad',
+    name: 'Koramangala — Business Hub',
+    city: 'Bangalore',
+    slug: 'bangalore',
     rating: 4.8,
-    price: '5,999',
+    price: '999',
+    badge: 'Trending',
+    image:
+      'https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    name: 'Cyber City — Workspace',
+    city: 'Gurgaon',
+    slug: 'gurgaon',
+    rating: 4.8,
+    price: '999',
+    badge: null,
+    image:
+      'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    name: 'HITEC City — Workspace',
+    city: 'Hyderabad',
+    slug: 'hyderabad',
+    rating: 4.7,
+    price: '999',
     badge: null,
     image:
       'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=800&q=80',
   },
   {
-    name: 'Business Bay — Baner',
-    city: 'Pune',
-    rating: 4.7,
-    price: '5,499',
-    badge: null,
+    name: 'Connaught Place — Centre',
+    city: 'Delhi',
+    slug: 'delhi',
+    rating: 4.9,
+    price: '899',
+    badge: 'Trending',
     image:
-      'https://images.unsplash.com/photo-1604328698692-f76ea9498e76?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1462826303086-329426d1aef5?auto=format&fit=crop&w=800&q=80',
   },
   {
-    name: 'Tech Park Suites — OMR',
+    name: 'OMR — Tech Park',
     city: 'Chennai',
+    slug: 'chennai',
     rating: 4.6,
-    price: '5,999',
+    price: '999',
     badge: null,
     image:
       'https://images.unsplash.com/photo-1568992687947-868a62a9f521?auto=format&fit=crop&w=800&q=80',
   },
   {
-    name: 'Corporate Square — Sector 62',
-    city: 'Noida',
-    rating: 4.8,
-    price: '6,499',
-    badge: 'Trending',
-    image:
-      'https://images.unsplash.com/photo-1531973576160-7125cd663d86?auto=format&fit=crop&w=800&q=80',
-  },
-  {
-    name: 'Riverside Offices — Salt Lake',
-    city: 'Kolkata',
-    rating: 4.6,
-    price: '4,999',
+    name: 'Baner — Business Centre',
+    city: 'Pune',
+    slug: 'pune',
+    rating: 4.7,
+    price: '899',
     badge: null,
     image:
-      'https://images.unsplash.com/photo-1462826303086-329426d1aef5?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1604328698692-f76ea9498e76?auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    name: 'Sector 62 — Corporate Hub',
+    city: 'Noida',
+    slug: 'noida',
+    rating: 4.8,
+    price: '899',
+    badge: null,
+    image:
+      'https://images.unsplash.com/photo-1531973576160-7125cd663d86?auto=format&fit=crop&w=800&q=80',
   },
 ]
 
 const amenities = [
-  { icon: Wifi, label: 'WiFi' },
-  { icon: Users, label: 'Meeting Room' },
-  { icon: Coffee, label: 'Cafe' },
+  { icon: ShieldCheck, label: 'GST Ready' },
+  { icon: Users, label: 'Meeting Rooms' },
+  { icon: Mail, label: 'Mail Handling' },
 ]
 
 const STEP = 324 // card width (300) + gap (24)
@@ -199,7 +208,7 @@ export default function TopCoworking() {
                         </p>
                       </div>
                       <Link
-                        to="/coworking"
+                        to={`/virtual-office/${s.slug}`}
                         className="btn-base bg-primary-50 px-4 py-2 text-xs text-primary-700 hover:bg-primary-100"
                       >
                         View Details
