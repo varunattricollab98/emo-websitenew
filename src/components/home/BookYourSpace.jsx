@@ -67,6 +67,32 @@ export default function BookYourSpace() {
                 in 2–3 days.
               </p>
 
+              {/* social proof — avatar cluster */}
+              <div className="mt-6 flex items-center gap-3">
+                <div className="flex -space-x-3">
+                  {[
+                    { g: 'linear-gradient(135deg,#3c82c2,#11417c)', t: 'R' },
+                    { g: 'linear-gradient(135deg,#8b5cf6,#6366f1)', t: 'A' },
+                    { g: 'linear-gradient(135deg,#10b981,#059669)', t: 'S' },
+                    { g: 'linear-gradient(135deg,#f59e0b,#d97706)', t: 'M' },
+                  ].map((a, idx) => (
+                    <span
+                      key={idx}
+                      className="inline-flex h-9 w-9 items-center justify-center rounded-full text-xs font-bold text-white ring-2 ring-navy-dark"
+                      style={{ background: a.g }}
+                    >
+                      {a.t}
+                    </span>
+                  ))}
+                  <span className="inline-flex h-9 items-center justify-center rounded-full bg-white/15 px-3 text-[11px] font-bold text-white ring-2 ring-navy-dark backdrop-blur">
+                    5,000+
+                  </span>
+                </div>
+                <span className="text-sm text-blue-100/80">
+                  Joined by <span className="font-bold text-white">founders &amp; sellers</span> across India
+                </span>
+              </div>
+
               {/* trust checklist */}
               <ul className="mt-7 grid gap-3 sm:grid-cols-2">
                 {trustPoints.map((t) => (
@@ -100,8 +126,10 @@ export default function BookYourSpace() {
             {/* ===== callback form ===== */}
             <div
               id="book-form"
-              className="scroll-mt-24 rounded-2xl bg-white p-6 shadow-card-hover ring-1 ring-white/60 sm:p-8"
+              className="relative scroll-mt-24 overflow-hidden rounded-2xl bg-white p-6 shadow-card-hover ring-1 ring-white/60 sm:p-8"
             >
+              {/* gold top accent */}
+              <span className="pointer-events-none absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-gold via-gold-dark to-gold" />
               {submitted ? (
                 <div className="flex flex-col items-center py-10 text-center">
                   <CheckCircle2 className="h-16 w-16 text-accent-emerald" />
@@ -113,7 +141,12 @@ export default function BookYourSpace() {
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-bold text-navy-dark">Get a Callback</h3>
+                    <h3 className="flex items-center gap-2.5 text-lg font-bold text-navy-dark">
+                      <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-gold to-gold-dark text-white shadow-gold-glow">
+                        <Phone className="h-4 w-4" />
+                      </span>
+                      Get a Callback
+                    </h3>
                     <span className="inline-flex items-center gap-1 rounded-full bg-accent-green/10 px-2.5 py-1 text-[11px] font-bold text-accent-emerald">
                       Free consultation
                     </span>
