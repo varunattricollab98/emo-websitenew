@@ -10,6 +10,7 @@ import ThreeStepSetup from '../components/home/ThreeStepSetup'
 import ChooseByRequirement from '../components/home/ChooseByRequirement'
 import TransparentPricing from '../components/home/TransparentPricing'
 import WhyVirtualOffice from '../components/home/WhyVirtualOffice'
+import MarketplacesGST from '../components/home/MarketplacesGST'
 import HomeFAQ from '../components/home/HomeFAQ'
 import BookYourSpace from '../components/home/BookYourSpace'
 
@@ -40,6 +41,7 @@ export default function Home() {
       <ChooseByRequirement />
       <TransparentPricing />
       <WhyVirtualOffice />
+      <MarketplacesGST />
       <HomeFAQ />
       <BookYourSpace />
     </>
