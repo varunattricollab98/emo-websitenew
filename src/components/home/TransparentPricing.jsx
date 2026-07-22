@@ -56,6 +56,8 @@ const plans = [
       'Prime business mailing address',
       'Mail receipt & notification',
       'Use on website & visiting cards',
+      'Use for Google Business listing',
+      'Great for local SEO & visibility',
       'Dedicated support',
     ],
     cta: 'Get Started',
