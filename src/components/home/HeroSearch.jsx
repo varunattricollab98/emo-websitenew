@@ -58,8 +58,11 @@ export default function HeroSearch() {
           transition={{ duration: 0.6, ease: 'easeOut' }}
           className="mx-auto max-w-4xl text-center"
         >
-          <span className="inline-flex items-center gap-2 rounded-full border border-primary-200 bg-white/70 px-4 py-1.5 text-xs font-semibold text-primary-700 backdrop-blur">
-            <span className="flex h-2 w-2 rounded-full bg-accent-green" />
+          <span className="inline-flex items-center gap-2.5 rounded-full border border-primary-200 bg-gradient-to-r from-primary-50 via-white to-primary-50 px-6 py-2.5 text-xs font-bold uppercase tracking-[0.14em] text-primary shadow-soft ring-1 ring-primary-100/60 sm:text-sm">
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-green/60" />
+              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-accent-green" />
+            </span>
             India&apos;s #1 Workspace &amp; Virtual Office Marketplace
           </span>
 
