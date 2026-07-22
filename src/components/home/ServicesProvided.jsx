@@ -33,6 +33,8 @@ const compactCards = [
     desc: 'Book conference & training rooms by the hour.',
     tag: 'Hourly booking',
     to: '/meeting-rooms',
+    chip: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)',
+    glow: 'rgba(139,92,246,0.32)',
   },
   {
     n: '04',
@@ -41,6 +43,8 @@ const compactCards = [
     desc: 'Fast, compliant GST registration with expert support.',
     tag: 'Expert-assisted',
     to: '/ca-services',
+    chip: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+    glow: 'rgba(16,185,129,0.32)',
   },
   {
     n: '05',
@@ -49,6 +53,8 @@ const compactCards = [
     desc: 'Incorporate your Pvt Ltd, LLP or OPC end-to-end.',
     tag: 'Pvt Ltd · LLP · OPC',
     to: '/ca-services',
+    chip: 'linear-gradient(135deg, #fbbf24 0%, #d97706 100%)',
+    glow: 'rgba(245,158,11,0.32)',
   },
 ]
 
@@ -61,8 +67,10 @@ function trackGlow(e) {
 export default function ServicesProvided() {
   return (
     <section className="section-padding relative overflow-hidden bg-white">
-      {/* subtle tech dot grid background */}
+      {/* tech dot grid + faint colour glows */}
       <div className="pointer-events-none absolute inset-0 tech-dots opacity-60 [mask-image:radial-gradient(ellipse_70%_60%_at_50%_35%,#000,transparent)]" />
+      <div className="pointer-events-none absolute -left-24 top-1/3 h-80 w-80 rounded-full bg-primary-300/15 blur-3xl" />
+      <div className="pointer-events-none absolute right-0 top-10 h-64 w-64 rounded-full bg-violet-300/10 blur-3xl" />
 
       <div className="container-custom relative">
         <SectionHeading
@@ -95,12 +103,14 @@ export default function ServicesProvided() {
           >
             <Link
               to="/virtual-office"
-              className="group relative grid h-full overflow-hidden rounded-3xl lg:grid-cols-[1.25fr_0.75fr]"
+              className="group relative grid h-full overflow-hidden rounded-3xl ring-1 ring-white/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover lg:grid-cols-[1.25fr_0.75fr]"
               style={{ background: 'linear-gradient(115deg, #0a1a30 0%, #11417c 48%, #2c679e 100%)' }}
             >
-              {/* very faded tech grid + soft glow */}
+              {/* faded tech grid + soft glows + glossy sheen */}
               <div className="pointer-events-none absolute inset-0 tech-grid opacity-[0.07] [mask-image:linear-gradient(90deg,#000,transparent_55%)]" />
               <div className="pointer-events-none absolute -right-10 -top-16 h-56 w-56 rounded-full bg-primary-300/20 blur-3xl transition-transform duration-500 group-hover:scale-125" />
+              <div className="pointer-events-none absolute -left-10 bottom-0 h-48 w-48 rounded-full bg-gold/10 blur-3xl" />
+              <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent" />
 
               {/* content */}
               <div className="relative p-7 lg:p-8">
@@ -150,9 +160,8 @@ export default function ServicesProvided() {
                 <SmartImage
                   src="https://easemyoffice.in/wp-content/uploads/2024/09/Millenia-Business-Park-Chennai.webp"
                   alt="Premium business address"
-                  className="h-full w-full object-cover"
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                {/* smooth blue → photo blend so the image melts into the card */}
                 <div
                   className="pointer-events-none absolute inset-0"
                   style={{
@@ -160,7 +169,6 @@ export default function ServicesProvided() {
                       'linear-gradient(90deg, #11417c 0%, rgba(17,65,124,0.96) 12%, rgba(17,65,124,0.6) 38%, rgba(17,65,124,0.22) 68%, rgba(17,65,124,0.05) 100%)',
                   }}
                 />
-                {/* soft bottom depth fade */}
                 <div
                   className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3"
                   style={{ background: 'linear-gradient(0deg, rgba(10,26,48,0.5), transparent)' }}
@@ -169,7 +177,7 @@ export default function ServicesProvided() {
             </Link>
           </motion.div>
 
-          {/* ===== Coworking (photo card) ===== */}
+          {/* ===== Coworking (cinematic full-image card) ===== */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -178,30 +186,36 @@ export default function ServicesProvided() {
           >
             <Link
               to="/coworking"
-              className="group flex h-full flex-col overflow-hidden rounded-3xl border border-primary-100 bg-white shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/40 hover:shadow-card-hover"
+              className="group relative flex h-full min-h-[280px] flex-col justify-end overflow-hidden rounded-3xl shadow-card ring-1 ring-primary-100/60 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover"
             >
-              {/* photo header */}
-              <div className="relative h-36 overflow-hidden">
-                <div className="absolute inset-0 bg-primary-gradient" />
-                <SmartImage
-                  src="https://easemyoffice.in/wp-content/uploads/2024/09/coworking-1024x576-1.webp"
-                  alt="Coworking space"
-                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-                <span className="absolute right-3 top-3 font-mono text-xs font-semibold text-white/70">02</span>
-                <span className="absolute left-3 top-3 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-white/90 text-primary shadow-card backdrop-blur">
-                  <Users className="h-5 w-5" />
-                </span>
-              </div>
-              <div className="flex flex-1 flex-col justify-between p-6">
-                <div>
-                  <h3 className="text-xl font-bold text-navy-dark">Coworking Spaces</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                    Flexible desks, private cabins &amp; hot seats across India.
-                  </p>
+              <SmartImage
+                src="https://easemyoffice.in/wp-content/uploads/2024/09/coworking-1024x576-1.webp"
+                alt="Coworking space"
+                className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+              />
+              {/* cinematic overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-navy-dark via-navy-dark/45 to-navy-dark/10" />
+              <span className="absolute right-4 top-4 font-mono text-sm font-semibold text-white/70">02</span>
+              <span className="absolute left-4 top-4 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-white/15 text-white ring-1 ring-white/30 backdrop-blur">
+                <Users className="h-5 w-5" />
+              </span>
+
+              <div className="relative p-6 text-white">
+                <div className="mb-3 flex flex-wrap gap-1.5">
+                  {['Desks', 'Cabins', 'Hot Seats'].map((t) => (
+                    <span
+                      key={t}
+                      className="rounded-full border border-white/20 bg-white/10 px-2.5 py-0.5 text-[11px] font-medium text-white/90 backdrop-blur"
+                    >
+                      {t}
+                    </span>
+                  ))}
                 </div>
-                <span className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-primary">
+                <h3 className="text-xl font-extrabold">Coworking Spaces</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-blue-100/85">
+                  Flexible desks, private cabins &amp; hot seats across India.
+                </p>
+                <span className="mt-4 inline-flex items-center gap-1 text-sm font-bold text-gold-light">
                   Explore
                   <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </span>
@@ -209,7 +223,7 @@ export default function ServicesProvided() {
             </Link>
           </motion.div>
 
-          {/* ===== 3 compact cards ===== */}
+          {/* ===== 3 compact cards (crystal glass + colour accents) ===== */}
           {compactCards.map((s, i) => (
             <motion.div
               key={s.title}
@@ -221,14 +235,24 @@ export default function ServicesProvided() {
               <Link
                 to={s.to}
                 onMouseMove={trackGlow}
-                className="svc-card group flex h-full flex-col justify-between rounded-3xl border border-primary-100 bg-white p-7 shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/40 hover:shadow-card-hover"
+                className="svc-card group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border border-white/70 bg-white/60 p-7 shadow-card backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/40 hover:shadow-card-hover"
               >
+                {/* coloured glow blob + glossy top edge */}
+                <div
+                  className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full opacity-50 blur-2xl transition-opacity duration-300 group-hover:opacity-90"
+                  style={{ background: s.glow }}
+                />
+                <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/90 to-transparent" />
+
                 <div className="relative">
                   <div className="flex items-center justify-between">
-                    <span className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-gradient text-white shadow-card transition-transform duration-300 group-hover:scale-110">
+                    <span
+                      className="inline-flex h-14 w-14 items-center justify-center rounded-2xl text-white shadow-card ring-1 ring-white/40 transition-transform duration-300 group-hover:scale-110"
+                      style={{ background: s.chip }}
+                    >
                       <s.icon className="h-7 w-7" />
                     </span>
-                    <span className="font-mono text-sm font-semibold text-primary-200">{s.n}</span>
+                    <span className="font-mono text-sm font-semibold text-slate-300">{s.n}</span>
                   </div>
                   <h3 className="mt-6 text-xl font-bold text-navy-dark">{s.title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-slate-600">{s.desc}</p>
@@ -255,10 +279,11 @@ export default function ServicesProvided() {
             <Link
               to="/ca-services"
               onMouseMove={trackGlow}
-              className="svc-card group flex flex-col items-start justify-between gap-6 rounded-3xl border border-primary-100 bg-gradient-to-br from-primary-50 via-white to-primary-50/40 p-8 shadow-card transition-all duration-300 hover:border-primary/40 hover:shadow-card-hover sm:flex-row sm:items-center"
+              className="svc-card group flex flex-col items-start justify-between gap-6 overflow-hidden rounded-3xl border border-primary-100 bg-gradient-to-br from-primary-50 via-white to-primary-50/40 p-8 shadow-card transition-all duration-300 hover:border-primary/40 hover:shadow-card-hover sm:flex-row sm:items-center"
             >
+              <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white to-transparent" />
               <div className="relative flex items-start gap-5">
-                <span className="inline-flex h-14 w-14 flex-none items-center justify-center rounded-2xl bg-white text-primary shadow-card ring-1 ring-primary-100 transition-transform duration-300 group-hover:scale-110">
+                <span className="inline-flex h-14 w-14 flex-none items-center justify-center rounded-2xl text-white shadow-card ring-1 ring-white/40 transition-transform duration-300 group-hover:scale-110" style={{ background: 'linear-gradient(135deg, #38bdf8 0%, #2c679e 100%)' }}>
                   <BadgeCheck className="h-7 w-7" />
                 </span>
                 <div>
