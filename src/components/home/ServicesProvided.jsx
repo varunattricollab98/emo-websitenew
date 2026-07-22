@@ -100,20 +100,22 @@ export default function ServicesProvided() {
         />
 
         {/* quick trust badges */}
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-2.5">
+        <div className="mx-auto mt-10 flex max-w-4xl flex-wrap items-center justify-center gap-3 sm:gap-4">
           {trustBadges.map((b) => (
             <span
               key={b.label}
-              className="inline-flex items-center gap-2 rounded-full border border-primary-100 bg-white/80 px-4 py-2 text-sm font-semibold text-navy shadow-soft backdrop-blur"
+              className="inline-flex items-center gap-2.5 rounded-full border border-primary-100/80 bg-white px-5 py-2.5 text-sm font-semibold text-navy shadow-soft"
             >
-              <b.icon className="h-4 w-4 text-primary" />
+              <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-primary-50 text-primary">
+                <b.icon className="h-3.5 w-3.5" />
+              </span>
               {b.label}
             </span>
           ))}
         </div>
 
         {/* uniform clean card grid */}
-        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {services.map((s, i) => (
             <motion.div
               key={s.title}
