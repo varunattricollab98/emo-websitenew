@@ -56,6 +56,7 @@ export default function TopCoworking() {
         <SectionHeading
           eyebrow="Premium Workspaces"
           title="Our Top Picked Premium Locations"
+          accent="Premium Locations"
           subtitle="Handpicked, highest-rated workspaces and business addresses our clients love — verified and ready to move in."
         />
 

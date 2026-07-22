@@ -27,6 +27,7 @@ export default function ThreeStepSetup() {
         <SectionHeading
           eyebrow="How It Works"
           title="Get Set Up in 3 Simple Steps"
+          accent="3 Simple Steps"
           subtitle="From choosing a location to a ready-to-use business address — fully online."
         />
 

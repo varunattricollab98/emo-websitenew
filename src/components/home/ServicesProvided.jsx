@@ -15,6 +15,7 @@ import {
   Star,
 } from 'lucide-react'
 import SmartImage from '../ui/SmartImage'
+import SectionHeading from '../ui/SectionHeading'
 
 const trustBadges = [
   { icon: Clock, label: 'Ready in 2–3 days' },
@@ -92,35 +93,12 @@ export default function ServicesProvided() {
       <div className="pointer-events-none absolute inset-0 tech-dots opacity-50 [mask-image:radial-gradient(ellipse_70%_60%_at_50%_30%,#000,transparent)]" />
 
       <div className="container-custom relative">
-        {/* ===== premium header ===== */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.6, ease: 'easeOut' }}
-          className="mx-auto max-w-3xl text-center"
-        >
-          {/* premium eyebrow — larger, standout pill */}
-          <span className="inline-flex items-center gap-3 rounded-full border border-primary-200 bg-gradient-to-r from-primary-50 via-white to-primary-50 px-7 py-3.5 text-base font-bold uppercase tracking-[0.18em] text-primary shadow-soft ring-1 ring-primary-100/60">
-            <span className="relative flex h-3 w-3">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary/50" />
-              <span className="relative inline-flex h-3 w-3 rounded-full bg-primary" />
-            </span>
-            Services We Provide
-          </span>
-
-          {/* two-tone heading */}
-          <h2 className="mt-6 text-4xl font-extrabold leading-[1.08] tracking-tight text-navy-dark text-balance sm:text-5xl">
-            Everything Your Business Needs,
-            <br className="hidden sm:block" />{' '}
-            <span className="gradient-text">One Platform</span>
-          </h2>
-
-          <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-500 sm:text-lg">
-            From a compliant business address to full company setup — discover and book everything
-            in one place.
-          </p>
-        </motion.div>
+        <SectionHeading
+          eyebrow="Services We Provide"
+          title="Everything Your Business Needs, One Platform"
+          accent="One Platform"
+          subtitle="From a compliant business address to full company setup — discover and book everything in one place."
+        />
 
         {/* trust badges — one balanced row (2×2 on mobile) */}
         <div className="mx-auto mt-9 grid max-w-3xl grid-cols-2 gap-3 lg:flex lg:max-w-none lg:flex-wrap lg:justify-center lg:gap-3">

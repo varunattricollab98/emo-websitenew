@@ -86,6 +86,7 @@ export default function LovedLocations() {
         <SectionHeading
           eyebrow="Locations"
           title="Explore Our Most-Loved Locations by Clients"
+          accent="Most-Loved Locations"
           subtitle="Highest-rated business addresses across India — loved by founders and sellers alike."
         />
 

@@ -45,6 +45,7 @@ export default function ChooseByRequirement() {
         <SectionHeading
           eyebrow="Choose by Requirement"
           title="Not Sure Which Plan? Choose by Your Need"
+          accent="Choose by Your Need"
           subtitle="Tell us what you're setting up — we'll match you with the right virtual office plan."
         />
 

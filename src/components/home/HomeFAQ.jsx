@@ -9,7 +9,8 @@ export default function HomeFAQ() {
       <div className="container-custom">
         <SectionHeading
           eyebrow="FAQ"
-          title="Frequently asked questions"
+          title="Frequently Asked Questions"
+          accent="Questions"
           subtitle="Everything you need to know about virtual offices, GST and compliance."
         />
         <Reveal className="mt-12">

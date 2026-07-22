@@ -90,8 +90,11 @@ export default function WhyVirtualOffice() {
           transition={{ duration: 0.5 }}
           className="mx-auto max-w-2xl text-center"
         >
-          <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-white backdrop-blur">
-            <span className="flex h-2 w-2 rounded-full bg-gold" />
+          <span className="inline-flex items-center gap-3 rounded-full border border-white/25 bg-white/10 px-7 py-3.5 text-base font-bold uppercase tracking-[0.18em] text-white shadow-soft backdrop-blur">
+            <span className="relative flex h-3 w-3">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold/60" />
+              <span className="relative inline-flex h-3 w-3 rounded-full bg-gold" />
+            </span>
             Benefits of a Virtual Office
           </span>
           <h2 className="mt-5 text-3xl font-extrabold leading-tight text-white sm:text-4xl">

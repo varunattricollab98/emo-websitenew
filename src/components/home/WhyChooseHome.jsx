@@ -143,8 +143,11 @@ export default function WhyChooseHome() {
         {/* ===== executive split header ===== */}
         <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
           <div>
-            <span className="inline-flex items-center gap-2 rounded-full border border-primary-200/70 bg-white/80 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider text-primary shadow-soft backdrop-blur">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+            <span className="inline-flex items-center gap-3 rounded-full border border-primary-200 bg-gradient-to-r from-primary-50 via-white to-primary-50 px-7 py-3.5 text-base font-bold uppercase tracking-[0.18em] text-primary shadow-soft ring-1 ring-primary-100/60">
+              <span className="relative flex h-3 w-3">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary/50" />
+                <span className="relative inline-flex h-3 w-3 rounded-full bg-primary" />
+              </span>
               Why EaseMyOffice
             </span>
             <h2 className="mt-5 text-3xl font-extrabold leading-[1.1] tracking-tight text-navy-dark sm:text-4xl lg:text-[2.6rem]">

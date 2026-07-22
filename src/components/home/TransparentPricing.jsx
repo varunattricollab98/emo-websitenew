@@ -63,6 +63,7 @@ export default function TransparentPricing() {
         <SectionHeading
           eyebrow="Pricing"
           title="Simple, Transparent Pricing"
+          accent="Transparent Pricing"
           subtitle="No hidden fees. Choose the plan that fits your requirement and get set up in days."
         />
 
