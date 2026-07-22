@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { Headset, Star, ShieldCheck, ArrowRight } from 'lucide-react'
 import SectionHeading from '../ui/SectionHeading'
 import Reveal from '../ui/Reveal'
@@ -63,7 +64,16 @@ export default function HomeFAQ() {
 
           {/* ===== right: accordion ===== */}
           <Reveal>
-            <FaqAccordion items={faqs} />
+            <FaqAccordion items={faqs.slice(0, 6)} />
+            <div className="mt-6 flex justify-center lg:justify-start">
+              <Link
+                to="/faq"
+                className="group inline-flex items-center gap-2 rounded-full border border-primary-200 bg-white px-6 py-3 text-sm font-bold text-primary shadow-soft transition-all hover:border-primary/40 hover:shadow-card"
+              >
+                View All FAQs
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Link>
+            </div>
           </Reveal>
         </div>
       </div>

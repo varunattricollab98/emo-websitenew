@@ -14,6 +14,7 @@ import About from './pages/About'
 import Contact from './pages/Contact'
 import ListYourSpace from './pages/ListYourSpace'
 import CityTemplate from './pages/CityTemplate'
+import Faq from './pages/Faq'
 import NotFound from './pages/NotFound'
 
 export default function App() {
@@ -33,6 +34,7 @@ export default function App() {
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/list-your-space" element={<ListYourSpace />} />
+          <Route path="/faq" element={<Faq />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
