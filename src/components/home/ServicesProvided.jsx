@@ -8,7 +8,6 @@ import {
   Landmark,
   BadgeCheck,
   ArrowRight,
-  ArrowUpRight,
   Sparkles,
   Clock,
   MapPin,
@@ -25,53 +24,73 @@ const trustBadges = [
   { icon: Star, label: '4.9★ rated by 5,000+' },
 ]
 
-const compactCards = [
+const services = [
   {
-    n: '03',
+    icon: Building2,
+    title: 'Virtual Office',
+    desc: 'A premium, GST-compliant business address in 250+ prime locations — ready in 2–3 days.',
+    meta: 'From ₹799/mo',
+    to: '/virtual-office',
+    chip: 'linear-gradient(135deg, #3c82c2 0%, #11417c 100%)',
+    image: 'https://easemyoffice.in/wp-content/uploads/2024/09/Millenia-Business-Park-Chennai.webp',
+    flagship: true,
+  },
+  {
+    icon: Users,
+    title: 'Coworking Spaces',
+    desc: 'Flexible desks, private cabins & hot seats across India — book by the day or month.',
+    meta: 'Flexible plans',
+    to: '/coworking',
+    chip: 'linear-gradient(135deg, #22d3ee 0%, #0891b2 100%)',
+    image: 'https://easemyoffice.in/wp-content/uploads/2024/09/coworking-1024x576-1.webp',
+  },
+  {
     icon: CalendarClock,
     title: 'Meeting Rooms',
-    desc: 'Book conference & training rooms by the hour.',
-    tag: 'Hourly booking',
+    desc: 'Book professional conference & training rooms by the hour, fully equipped.',
+    meta: 'Hourly booking',
     to: '/meeting-rooms',
     chip: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)',
     image:
       'https://images.unsplash.com/photo-1600494603989-9650cf6ddd3d?auto=format&fit=crop&w=800&q=80',
   },
   {
-    n: '04',
     icon: FileCheck2,
     title: 'GST Registration',
-    desc: 'Fast, compliant GST registration with expert support.',
-    tag: 'Expert-assisted',
+    desc: 'Fast, compliant GST registration with dedicated expert support end-to-end.',
+    meta: 'Expert-assisted',
     to: '/ca-services',
     chip: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
     image:
       'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=800&q=80',
   },
   {
-    n: '05',
     icon: Landmark,
     title: 'Company Registration',
-    desc: 'Incorporate your Pvt Ltd, LLP or OPC end-to-end.',
-    tag: 'Pvt Ltd · LLP · OPC',
+    desc: 'Incorporate your Pvt Ltd, LLP or OPC end-to-end with full compliance handled.',
+    meta: 'Pvt Ltd · LLP · OPC',
     to: '/ca-services',
     chip: 'linear-gradient(135deg, #fbbf24 0%, #d97706 100%)',
     image:
       'https://images.unsplash.com/photo-1573497491208-6b1acb260507?auto=format&fit=crop&w=800&q=80',
   },
+  {
+    icon: BadgeCheck,
+    title: 'Trademark & ITR Filing',
+    desc: 'Protect your brand with trademark registration and stay compliant with ITR filing.',
+    meta: 'Brand + Tax',
+    to: '/ca-services',
+    chip: 'linear-gradient(135deg, #38bdf8 0%, #2c679e 100%)',
+    image:
+      'https://images.unsplash.com/photo-1505664194779-8beaceb93744?auto=format&fit=crop&w=800&q=80',
+  },
 ]
-
-// shared premium frame: crisp corners, strong lift shadow, defined inner + outer edge
-const cardFrame =
-  'group relative overflow-hidden rounded-2xl shadow-card-hover ring-1 ring-navy-dark/10 transition-all duration-300 hover:-translate-y-1.5 hover:ring-primary/40'
 
 export default function ServicesProvided() {
   return (
     <section className="section-padding relative overflow-hidden bg-white">
-      {/* tech dot grid + faint colour glows */}
-      <div className="pointer-events-none absolute inset-0 tech-dots opacity-60 [mask-image:radial-gradient(ellipse_70%_60%_at_50%_35%,#000,transparent)]" />
-      <div className="pointer-events-none absolute -left-24 top-1/3 h-80 w-80 rounded-full bg-primary-300/15 blur-3xl" />
-      <div className="pointer-events-none absolute right-0 top-10 h-64 w-64 rounded-full bg-violet-300/10 blur-3xl" />
+      {/* subtle tech dot backdrop */}
+      <div className="pointer-events-none absolute inset-0 tech-dots opacity-50 [mask-image:radial-gradient(ellipse_70%_60%_at_50%_30%,#000,transparent)]" />
 
       <div className="container-custom relative">
         <SectionHeading
@@ -93,215 +112,62 @@ export default function ServicesProvided() {
           ))}
         </div>
 
-        <div className="mt-12 grid gap-5 lg:grid-cols-3">
-          {/* ===== Featured card — Virtual Office (distinct flagship) ===== */}
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="lg:col-span-2"
-          >
-            <Link
-              to="/virtual-office"
-              className="group relative grid h-full overflow-hidden rounded-2xl shadow-card-hover ring-1 ring-white/10 transition-all duration-300 hover:-translate-y-1 lg:grid-cols-[1.25fr_0.75fr]"
-              style={{ background: 'linear-gradient(115deg, #0a1a30 0%, #11417c 48%, #2c679e 100%)' }}
-            >
-              <div className="pointer-events-none absolute inset-0 tech-grid opacity-[0.07] [mask-image:linear-gradient(90deg,#000,transparent_55%)]" />
-              <div className="pointer-events-none absolute -right-10 -top-16 h-56 w-56 rounded-full bg-primary-300/20 blur-3xl transition-transform duration-500 group-hover:scale-125" />
-              <div className="pointer-events-none absolute -left-10 bottom-0 h-48 w-48 rounded-full bg-gold/10 blur-3xl" />
-              {/* premium inner frame */}
-              <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/15" />
-
-              <div className="relative p-7 lg:p-8">
-                <div className="flex items-center justify-between">
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-white backdrop-blur">
-                    <Sparkles className="h-3.5 w-3.5 text-gold" />
-                    Flagship Service
-                  </span>
-                  <span className="font-mono text-sm font-semibold text-white/30">01</span>
-                </div>
-
-                <span className="mt-5 inline-flex items-baseline gap-1 rounded-full bg-gold/15 px-3 py-1 text-xs font-bold text-gold ring-1 ring-gold/30">
-                  Starts at ₹799<span className="font-medium text-gold/80">/mo</span>
-                </span>
-
-                <div className="mt-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 text-white ring-1 ring-white/20 backdrop-blur transition-transform duration-500 group-hover:scale-110">
-                  <Building2 className="h-7 w-7" />
-                </div>
-
-                <h3 className="mt-5 text-2xl font-extrabold text-white">Virtual Office</h3>
-                <p className="mt-2.5 max-w-sm text-sm leading-relaxed text-blue-100/80">
-                  A premium, GST-compliant business address in 250+ prime locations — perfect for
-                  company registration, GST, APOB &amp; mailing. Ready in 2–3 days.
-                </p>
-
-                <div className="mt-5 flex flex-wrap gap-2">
-                  {['GST', 'Company Reg', 'APOB', 'Mail Handling'].map((c) => (
-                    <span
-                      key={c}
-                      className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium text-blue-100/90"
-                    >
-                      {c}
-                    </span>
-                  ))}
-                </div>
-
-                <div className="mt-7 flex items-center gap-2 text-sm font-bold text-white">
-                  Explore Virtual Office
-                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-white text-navy-dark transition-transform duration-300 group-hover:translate-x-1">
-                    <ArrowRight className="h-4 w-4" />
-                  </span>
-                </div>
-              </div>
-
-              {/* photo panel (desktop) */}
-              <div className="relative hidden lg:block">
-                <SmartImage
-                  src="https://easemyoffice.in/wp-content/uploads/2024/09/Millenia-Business-Park-Chennai.webp"
-                  alt="Premium business address"
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                <div
-                  className="pointer-events-none absolute inset-0"
-                  style={{
-                    background:
-                      'linear-gradient(90deg, #11417c 0%, rgba(17,65,124,0.96) 12%, rgba(17,65,124,0.6) 38%, rgba(17,65,124,0.22) 68%, rgba(17,65,124,0.05) 100%)',
-                  }}
-                />
-                <div
-                  className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3"
-                  style={{ background: 'linear-gradient(0deg, rgba(10,26,48,0.5), transparent)' }}
-                />
-              </div>
-            </Link>
-          </motion.div>
-
-          {/* ===== Coworking (cinematic image card) ===== */}
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.08 }}
-          >
-            <Link
-              to="/coworking"
-              className={`${cardFrame} flex h-full min-h-[300px] flex-col justify-end`}
-            >
-              <SmartImage
-                src="https://easemyoffice.in/wp-content/uploads/2024/09/coworking-1024x576-1.webp"
-                alt="Coworking space"
-                className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-navy-dark via-navy-dark/55 to-navy-dark/5" />
-              <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/20" />
-              <span className="absolute right-4 top-4 font-mono text-sm font-semibold text-white/70">02</span>
-              <span className="absolute left-4 top-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-white/15 text-white ring-1 ring-white/30 backdrop-blur">
-                <Users className="h-6 w-6" />
-              </span>
-
-              <div className="relative p-6 text-white">
-                <div className="mb-3 flex flex-wrap gap-1.5">
-                  {['Desks', 'Cabins', 'Hot Seats'].map((t) => (
-                    <span
-                      key={t}
-                      className="rounded-full border border-white/20 bg-white/10 px-2.5 py-0.5 text-[11px] font-medium text-white/90 backdrop-blur"
-                    >
-                      {t}
-                    </span>
-                  ))}
-                </div>
-                <h3 className="text-xl font-extrabold">Coworking Spaces</h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-blue-100/85">
-                  Flexible desks, private cabins &amp; hot seats across India.
-                </p>
-                <span className="mt-4 inline-flex items-center gap-1 text-sm font-bold text-gold-light">
-                  Explore
-                  <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                </span>
-              </div>
-            </Link>
-          </motion.div>
-
-          {/* ===== 3 image cards ===== */}
-          {compactCards.map((s, i) => (
+        {/* uniform clean card grid */}
+        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {services.map((s, i) => (
             <motion.div
               key={s.title}
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.12 + i * 0.06 }}
+              transition={{ duration: 0.45, delay: i * 0.06 }}
             >
-              <Link to={s.to} className={`${cardFrame} flex h-full min-h-[300px] flex-col justify-end`}>
-                <SmartImage
-                  src={s.image}
-                  alt={s.title}
-                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-navy-dark via-navy-dark/55 to-navy-dark/5" />
-                <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/20" />
-                <span className="absolute right-4 top-4 font-mono text-sm font-semibold text-white/70">{s.n}</span>
-                <span
-                  className="absolute left-4 top-4 inline-flex h-12 w-12 items-center justify-center rounded-xl text-white shadow-card ring-1 ring-white/30 transition-transform duration-300 group-hover:scale-110"
-                  style={{ background: s.chip }}
-                >
-                  <s.icon className="h-6 w-6" />
-                </span>
+              <Link
+                to={s.to}
+                className={`group flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover ${
+                  s.flagship ? 'ring-2 ring-gold/60' : 'ring-1 ring-primary-100/70 hover:ring-primary/40'
+                }`}
+              >
+                {/* image header */}
+                <div className="relative h-44 overflow-hidden">
+                  <SmartImage
+                    src={s.image}
+                    alt={s.title}
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-navy-dark/35 to-transparent" />
+                  {/* colour-accent icon chip */}
+                  <span
+                    className="absolute left-3 top-3 inline-flex h-11 w-11 items-center justify-center rounded-xl text-white shadow-card ring-1 ring-white/40"
+                    style={{ background: s.chip }}
+                  >
+                    <s.icon className="h-5 w-5" />
+                  </span>
+                  {/* flagship badge */}
+                  {s.flagship && (
+                    <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-gold px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-white shadow-gold-glow">
+                      <Sparkles className="h-3.5 w-3.5" />
+                      Flagship
+                    </span>
+                  )}
+                </div>
 
-                <div className="relative p-6 text-white">
-                  <span className="mb-3 inline-flex items-center rounded-full border border-white/20 bg-white/10 px-2.5 py-0.5 text-[11px] font-medium text-white/90 backdrop-blur">
-                    {s.tag}
-                  </span>
-                  <h3 className="text-xl font-extrabold">{s.title}</h3>
-                  <p className="mt-1.5 text-sm leading-relaxed text-blue-100/85">{s.desc}</p>
-                  <span className="mt-4 inline-flex items-center gap-1 text-sm font-bold text-gold-light">
-                    Explore
-                    <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                  </span>
+                {/* body */}
+                <div className="flex flex-1 flex-col p-5">
+                  <h3 className="text-lg font-bold text-navy-dark">{s.title}</h3>
+                  <p className="mt-1.5 text-sm leading-relaxed text-slate-600">{s.desc}</p>
+
+                  <div className="mt-auto flex items-center justify-between pt-5">
+                    <span className="text-sm font-bold text-navy-dark">{s.meta}</span>
+                    <span className="btn-base bg-primary-50 px-4 py-2 text-xs font-semibold text-primary-700 transition-colors group-hover:bg-primary-100">
+                      Explore
+                      <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                    </span>
+                  </div>
                 </div>
               </Link>
             </motion.div>
           ))}
-
-          {/* ===== Wide card — Trademark & ITR ===== */}
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="lg:col-span-3"
-          >
-            <Link to="/ca-services" className={`${cardFrame} flex min-h-[240px] flex-col justify-end`}>
-              <SmartImage
-                src="https://images.unsplash.com/photo-1505664194779-8beaceb93744?auto=format&fit=crop&w=1200&q=80"
-                alt="Trademark & ITR filing"
-                className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-navy-dark via-navy-dark/70 to-navy-dark/25" />
-              <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/20" />
-              <span className="absolute right-5 top-5 font-mono text-sm font-semibold text-white/60">06</span>
-              <span
-                className="absolute left-5 top-5 inline-flex h-12 w-12 items-center justify-center rounded-xl text-white shadow-card ring-1 ring-white/30 transition-transform duration-300 group-hover:scale-110"
-                style={{ background: 'linear-gradient(135deg, #38bdf8 0%, #2c679e 100%)' }}
-              >
-                <BadgeCheck className="h-6 w-6" />
-              </span>
-
-              <div className="relative flex flex-col items-start justify-between gap-5 p-7 sm:flex-row sm:items-end">
-                <div className="max-w-xl text-white">
-                  <h3 className="text-xl font-extrabold sm:text-2xl">Trademark &amp; ITR Filing</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-blue-100/85">
-                    Protect your brand with trademark registration and stay compliant with
-                    expert-assisted income tax return filing — all handled for you.
-                  </p>
-                </div>
-                <span className="inline-flex flex-none items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-navy-dark shadow-card transition-all duration-300 group-hover:bg-primary-50">
-                  Explore Services
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </span>
-              </div>
-            </Link>
-          </motion.div>
         </div>
       </div>
     </section>
