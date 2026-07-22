@@ -34,7 +34,8 @@ const compactCards = [
     tag: 'Hourly booking',
     to: '/meeting-rooms',
     chip: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)',
-    glow: 'rgba(139,92,246,0.32)',
+    image:
+      'https://images.unsplash.com/photo-1517502884422-41eaead166d4?auto=format&fit=crop&w=800&q=80',
   },
   {
     n: '04',
@@ -44,7 +45,8 @@ const compactCards = [
     tag: 'Expert-assisted',
     to: '/ca-services',
     chip: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-    glow: 'rgba(16,185,129,0.32)',
+    image:
+      'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=800&q=80',
   },
   {
     n: '05',
@@ -54,15 +56,9 @@ const compactCards = [
     tag: 'Pvt Ltd · LLP · OPC',
     to: '/ca-services',
     chip: 'linear-gradient(135deg, #fbbf24 0%, #d97706 100%)',
-    glow: 'rgba(245,158,11,0.32)',
+    image: 'https://easemyoffice.in/wp-content/uploads/2024/09/mumbai5.webp',
   },
 ]
-
-function trackGlow(e) {
-  const r = e.currentTarget.getBoundingClientRect()
-  e.currentTarget.style.setProperty('--mx', `${e.clientX - r.left}px`)
-  e.currentTarget.style.setProperty('--my', `${e.clientY - r.top}px`)
-}
 
 export default function ServicesProvided() {
   return (
@@ -234,36 +230,34 @@ export default function ServicesProvided() {
             >
               <Link
                 to={s.to}
-                onMouseMove={trackGlow}
-                className="svc-card group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border border-white/70 bg-white/60 p-7 shadow-card backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/40 hover:shadow-card-hover"
+                className="group relative flex h-full min-h-[300px] flex-col justify-end overflow-hidden rounded-3xl shadow-card ring-1 ring-primary-100/60 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover"
               >
-                {/* coloured glow blob + glossy top edge */}
-                <div
-                  className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full opacity-50 blur-2xl transition-opacity duration-300 group-hover:opacity-90"
-                  style={{ background: s.glow }}
+                <SmartImage
+                  src={s.image}
+                  alt={s.title}
+                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
-                <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/90 to-transparent" />
+                {/* cinematic overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-navy-dark via-navy-dark/45 to-navy-dark/10" />
+                <span className="absolute right-4 top-4 font-mono text-sm font-semibold text-white/70">{s.n}</span>
+                <span
+                  className="absolute left-4 top-4 inline-flex h-12 w-12 items-center justify-center rounded-xl text-white shadow-card ring-1 ring-white/30 transition-transform duration-300 group-hover:scale-110"
+                  style={{ background: s.chip }}
+                >
+                  <s.icon className="h-6 w-6" />
+                </span>
 
-                <div className="relative">
-                  <div className="flex items-center justify-between">
-                    <span
-                      className="inline-flex h-14 w-14 items-center justify-center rounded-2xl text-white shadow-card ring-1 ring-white/40 transition-transform duration-300 group-hover:scale-110"
-                      style={{ background: s.chip }}
-                    >
-                      <s.icon className="h-7 w-7" />
-                    </span>
-                    <span className="font-mono text-sm font-semibold text-slate-300">{s.n}</span>
-                  </div>
-                  <h3 className="mt-6 text-xl font-bold text-navy-dark">{s.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-600">{s.desc}</p>
-                  <span className="mt-4 inline-flex items-center rounded-full bg-primary-50 px-3 py-1 text-xs font-semibold text-primary">
+                <div className="relative p-6 text-white">
+                  <span className="mb-3 inline-flex items-center rounded-full border border-white/20 bg-white/10 px-2.5 py-0.5 text-[11px] font-medium text-white/90 backdrop-blur">
                     {s.tag}
                   </span>
+                  <h3 className="text-xl font-extrabold">{s.title}</h3>
+                  <p className="mt-1.5 text-sm leading-relaxed text-blue-100/85">{s.desc}</p>
+                  <span className="mt-4 inline-flex items-center gap-1 text-sm font-bold text-gold-light">
+                    Explore
+                    <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  </span>
                 </div>
-                <span className="relative mt-6 inline-flex items-center gap-1 text-sm font-semibold text-primary">
-                  Explore
-                  <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                </span>
               </Link>
             </motion.div>
           ))}
@@ -278,29 +272,35 @@ export default function ServicesProvided() {
           >
             <Link
               to="/ca-services"
-              onMouseMove={trackGlow}
-              className="svc-card group flex flex-col items-start justify-between gap-6 overflow-hidden rounded-3xl border border-primary-100 bg-gradient-to-br from-primary-50 via-white to-primary-50/40 p-8 shadow-card transition-all duration-300 hover:border-primary/40 hover:shadow-card-hover sm:flex-row sm:items-center"
+              className="group relative flex min-h-[240px] flex-col justify-end overflow-hidden rounded-3xl shadow-card ring-1 ring-primary-100/60 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover"
             >
-              <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white to-transparent" />
-              <div className="relative flex items-start gap-5">
-                <span className="inline-flex h-14 w-14 flex-none items-center justify-center rounded-2xl text-white shadow-card ring-1 ring-white/40 transition-transform duration-300 group-hover:scale-110" style={{ background: 'linear-gradient(135deg, #38bdf8 0%, #2c679e 100%)' }}>
-                  <BadgeCheck className="h-7 w-7" />
-                </span>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h3 className="text-xl font-bold text-navy-dark">Trademark &amp; ITR Filing</h3>
-                    <span className="font-mono text-xs font-semibold text-primary-300">06</span>
-                  </div>
-                  <p className="mt-1.5 max-w-xl text-sm leading-relaxed text-slate-600">
-                    Protect your brand with trademark registration and stay compliant with expert-assisted
-                    income tax return filing — all handled for you.
+              <SmartImage
+                src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=1200&q=80"
+                alt="Trademark & ITR filing"
+                className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-navy-dark via-navy-dark/70 to-navy-dark/20" />
+              <span className="absolute right-5 top-5 font-mono text-sm font-semibold text-white/60">06</span>
+              <span
+                className="absolute left-5 top-5 inline-flex h-12 w-12 items-center justify-center rounded-xl text-white shadow-card ring-1 ring-white/30 transition-transform duration-300 group-hover:scale-110"
+                style={{ background: 'linear-gradient(135deg, #38bdf8 0%, #2c679e 100%)' }}
+              >
+                <BadgeCheck className="h-6 w-6" />
+              </span>
+
+              <div className="relative flex flex-col items-start justify-between gap-5 p-7 sm:flex-row sm:items-end">
+                <div className="max-w-xl text-white">
+                  <h3 className="text-xl font-extrabold sm:text-2xl">Trademark &amp; ITR Filing</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-blue-100/85">
+                    Protect your brand with trademark registration and stay compliant with
+                    expert-assisted income tax return filing — all handled for you.
                   </p>
                 </div>
+                <span className="inline-flex flex-none items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-navy-dark shadow-card transition-all duration-300 group-hover:bg-primary-50">
+                  Explore Services
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </span>
               </div>
-              <span className="relative inline-flex flex-none items-center gap-2 rounded-xl bg-navy px-5 py-3 text-sm font-semibold text-white transition-all duration-300 group-hover:bg-navy-dark">
-                Explore Services
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </span>
             </Link>
           </motion.div>
         </div>
