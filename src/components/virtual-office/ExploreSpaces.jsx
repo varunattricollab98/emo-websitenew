@@ -64,17 +64,18 @@ export default function ExploreSpaces() {
   const [purpose, setPurpose] = useState('')
   const [showAll, setShowAll] = useState(false)
   const [cityOpen, setCityOpen] = useState(false)
-  const [citySearch, setCitySearch] = useState('')
+  const [cityInput, setCityInput] = useState('Bangalore')
 
   const cityName = voCities.find((c) => c.slug === city)?.name || 'Bangalore'
 
   const filteredCities = useMemo(() => {
-    const q = citySearch.trim().toLowerCase()
-    if (!q) return voCities
+    const q = cityInput.trim().toLowerCase()
+    // when the field still shows the selected city, show the full list
+    if (!q || q === cityName.toLowerCase()) return voCities
     return voCities.filter(
       (c) => c.name.toLowerCase().includes(q) || (c.state || '').toLowerCase().includes(q)
     )
-  }, [citySearch])
+  }, [cityInput, cityName])
 
   const results = useMemo(() => {
     let list = getSpaces(city) || []
@@ -186,13 +187,20 @@ export default function ExploreSpaces() {
                   </label>
                   <div className="relative">
                     <MapPin className="pointer-events-none absolute left-3.5 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-primary" />
-                    <button
-                      type="button"
-                      onClick={() => setCityOpen((o) => !o)}
-                      className="flex w-full items-center rounded-xl border border-primary-100 bg-surface-light py-3.5 pl-10 pr-9 text-left text-sm font-semibold text-navy-dark focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20"
-                    >
-                      {cityName}
-                    </button>
+                    <input
+                      value={cityInput}
+                      onChange={(e) => {
+                        setCityInput(e.target.value)
+                        setCityOpen(true)
+                      }}
+                      onFocus={(e) => {
+                        setCityOpen(true)
+                        e.target.select()
+                      }}
+                      placeholder="Type a city or state…"
+                      aria-label="City"
+                      className="w-full rounded-xl border border-primary-100 bg-surface-light py-3.5 pl-10 pr-9 text-sm font-semibold text-navy-dark placeholder:font-normal placeholder:text-slate-400 focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                    />
                     <ChevronDown
                       className={`pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 transition-transform ${
                         cityOpen ? 'rotate-180' : ''
@@ -201,18 +209,14 @@ export default function ExploreSpaces() {
 
                     {cityOpen && (
                       <>
-                        <div className="fixed inset-0 z-30" onClick={() => setCityOpen(false)} />
+                        <div
+                          className="fixed inset-0 z-30"
+                          onClick={() => {
+                            setCityOpen(false)
+                            setCityInput(cityName)
+                          }}
+                        />
                         <div className="absolute left-0 right-0 z-40 mt-2 rounded-2xl border border-primary-100 bg-white p-2 shadow-card-hover">
-                          <div className="relative mb-2">
-                            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                            <input
-                              autoFocus
-                              value={citySearch}
-                              onChange={(e) => setCitySearch(e.target.value)}
-                              placeholder="Search city…"
-                              className="w-full rounded-lg border border-primary-100 bg-surface-light py-2.5 pl-9 pr-3 text-sm text-navy-dark placeholder:text-slate-400 focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20"
-                            />
-                          </div>
                           <ul className="sky-scroll max-h-60 space-y-0.5 overflow-y-auto pr-1">
                             {filteredCities.length === 0 ? (
                               <li className="px-3 py-2 text-sm text-slate-400">No city found</li>
@@ -223,8 +227,8 @@ export default function ExploreSpaces() {
                                     type="button"
                                     onClick={() => {
                                       setCity(c.slug)
+                                      setCityInput(c.name)
                                       setCityOpen(false)
-                                      setCitySearch('')
                                       setShowAll(false)
                                     }}
                                     className={`flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2.5 text-left transition-colors ${
