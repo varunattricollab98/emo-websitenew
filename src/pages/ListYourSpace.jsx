@@ -146,14 +146,17 @@ export default function ListYourSpace() {
             <div className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-primary-300/15 blur-3xl" />
 
             {/* header */}
-            <div className="relative flex justify-center">
-              <p className="inline-flex items-center gap-2.5 text-xs font-semibold uppercase tracking-[0.24em] text-primary-100/80">
+            <div className="relative text-center">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-primary-100 backdrop-blur">
                 <span className="relative flex h-1.5 w-1.5">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold/50" />
                   <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-gold" />
                 </span>
-                Join 200+ space partners earning with us
-              </p>
+                Partner Network
+              </span>
+              <h2 className="mt-4 text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
+                Join <span className="text-gold">200+ Space Partners</span> Earning With Us
+              </h2>
             </div>
 
             {/* stats */}
