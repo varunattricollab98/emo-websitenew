@@ -86,12 +86,9 @@ export default function Navbar() {
           <NavLink to="/ca-services" className={navLinkClass}>
             CA Services
           </NavLink>
-          <Link
-            to="/#locations"
-            className="text-sm font-semibold text-navy-dark transition-colors hover:text-primary"
-          >
-            Locations
-          </Link>
+          <NavLink to="/list-your-space" className={navLinkClass}>
+            List Your Space
+          </NavLink>
 
           <div
             className="relative"
@@ -143,9 +140,6 @@ export default function Navbar() {
             </AnimatePresence>
           </div>
 
-          <NavLink to="/list-your-space" className={navLinkClass}>
-            List Your Space
-          </NavLink>
           <NavLink to="/contact" className={navLinkClass}>
             Contact Us
           </NavLink>
@@ -185,13 +179,9 @@ export default function Navbar() {
               <MobileLink to="/" end>Home</MobileLink>
               <MobileLink to="/virtual-office">Virtual Office</MobileLink>
               <MobileLink to="/ca-services">CA Services</MobileLink>
-              <Link
-                to="/#locations"
-                className="rounded-xl px-3 py-3 font-semibold text-navy-dark transition-colors hover:bg-primary-50"
-              >
-                Locations
-              </Link>
-              <p className="px-3 pt-3 pb-1 text-xs font-bold uppercase tracking-wider text-slate-400">
+              <MobileLink to="/list-your-space">List Your Space</MobileLink>
+              <div className="my-2 h-px bg-primary-100" />
+              <p className="px-3 pt-1 pb-1 text-xs font-bold uppercase tracking-wider text-slate-400">
                 All Solutions
               </p>
               {solutions.map((s) => (
@@ -205,7 +195,6 @@ export default function Navbar() {
                 </Link>
               ))}
               <div className="my-2 h-px bg-primary-100" />
-              <MobileLink to="/list-your-space">List Your Space</MobileLink>
               <MobileLink to="/contact">Contact Us</MobileLink>
               <a
                 href="tel:8882735038"
