@@ -18,6 +18,30 @@ import { voCities, spacesByCity } from '../../data/spaces'
 
 const VISIBLE = 8
 
+// Official multicolour Google "G"
+function GoogleG({ className }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
+      <path
+        fill="#4285F4"
+        d="M23.52 12.27c0-.79-.07-1.54-.2-2.27H12v4.51h6.47a5.53 5.53 0 0 1-2.4 3.63v3h3.88c2.27-2.09 3.57-5.17 3.57-8.87z"
+      />
+      <path
+        fill="#34A853"
+        d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3c-1.08.72-2.45 1.16-4.05 1.16-3.11 0-5.75-2.1-6.69-4.93H1.3v3.09A11.99 11.99 0 0 0 12 24z"
+      />
+      <path
+        fill="#FBBC05"
+        d="M5.31 14.32a7.2 7.2 0 0 1 0-4.63V6.6H1.3a12 12 0 0 0 0 10.81l4.01-3.09z"
+      />
+      <path
+        fill="#EA4335"
+        d="M12 4.75c1.76 0 3.34.6 4.58 1.79l3.43-3.43C17.95 1.14 15.24 0 12 0A11.99 11.99 0 0 0 1.3 6.6l4.01 3.09C6.25 6.85 8.89 4.75 12 4.75z"
+      />
+    </svg>
+  )
+}
+
 const purposes = [
   { v: '', l: 'Any purpose' },
   { v: 'GST', l: 'GST Registration' },
@@ -100,33 +124,19 @@ export default function ExploreSpaces() {
               ))}
             </ul>
 
-            {/* social proof */}
-            <div className="mt-8 flex items-center gap-4">
-              <div className="flex -space-x-3">
-                {[
-                  ['#3c82c2', '#11417c', 'R'],
-                  ['#8b5cf6', '#6366f1', 'A'],
-                  ['#10b981', '#059669', 'S'],
-                  ['#f59e0b', '#d97706', 'M'],
-                ].map((a, idx) => (
-                  <span
-                    key={idx}
-                    className="inline-flex h-9 w-9 items-center justify-center rounded-full text-xs font-bold text-white ring-2 ring-white"
-                    style={{ background: `linear-gradient(135deg, ${a[0]}, ${a[1]})` }}
-                  >
-                    {a[2]}
-                  </span>
-                ))}
-              </div>
+            {/* Google rating */}
+            <div className="mt-8 inline-flex items-center gap-3 rounded-2xl border border-primary-100 bg-white px-5 py-3 shadow-soft">
+              <GoogleG className="h-7 w-7" />
               <div>
-                <div className="flex gap-0.5">
-                  {[0, 1, 2, 3, 4].map((n) => (
-                    <Star key={n} className="h-4 w-4 fill-gold text-gold" />
-                  ))}
+                <div className="flex items-center gap-1.5">
+                  <span className="text-base font-extrabold text-navy-dark">4.9</span>
+                  <div className="flex gap-0.5">
+                    {[0, 1, 2, 3, 4].map((n) => (
+                      <Star key={n} className="h-4 w-4 fill-gold text-gold" />
+                    ))}
+                  </div>
                 </div>
-                <p className="mt-0.5 text-sm font-semibold text-navy-dark">
-                  Trusted by <span className="text-primary">5,000+ businesses</span>
-                </p>
+                <p className="text-xs font-medium text-slate-500">Highly rated on Google</p>
               </div>
             </div>
           </motion.div>
