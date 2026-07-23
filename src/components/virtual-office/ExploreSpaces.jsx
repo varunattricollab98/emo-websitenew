@@ -46,6 +46,7 @@ const purposes = [
   { v: '', l: 'Any purpose' },
   { v: 'GST', l: 'GST Registration' },
   { v: 'Company Reg', l: 'Company Registration' },
+  { v: 'Compliance', l: 'Compliance Management' },
   { v: 'Mailing', l: 'Mailing Address' },
   { v: 'APOB', l: 'APOB / Multi-state' },
 ]
@@ -75,7 +76,12 @@ export default function ExploreSpaces() {
 
   const results = useMemo(() => {
     let list = getSpaces(city) || []
-    if (purpose) list = list.filter((s) => s.tags.includes(purpose))
+    if (purpose === 'Compliance') {
+      // compliance management covers GST + company/MCA-ready addresses
+      list = list.filter((s) => s.tags.includes('GST') || s.tags.includes('Company Reg'))
+    } else if (purpose) {
+      list = list.filter((s) => s.tags.includes(purpose))
+    }
     if (query.trim()) {
       const q = query.toLowerCase()
       list = list.filter((s) => s.name.toLowerCase().includes(q))
@@ -108,7 +114,7 @@ export default function ExploreSpaces() {
               Virtual Office
             </span>
 
-            <h1 className="mt-5 text-3xl font-extrabold leading-[1.14] tracking-tight text-navy-dark text-balance sm:text-4xl lg:text-[2.9rem]">
+            <h1 className="mt-5 text-3xl font-extrabold leading-[1.24] tracking-tight text-navy-dark text-balance sm:text-4xl lg:text-[2.9rem] lg:leading-[1.2]">
               Virtual Office in India for{' '}
               <span className="gradient-text">GST, Company Registration &amp; Business Address</span>
             </h1>
