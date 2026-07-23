@@ -33,6 +33,33 @@ export const voCities = [
   { slug: 'pune', name: 'Pune' },
   { slug: 'chennai', name: 'Chennai' },
   { slug: 'noida', name: 'Noida' },
+  { slug: 'kolkata', name: 'Kolkata' },
+  { slug: 'ahmedabad', name: 'Ahmedabad' },
+  { slug: 'jaipur', name: 'Jaipur' },
+  { slug: 'kochi', name: 'Kochi' },
+  { slug: 'indore', name: 'Indore' },
+  { slug: 'chandigarh', name: 'Chandigarh' },
+  { slug: 'lucknow', name: 'Lucknow' },
+  { slug: 'surat', name: 'Surat' },
+  { slug: 'nagpur', name: 'Nagpur' },
+  { slug: 'coimbatore', name: 'Coimbatore' },
+  { slug: 'bhopal', name: 'Bhopal' },
+  { slug: 'vadodara', name: 'Vadodara' },
+  { slug: 'visakhapatnam', name: 'Visakhapatnam' },
+  { slug: 'thane', name: 'Thane' },
+  { slug: 'faridabad', name: 'Faridabad' },
+  { slug: 'ghaziabad', name: 'Ghaziabad' },
+  { slug: 'patna', name: 'Patna' },
+  { slug: 'bhubaneswar', name: 'Bhubaneswar' },
+  { slug: 'nashik', name: 'Nashik' },
+  { slug: 'rajkot', name: 'Rajkot' },
+  { slug: 'guwahati', name: 'Guwahati' },
+  { slug: 'ludhiana', name: 'Ludhiana' },
+  { slug: 'kanpur', name: 'Kanpur' },
+  { slug: 'mysore', name: 'Mysore' },
+  { slug: 'mangalore', name: 'Mangalore' },
+  { slug: 'goa', name: 'Goa' },
+  { slug: 'dehradun', name: 'Dehradun' },
 ]
 
 export const spacesByCity = {
@@ -96,4 +123,20 @@ export const spacesByCity = {
     s('Sector 132', 949, 4.6, [T.gst, T.mail], 8),
     s('Sector 16', 899, 4.6, [T.gst, T.co], 0),
   ],
+}
+
+
+// Generic areas for cities without an explicit listing yet.
+const GENERIC = [
+  'Central Business District',
+  'Prime Commercial Hub',
+  'IT & Tech Park',
+  'Main Market Area',
+  'City Centre',
+  'Business Bay',
+]
+
+export function getSpaces(slug) {
+  if (spacesByCity[slug]) return spacesByCity[slug]
+  return GENERIC.map((area, i) => s(area, 799, 4.7, [T.gst, T.co, T.mail], i))
 }

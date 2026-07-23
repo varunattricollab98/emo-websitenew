@@ -14,7 +14,7 @@ import {
   ShieldCheck,
 } from 'lucide-react'
 import SmartImage from '../ui/SmartImage'
-import { voCities, spacesByCity } from '../../data/spaces'
+import { voCities, getSpaces } from '../../data/spaces'
 
 const VISIBLE = 8
 
@@ -62,11 +62,19 @@ export default function ExploreSpaces() {
   const [query, setQuery] = useState('')
   const [purpose, setPurpose] = useState('')
   const [showAll, setShowAll] = useState(false)
+  const [cityOpen, setCityOpen] = useState(false)
+  const [citySearch, setCitySearch] = useState('')
 
   const cityName = voCities.find((c) => c.slug === city)?.name || 'Bangalore'
 
+  const filteredCities = useMemo(() => {
+    const q = citySearch.trim().toLowerCase()
+    if (!q) return voCities
+    return voCities.filter((c) => c.name.toLowerCase().includes(q))
+  }, [citySearch])
+
   const results = useMemo(() => {
-    let list = spacesByCity[city] || []
+    let list = getSpaces(city) || []
     if (purpose) list = list.filter((s) => s.tags.includes(purpose))
     if (query.trim()) {
       const q = query.toLowerCase()
@@ -163,29 +171,70 @@ export default function ExploreSpaces() {
               </div>
 
               <div className="mt-6 space-y-4">
-                {/* city */}
+                {/* city — searchable dropdown */}
                 <div>
                   <label className="mb-1.5 block text-[11px] font-bold uppercase tracking-wider text-slate-400">
                     City
                   </label>
                   <div className="relative">
-                    <MapPin className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-primary" />
-                    <select
-                      value={city}
-                      onChange={(e) => {
-                        setCity(e.target.value)
-                        setShowAll(false)
-                      }}
-                      aria-label="Select city"
-                      className="w-full appearance-none rounded-xl border border-primary-100 bg-surface-light py-3.5 pl-10 pr-9 text-sm font-semibold text-navy-dark focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                    <MapPin className="pointer-events-none absolute left-3.5 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-primary" />
+                    <button
+                      type="button"
+                      onClick={() => setCityOpen((o) => !o)}
+                      className="flex w-full items-center rounded-xl border border-primary-100 bg-surface-light py-3.5 pl-10 pr-9 text-left text-sm font-semibold text-navy-dark focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20"
                     >
-                      {voCities.map((c) => (
-                        <option key={c.slug} value={c.slug}>
-                          {c.name}
-                        </option>
-                      ))}
-                    </select>
-                    <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                      {cityName}
+                    </button>
+                    <ChevronDown
+                      className={`pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 transition-transform ${
+                        cityOpen ? 'rotate-180' : ''
+                      }`}
+                    />
+
+                    {cityOpen && (
+                      <>
+                        <div className="fixed inset-0 z-30" onClick={() => setCityOpen(false)} />
+                        <div className="absolute left-0 right-0 z-40 mt-2 rounded-2xl border border-primary-100 bg-white p-2 shadow-card-hover">
+                          <div className="relative mb-2">
+                            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                            <input
+                              autoFocus
+                              value={citySearch}
+                              onChange={(e) => setCitySearch(e.target.value)}
+                              placeholder="Search city…"
+                              className="w-full rounded-lg border border-primary-100 bg-surface-light py-2.5 pl-9 pr-3 text-sm text-navy-dark placeholder:text-slate-400 focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                            />
+                          </div>
+                          <ul className="sky-scroll max-h-60 space-y-0.5 overflow-y-auto pr-1">
+                            {filteredCities.length === 0 ? (
+                              <li className="px-3 py-2 text-sm text-slate-400">No city found</li>
+                            ) : (
+                              filteredCities.map((c) => (
+                                <li key={c.slug}>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setCity(c.slug)
+                                      setCityOpen(false)
+                                      setCitySearch('')
+                                      setShowAll(false)
+                                    }}
+                                    className={`flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm transition-colors ${
+                                      c.slug === city
+                                        ? 'bg-primary-50 font-bold text-primary'
+                                        : 'text-navy-dark hover:bg-surface-light'
+                                    }`}
+                                  >
+                                    {c.name}
+                                    {c.slug === city && <Check className="h-4 w-4 text-primary" />}
+                                  </button>
+                                </li>
+                              ))
+                            )}
+                          </ul>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
 
