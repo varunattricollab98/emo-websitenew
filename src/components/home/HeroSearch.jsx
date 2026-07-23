@@ -77,58 +77,80 @@ export default function HeroSearch() {
           </p>
         </motion.div>
 
-        {/* Prominent search / filter card */}
+        {/* Executive booking-style search bar */}
         <motion.form
           onSubmit={handleSearch}
           initial={{ opacity: 0, y: 32, scale: 0.98 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 0.6, ease: 'easeOut', delay: 0.15 }}
-          className="mx-auto mt-10 max-w-4xl rounded-2xl border border-primary-100/70 bg-white p-4 shadow-card-hover sm:p-5"
+          className="relative mx-auto mt-10 max-w-4xl"
         >
-          <div className="grid gap-3 md:grid-cols-[1.5fr_1fr_auto]">
-            {/* location input */}
-            <div className="flex items-center gap-2 rounded-xl border border-primary-100 bg-surface-light px-4 py-3 focus-within:border-primary/60 focus-within:ring-2 focus-within:ring-primary/20">
-              <MapPin className="h-5 w-5 flex-none text-primary" />
-              <input
-                type="text"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                placeholder="Search your city or location…"
-                className="w-full bg-transparent text-sm font-medium text-navy-dark placeholder:text-slate-400 focus:outline-none"
-              />
-            </div>
+          {/* soft glow behind bar */}
+          <div className="pointer-events-none absolute -inset-x-6 -bottom-4 top-2 rounded-[2rem] bg-primary-300/20 blur-2xl" />
 
-            {/* service dropdown */}
-            <div className="relative flex items-center rounded-xl border border-primary-100 bg-surface-light px-4 py-3 focus-within:border-primary/60 focus-within:ring-2 focus-within:ring-primary/20">
-              <Layers className="h-5 w-5 flex-none text-primary" />
-              <select
-                value={service}
-                onChange={(e) => setService(e.target.value)}
-                aria-label="Service type"
-                className="w-full appearance-none bg-transparent pl-2 pr-6 text-sm font-medium text-navy-dark focus:outline-none"
+          <div className="relative rounded-2xl border border-white/80 bg-white/90 p-2 shadow-card-hover ring-1 ring-primary-100/70 backdrop-blur-xl">
+            <div className="flex flex-col md:flex-row md:items-center">
+              {/* location */}
+              <div className="flex flex-1 items-center gap-3 rounded-xl px-4 py-3 transition-colors hover:bg-surface-light">
+                <span className="inline-flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-primary-50 text-primary">
+                  <MapPin className="h-5 w-5" />
+                </span>
+                <div className="flex-1 text-left">
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                    Location
+                  </p>
+                  <input
+                    type="text"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                    placeholder="Search your city or area…"
+                    className="w-full bg-transparent text-sm font-semibold text-navy-dark placeholder:font-normal placeholder:text-slate-400 focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              {/* divider */}
+              <span className="mx-2 hidden h-10 w-px bg-primary-100 md:block" />
+
+              {/* service */}
+              <div className="relative flex items-center gap-3 rounded-xl px-4 py-3 transition-colors hover:bg-surface-light md:w-60">
+                <span className="inline-flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-primary-50 text-primary">
+                  <Layers className="h-5 w-5" />
+                </span>
+                <div className="flex-1 text-left">
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                    Looking for
+                  </p>
+                  <select
+                    value={service}
+                    onChange={(e) => setService(e.target.value)}
+                    aria-label="Service type"
+                    className="w-full appearance-none bg-transparent pr-6 text-sm font-semibold text-navy-dark focus:outline-none"
+                  >
+                    {serviceTypes.map((s) => (
+                      <option key={s.value} value={s.value}>
+                        {s.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+              </div>
+
+              {/* search button */}
+              <button
+                type="submit"
+                className="btn-base m-1 justify-center rounded-xl bg-primary-gradient px-8 py-4 text-sm text-white shadow-card transition-all hover:shadow-glow hover:brightness-110"
               >
-                {serviceTypes.map((s) => (
-                  <option key={s.value} value={s.value}>
-                    {s.label}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown className="pointer-events-none absolute right-3 h-4 w-4 text-slate-400" />
+                <Search className="h-5 w-5" />
+                Search
+              </button>
             </div>
-
-            {/* search button */}
-            <button
-              type="submit"
-              className="btn-base bg-primary-gradient px-7 py-3 text-sm text-white shadow-card hover:shadow-glow hover:brightness-110"
-            >
-              <Search className="h-5 w-5" />
-              Search
-            </button>
           </div>
 
           {/* popular city chips */}
-          <div className="mt-4 flex flex-wrap items-center gap-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
               Popular:
             </span>
             {popularCities.map((city) => (
@@ -136,7 +158,7 @@ export default function HeroSearch() {
                 key={city}
                 type="button"
                 onClick={() => setLocation(city)}
-                className="rounded-full border border-primary-100 bg-white px-3.5 py-1.5 text-xs font-semibold text-primary-700 transition-colors hover:border-primary/40 hover:bg-primary-50"
+                className="rounded-full border border-primary-100 bg-white/80 px-3.5 py-1.5 text-xs font-semibold text-primary-700 backdrop-blur transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:bg-primary-50"
               >
                 {city}
               </button>
