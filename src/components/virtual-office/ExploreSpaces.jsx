@@ -71,7 +71,9 @@ export default function ExploreSpaces() {
   const filteredCities = useMemo(() => {
     const q = citySearch.trim().toLowerCase()
     if (!q) return voCities
-    return voCities.filter((c) => c.name.toLowerCase().includes(q))
+    return voCities.filter(
+      (c) => c.name.toLowerCase().includes(q) || (c.state || '').toLowerCase().includes(q)
+    )
   }, [citySearch])
 
   const results = useMemo(() => {
@@ -225,14 +227,27 @@ export default function ExploreSpaces() {
                                       setCitySearch('')
                                       setShowAll(false)
                                     }}
-                                    className={`flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm transition-colors ${
+                                    className={`flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2.5 text-left transition-colors ${
                                       c.slug === city
-                                        ? 'bg-primary-50 font-bold text-primary'
+                                        ? 'bg-primary-50 text-primary'
                                         : 'text-navy-dark hover:bg-surface-light'
                                     }`}
                                   >
-                                    {c.name}
-                                    {c.slug === city && <Check className="h-4 w-4 text-primary" />}
+                                    <span className="min-w-0">
+                                      <span
+                                        className={`block truncate text-sm ${
+                                          c.slug === city ? 'font-bold' : 'font-semibold'
+                                        }`}
+                                      >
+                                        {c.name}
+                                      </span>
+                                      <span className="block truncate text-[11px] text-slate-400">
+                                        {c.state}
+                                      </span>
+                                    </span>
+                                    {c.slug === city && (
+                                      <Check className="h-4 w-4 flex-none text-primary" />
+                                    )}
                                   </button>
                                 </li>
                               ))
