@@ -25,6 +25,7 @@ import Button from '../components/ui/Button'
 import Counter from '../components/ui/Counter'
 import CTABand from '../components/ui/CTABand'
 import FaqAccordion from '../components/ui/FaqAccordion'
+import CoworkingSpaces from '../components/coworking/CoworkingSpaces'
 import { cities } from '../data/cities'
 
 const offerings = [
@@ -230,8 +231,11 @@ export default function Coworking() {
         </div>
       </section>
 
+      {/* City-wise coworking listings */}
+      <CoworkingSpaces />
+
       {/* Why us */}
-      <section className="section-padding bg-surface-light">
+      <section className="section-padding bg-white">
         <div className="container-custom">
           <SectionHeading
             eyebrow="Why EaseMyOffice"
@@ -256,7 +260,7 @@ export default function Coworking() {
       </section>
 
       {/* Amenities */}
-      <section className="section-padding bg-white">
+      <section className="section-padding bg-surface-light">
         <div className="container-custom">
           <SectionHeading
             eyebrow="Amenities"
