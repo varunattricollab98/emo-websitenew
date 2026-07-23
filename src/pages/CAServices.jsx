@@ -1,4 +1,6 @@
+import { useState } from 'react'
 import CAServiceHero from '../components/ca-services/CAServiceHero'
+import CAServicesGrid from '../components/ca-services/CAServicesGrid'
 import CAServiceFinder from '../components/ca-services/CAServiceFinder'
 import CAPackages from '../components/ca-services/CAPackages'
 import CAProcess from '../components/ca-services/CAProcess'
@@ -9,16 +11,23 @@ import ClientsStrip from '../components/virtual-office/ClientsStrip'
 import GoogleReviews from '../components/virtual-office/GoogleReviews'
 
 export default function CAServices() {
+  // shared search state between the hero search box and the results grid
+  const [query, setQuery] = useState('')
+  const [cat, setCat] = useState('')
+
   return (
     <>
-      {/* Hero: 1,200+ accounts highlight + searchable service finder + results grid */}
-      <CAServiceHero />
+      {/* Hero: 1,200+ accounts highlight + searchable service finder */}
+      <CAServiceHero query={query} setQuery={setQuery} cat={cat} setCat={setCat} />
+
+      {/* Tabbed service finder by category (moved up) */}
+      <CAServiceFinder />
 
       {/* Auto-rolling trusted-by brands */}
       <TrustBar />
 
-      {/* Tabbed service finder by category */}
-      <CAServiceFinder />
+      {/* Services results grid (driven by hero search) */}
+      <CAServicesGrid query={query} cat={cat} />
 
       {/* Ongoing monthly compliance packages */}
       <CAPackages />
