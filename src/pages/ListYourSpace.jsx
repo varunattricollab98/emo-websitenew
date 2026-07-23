@@ -18,6 +18,7 @@ import SubPageHero from '../components/ui/SubPageHero'
 import SectionHeading from '../components/ui/SectionHeading'
 import Reveal from '../components/ui/Reveal'
 import Counter from '../components/ui/Counter'
+import LocationSelect from '../components/ui/LocationSelect'
 
 const benefits = [
   { icon: Wallet, title: 'Extra Revenue', desc: 'Monetise unused desks, cabins and address capacity.' },
@@ -239,7 +240,17 @@ export default function ListYourSpace() {
                     <Field label="Company / Property" name="company" value={form.company} onChange={handleChange} />
                     <Field label="Email" name="email" type="email" value={form.email} onChange={handleChange} required />
                     <Field label="Phone" name="phone" type="tel" value={form.phone} onChange={handleChange} required />
-                    <Field label="City" name="city" value={form.city} onChange={handleChange} required />
+                    <div>
+                      <label className="mb-1.5 block text-sm font-semibold text-navy-dark">
+                        City / Location
+                      </label>
+                      <LocationSelect
+                        name="city"
+                        value={form.city}
+                        onChange={(v) => setForm((f) => ({ ...f, city: v }))}
+                        required
+                      />
+                    </div>
                     <div>
                       <label className="mb-1.5 block text-sm font-semibold text-navy-dark">Space type</label>
                       <select

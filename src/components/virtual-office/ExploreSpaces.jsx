@@ -15,6 +15,7 @@ import {
 } from 'lucide-react'
 import SmartImage from '../ui/SmartImage'
 import { voCities, getSpaces } from '../../data/spaces'
+import { resolvePincode } from '../../data/pincodes'
 
 const VISIBLE = 8
 
@@ -72,6 +73,8 @@ export default function ExploreSpaces() {
     const q = cityInput.trim().toLowerCase()
     // when the field still shows the selected city, show the full list
     if (!q || q === cityName.toLowerCase()) return voCities
+    // numeric input → treat as a pincode and resolve to matching cities
+    if (/^\d+$/.test(q)) return resolvePincode(q)
     return voCities.filter(
       (c) => c.name.toLowerCase().includes(q) || (c.state || '').toLowerCase().includes(q)
     )
@@ -197,7 +200,7 @@ export default function ExploreSpaces() {
                         setCityOpen(true)
                         e.target.select()
                       }}
-                      placeholder="Type a city or state…"
+                      placeholder="Type a city, state or pincode…"
                       aria-label="City"
                       className="w-full rounded-xl border border-primary-100 bg-surface-light py-3.5 pl-10 pr-9 text-sm font-semibold text-navy-dark placeholder:font-normal placeholder:text-slate-400 focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20"
                     />

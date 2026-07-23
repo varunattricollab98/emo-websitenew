@@ -14,7 +14,7 @@ import {
 import SubPageHero from '../components/ui/SubPageHero'
 import SectionHeading from '../components/ui/SectionHeading'
 import Reveal from '../components/ui/Reveal'
-import { cities } from '../data/cities'
+import LocationSelect from '../components/ui/LocationSelect'
 
 const details = [
   { icon: Phone, label: 'Call us', value: '888-273-5038', href: 'tel:8882735038' },
@@ -173,20 +173,14 @@ export default function Contact() {
                     <Field label="Email" name="email" type="email" value={form.email} onChange={handleChange} required />
                     <Field label="Phone" name="phone" type="tel" value={form.phone} onChange={handleChange} required />
                     <div>
-                      <label className="mb-1.5 block text-sm font-semibold text-navy-dark">City</label>
-                      <select
+                      <label className="mb-1.5 block text-sm font-semibold text-navy-dark">
+                        City / Location
+                      </label>
+                      <LocationSelect
                         name="city"
                         value={form.city}
-                        onChange={handleChange}
-                        className="w-full rounded-xl border border-primary-200 bg-white px-4 py-3 text-sm text-navy-dark outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
-                      >
-                        <option value="">Select a city</option>
-                        {cities.map((c) => (
-                          <option key={c.slug} value={c.name}>
-                            {c.name}
-                          </option>
-                        ))}
-                      </select>
+                        onChange={(v) => setForm((f) => ({ ...f, city: v }))}
+                      />
                     </div>
                   </div>
                   <div>

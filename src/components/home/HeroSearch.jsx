@@ -93,7 +93,7 @@ export default function HeroSearch() {
                 type="text"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
-                placeholder="Search your city or location…"
+                placeholder="Search your city, location or pincode…"
                 className="w-full bg-transparent text-sm font-medium text-navy-dark placeholder:text-slate-400 focus:outline-none"
               />
             </div>
