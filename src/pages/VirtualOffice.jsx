@@ -4,6 +4,7 @@ import GoogleReviews from '../components/virtual-office/GoogleReviews'
 import VOPricing from '../components/virtual-office/VOPricing'
 import KycDocs from '../components/virtual-office/KycDocs'
 import ClientsStrip from '../components/virtual-office/ClientsStrip'
+import ServiceFinder from '../components/virtual-office/ServiceFinder'
 import TrustBar from '../components/home/TrustBar'
 import HomeFAQ from '../components/home/HomeFAQ'
 import BookYourSpace from '../components/home/BookYourSpace'
@@ -22,6 +23,9 @@ export default function VirtualOffice() {
 
       {/* Client reviews */}
       <GoogleReviews />
+
+      {/* Service finder — choose your own plan by requirement */}
+      <ServiceFinder />
 
       {/* Plans & pricing (Business Reg · GST · Mailing · Dedicated Desk) */}
       <VOPricing />
