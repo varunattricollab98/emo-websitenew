@@ -1,42 +1,72 @@
 import { useState, useMemo } from 'react'
-import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { MapPin, Search, ChevronDown, Star, ArrowRight, Flame } from 'lucide-react'
+import {
+  MapPin,
+  Search,
+  ChevronDown,
+  Star,
+  ArrowRight,
+  Flame,
+  Layers,
+  Check,
+  BadgeCheck,
+  Clock,
+  ShieldCheck,
+} from 'lucide-react'
 import SmartImage from '../ui/SmartImage'
 import { voCities, spacesByCity } from '../../data/spaces'
 
 const VISIBLE = 8
 
+const purposes = [
+  { v: '', l: 'Any purpose' },
+  { v: 'GST', l: 'GST Registration' },
+  { v: 'Company Reg', l: 'Company Registration' },
+  { v: 'Mailing', l: 'Mailing Address' },
+  { v: 'APOB', l: 'APOB / Multi-state' },
+]
+
+const highlights = [
+  { icon: BadgeCheck, label: '98.7% document approval rate' },
+  { icon: MapPin, label: '250+ prime locations, 28 states' },
+  { icon: Clock, label: 'Ready in just 2–3 days' },
+  { icon: ShieldCheck, label: '100% refund if GST rejected' },
+]
+
 export default function ExploreSpaces() {
   const [city, setCity] = useState('bangalore')
   const [query, setQuery] = useState('')
+  const [purpose, setPurpose] = useState('')
   const [showAll, setShowAll] = useState(false)
 
   const cityName = voCities.find((c) => c.slug === city)?.name || 'Bangalore'
 
   const results = useMemo(() => {
-    const list = spacesByCity[city] || []
-    if (!query.trim()) return list
-    const q = query.toLowerCase()
-    return list.filter((s) => s.name.toLowerCase().includes(q))
-  }, [city, query])
+    let list = spacesByCity[city] || []
+    if (purpose) list = list.filter((s) => s.tags.includes(purpose))
+    if (query.trim()) {
+      const q = query.toLowerCase()
+      list = list.filter((s) => s.name.toLowerCase().includes(q))
+    }
+    return list
+  }, [city, query, purpose])
 
   const visible = showAll ? results : results.slice(0, VISIBLE)
 
   return (
     <>
-      {/* ===== Hero with city search ===== */}
+      {/* ===== Split hero: info left, filter form right ===== */}
       <section className="relative overflow-hidden bg-hero-gradient">
-        <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-primary-200/40 blur-3xl" />
+        <div className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full bg-primary-200/40 blur-3xl" />
         <div className="pointer-events-none absolute -left-20 bottom-0 h-64 w-64 rounded-full bg-primary-100/50 blur-3xl" />
-        <div className="pointer-events-none absolute inset-0 tech-dots opacity-40 [mask-image:radial-gradient(ellipse_65%_60%_at_50%_40%,#000,transparent)]" />
+        <div className="pointer-events-none absolute inset-0 tech-dots opacity-40 [mask-image:radial-gradient(ellipse_70%_60%_at_40%_40%,#000,transparent)]" />
 
-        <div className="container-custom relative py-16 text-center lg:py-24">
+        <div className="container-custom relative grid items-center gap-12 py-16 lg:grid-cols-2 lg:py-24">
+          {/* ---- left: info ---- */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
-            className="mx-auto max-w-3xl"
           >
             <span className="inline-flex items-center gap-2.5 rounded-full border border-primary-200 bg-white px-5 py-2 text-xs font-bold uppercase tracking-[0.16em] text-primary shadow-soft">
               <span className="relative flex h-2.5 w-2.5">
@@ -46,64 +76,164 @@ export default function ExploreSpaces() {
               Virtual Office
             </span>
 
-            <h1 className="mt-5 text-3xl font-extrabold leading-[1.14] tracking-tight text-navy-dark text-balance sm:text-4xl lg:text-5xl">
+            <h1 className="mt-5 text-3xl font-extrabold leading-[1.14] tracking-tight text-navy-dark text-balance sm:text-4xl lg:text-[2.9rem]">
               Virtual Office in India for{' '}
               <span className="gradient-text">GST, Company Registration &amp; Business Address</span>
             </h1>
-            <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-slate-600">
-              Get a premium, compliant business address without the cost of physical space — search
-              your city and explore verified spaces in seconds.
+            <p className="mt-5 max-w-xl text-lg leading-relaxed text-slate-600">
+              Get a premium, compliant business address without the cost of physical space — with the
+              full documentation kit, ready in days.
             </p>
+
+            {/* info highlights as premium chips */}
+            <ul className="mt-7 grid gap-3 sm:grid-cols-2">
+              {highlights.map((h) => (
+                <li
+                  key={h.label}
+                  className="flex items-center gap-3 rounded-xl border border-primary-100/70 bg-white/70 px-3.5 py-3 text-sm font-semibold text-navy shadow-soft backdrop-blur"
+                >
+                  <span className="inline-flex h-8 w-8 flex-none items-center justify-center rounded-lg bg-primary-50 text-primary">
+                    <h.icon className="h-4 w-4" />
+                  </span>
+                  {h.label}
+                </li>
+              ))}
+            </ul>
+
+            {/* social proof */}
+            <div className="mt-8 flex items-center gap-4">
+              <div className="flex -space-x-3">
+                {[
+                  ['#3c82c2', '#11417c', 'R'],
+                  ['#8b5cf6', '#6366f1', 'A'],
+                  ['#10b981', '#059669', 'S'],
+                  ['#f59e0b', '#d97706', 'M'],
+                ].map((a, idx) => (
+                  <span
+                    key={idx}
+                    className="inline-flex h-9 w-9 items-center justify-center rounded-full text-xs font-bold text-white ring-2 ring-white"
+                    style={{ background: `linear-gradient(135deg, ${a[0]}, ${a[1]})` }}
+                  >
+                    {a[2]}
+                  </span>
+                ))}
+              </div>
+              <div>
+                <div className="flex gap-0.5">
+                  {[0, 1, 2, 3, 4].map((n) => (
+                    <Star key={n} className="h-4 w-4 fill-gold text-gold" />
+                  ))}
+                </div>
+                <p className="mt-0.5 text-sm font-semibold text-navy-dark">
+                  Trusted by <span className="text-primary">5,000+ businesses</span>
+                </p>
+              </div>
+            </div>
           </motion.div>
 
-          {/* search / filter bar */}
+          {/* ---- right: filter form ---- */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.15 }}
-            className="mx-auto mt-9 max-w-3xl"
+            initial={{ opacity: 0, y: 28, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.6, ease: 'easeOut', delay: 0.15 }}
+            className="relative"
           >
-            <div className="flex flex-col gap-3 rounded-2xl border border-primary-100 bg-white p-2.5 shadow-card-hover sm:flex-row sm:items-center">
-              {/* city dropdown */}
-              <div className="relative flex-none sm:w-48">
-                <MapPin className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-primary" />
-                <select
-                  value={city}
-                  onChange={(e) => {
-                    setCity(e.target.value)
-                    setShowAll(false)
-                  }}
-                  aria-label="Select city"
-                  className="w-full appearance-none rounded-xl bg-surface-light py-3.5 pl-10 pr-9 text-sm font-semibold text-navy-dark focus:outline-none focus:ring-2 focus:ring-primary/20"
+            <div className="pointer-events-none absolute -inset-3 rounded-[2rem] bg-primary-300/20 blur-2xl" />
+            <div className="relative overflow-hidden rounded-3xl border border-white/80 bg-white/95 p-6 shadow-card-hover ring-1 ring-primary-100/70 backdrop-blur-xl sm:p-7">
+              {/* gold executive accent */}
+              <span className="pointer-events-none absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-gold via-gold-dark to-gold" />
+              <div className="flex items-center gap-3">
+                <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-primary-gradient text-white shadow-card">
+                  <Search className="h-5 w-5" />
+                </span>
+                <div>
+                  <h2 className="text-lg font-bold text-navy-dark">Find Your Space</h2>
+                  <p className="text-xs text-slate-500">Search verified virtual offices near you</p>
+                </div>
+              </div>
+
+              <div className="mt-6 space-y-4">
+                {/* city */}
+                <div>
+                  <label className="mb-1.5 block text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                    City
+                  </label>
+                  <div className="relative">
+                    <MapPin className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-primary" />
+                    <select
+                      value={city}
+                      onChange={(e) => {
+                        setCity(e.target.value)
+                        setShowAll(false)
+                      }}
+                      aria-label="Select city"
+                      className="w-full appearance-none rounded-xl border border-primary-100 bg-surface-light py-3.5 pl-10 pr-9 text-sm font-semibold text-navy-dark focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                    >
+                      {voCities.map((c) => (
+                        <option key={c.slug} value={c.slug}>
+                          {c.name}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                  </div>
+                </div>
+
+                {/* purpose */}
+                <div>
+                  <label className="mb-1.5 block text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                    Purpose
+                  </label>
+                  <div className="relative">
+                    <Layers className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-primary" />
+                    <select
+                      value={purpose}
+                      onChange={(e) => {
+                        setPurpose(e.target.value)
+                        setShowAll(false)
+                      }}
+                      aria-label="Purpose"
+                      className="w-full appearance-none rounded-xl border border-primary-100 bg-surface-light py-3.5 pl-10 pr-9 text-sm font-semibold text-navy-dark focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                    >
+                      {purposes.map((p) => (
+                        <option key={p.v} value={p.v}>
+                          {p.l}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                  </div>
+                </div>
+
+                {/* locality */}
+                <div>
+                  <label className="mb-1.5 block text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                    Locality
+                  </label>
+                  <div className="relative">
+                    <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                    <input
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                      placeholder={`Search locality in ${cityName}…`}
+                      aria-label="Search locality"
+                      className="w-full rounded-xl border border-primary-100 bg-surface-light py-3.5 pl-10 pr-4 text-sm text-navy-dark placeholder:text-slate-400 focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                    />
+                  </div>
+                </div>
+
+                <a
+                  href="#spaces"
+                  className="btn-base w-full bg-primary-gradient px-6 py-3.5 text-sm text-white shadow-card transition-all hover:shadow-glow hover:brightness-110"
                 >
-                  {voCities.map((c) => (
-                    <option key={c.slug} value={c.slug}>
-                      {c.name}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                  View Spaces
+                  <ArrowRight className="h-4 w-4" />
+                </a>
+                <div className="flex items-center justify-center gap-1.5 pt-1 text-xs text-slate-400">
+                  <ShieldCheck className="h-3.5 w-3.5 text-accent-emerald" />
+                  {results.length}+ verified spaces in {cityName} · No spam, ever
+                </div>
               </div>
-
-              {/* search input */}
-              <div className="relative flex-1">
-                <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                <input
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder={`Search locality in ${cityName}…`}
-                  aria-label="Search location"
-                  className="w-full rounded-xl bg-surface-light py-3.5 pl-10 pr-4 text-sm text-navy-dark placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/20"
-                />
-              </div>
-
-              <a
-                href="#spaces"
-                className="btn-base flex-none bg-primary-gradient px-7 py-3.5 text-sm text-white shadow-card hover:shadow-glow hover:brightness-110"
-              >
-                View Spaces
-                <ArrowRight className="h-4 w-4" />
-              </a>
             </div>
           </motion.div>
         </div>
@@ -117,6 +247,7 @@ export default function ExploreSpaces() {
               <span className="inline-flex items-center gap-2 rounded-full bg-primary-50 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-primary">
                 <MapPin className="h-3.5 w-3.5" />
                 {cityName}
+                {purpose && <span className="text-primary-400">· {purpose}</span>}
               </span>
               <h2 className="mt-4 text-2xl font-extrabold tracking-tight text-navy-dark sm:text-3xl">
                 Virtual Offices in <span className="gradient-text">{cityName}</span>
@@ -129,7 +260,7 @@ export default function ExploreSpaces() {
 
           {visible.length === 0 ? (
             <p className="mt-12 rounded-2xl border border-dashed border-primary-200 bg-surface-light p-10 text-center text-slate-500">
-              No spaces match “{query}”. Try another locality.
+              No spaces match your filters. Try another locality or purpose.
             </p>
           ) : (
             <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
