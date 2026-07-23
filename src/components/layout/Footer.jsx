@@ -84,11 +84,11 @@ export default function Footer() {
               </li>
               <li>
                 <a
-                  href="mailto:connect@easemyoffice.in"
+                  href="mailto:contact@easemyoffice.in"
                   className="flex items-start gap-3 hover:text-primary-300"
                 >
                   <Mail className="mt-0.5 h-4 w-4 flex-none text-primary-300" />
-                  connect@easemyoffice.in
+                  contact@easemyoffice.in
                 </a>
               </li>
               <li className="flex items-start gap-3 text-slate-400">

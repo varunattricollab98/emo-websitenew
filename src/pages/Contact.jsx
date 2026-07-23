@@ -21,8 +21,8 @@ const details = [
   {
     icon: Mail,
     label: 'Email us',
-    value: 'connect@easemyoffice.in',
-    href: 'mailto:connect@easemyoffice.in',
+    value: 'contact@easemyoffice.in',
+    href: 'mailto:contact@easemyoffice.in',
   },
   {
     icon: MapPin,
@@ -91,7 +91,7 @@ export default function Contact() {
                   </div>
                 </a>
                 <a
-                  href="mailto:connect@easemyoffice.in"
+                  href="mailto:contact@easemyoffice.in"
                   className="flex items-center gap-3 rounded-2xl border border-primary-100 bg-surface-light px-4 py-3 transition-all hover:-translate-y-0.5 hover:shadow-card"
                 >
                   <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-gold to-gold-dark text-white">
@@ -99,7 +99,7 @@ export default function Contact() {
                   </span>
                   <div>
                     <p className="text-sm font-bold text-navy-dark">Email us</p>
-                    <p className="text-xs text-slate-500">connect@easemyoffice.in</p>
+                    <p className="text-xs text-slate-500">contact@easemyoffice.in</p>
                   </div>
                 </a>
               </div>
