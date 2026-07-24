@@ -21,6 +21,9 @@ import Reveal from '../components/ui/Reveal'
 import Button from '../components/ui/Button'
 import FaqAccordion from '../components/ui/FaqAccordion'
 import SmartImage from '../components/ui/SmartImage'
+import TrustBar from '../components/home/TrustBar'
+import GoogleReviews from '../components/virtual-office/GoogleReviews'
+import ClientsStrip from '../components/virtual-office/ClientsStrip'
 import { voCities, getSpaces } from '../data/spaces'
 import { getCityBySlug } from '../data/cities'
 import { faqs } from '../data/faqs'
@@ -148,26 +151,37 @@ export default function CityTemplate() {
         </Button>
       </SubPageHero>
 
-      {/* Quick facts */}
-      <section className="border-b border-primary-100 bg-white">
-        <div className="container-custom grid grid-cols-2 gap-6 py-10 sm:grid-cols-4">
-          {facts.map((f) => (
-            <div key={f.label} className="flex items-center gap-3">
-              <span className="inline-flex h-11 w-11 flex-none items-center justify-center rounded-xl bg-primary-50 text-primary">
-                <f.icon className="h-5 w-5" />
-              </span>
-              <div>
-                <p className="font-bold text-navy-dark">{f.label}</p>
-                <p className="text-xs text-slate-500">{f.sub}</p>
+      {/* Quick facts — premium floating band overlapping the hero */}
+      <section className="relative z-10 bg-white pb-6">
+        <div className="container-custom -mt-8 sm:-mt-10">
+          <div className="grid grid-cols-2 overflow-hidden rounded-2xl border border-primary-100 bg-white shadow-card-hover ring-1 ring-primary-100/50 sm:grid-cols-4 sm:divide-x sm:divide-primary-100">
+            <span className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-gold/50 to-transparent" />
+            {facts.map((f) => (
+              <div
+                key={f.label}
+                className="group flex items-center gap-3.5 p-5 transition-colors hover:bg-surface-light"
+              >
+                <span className="inline-flex h-12 w-12 flex-none items-center justify-center rounded-xl bg-primary-gradient text-white shadow-card ring-1 ring-white/30 transition-transform duration-300 group-hover:scale-105">
+                  <f.icon className="h-5 w-5" />
+                </span>
+                <div>
+                  <p className="text-lg font-extrabold leading-tight text-navy-dark">{f.label}</p>
+                  <p className="mt-0.5 text-xs font-medium text-slate-500">{f.sub}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
+      {/* Auto-rolling trusted-by brands */}
+      <TrustBar />
+
       {/* Localities / spaces in this city */}
-      <section className="section-padding bg-white">
-        <div className="container-custom">
+      <section className="section-padding relative overflow-hidden bg-white">
+        <div className="pointer-events-none absolute inset-0 tech-dots opacity-40 [mask-image:radial-gradient(ellipse_70%_55%_at_50%_20%,#000,transparent)]" />
+        <div className="pointer-events-none absolute -right-24 top-24 h-72 w-72 rounded-full bg-primary-200/20 blur-3xl" />
+        <div className="container-custom relative">
           <SectionHeading
             eyebrow="Locations"
             title={`Virtual Office Locations in ${cityName}`}
@@ -304,8 +318,9 @@ export default function CityTemplate() {
       </section>
 
       {/* Why choose */}
-      <section className="section-padding bg-white">
-        <div className="container-custom">
+      <section className="section-padding relative overflow-hidden bg-white">
+        <div className="pointer-events-none absolute -left-24 top-1/3 h-72 w-72 rounded-full bg-primary-300/10 blur-3xl" />
+        <div className="container-custom relative">
           <SectionHeading
             eyebrow="Why EaseMyOffice"
             title={`Why Choose a Virtual Office in ${cityName}`}
@@ -326,6 +341,10 @@ export default function CityTemplate() {
           </div>
         </div>
       </section>
+
+      {/* Social proof — animated stats + real reviews */}
+      <ClientsStrip />
+      <GoogleReviews />
 
       {/* Addresses note */}
       <section className="section-padding bg-surface-light">
