@@ -24,15 +24,17 @@ export default function LeadModal({ open, config = {}, onClose }) {
     title = 'Get a Free Consultation',
     subtitle = "Share a few details and our team will call you back within one business day.",
     service = '',
+    city = '',
+    message = '',
   } = config
 
   // reset + prefill whenever the modal (re)opens
   useEffect(() => {
     if (open) {
-      setForm({ ...emptyForm, interest: service })
+      setForm({ ...emptyForm, interest: service, city, message })
       setSubmitted(false)
     }
-  }, [open, service])
+  }, [open, service, city, message])
 
   // escape to close + lock body scroll
   useEffect(() => {

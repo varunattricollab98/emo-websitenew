@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import {
   Users,
   Presentation,
@@ -62,6 +63,19 @@ const rooms = [
 
 const bookingCities = ['Bengaluru', 'Gurugram', 'Mumbai', 'Delhi', 'Hyderabad', 'Pune', 'Chennai', 'Noida']
 
+const timeSlots = [
+  '09:00 AM',
+  '10:00 AM',
+  '11:00 AM',
+  '12:00 PM',
+  '01:00 PM',
+  '02:00 PM',
+  '03:00 PM',
+  '04:00 PM',
+  '05:00 PM',
+  '06:00 PM',
+]
+
 const amenities = [
   { icon: Monitor, label: '4K displays & screen share' },
   { icon: Wifi, label: 'High-speed Wi-Fi' },
@@ -86,12 +100,38 @@ const steps = [
 
 export default function MeetingRooms() {
   const { openLeadModal } = useLeadModal()
+
+  const today = new Date().toISOString().split('T')[0]
+  const [bCity, setBCity] = useState(bookingCities[0])
+  const [bDate, setBDate] = useState(today)
+  const [bTime, setBTime] = useState('10:00 AM')
+
+  const prettyDate = (d) => {
+    if (!d) return 'your date'
+    return new Date(`${d}T00:00:00`).toLocaleDateString('en-IN', {
+      weekday: 'short',
+      day: 'numeric',
+      month: 'short',
+    })
+  }
+
   const bookRoom = (name) =>
     openLeadModal({
       title: `Book a ${name}`,
-      subtitle: 'Tell us your city, date and time — we will confirm your slot.',
-      service: `${name} booking`,
+      subtitle: `${bCity} · ${prettyDate(bDate)} · ${bTime}`,
+      service: `${name} — ${bCity}`,
+      city: bCity,
+      message: `Requested booking: ${name} in ${bCity} on ${prettyDate(bDate)} at ${bTime}.`,
     })
+
+  const checkAvailability = () =>
+    openLeadModal({
+      title: 'Check Room Availability',
+      subtitle: `${bCity} · ${prettyDate(bDate)} · ${bTime}`,
+      city: bCity,
+      message: `Looking for an available room in ${bCity} on ${prettyDate(bDate)} at ${bTime}.`,
+    })
+
   return (
     <>
       <SubPageHero
@@ -126,13 +166,15 @@ export default function MeetingRooms() {
                 </span>
               </div>
 
-              {/* booking selectors */}
+              {/* booking selectors — city / date (calendar) / time */}
               <div className="mt-5 grid grid-cols-3 gap-2">
+                {/* city */}
                 <div className="relative">
                   <MapPin className="pointer-events-none absolute left-2.5 top-1/2 z-10 h-3.5 w-3.5 -translate-y-1/2 text-primary" />
                   <select
                     aria-label="City"
-                    defaultValue="Bengaluru"
+                    value={bCity}
+                    onChange={(e) => setBCity(e.target.value)}
                     className="w-full appearance-none rounded-xl border border-primary-100 bg-surface-light py-2.5 pl-8 pr-6 text-xs font-bold text-navy-dark focus:border-primary/60 focus:outline-none"
                   >
                     {bookingCities.map((c) => (
@@ -141,13 +183,34 @@ export default function MeetingRooms() {
                   </select>
                   <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
                 </div>
-                <div className="flex items-center gap-1.5 rounded-xl border border-primary-100 bg-surface-light px-2.5 py-2.5 text-xs font-bold text-navy-dark">
-                  <CalendarDays className="h-3.5 w-3.5 flex-none text-primary" />
-                  Today
+
+                {/* date — opens calendar */}
+                <div className="relative">
+                  <CalendarDays className="pointer-events-none absolute left-2.5 top-1/2 z-10 h-3.5 w-3.5 -translate-y-1/2 text-primary" />
+                  <input
+                    type="date"
+                    min={today}
+                    value={bDate}
+                    onChange={(e) => setBDate(e.target.value)}
+                    aria-label="Date"
+                    className="w-full rounded-xl border border-primary-100 bg-surface-light py-2.5 pl-8 pr-1.5 text-xs font-bold text-navy-dark focus:border-primary/60 focus:outline-none"
+                  />
                 </div>
-                <div className="flex items-center gap-1.5 rounded-xl border border-primary-100 bg-surface-light px-2.5 py-2.5 text-xs font-bold text-navy-dark">
-                  <Clock className="h-3.5 w-3.5 flex-none text-primary" />
-                  10:00 AM
+
+                {/* time slot */}
+                <div className="relative">
+                  <Clock className="pointer-events-none absolute left-2.5 top-1/2 z-10 h-3.5 w-3.5 -translate-y-1/2 text-primary" />
+                  <select
+                    aria-label="Time"
+                    value={bTime}
+                    onChange={(e) => setBTime(e.target.value)}
+                    className="w-full appearance-none rounded-xl border border-primary-100 bg-surface-light py-2.5 pl-8 pr-6 text-xs font-bold text-navy-dark focus:border-primary/60 focus:outline-none"
+                  >
+                    {timeSlots.map((t) => (
+                      <option key={t}>{t}</option>
+                    ))}
+                  </select>
+                  <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
                 </div>
               </div>
 
@@ -199,15 +262,7 @@ export default function MeetingRooms() {
           </div>
         }
       >
-        <Button
-          onClick={() =>
-            openLeadModal({
-              title: 'Check Room Availability',
-              subtitle: 'Share your city, date and time — we will confirm available rooms.',
-            })
-          }
-          size="lg"
-        >
+        <Button onClick={checkAvailability} size="lg">
           Check Availability <ArrowRight className="h-5 w-5" />
         </Button>
       </SubPageHero>
