@@ -255,7 +255,7 @@ export function getSpaces(slug) {
 // types the former name (data stores the current official name). All lowercase.
 export const cityAliases = {
   bangalore: ['bangalore', 'bengaluru'],
-  gurgaon: ['gurgaon', 'gurugram'],
+  gurgaon: ['gurgaon', 'gurugram', 'guru gram'],
   mumbai: ['bombay'],
   delhi: ['new delhi', 'ncr'],
   chennai: ['madras'],
@@ -281,8 +281,12 @@ export const cityAliases = {
   kanpur: ['cawnpore'],
   vijayawada: ['bezawada'],
   solapur: ['sholapur'],
-  panipat: [],
-  navi_mumbai: ['navi mumbai'],
+  'navi-mumbai': ['navi mumbai', 'navimumbai'],
+  gwalior: ['gwaliyar'],
+  bhopal: ['bhopaal'],
+  guwahati: ['gauhati'],
+  jodhpur: ['jodhpur', 'blue city'],
+  udaipur: ['udaipur', 'lake city'],
 }
 
 // True if the query matches a city's current name, state, or any alias.
