@@ -91,10 +91,10 @@ const whyUs = [
 ]
 
 const stats = [
-  { to: 200, suffix: '+', label: 'Workspaces' },
-  { to: 14, suffix: '', label: 'Cities' },
-  { to: 5000, suffix: '+', label: 'Members' },
-  { to: 4.9, suffix: '/5', label: 'Member rating', decimals: 1 },
+  { icon: Building2, to: 200, suffix: '+', label: 'Workspaces', sub: 'Move-in ready' },
+  { icon: MapPin, to: 14, suffix: '', label: 'Cities', sub: 'Across India' },
+  { icon: Users, to: 5000, suffix: '+', label: 'Members', sub: 'Founders & teams' },
+  { icon: Star, to: 4.9, suffix: '/5', label: 'Member rating', decimals: 1, sub: '1,200+ reviews', rating: true },
 ]
 
 const faqs = [
@@ -284,20 +284,56 @@ export default function Coworking() {
       </section>
 
       {/* Stats band */}
-      <section className="relative overflow-hidden bg-navy-gradient py-16 lg:py-20">
-        <div className="pointer-events-none absolute inset-0 tech-grid opacity-[0.06]" />
-        <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-primary/25 blur-3xl" />
-        <div className="container-custom relative grid grid-cols-2 gap-8 lg:grid-cols-4">
-          {stats.map((s, i) => (
-            <Reveal key={s.label} delay={i * 0.08}>
-              <div className="text-center">
-                <p className="text-4xl font-extrabold text-white lg:text-5xl">
-                  <Counter to={s.to} suffix={s.suffix} decimals={s.decimals || 0} />
-                </p>
-                <p className="mt-2 text-sm text-primary-100">{s.label}</p>
-              </div>
+      <section className="section-padding">
+        <div className="container-custom">
+          <div
+            className="relative overflow-hidden rounded-[2rem] px-6 py-14 shadow-card-hover ring-1 ring-white/10 sm:px-12 sm:py-16"
+            style={{ background: 'linear-gradient(135deg, #0a1a30 0%, #11417c 62%, #16508f 120%)' }}
+          >
+            <div className="pointer-events-none absolute inset-0 tech-grid opacity-[0.05]" />
+            <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-primary/25 blur-3xl" />
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/35 to-transparent" />
+
+            {/* header */}
+            <Reveal className="relative flex justify-center">
+              <p className="inline-flex items-center gap-2.5 text-xs font-semibold uppercase tracking-[0.24em] text-primary-100/80">
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold/50" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-gold" />
+                </span>
+                A thriving community across India
+              </p>
             </Reveal>
-          ))}
+
+            <div className="relative mt-12 grid grid-cols-2 gap-x-4 gap-y-12 sm:gap-y-10 lg:grid-cols-4 lg:divide-x lg:divide-white/[0.08]">
+              {stats.map((s, i) => (
+                <Reveal key={s.label} delay={i * 0.08}>
+                  <div className="px-1 text-center lg:px-8">
+                    <div className="flex items-center justify-center gap-2 text-primary-200/70">
+                      <s.icon className="h-4 w-4" strokeWidth={1.75} />
+                      <span className="text-[11px] font-bold uppercase tracking-[0.14em]">
+                        {s.label}
+                      </span>
+                    </div>
+                    <p className="mt-3 text-5xl font-black leading-none tracking-tight text-white sm:text-6xl">
+                      <Counter to={s.to} decimals={s.decimals || 0} />
+                      <span className="text-gold">{s.suffix}</span>
+                    </p>
+                    {s.rating ? (
+                      <div className="mt-3 flex items-center justify-center gap-0.5">
+                        {[0, 1, 2, 3, 4].map((n) => (
+                          <Star key={n} className="h-3.5 w-3.5 fill-gold text-gold" />
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="mx-auto mt-3 h-0.5 w-8 rounded-full bg-gold/50" />
+                    )}
+                    <p className="mt-3 text-xs font-medium text-primary-100/50">{s.sub}</p>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
