@@ -14,8 +14,14 @@ import {
   ShieldCheck,
 } from 'lucide-react'
 import SmartImage from '../ui/SmartImage'
-import { voCities, getSpaces } from '../../data/spaces'
+import { voCities, getSpaces, spacesByCity } from '../../data/spaces'
 import { resolvePincode } from '../../data/pincodes'
+
+// name lookup + a flat list of every space across all cities that has data
+const cityNameBySlug = Object.fromEntries(voCities.map((c) => [c.slug, c.name]))
+const allSpaces = Object.entries(spacesByCity).flatMap(([slug, arr]) =>
+  arr.map((sp) => ({ ...sp, citySlug: slug, cityName: cityNameBySlug[slug] || slug }))
+)
 
 const VISIBLE = 8
 
@@ -60,14 +66,14 @@ const highlights = [
 ]
 
 export default function ExploreSpaces() {
-  const [city, setCity] = useState('bangalore')
+  const [city, setCity] = useState('') // '' = all cities
   const [query, setQuery] = useState('')
   const [purpose, setPurpose] = useState('')
   const [showAll, setShowAll] = useState(false)
   const [cityOpen, setCityOpen] = useState(false)
-  const [cityInput, setCityInput] = useState('Bangalore')
+  const [cityInput, setCityInput] = useState('')
 
-  const cityName = voCities.find((c) => c.slug === city)?.name || 'Bangalore'
+  const cityName = city ? cityNameBySlug[city] || 'your city' : ''
 
   const filteredCities = useMemo(() => {
     const q = cityInput.trim().toLowerCase()
@@ -81,7 +87,14 @@ export default function ExploreSpaces() {
   }, [cityInput, cityName])
 
   const results = useMemo(() => {
-    let list = getSpaces(city) || []
+    // no city selected → show every space across India; else that city's spaces
+    let list = city
+      ? (getSpaces(city) || []).map((sp) => ({
+          ...sp,
+          citySlug: city,
+          cityName: cityNameBySlug[city] || city,
+        }))
+      : allSpaces
     if (purpose === 'Compliance') {
       // compliance management covers GST + company/MCA-ready addresses
       list = list.filter((s) => s.tags.includes('GST') || s.tags.includes('Company Reg'))
@@ -90,7 +103,9 @@ export default function ExploreSpaces() {
     }
     if (query.trim()) {
       const q = query.toLowerCase()
-      list = list.filter((s) => s.name.toLowerCase().includes(q))
+      list = list.filter(
+        (s) => s.name.toLowerCase().includes(q) || s.cityName.toLowerCase().includes(q)
+      )
     }
     return list
   }, [city, query, purpose])
@@ -221,6 +236,32 @@ export default function ExploreSpaces() {
                         />
                         <div className="absolute left-0 right-0 z-40 mt-2 rounded-2xl border border-primary-100 bg-white p-2 shadow-card-hover">
                           <ul className="sky-scroll max-h-60 space-y-0.5 overflow-y-auto pr-1">
+                            {!cityInput.trim() && (
+                              <li>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setCity('')
+                                    setCityInput('')
+                                    setCityOpen(false)
+                                    setShowAll(false)
+                                  }}
+                                  className={`flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2.5 text-left transition-colors ${
+                                    !city ? 'bg-primary-50 text-primary' : 'text-navy-dark hover:bg-surface-light'
+                                  }`}
+                                >
+                                  <span className="min-w-0">
+                                    <span className={`block text-sm ${!city ? 'font-bold' : 'font-semibold'}`}>
+                                      All Cities
+                                    </span>
+                                    <span className="block text-[11px] text-slate-400">
+                                      Spaces across India
+                                    </span>
+                                  </span>
+                                  {!city && <Check className="h-4 w-4 flex-none text-primary" />}
+                                </button>
+                              </li>
+                            )}
                             {filteredCities.length === 0 ? (
                               <li className="px-3 py-2 text-sm text-slate-400">No city found</li>
                             ) : (
@@ -302,7 +343,7 @@ export default function ExploreSpaces() {
                     <input
                       value={query}
                       onChange={(e) => setQuery(e.target.value)}
-                      placeholder={`Search locality in ${cityName}…`}
+                      placeholder={city ? `Search locality in ${cityName}…` : 'Search locality across India…'}
                       aria-label="Search locality"
                       className="w-full rounded-xl border border-primary-100 bg-surface-light py-3.5 pl-10 pr-4 text-sm text-navy-dark placeholder:text-slate-400 focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20"
                     />
@@ -318,7 +359,8 @@ export default function ExploreSpaces() {
                 </a>
                 <div className="flex items-center justify-center gap-1.5 pt-1 text-xs text-slate-400">
                   <ShieldCheck className="h-3.5 w-3.5 text-accent-emerald" />
-                  {results.length}+ verified spaces in {cityName} · No spam, ever
+                  {results.length}+ verified spaces {city ? `in ${cityName}` : 'across India'} · No spam,
+                  ever
                 </div>
               </div>
             </div>
@@ -333,11 +375,12 @@ export default function ExploreSpaces() {
             <div>
               <span className="inline-flex items-center gap-2 rounded-full bg-primary-50 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-primary">
                 <MapPin className="h-3.5 w-3.5" />
-                {cityName}
+                {city ? cityName : 'All India'}
                 {purpose && <span className="text-primary-400">· {purpose}</span>}
               </span>
               <h2 className="mt-4 text-2xl font-extrabold tracking-tight text-navy-dark sm:text-3xl">
-                Virtual Offices in <span className="gradient-text">{cityName}</span>
+                Virtual Offices{' '}
+                <span className="gradient-text">{city ? `in ${cityName}` : 'Across India'}</span>
               </h2>
               <p className="mt-2 text-sm text-slate-500">
                 {results.length} verified {results.length === 1 ? 'space' : 'spaces'} available
@@ -363,7 +406,7 @@ export default function ExploreSpaces() {
                     <div className="relative h-40 overflow-hidden bg-primary-gradient">
                       <SmartImage
                         src={sp.image}
-                        alt={`${sp.name}, ${cityName}`}
+                        alt={`${sp.name}, ${sp.cityName}`}
                         className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                       />
                       {sp.badge && (
@@ -379,7 +422,10 @@ export default function ExploreSpaces() {
                     </div>
                     <div className="flex flex-1 flex-col p-5">
                       <h3 className="text-base font-bold text-navy-dark">{sp.name}</h3>
-                      <p className="mt-0.5 text-xs text-slate-500">{cityName}</p>
+                      <p className="mt-0.5 flex items-center gap-1 text-xs text-slate-500">
+                        <MapPin className="h-3 w-3 text-primary/60" />
+                        {sp.cityName}
+                      </p>
                       <div className="mt-3 flex flex-wrap gap-1.5">
                         {sp.tags.map((t) => (
                           <span
@@ -420,7 +466,7 @@ export default function ExploreSpaces() {
                 onClick={() => setShowAll((v) => !v)}
                 className="inline-flex items-center gap-2 rounded-full border border-primary-200 bg-white px-6 py-3 text-sm font-bold text-primary shadow-soft transition-all hover:border-primary/40 hover:shadow-card"
               >
-                {showAll ? 'Show Less' : `View More Spaces in ${cityName}`}
+                {showAll ? 'Show Less' : city ? `View More Spaces in ${cityName}` : 'View All Spaces'}
                 <ChevronDown
                   className={`h-4 w-4 transition-transform ${showAll ? 'rotate-180' : ''}`}
                 />
