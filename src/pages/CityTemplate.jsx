@@ -26,7 +26,6 @@ import GoogleReviews from '../components/virtual-office/GoogleReviews'
 import ClientsStrip from '../components/virtual-office/ClientsStrip'
 import { voCities, getSpaces } from '../data/spaces'
 import { getCityBySlug } from '../data/cities'
-import { faqs } from '../data/faqs'
 import { useLeadModal } from '../context/LeadModalContext'
 
 function toTitle(str = '') {
@@ -95,6 +94,42 @@ export default function CityTemplate() {
     { icon: FileCheck2, title: 'GST & Company Ready', desc: 'Rent agreement, NOC and utility bill — the complete verification-ready kit.' },
     { icon: Store, title: 'Marketplace Approved', desc: `Use it for Amazon, Flipkart & APOB registrations in ${region}.` },
     { icon: ShieldCheck, title: 'Fully Compliant', desc: 'Authority-accepted paperwork with a dedicated relationship manager.' },
+  ]
+
+  // City-specific FAQs (better for SEO + feels tailored to the city)
+  const cityFaqs = [
+    {
+      q: `Is a virtual office in ${cityName} valid for GST registration?`,
+      a: `Yes. Our ${cityName} virtual office plans include the complete GST documentation kit — a notarised rent agreement, NOC and a recent utility bill — accepted by the ${region} GST authorities.`,
+    },
+    {
+      q: `Can I register my company at a ${cityName} address?`,
+      a: `Absolutely. Our ${cityName} Company Registration plan provides a registered office address with the full MCA documentation kit for Private Limited, LLP or OPC incorporation.`,
+    },
+    {
+      q: `Will my ${cityName} address clear GST physical verification?`,
+      a: `Yes. Every ${cityName} address is a genuine, physically verified commercial premise supplied with the full paperwork set — built to clear GST department verification the first time.`,
+    },
+    {
+      q: `How much does a virtual office in ${cityName} cost?`,
+      a: `Plans in ${cityName} start from ₹${(basePrice - 200).toLocaleString('en-IN')}/year for a mailing address, with GST-ready and company registration plans available. Pricing is transparent — no deposits, no hidden charges.`,
+    },
+    {
+      q: `How long does it take to set up my ${cityName} address?`,
+      a: `Most ${cityName} addresses are activated within 2–3 business days of submitting your KYC. We pre-verify your documents so approvals go through smoothly the first time.`,
+    },
+    {
+      q: `Which areas in ${cityName} are available?`,
+      a: `We offer verified addresses across ${cityName}'s top commercial districts. Exact locality details are shared once you choose a plan, and you can register in multiple ${cityName} locations to expand your reach.`,
+    },
+    {
+      q: `Can I receive mail and couriers at my ${cityName} office?`,
+      a: `Yes. Letters, government notices and courier parcels are received and safely held at your ${cityName} address. We notify you on arrival and can forward everything to your preferred location.`,
+    },
+    {
+      q: `Do I need to visit ${cityName} in person?`,
+      a: `No — the entire process is 100% online. You submit your KYC digitally and we handle preparation, verification and activation, so no visit to ${cityName} is required.`,
+    },
   ]
 
   return (
@@ -410,7 +445,7 @@ export default function CityTemplate() {
         <div className="container-custom">
           <SectionHeading eyebrow="FAQ" title={`Virtual Office in ${cityName} — FAQs`} accent={cityName} />
           <Reveal className="mx-auto mt-12 max-w-3xl">
-            <FaqAccordion items={faqs} />
+            <FaqAccordion items={cityFaqs} />
           </Reveal>
         </div>
       </section>
