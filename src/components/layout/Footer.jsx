@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Phone, Mail, MapPin, Building2, Linkedin, Twitter, Facebook, Instagram } from 'lucide-react'
+import { Phone, Mail, MapPin, Linkedin, Twitter, Facebook, Instagram } from 'lucide-react'
 import { footerCities } from '../../data/cities'
 
 const company = [
@@ -34,13 +34,18 @@ export default function Footer() {
         <div className="grid grid-cols-2 gap-10 lg:grid-cols-6 lg:gap-8">
           {/* Brand */}
           <div className="col-span-2 lg:col-span-1">
-            <Link to="/" className="flex items-center gap-2.5">
-              <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-primary-gradient text-white">
-                <Building2 className="h-5 w-5" />
-              </span>
-              <span className="text-xl font-extrabold text-white">
-                Ease<span className="text-primary-300">My</span>Office
-              </span>
+            <Link
+              to="/"
+              className="inline-flex items-center rounded-xl bg-white px-3.5 py-2.5 shadow-soft"
+              aria-label="EaseMyOffice home"
+            >
+              <img
+                src="/emo-logo.webp"
+                alt="EaseMyOffice"
+                width="800"
+                height="200"
+                className="h-8 w-auto"
+              />
             </Link>
             <p className="mt-4 text-sm leading-relaxed text-slate-400">
               India's most trusted platform for virtual offices, coworking and business
