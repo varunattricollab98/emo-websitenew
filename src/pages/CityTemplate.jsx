@@ -329,12 +329,18 @@ export default function CityTemplate() {
           <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {benefits.map((b, i) => (
               <Reveal key={b.title} delay={(i % 4) * 0.07}>
-                <div className="premium-card h-full p-7">
-                  <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary-gradient text-white shadow-card">
-                    <b.icon className="h-6 w-6" />
+                <div className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-primary-100/70 bg-white p-7 shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/30 hover:shadow-card-hover">
+                  {/* faint number watermark */}
+                  <span className="pointer-events-none absolute right-5 top-4 text-5xl font-black text-primary-50 transition-colors duration-300 group-hover:text-primary-100">
+                    0{i + 1}
                   </span>
-                  <h3 className="mt-4 font-bold text-navy-dark">{b.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-600">{b.desc}</p>
+
+                  <span className="relative inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-gradient text-white shadow-card ring-1 ring-white/30 transition-transform duration-300 group-hover:scale-105">
+                    <b.icon className="h-7 w-7" />
+                  </span>
+                  <h3 className="relative mt-5 text-base font-bold text-navy-dark">{b.title}</h3>
+                  <p className="relative mt-2 flex-1 text-sm leading-relaxed text-slate-600">{b.desc}</p>
+                  <span className="relative mt-5 h-1 w-8 rounded-full bg-gradient-to-r from-gold to-gold-dark transition-all duration-300 group-hover:w-16" />
                 </div>
               </Reveal>
             ))}
@@ -350,30 +356,47 @@ export default function CityTemplate() {
       <section className="section-padding bg-surface-light">
         <div className="container-custom">
           <Reveal>
-            <div className="premium-card mx-auto max-w-4xl p-8 lg:p-10">
-              <div className="flex items-center gap-3">
-                <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary-gradient text-white">
-                  <Mailbox className="h-6 w-6" />
+            <div className="relative mx-auto max-w-4xl overflow-hidden rounded-3xl border border-primary-100 bg-white p-8 shadow-card-hover ring-1 ring-primary-100/50 lg:p-10">
+              <span className="pointer-events-none absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-gold via-gold-dark to-gold" />
+              <div className="pointer-events-none absolute -right-16 -top-16 h-52 w-52 rounded-full bg-primary-100/50 blur-3xl" />
+              <div className="pointer-events-none absolute inset-0 tech-dots opacity-30 [mask-image:radial-gradient(ellipse_60%_50%_at_80%_10%,#000,transparent)]" />
+
+              <div className="relative flex items-start gap-4">
+                <span className="inline-flex h-14 w-14 flex-none items-center justify-center rounded-2xl bg-primary-gradient text-white shadow-card ring-1 ring-white/30">
+                  <Mailbox className="h-7 w-7" />
                 </span>
-                <h3 className="text-xl font-bold text-navy-dark">
-                  Verified addresses across {cityName}
-                </h3>
+                <div>
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-accent-green/10 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-accent-emerald">
+                    <ShieldCheck className="h-3.5 w-3.5" />
+                    100% Verified
+                  </span>
+                  <h3 className="mt-2 text-xl font-bold text-navy-dark sm:text-2xl">
+                    Verified addresses across {cityName}
+                  </h3>
+                </div>
               </div>
-              <p className="mt-4 text-slate-600">
+
+              <p className="relative mt-5 max-w-2xl leading-relaxed text-slate-600">
                 Our {cityName} addresses are located in reputed commercial districts, fully verified
                 and accepted for GST and MCA filings. Exact address details are shared once you choose
                 a plan — you can even register in multiple {cityName} locations to expand your reach.
               </p>
-              <div className="mt-6 grid gap-3 sm:grid-cols-2">
+
+              <div className="relative mt-7 grid gap-3 sm:grid-cols-2">
                 {[
                   'Prime commercial locations',
                   'Authority-accepted paperwork',
                   'Mail handling & notifications',
                   'Dedicated relationship manager',
                 ].map((item) => (
-                  <div key={item} className="flex items-center gap-2.5 text-sm text-slate-700">
-                    <Check className="h-4 w-4 flex-none text-accent-emerald" />
-                    {item}
+                  <div
+                    key={item}
+                    className="flex items-center gap-3 rounded-2xl border border-primary-100/70 bg-surface-light px-4 py-3 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:bg-white hover:shadow-soft"
+                  >
+                    <span className="inline-flex h-7 w-7 flex-none items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-sm">
+                      <Check className="h-4 w-4" strokeWidth={3} />
+                    </span>
+                    <span className="text-sm font-semibold text-navy-dark">{item}</span>
                   </div>
                 ))}
               </div>
