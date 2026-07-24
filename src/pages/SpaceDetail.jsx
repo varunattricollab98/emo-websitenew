@@ -102,7 +102,8 @@ export default function SpaceDetail() {
       ]
 
   const [activeImg, setActiveImg] = useState(featuredImage)
-  const thumbs = [featuredImage, ...gallery].filter(Boolean).slice(0, 4)
+  // all photos — no cap, so any number from the CSV renders
+  const thumbs = [...new Set([featuredImage, ...gallery].filter(Boolean))]
 
   const book = () =>
     openLeadModal({
@@ -170,13 +171,14 @@ export default function SpaceDetail() {
               </div>
             </div>
             {thumbs.length > 1 && (
-              <div className="mt-3 grid grid-cols-4 gap-3">
+              <div className="sky-scroll mt-3 flex gap-3 overflow-x-auto pb-1">
                 {thumbs.map((img, i) => (
                   <button
                     key={i}
                     type="button"
                     onClick={() => setActiveImg(img)}
-                    className={`h-16 overflow-hidden rounded-xl ring-2 transition ${
+                    aria-label={`Photo ${i + 1}`}
+                    className={`h-16 w-24 flex-none overflow-hidden rounded-xl ring-2 transition ${
                       activeImg === img ? 'ring-primary' : 'ring-transparent hover:ring-primary/40'
                     }`}
                   >
@@ -184,6 +186,9 @@ export default function SpaceDetail() {
                   </button>
                 ))}
               </div>
+            )}
+            {thumbs.length > 1 && (
+              <p className="mt-2 text-xs text-slate-400">{thumbs.length} photos · tap to preview</p>
             )}
           </motion.div>
 
@@ -235,24 +240,58 @@ export default function SpaceDetail() {
       {/* ===== About the space ===== */}
       <section className="section-padding bg-white">
         <div className="container-custom">
-          <SectionHeading align="left" eyebrow="About the space" title={spaceName} accent={spaceName} />
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <SectionHeading
+            align="left"
+            eyebrow="About the space"
+            title={spaceName}
+            accent={areaName}
+            subtitle={`A verified virtual office & coworking address in ${cityName}, ${region} — accepted for GST and company registration, activated in ${processingTime}.`}
+          />
+          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {[
               { icon: MapPin, label: 'Address', value: fullAddress },
               { icon: Building2, label: 'Property type', value: propertyType },
               { icon: Clock, label: 'Activation', value: processingTime },
               { icon: BadgeCheck, label: 'Compliance', value: 'GST & MCA accepted' },
             ].map((f) => (
-              <div key={f.label} className="premium-card h-full p-5">
-                <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-primary-50 text-primary">
-                  <f.icon className="h-5 w-5" />
+              <div
+                key={f.label}
+                className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-primary-100/70 bg-white p-6 shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/30 hover:shadow-card-hover"
+              >
+                <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary-gradient text-white shadow-card ring-1 ring-white/30 transition-transform duration-300 group-hover:scale-105">
+                  <f.icon className="h-6 w-6" />
                 </span>
-                <p className="mt-3 text-xs font-semibold uppercase tracking-wider text-slate-400">
+                <p className="mt-4 text-[11px] font-bold uppercase tracking-wider text-slate-400">
                   {f.label}
                 </p>
-                <p className="mt-1 text-sm font-semibold leading-snug text-navy-dark">{f.value}</p>
+                <p className="mt-1 flex-1 text-sm font-bold leading-snug text-navy-dark">{f.value}</p>
+                <span className="mt-4 h-1 w-8 rounded-full bg-gradient-to-r from-gold to-gold-dark transition-all duration-300 group-hover:w-14" />
               </div>
             ))}
+          </div>
+
+          {/* quick highlight strip */}
+          <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 rounded-2xl border border-primary-100 bg-surface-light px-5 py-4">
+            <span className="inline-flex items-center gap-2 text-sm font-semibold text-navy">
+              <Star className="h-4 w-4 fill-gold text-gold" />
+              {rating}/5 rating
+            </span>
+            <span className="inline-flex items-center gap-2 text-sm font-semibold text-navy">
+              <BadgeCheck className="h-4 w-4 text-accent-emerald" />
+              Verification-ready documents
+            </span>
+            <span className="inline-flex items-center gap-2 text-sm font-semibold text-navy">
+              <Building2 className="h-4 w-4 text-primary" />
+              From ₹{Number(pricing.monthly).toLocaleString('en-IN')}/mo
+            </span>
+            <button
+              type="button"
+              onClick={book}
+              className="ml-auto inline-flex items-center gap-1.5 text-sm font-bold text-primary hover:text-primary-700"
+            >
+              Book this space
+              <ArrowRight className="h-4 w-4" />
+            </button>
           </div>
         </div>
       </section>
