@@ -21,6 +21,7 @@ import Reveal from '../components/ui/Reveal'
 import Button from '../components/ui/Button'
 import SmartImage from '../components/ui/SmartImage'
 import FaqAccordion from '../components/ui/FaqAccordion'
+import ArticleBlocks from '../components/ui/ArticleBlocks'
 import { voCities, getSpaceBySlug } from '../data/spaces'
 import { getCityBySlug } from '../data/cities'
 import { getSpaceDetail } from '../data/spaceDetails'
@@ -100,6 +101,13 @@ export default function SpaceDetail() {
         { name: 'Ananya Kapoor', role: 'Chartered Accountant', rating: 5, text: 'Verification-ready paperwork and a helpful, responsive team. Highly recommend.' },
         { name: 'Mohit Verma', role: 'Startup Co-founder', rating: 4, text: `Premium ${cityName} address at a fair price. Great value for a growing business.` },
       ]
+
+  // description → blocks (supports a big blog: detail.article blocks, or paragraphs split by blank lines)
+  const descriptionBlocks = detail?.article
+    ? detail.article
+    : typeof description === 'string'
+      ? description.split('\n\n').filter(Boolean)
+      : [String(description)]
 
   const [activeImg, setActiveImg] = useState(featuredImage)
   // all photos — no cap, so any number from the CSV renders
@@ -217,8 +225,11 @@ export default function SpaceDetail() {
               <span className="mb-1 text-sm text-slate-400">/mo</span>
             </div>
 
-            {/* explanation (about this location) */}
-            <p className="mt-4 leading-relaxed text-slate-600">{description}</p>
+            {/* short lead — full description lives in the About section below */}
+            <p className="mt-4 leading-relaxed text-slate-600">
+              A premium, verified business address in {areaName}, {cityName} — ready for GST and
+              company registration, activated in {processingTime}.
+            </p>
 
             {/* Book — top */}
             <div className="mt-6 flex flex-wrap gap-3">
@@ -292,6 +303,11 @@ export default function SpaceDetail() {
               Book this space
               <ArrowRight className="h-4 w-4" />
             </button>
+          </div>
+
+          {/* full space description / blog — supports large future content */}
+          <div className="mt-10 max-w-3xl">
+            <ArticleBlocks blocks={descriptionBlocks} />
           </div>
         </div>
       </section>
