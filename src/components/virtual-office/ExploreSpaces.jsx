@@ -17,7 +17,7 @@ import {
   List,
 } from 'lucide-react'
 import SmartImage from '../ui/SmartImage'
-import { voCities, getSpaces, spacesByCity, cityMatches, slugifySpace } from '../../data/spaces'
+import { voCities, getSpaces, spacesByCity, cityMatches, slugifySpace, citiesForState } from '../../data/spaces'
 import { resolvePincode } from '../../data/pincodes'
 import { resolveCity } from '../../utils/resolveCity'
 import { getStateDescription, toBlocks } from '../../data/descriptions'
@@ -29,17 +29,16 @@ const allSpaces = Object.entries(spacesByCity).flatMap(([slug, arr]) =>
   arr.map((sp) => ({ ...sp, citySlug: slug, cityName: cityNameBySlug[slug] || slug }))
 )
 
-// spaces across every city in a given state (real + generic listings)
+// spaces across every city in a given state (real + generic listings),
+// tier-1 / primary cities first (see citiesForState).
 function spacesForState(state) {
-  return voCities
-    .filter((c) => (c.state || '').toLowerCase() === String(state).toLowerCase())
-    .flatMap((c) =>
-      (getSpaces(c.slug) || []).map((sp) => ({
-        ...sp,
-        citySlug: c.slug,
-        cityName: cityNameBySlug[c.slug] || c.slug,
-      }))
-    )
+  return citiesForState(state).flatMap((c) =>
+    (getSpaces(c.slug) || []).map((sp) => ({
+      ...sp,
+      citySlug: c.slug,
+      cityName: cityNameBySlug[c.slug] || c.slug,
+    }))
+  )
 }
 
 const VISIBLE = 8
@@ -131,7 +130,11 @@ export default function ExploreSpaces() {
     if (!q || q === cityName.toLowerCase()) return voCities
     // numeric input → treat as a pincode and resolve to matching cities
     if (/^\d+$/.test(q)) return resolvePincode(q)
-    return voCities.filter((c) => cityMatches(c, q))
+    const matches = voCities.filter((c) => cityMatches(c, q))
+    // if the query resolves to a single state, surface tier-1 cities first
+    const states = new Set(matches.map((c) => (c.state || '').toLowerCase()))
+    if (states.size === 1) return citiesForState([...states][0])
+    return matches
   }, [cityInput, cityName])
 
   const results = useMemo(() => {

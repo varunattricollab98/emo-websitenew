@@ -127,7 +127,50 @@ export const voCities = [
   c('karnal', 'Karnal', 'Haryana'),
   c('thiruvananthapuram', 'Thiruvananthapuram', 'Kerala'),
   c('thane', 'Thane', 'Maharashtra'),
+  c('mohali', 'Mohali', 'Punjab'),
+  c('zirakpur', 'Zirakpur', 'Punjab'),
+  c('panchkula', 'Panchkula', 'Haryana'),
 ]
+
+// ── Tier-1 / primary city ordering per state ─────────────────
+// For a state view, the commercial-hub (tier-1) cities should surface first,
+// then the rest. Cities listed here float to the top in this exact order;
+// any other city of that state follows in its existing voCities order.
+// Keys are lowercased state names.
+export const statePriority = {
+  'uttar pradesh': ['noida', 'ghaziabad', 'lucknow', 'kanpur', 'agra', 'varanasi', 'prayagraj', 'meerut'],
+  haryana: ['gurgaon', 'faridabad', 'panchkula', 'panipat', 'karnal', 'rohtak'],
+  punjab: ['mohali', 'zirakpur', 'ludhiana', 'amritsar', 'jalandhar', 'patiala'],
+  'madhya pradesh': ['indore', 'bhopal', 'jabalpur', 'gwalior', 'ujjain'],
+  karnataka: ['bangalore', 'mysuru', 'mangaluru', 'hubballi', 'belagavi', 'kalaburagi'],
+  maharashtra: ['mumbai', 'pune', 'navi-mumbai', 'thane', 'nagpur', 'nashik', 'aurangabad', 'solapur', 'kolhapur', 'sangli', 'nanded', 'akola', 'amravati', 'bhiwandi'],
+  telangana: ['hyderabad', 'warangal'],
+  'tamil nadu': ['chennai', 'coimbatore', 'madurai', 'tiruchirappalli', 'salem', 'tiruppur', 'erode', 'tirunelveli'],
+  gujarat: ['ahmedabad', 'surat', 'vadodara', 'rajkot', 'bhavnagar', 'jamnagar'],
+  rajasthan: ['jaipur', 'jodhpur', 'udaipur', 'kota', 'ajmer', 'bikaner'],
+  'west bengal': ['kolkata', 'howrah', 'siliguri', 'durgapur', 'asansol'],
+  'andhra pradesh': ['visakhapatnam', 'vijayawada', 'guntur', 'nellore', 'kurnool', 'rajahmundry'],
+  kerala: ['kochi', 'thiruvananthapuram', 'kozhikode'],
+  bihar: ['patna', 'gaya'],
+  jharkhand: ['ranchi', 'jamshedpur', 'dhanbad', 'bokaro'],
+  odisha: ['bhubaneswar', 'cuttack', 'rourkela'],
+  chhattisgarh: ['raipur', 'bhilai'],
+  'jammu & kashmir': ['jammu', 'srinagar'],
+}
+
+// Cities of a state, tier-1 first (see statePriority). Falls back to the
+// natural voCities order for states without an explicit priority list.
+export function citiesForState(state) {
+  const key = String(state || '').toLowerCase()
+  const order = statePriority[key] || []
+  const rank = (slug) => {
+    const i = order.indexOf(slug)
+    return i === -1 ? order.length + 1000 : i
+  }
+  return voCities
+    .filter((c) => (c.state || '').toLowerCase() === key)
+    .sort((a, b) => rank(a.slug) - rank(b.slug))
+}
 
 export const spacesByCity = {
   bangalore: [
