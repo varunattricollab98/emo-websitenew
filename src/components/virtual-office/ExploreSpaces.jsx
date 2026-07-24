@@ -19,6 +19,7 @@ import {
 import SmartImage from '../ui/SmartImage'
 import { voCities, getSpaces, spacesByCity, cityMatches, slugifySpace } from '../../data/spaces'
 import { resolvePincode } from '../../data/pincodes'
+import { resolveCity } from '../../utils/resolveCity'
 
 // name lookup + a flat list of every space across all cities that has data
 const cityNameBySlug = Object.fromEntries(voCities.map((c) => [c.slug, c.name]))
@@ -26,17 +27,17 @@ const allSpaces = Object.entries(spacesByCity).flatMap(([slug, arr]) =>
   arr.map((sp) => ({ ...sp, citySlug: slug, cityName: cityNameBySlug[slug] || slug }))
 )
 
-// Resolve a ?city= query (city name, old/alias name, or pincode) to a real city.
-function resolveCityFromQuery(q) {
-  const raw = String(q || '').trim()
-  if (!raw) return null
-  if (/^\d+$/.test(raw)) {
-    const m = resolvePincode(raw)
-    return m[0] ? { slug: m[0].slug, name: m[0].name } : null
-  }
-  const exact = voCities.find((c) => c.name.toLowerCase() === raw.toLowerCase())
-  const match = exact || voCities.find((c) => cityMatches(c, raw))
-  return match ? { slug: match.slug, name: match.name } : null
+// spaces across every city in a given state (real + generic listings)
+function spacesForState(state) {
+  return voCities
+    .filter((c) => (c.state || '').toLowerCase() === String(state).toLowerCase())
+    .flatMap((c) =>
+      (getSpaces(c.slug) || []).map((sp) => ({
+        ...sp,
+        citySlug: c.slug,
+        cityName: cityNameBySlug[c.slug] || c.slug,
+      }))
+    )
 }
 
 const VISIBLE = 8
@@ -84,20 +85,32 @@ const highlights = [
 export default function ExploreSpaces() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const initialCity = resolveCityFromQuery(searchParams.get('city'))
+  const initialCity = resolveCity(searchParams.get('city'))
 
   const [city, setCity] = useState(initialCity?.slug || '') // '' = all cities
+  const [stateFilter, setStateFilter] = useState(searchParams.get('state') || '') // '' = no state
   const [query, setQuery] = useState('')
   const [purpose, setPurpose] = useState('')
   const [showAll, setShowAll] = useState(false)
   const [view, setView] = useState('grid') // 'grid' | 'list'
   const [cityOpen, setCityOpen] = useState(false)
-  const [cityInput, setCityInput] = useState(initialCity?.name || '')
+  const [cityInput, setCityInput] = useState(
+    searchParams.get('state') || initialCity?.name || ''
+  )
 
-  // keep the selection in sync when arriving with (or changing) a ?city= param
+  // keep the selection in sync when arriving with (or changing) a ?city / ?state param
   useEffect(() => {
-    const r = resolveCityFromQuery(searchParams.get('city'))
+    const st = searchParams.get('state')
+    if (st) {
+      setStateFilter(st)
+      setCity('')
+      setCityInput(st)
+      setShowAll(false)
+      return
+    }
+    const r = resolveCity(searchParams.get('city'))
     if (r) {
+      setStateFilter('')
       setCity(r.slug)
       setCityInput(r.name)
       setShowAll(false)
@@ -106,6 +119,8 @@ export default function ExploreSpaces() {
   }, [searchParams])
 
   const cityName = city ? cityNameBySlug[city] || 'your city' : ''
+  // what the results are scoped to, for headings
+  const scopeLabel = stateFilter || (city ? cityName : '')
 
   const filteredCities = useMemo(() => {
     const q = cityInput.trim().toLowerCase()
@@ -117,14 +132,16 @@ export default function ExploreSpaces() {
   }, [cityInput, cityName])
 
   const results = useMemo(() => {
-    // no city selected → show every space across India; else that city's spaces
-    let list = city
-      ? (getSpaces(city) || []).map((sp) => ({
-          ...sp,
-          citySlug: city,
-          cityName: cityNameBySlug[city] || city,
-        }))
-      : allSpaces
+    // state selected → every space across that state; city → that city; else all India
+    let list = stateFilter
+      ? spacesForState(stateFilter)
+      : city
+        ? (getSpaces(city) || []).map((sp) => ({
+            ...sp,
+            citySlug: city,
+            cityName: cityNameBySlug[city] || city,
+          }))
+        : allSpaces
     if (purpose === 'Compliance') {
       // compliance management covers GST + company/MCA-ready addresses
       list = list.filter((s) => s.tags.includes('GST') || s.tags.includes('Company Reg'))
@@ -138,7 +155,7 @@ export default function ExploreSpaces() {
       )
     }
     return list
-  }, [city, query, purpose])
+  }, [city, stateFilter, query, purpose])
 
   const visible = showAll ? results : results.slice(0, VISIBLE)
 
@@ -272,6 +289,7 @@ export default function ExploreSpaces() {
                                   type="button"
                                   onClick={() => {
                                     setCity('')
+                                    setStateFilter('')
                                     setCityInput('')
                                     setCityOpen(false)
                                     setShowAll(false)
@@ -301,6 +319,7 @@ export default function ExploreSpaces() {
                                     type="button"
                                     onClick={() => {
                                       setCity(c.slug)
+                                      setStateFilter('')
                                       setCityInput(c.name)
                                       setCityOpen(false)
                                       setShowAll(false)
@@ -393,8 +412,8 @@ export default function ExploreSpaces() {
                 </button>
                 <div className="flex items-center justify-center gap-1.5 pt-1 text-xs text-slate-400">
                   <ShieldCheck className="h-3.5 w-3.5 text-accent-emerald" />
-                  {results.length}+ verified spaces {city ? `in ${cityName}` : 'across India'} · No spam,
-                  ever
+                  {results.length}+ verified spaces {scopeLabel ? `in ${scopeLabel}` : 'across India'} ·
+                  No spam, ever
                 </div>
               </div>
             </div>
@@ -409,15 +428,18 @@ export default function ExploreSpaces() {
             <div>
               <span className="inline-flex items-center gap-2 rounded-full bg-primary-50 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-primary">
                 <MapPin className="h-3.5 w-3.5" />
-                {city ? cityName : 'All India'}
+                {scopeLabel || 'All India'}
                 {purpose && <span className="text-primary-400">· {purpose}</span>}
               </span>
               <h2 className="mt-4 text-2xl font-extrabold tracking-tight text-navy-dark sm:text-3xl">
                 Virtual Offices{' '}
-                <span className="gradient-text">{city ? `in ${cityName}` : 'Across India'}</span>
+                <span className="gradient-text">
+                  {scopeLabel ? `in ${scopeLabel}` : 'Across India'}
+                </span>
               </h2>
               <p className="mt-2 text-sm text-slate-500">
                 {results.length} verified {results.length === 1 ? 'space' : 'spaces'} available
+                {stateFilter ? ` across ${stateFilter}` : ''}
               </p>
               {city && (
                 <Link

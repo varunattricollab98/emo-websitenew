@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { resolveCity } from '../../utils/resolveCity'
+import { resolveCity, resolveState } from '../../utils/resolveCity'
 import {
   MapPin,
   Search,
@@ -43,10 +43,12 @@ export default function HeroSearch() {
   const handleSearch = (e) => {
     e.preventDefault()
     const loc = location.trim()
-    // Virtual Office + a recognised city → go straight to that city's page
+    // Virtual Office + a recognised city → that city's page; a state → all its spaces
     if (service === 'virtual-office') {
       const c = resolveCity(loc)
       if (c) return navigate(`/virtual-office/${c.slug}`)
+      const st = resolveState(loc)
+      if (st) return navigate(`/virtual-office?state=${encodeURIComponent(st)}`)
       return navigate(loc ? `/virtual-office?city=${encodeURIComponent(loc)}` : '/virtual-office')
     }
     const base = serviceRoutes[service] || '/virtual-office'
