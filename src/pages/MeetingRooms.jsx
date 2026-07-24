@@ -26,6 +26,7 @@ import Reveal from '../components/ui/Reveal'
 import Button from '../components/ui/Button'
 import CTABand from '../components/ui/CTABand'
 import { useLeadModal } from '../context/LeadModalContext'
+import { voCities } from '../data/spaces'
 
 const rooms = [
   {
@@ -60,8 +61,6 @@ const rooms = [
     grad: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)',
   },
 ]
-
-const bookingCities = ['Bengaluru', 'Gurugram', 'Mumbai', 'Delhi', 'Hyderabad', 'Pune', 'Chennai', 'Noida']
 
 const timeSlots = [
   '09:00 AM',
@@ -102,7 +101,7 @@ export default function MeetingRooms() {
   const { openLeadModal } = useLeadModal()
 
   const today = new Date().toISOString().split('T')[0]
-  const [bCity, setBCity] = useState(bookingCities[0])
+  const [bCity, setBCity] = useState('Bengaluru')
   const [bDate, setBDate] = useState(today)
   const [bTime, setBTime] = useState('10:00 AM')
 
@@ -177,8 +176,10 @@ export default function MeetingRooms() {
                     onChange={(e) => setBCity(e.target.value)}
                     className="w-full appearance-none rounded-xl border border-primary-100 bg-surface-light py-2.5 pl-8 pr-6 text-xs font-bold text-navy-dark focus:border-primary/60 focus:outline-none"
                   >
-                    {bookingCities.map((c) => (
-                      <option key={c}>{c}</option>
+                    {voCities.map((c) => (
+                      <option key={c.slug} value={c.name}>
+                        {c.name}
+                      </option>
                     ))}
                   </select>
                   <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
