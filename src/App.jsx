@@ -13,6 +13,7 @@ import Home from './pages/Home'
 // Every other route is lazy-loaded → tiny initial bundle, fast first paint.
 const VirtualOffice = lazy(() => import('./pages/VirtualOffice'))
 const Coworking = lazy(() => import('./pages/Coworking'))
+const CoworkingDetail = lazy(() => import('./pages/CoworkingDetail'))
 const MeetingRooms = lazy(() => import('./pages/MeetingRooms'))
 const CAServices = lazy(() => import('./pages/CAServices'))
 const Pricing = lazy(() => import('./pages/Pricing'))
@@ -56,6 +57,7 @@ export default function App() {
                 <Route path="/space/:city/:space" element={<SpaceOrService />} />
                 <Route path="/space/:city/:locality/:service" element={<ServiceLanding />} />
                 <Route path="/coworking" element={<Coworking />} />
+                <Route path="/coworking/:city/:space" element={<CoworkingDetail />} />
                 <Route path="/meeting-rooms" element={<MeetingRooms />} />
                 <Route path="/ca-services" element={<CAServices />} />
                 <Route path="/pricing" element={<Pricing />} />

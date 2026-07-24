@@ -103,3 +103,17 @@ const GENERIC = [
 export function getCoworkingSpaces(slug) {
   return spacesByCity[slug] || GENERIC
 }
+
+// ── Coworking space detail helpers ───────────────────────────
+export function slugifyCoworking(name) {
+  return String(name || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+}
+
+// Find a single coworking space within a city by its slug.
+export function getCoworkingSpaceBySlug(citySlug, spaceSlug) {
+  const list = getCoworkingSpaces(citySlug) || []
+  return list.find((s) => slugifyCoworking(s.name) === spaceSlug) || null
+}

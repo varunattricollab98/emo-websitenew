@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams, Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   MapPin,
@@ -15,7 +15,7 @@ import {
 import SectionHeading from '../ui/SectionHeading'
 import SmartImage from '../ui/SmartImage'
 import Button from '../ui/Button'
-import { coworkingCities, getCoworkingSpaces } from '../../data/coworkingSpaces'
+import { coworkingCities, getCoworkingSpaces, slugifyCoworking } from '../../data/coworkingSpaces'
 import { voCities, cityMatches } from '../../data/spaces'
 import { resolvePincode } from '../../data/pincodes'
 
@@ -238,13 +238,15 @@ export default function CoworkingSpaces() {
             transition={{ duration: 0.3 }}
             className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
           >
-            {spaces.map((s) => (
+            {spaces.map((s) => {
+              const detailPath = `/coworking/${s.citySlug || active}/${slugifyCoworking(s.name)}`
+              return (
               <div
                 key={(s.citySlug || '') + s.name + s.locality}
                 className="group flex h-full flex-col overflow-hidden rounded-3xl border border-primary-100/70 bg-white shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover"
               >
                 {/* image */}
-                <div className="relative h-44 overflow-hidden bg-primary-gradient">
+                <Link to={detailPath} className="relative block h-44 overflow-hidden bg-primary-gradient">
                   <SmartImage
                     src={s.image}
                     alt={`${s.name}, ${s.locality}`}
@@ -266,11 +268,16 @@ export default function CoworkingSpaces() {
                       {s.locality}, {s.cityName || activeName}
                     </span>
                   </div>
-                </div>
+                </Link>
 
                 {/* body */}
                 <div className="flex flex-1 flex-col p-5">
-                  <h3 className="text-lg font-bold text-navy-dark">{s.name}</h3>
+                  <Link
+                    to={detailPath}
+                    className="text-lg font-bold text-navy-dark transition-colors hover:text-primary"
+                  >
+                    {s.name}
+                  </Link>
                   <p className="mt-1 inline-flex items-center gap-1.5 text-xs font-medium text-slate-500">
                     <Users className="h-3.5 w-3.5 text-primary" />
                     {s.seats}
@@ -301,13 +308,14 @@ export default function CoworkingSpaces() {
                     </span>
                   </div>
 
-                  <Button to="/contact" className="mt-5 w-full">
-                    Book a Tour
+                  <Button to={detailPath} className="mt-5 w-full">
+                    View Details
                     <ArrowRight className="h-4 w-4" />
                   </Button>
                 </div>
               </div>
-            ))}
+              )
+            })}
           </motion.div>
         </AnimatePresence>
 
