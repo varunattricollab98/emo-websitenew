@@ -206,3 +206,48 @@ export function getSpaces(slug) {
   if (spacesByCity[slug]) return spacesByCity[slug]
   return GENERIC.map((area, i) => s(area, 799, 4.7, [T.gst, T.co, T.mail], i))
 }
+
+
+// Old / alternate / colloquial names so search finds a city even when the user
+// types the former name (data stores the current official name). All lowercase.
+export const cityAliases = {
+  bangalore: ['bangalore', 'bengaluru'],
+  gurgaon: ['gurgaon', 'gurugram'],
+  mumbai: ['bombay'],
+  delhi: ['new delhi', 'ncr'],
+  chennai: ['madras'],
+  kolkata: ['calcutta'],
+  pune: ['poona'],
+  ahmedabad: ['amdavad'],
+  vadodara: ['baroda'],
+  visakhapatnam: ['vizag', 'vizagapatnam', 'waltair'],
+  aurangabad: ['aurangabad', 'sambhajinagar', 'chhatrapati sambhajinagar'],
+  prayagraj: ['allahabad', 'prayag'],
+  mysuru: ['mysore'],
+  hubballi: ['hubli', 'hubli-dharwad', 'dharwad'],
+  tiruchirappalli: ['trichy', 'tiruchi', 'trichinopoly'],
+  mangaluru: ['mangalore'],
+  belagavi: ['belgaum'],
+  kalaburagi: ['gulbarga'],
+  tiruppur: ['tirupur'],
+  thiruvananthapuram: ['trivandrum'],
+  kozhikode: ['calicut'],
+  kochi: ['cochin', 'ernakulam'],
+  rajahmundry: ['rajamahendravaram'],
+  varanasi: ['banaras', 'benares', 'kashi'],
+  kanpur: ['cawnpore'],
+  vijayawada: ['bezawada'],
+  solapur: ['sholapur'],
+  panipat: [],
+  navi_mumbai: ['navi mumbai'],
+}
+
+// True if the query matches a city's current name, state, or any alias.
+export function cityMatches(city, query) {
+  const q = String(query || '').trim().toLowerCase()
+  if (!q) return true
+  if (city.name.toLowerCase().includes(q)) return true
+  if ((city.state || '').toLowerCase().includes(q)) return true
+  const aliases = cityAliases[city.slug]
+  return aliases ? aliases.some((a) => a.includes(q) || q.includes(a)) : false
+}

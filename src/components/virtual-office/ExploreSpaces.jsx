@@ -14,7 +14,7 @@ import {
   ShieldCheck,
 } from 'lucide-react'
 import SmartImage from '../ui/SmartImage'
-import { voCities, getSpaces, spacesByCity } from '../../data/spaces'
+import { voCities, getSpaces, spacesByCity, cityMatches } from '../../data/spaces'
 import { resolvePincode } from '../../data/pincodes'
 
 // name lookup + a flat list of every space across all cities that has data
@@ -81,9 +81,7 @@ export default function ExploreSpaces() {
     if (!q || q === cityName.toLowerCase()) return voCities
     // numeric input → treat as a pincode and resolve to matching cities
     if (/^\d+$/.test(q)) return resolvePincode(q)
-    return voCities.filter(
-      (c) => c.name.toLowerCase().includes(q) || (c.state || '').toLowerCase().includes(q)
-    )
+    return voCities.filter((c) => cityMatches(c, q))
   }, [cityInput, cityName])
 
   const results = useMemo(() => {

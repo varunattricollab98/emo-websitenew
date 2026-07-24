@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react'
 import { MapPin, ChevronDown, Check, Hash, Plus, Loader2 } from 'lucide-react'
-import { voCities } from '../../data/spaces'
+import { voCities, cityMatches } from '../../data/spaces'
 import { resolvePincode, lookupPincode } from '../../data/pincodes'
 
 /**
@@ -33,9 +33,7 @@ export default function LocationSelect({
   const suggestions = useMemo(() => {
     if (!q) return voCities.slice(0, 30)
     if (isNumeric) return resolvePincode(raw)
-    return voCities
-      .filter((c) => c.name.toLowerCase().includes(q) || (c.state || '').toLowerCase().includes(q))
-      .slice(0, 30)
+    return voCities.filter((c) => cityMatches(c, q)).slice(0, 30)
   }, [q, isNumeric, raw])
 
   // API fallback for a full 6-digit pincode not covered by the offline map
