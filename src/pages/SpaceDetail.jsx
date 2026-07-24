@@ -15,6 +15,7 @@ import {
   Landmark,
   Mailbox,
   Quote,
+  FileText,
 } from 'lucide-react'
 import SectionHeading from '../components/ui/SectionHeading'
 import Reveal from '../components/ui/Reveal'
@@ -309,20 +310,96 @@ export default function SpaceDetail() {
             </button>
           </div>
 
-          {/* full space description / blog — supports large future content */}
-          <div className="mt-10 max-w-3xl">
-            <ArticleBlocks blocks={descriptionBlocks} />
-          </div>
+          {/* full space description / blog + area guide — premium reading cards */}
+          <div className="mt-10 grid gap-6 lg:grid-cols-3">
+            {/* main article */}
+            <div className="lg:col-span-2">
+              <article className="relative overflow-hidden rounded-3xl border border-primary-100/70 bg-white p-7 shadow-card sm:p-9">
+                <span className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary via-primary-400 to-gold" />
+                <div className="flex items-center gap-3">
+                  <span className="inline-flex h-10 w-10 flex-none items-center justify-center rounded-xl bg-primary-gradient text-white shadow-card">
+                    <FileText className="h-5 w-5" />
+                  </span>
+                  <div>
+                    <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                      Overview
+                    </p>
+                    <h3 className="text-lg font-bold leading-tight text-navy-dark">
+                      About {areaName}, {cityName}
+                    </h3>
+                  </div>
+                </div>
+                <div className="mt-6">
+                  <ArticleBlocks blocks={descriptionBlocks} lead />
+                </div>
+              </article>
 
-          {/* about the locality / area (editable, optional) */}
-          {localityBlocks.length > 0 && (
-            <div className="mt-10 max-w-3xl">
-              <h3 className="text-xl font-bold text-navy-dark">About {areaName}</h3>
-              <div className="mt-4">
-                <ArticleBlocks blocks={localityBlocks} />
-              </div>
+              {/* about the locality / area (editable, optional) */}
+              {localityBlocks.length > 0 && (
+                <article className="relative mt-6 overflow-hidden rounded-3xl border border-primary-100/70 bg-surface-light p-7 shadow-card sm:p-9">
+                  <div className="flex items-center gap-3">
+                    <span className="inline-flex h-10 w-10 flex-none items-center justify-center rounded-xl bg-gradient-to-br from-gold to-gold-dark text-white shadow-card">
+                      <MapPin className="h-5 w-5" />
+                    </span>
+                    <div>
+                      <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                        Location guide
+                      </p>
+                      <h3 className="text-lg font-bold leading-tight text-navy-dark">
+                        Why {areaName}?
+                      </h3>
+                    </div>
+                  </div>
+                  <div className="mt-6">
+                    <ArticleBlocks blocks={localityBlocks} />
+                  </div>
+                </article>
+              )}
             </div>
-          )}
+
+            {/* sticky quick-facts sidebar */}
+            <aside className="lg:col-span-1">
+              <div className="sticky top-24 rounded-3xl border border-primary-100/70 bg-white p-6 shadow-card">
+                <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                  At a glance
+                </p>
+                <div className="mt-4 space-y-4">
+                  {[
+                    { icon: MapPin, label: 'Location', value: `${areaName}, ${cityName}` },
+                    { icon: Building2, label: 'Property', value: propertyType },
+                    { icon: Clock, label: 'Activation', value: processingTime },
+                    { icon: BadgeCheck, label: 'Compliance', value: 'GST & MCA accepted' },
+                  ].map((f) => (
+                    <div key={f.label} className="flex items-start gap-3">
+                      <span className="mt-0.5 inline-flex h-8 w-8 flex-none items-center justify-center rounded-lg bg-primary-50 text-primary">
+                        <f.icon className="h-4 w-4" />
+                      </span>
+                      <div className="min-w-0">
+                        <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                          {f.label}
+                        </p>
+                        <p className="text-sm font-semibold leading-snug text-navy-dark">
+                          {f.value}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-6 border-t border-primary-100/70 pt-5">
+                  <div className="flex items-end gap-1">
+                    <span className="text-sm font-medium text-slate-400">From</span>
+                    <span className="ml-1 text-2xl font-extrabold text-navy-dark">
+                      ₹{Number(pricing.monthly).toLocaleString('en-IN')}
+                    </span>
+                    <span className="mb-0.5 text-sm text-slate-400">/mo</span>
+                  </div>
+                  <Button onClick={book} className="mt-4 w-full">
+                    Book This Space <ArrowRight className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            </aside>
+          </div>
         </div>
       </section>
 

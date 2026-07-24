@@ -12,21 +12,43 @@ import { Check } from 'lucide-react'
  *   - { quote: 'text' }         -> highlighted quote
  *
  * This means any amount of blog content can be added later and it just renders.
+ *
+ * `lead` (bool): styles the first paragraph as a larger intro/lead paragraph
+ * for a more editorial, readable feel.
  */
-export default function ArticleBlocks({ blocks = [] }) {
+const PARA = 'text-[15.5px] leading-[1.9] text-slate-600'
+
+export default function ArticleBlocks({ blocks = [], lead = false }) {
+  // index of the first paragraph-like block (for optional lead styling)
+  const firstParaIdx = blocks.findIndex(
+    (b) => typeof b === 'string' || (b && typeof b === 'object' && b.p)
+  )
+
   return (
     <div className="space-y-5">
       {blocks.map((b, i) => {
+        const isLead = lead && i === firstParaIdx
         if (typeof b === 'string') {
           return (
-            <p key={i} className="leading-relaxed text-slate-600">
+            <p
+              key={i}
+              className={
+                isLead
+                  ? 'text-lg leading-[1.85] text-navy/90 first-letter:float-left first-letter:mr-2 first-letter:mt-1 first-letter:text-5xl first-letter:font-extrabold first-letter:leading-none first-letter:text-primary'
+                  : PARA
+              }
+            >
               {b}
             </p>
           )
         }
         if (b.h) {
           return (
-            <h2 key={i} className="pt-4 text-2xl font-extrabold tracking-tight text-navy-dark">
+            <h2
+              key={i}
+              className="flex items-center gap-3 pt-4 text-2xl font-extrabold tracking-tight text-navy-dark"
+            >
+              <span className="inline-block h-6 w-1.5 flex-none rounded-full bg-gradient-to-b from-gold to-gold-dark" />
               {b.h}
             </h2>
           )
@@ -74,7 +96,14 @@ export default function ArticleBlocks({ blocks = [] }) {
           )
         }
         return (
-          <p key={i} className="leading-relaxed text-slate-600">
+          <p
+            key={i}
+            className={
+              lead && i === firstParaIdx
+                ? 'text-lg leading-[1.85] text-navy/90 first-letter:float-left first-letter:mr-2 first-letter:mt-1 first-letter:text-5xl first-letter:font-extrabold first-letter:leading-none first-letter:text-primary'
+                : PARA
+            }
+          >
             {b.p || ''}
           </p>
         )
