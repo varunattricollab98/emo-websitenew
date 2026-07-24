@@ -137,12 +137,20 @@ export default function SpaceDetail() {
     { name: 'Mailing Address', price: pricing.ma, icon: Mailbox, note: 'Professional address + mail handling' },
   ]
 
-  const faqs = [
-    { q: `Is the ${areaName} address valid for GST registration?`, a: `Yes. The ${areaName}, ${cityName} address comes with the complete GST documentation kit (rent agreement, NOC, utility bill) accepted by the department.` },
-    { q: `How soon can I activate this ${cityName} space?`, a: `Your ${areaName} address and documents are typically ready within ${processingTime} of submitting your KYC.` },
-    { q: `Can I use this address for company registration?`, a: `Absolutely. This ${areaName} space works as a registered office for Private Limited, LLP and OPC, with full MCA documentation.` },
-    { q: `Will I receive mail and couriers here?`, a: `Yes. All letters, notices and couriers are received at the ${areaName} address, and we notify and forward them to you.` },
-  ]
+  const faqs = detail?.faqs?.length
+    ? detail.faqs
+    : [
+        { q: `Is the ${areaName} address valid for GST registration?`, a: `Yes. The ${areaName}, ${cityName} address comes with the complete GST documentation kit (rent agreement, NOC, utility bill) accepted by the department.` },
+        { q: `How soon can I activate this ${cityName} space?`, a: `Your ${areaName} address and documents are typically ready within ${processingTime} of submitting your KYC.` },
+        { q: `Can I use this address for company registration?`, a: `Absolutely. This ${areaName} space works as a registered office for Private Limited, LLP and OPC, with full MCA documentation.` },
+        { q: `Will I receive mail and couriers here?`, a: `Yes. All letters, notices and couriers are received at the ${areaName} address, and we notify and forward them to you.` },
+        { q: `What documents do I need to get started?`, a: `Just basic KYC — your PAN, Aadhaar and a passport-size photo (for a company, add the incorporation certificate). We prepare the rest of the paperwork for you.` },
+        { q: `Can multiple companies use the same ${areaName} address?`, a: `Yes. Each business gets its own registration-ready set of documents, so co-founders or a group of companies can all use the ${areaName} address independently.` },
+        { q: `Is there any hidden or renewal cost?`, a: `No hidden charges. Pricing is transparent and billed annually — you only pay the plan you choose, with a simple yearly renewal to keep the address active.` },
+        { q: `Do I get access to coworking desks or meeting rooms?`, a: `Yes. Along with the virtual office, you can book plug-and-play desks and meeting rooms at ${areaName}, ${cityName} whenever you need a physical spot to work or meet clients.` },
+        { q: `Can I use this address on my website, invoices and visiting cards?`, a: `Absolutely. Once activated, the ${areaName} address is fully yours to use across your website, invoices, GST filings, visiting cards and all official communication.` },
+        { q: `What if I want to switch to a physical office later?`, a: `Easy — since ${areaName} also offers coworking and office space, you can upgrade from a virtual office to a physical desk or cabin without changing your registered address.` },
+      ]
 
   return (
     <>

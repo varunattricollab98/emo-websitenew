@@ -25,6 +25,9 @@
 // (otherwise they are auto-generated per space: weekly 5–10, monthly 12–32):
 //   stats: { weekly: 8, monthly: 27, seatsAvail: 15, occupancy: 88 }
 //   reviewCount: 154
+//
+// OPTIONAL — override the FAQ list for this space (else a rich default set shows):
+//   faqs: [ { q: 'Question?', a: 'Answer.' }, ... ]
 
 export const spaceDetails = {
   'gurgaon/sohna-road': {
