@@ -102,11 +102,19 @@ export default function Footer() {
 
       <div className="border-t border-white/10">
         <div className="container-custom flex flex-col items-center justify-between gap-4 py-6 sm:flex-row">
-          <p className="text-sm text-slate-500">© 2024 EaseMyOffice. All rights reserved.</p>
+          <p className="text-sm text-slate-500">
+            © 2024 EaseMyOffice · Operated by Narula Technologies LLP. All rights reserved.
+          </p>
           <div className="flex gap-6 text-sm text-slate-400">
-            <a href="#" className="hover:text-primary-300">Privacy Policy</a>
-            <a href="#" className="hover:text-primary-300">Terms</a>
-            <a href="#" className="hover:text-primary-300">Refund Policy</a>
+            <Link to="/privacy-policy" className="hover:text-primary-300">
+              Privacy Policy
+            </Link>
+            <Link to="/terms" className="hover:text-primary-300">
+              Terms
+            </Link>
+            <Link to="/refund-policy" className="hover:text-primary-300">
+              Refund Policy
+            </Link>
           </div>
         </div>
       </div>

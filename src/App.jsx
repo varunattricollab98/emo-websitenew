@@ -16,6 +16,9 @@ import Contact from './pages/Contact'
 import ListYourSpace from './pages/ListYourSpace'
 import CityTemplate from './pages/CityTemplate'
 import Faq from './pages/Faq'
+import PrivacyPolicy from './pages/PrivacyPolicy'
+import Terms from './pages/Terms'
+import RefundPolicy from './pages/RefundPolicy'
 import NotFound from './pages/NotFound'
 
 export default function App() {
@@ -37,6 +40,9 @@ export default function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/list-your-space" element={<ListYourSpace />} />
           <Route path="/faq" element={<Faq />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/refund-policy" element={<RefundPolicy />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
