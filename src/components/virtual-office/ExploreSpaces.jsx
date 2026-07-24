@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react'
-import { useSearchParams, Link } from 'react-router-dom'
+import { useSearchParams, Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
   MapPin,
@@ -82,6 +82,7 @@ const highlights = [
 ]
 
 export default function ExploreSpaces() {
+  const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const initialCity = resolveCityFromQuery(searchParams.get('city'))
 
@@ -379,13 +380,17 @@ export default function ExploreSpaces() {
                   </div>
                 </div>
 
-                <a
-                  href="#spaces"
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (city) navigate(`/virtual-office/${city}`)
+                    else document.getElementById('spaces')?.scrollIntoView({ behavior: 'smooth' })
+                  }}
                   className="btn-base w-full bg-primary-gradient px-6 py-3.5 text-sm text-white shadow-card transition-all hover:shadow-glow hover:brightness-110"
                 >
-                  View Spaces
+                  {city ? `View ${cityName} Spaces` : 'View Spaces'}
                   <ArrowRight className="h-4 w-4" />
-                </a>
+                </button>
                 <div className="flex items-center justify-center gap-1.5 pt-1 text-xs text-slate-400">
                   <ShieldCheck className="h-3.5 w-3.5 text-accent-emerald" />
                   {results.length}+ verified spaces {city ? `in ${cityName}` : 'across India'} · No spam,
