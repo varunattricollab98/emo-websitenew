@@ -18,6 +18,7 @@ import {
   CalendarCheck,
   Headset,
 } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import SubPageHero from '../components/ui/SubPageHero'
 import SectionHeading from '../components/ui/SectionHeading'
 import Reveal from '../components/ui/Reveal'
@@ -347,13 +348,14 @@ export default function Coworking() {
           />
           <div className="mt-12 flex flex-wrap justify-center gap-3">
             {cities.map((c) => (
-              <span
+              <Link
                 key={c.slug}
-                className="inline-flex items-center gap-2 rounded-full border border-primary-200 bg-white px-5 py-2.5 text-sm font-semibold text-navy-dark shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary hover:text-primary hover:shadow-card"
+                to={`/coworking?city=${c.slug}`}
+                className="group inline-flex items-center gap-2 rounded-full border border-primary-200 bg-white px-5 py-2.5 text-sm font-semibold text-navy-dark shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary hover:bg-primary hover:text-white hover:shadow-card"
               >
-                <MapPin className="h-4 w-4 text-primary" />
+                <MapPin className="h-4 w-4 text-primary transition-colors group-hover:text-white" />
                 {c.name}
-              </span>
+              </Link>
             ))}
           </div>
         </div>

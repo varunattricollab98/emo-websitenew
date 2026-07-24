@@ -1,4 +1,5 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   MapPin,
@@ -26,12 +27,27 @@ const sortOptions = [
 const cityNameBySlug = Object.fromEntries(voCities.map((c) => [c.slug, c.name]))
 
 export default function CoworkingSpaces() {
-  const [active, setActive] = useState('bangalore')
+  const [searchParams] = useSearchParams()
+  const paramCity = searchParams.get('city')
+  const initialSlug = paramCity && cityNameBySlug[paramCity] ? paramCity : 'bangalore'
+
+  const [active, setActive] = useState(initialSlug)
   const [sort, setSort] = useState('featured')
-  const [cityInput, setCityInput] = useState('Bengaluru')
+  const [cityInput, setCityInput] = useState(cityNameBySlug[initialSlug] || 'Bengaluru')
   const [cityOpen, setCityOpen] = useState(false)
 
   const activeName = cityNameBySlug[active] || 'Bengaluru'
+
+  // respond to ?city= changes (e.g. clicking a city chip elsewhere on the page)
+  useEffect(() => {
+    if (paramCity && cityNameBySlug[paramCity]) {
+      setActive(paramCity)
+      setCityInput(cityNameBySlug[paramCity])
+      document
+        .getElementById('coworking-browse')
+        ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }, [paramCity])
 
   const filteredCities = useMemo(() => {
     const q = cityInput.trim().toLowerCase()
@@ -54,7 +70,10 @@ export default function CoworkingSpaces() {
   }
 
   return (
-    <section className="section-padding relative overflow-hidden bg-surface-light">
+    <section
+      id="coworking-browse"
+      className="section-padding relative overflow-hidden bg-surface-light scroll-mt-24"
+    >
       <div className="pointer-events-none absolute inset-0 tech-dots opacity-40 [mask-image:radial-gradient(ellipse_70%_55%_at_50%_20%,#000,transparent)]" />
       <div className="container-custom relative">
         <SectionHeading
