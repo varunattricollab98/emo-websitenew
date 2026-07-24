@@ -1,4 +1,6 @@
 // Virtual office / workspace listings per city (drives the Explore section + counts).
+import { generatedSpaceDetails } from './spaceDetails.generated.js'
+
 const img = [
   'https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=800&q=80',
   'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=800&q=80',
@@ -245,8 +247,36 @@ const GENERIC = [
   'Business Bay',
 ]
 
+// Basic listing cards derived from CSV-imported rich details for a city.
+function importedCards(slug) {
+  const prefix = `${slug}/`
+  return Object.entries(generatedSpaceDetails)
+    .filter(([k]) => k.startsWith(prefix))
+    .map(([, d], i) => ({
+      name: d.area || d.spaceName || 'Business Hub',
+      price: Number(d.pricing?.monthly) || 799,
+      rating: Number(d.rating) || 4.7,
+      tags: d.tags?.length ? d.tags : [T.gst, T.co, T.mail],
+      image: d.featuredImage || img[i % img.length],
+      badge: d.badge || null,
+    }))
+}
+
 export function getSpaces(slug) {
-  if (spacesByCity[slug]) return spacesByCity[slug]
+  const imported = importedCards(slug)
+  const curated = spacesByCity[slug]
+  if (curated || imported.length) {
+    // merge (imported first), dedupe by space slug so links stay unique
+    const seen = new Set()
+    const merged = []
+    for (const sp of [...imported, ...(curated || [])]) {
+      const key = slugifySpace(sp.name)
+      if (seen.has(key)) continue
+      seen.add(key)
+      merged.push(sp)
+    }
+    return merged
+  }
   return GENERIC.map((area, i) => s(area, 799, 4.7, [T.gst, T.co, T.mail], i))
 }
 

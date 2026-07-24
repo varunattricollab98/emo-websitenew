@@ -84,6 +84,18 @@ export const spaceDetails = {
   },
 }
 
+import { generatedSpaceDetails } from './spaceDetails.generated.js'
+
+// Hand-written entries above win; CSV-imported entries fill in the rest.
 export function getSpaceDetail(citySlug, areaSlug) {
-  return spaceDetails[`${citySlug}/${areaSlug}`] || null
+  const key = `${citySlug}/${areaSlug}`
+  return spaceDetails[key] || generatedSpaceDetails[key] || null
+}
+
+// All CSV-imported areas for a city → used to list imported spaces on city pages.
+export function generatedAreasByCity(citySlug) {
+  const prefix = `${citySlug}/`
+  return Object.entries(generatedSpaceDetails)
+    .filter(([k]) => k.startsWith(prefix))
+    .map(([, d]) => d)
 }

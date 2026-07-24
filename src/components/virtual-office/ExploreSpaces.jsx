@@ -15,6 +15,7 @@ import {
   ShieldCheck,
   LayoutGrid,
   List,
+  X,
 } from 'lucide-react'
 import SmartImage from '../ui/SmartImage'
 import { voCities, getSpaces, spacesByCity, cityMatches, slugifySpace, citiesForState } from '../../data/spaces'
@@ -270,8 +271,25 @@ export default function ExploreSpaces() {
                       }}
                       placeholder="Type a city, state or pincode…"
                       aria-label="City"
-                      className="w-full rounded-xl border border-primary-100 bg-surface-light py-3.5 pl-10 pr-9 text-sm font-semibold text-navy-dark placeholder:font-normal placeholder:text-slate-400 focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                      className="w-full rounded-xl border border-primary-100 bg-surface-light py-3.5 pl-10 pr-16 text-sm font-semibold text-navy-dark placeholder:font-normal placeholder:text-slate-400 focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20"
                     />
+                    {/* clear → reset to all cities (spaces mix across India) */}
+                    {(city || stateFilter || cityInput) && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setCity('')
+                          setStateFilter('')
+                          setCityInput('')
+                          setCityOpen(true)
+                          setShowAll(false)
+                        }}
+                        aria-label="Clear city and show all spaces"
+                        className="absolute right-9 top-1/2 z-10 inline-flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-primary-50 hover:text-primary"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    )}
                     <ChevronDown
                       className={`pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 transition-transform ${
                         cityOpen ? 'rotate-180' : ''
