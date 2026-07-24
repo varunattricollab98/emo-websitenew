@@ -19,11 +19,19 @@ const services = [
   { label: 'Trademark', to: '/ca-services' },
 ]
 
+const legal = [
+  { label: 'Privacy Policy', to: '/privacy-policy' },
+  { label: 'Disclaimer', to: '/disclaimer' },
+  { label: 'Terms of Service', to: '/terms' },
+  { label: 'Cookie Policy', to: '/cookie-policy' },
+  { label: 'Refund Policy', to: '/refund-policy' },
+]
+
 export default function Footer() {
   return (
     <footer className="bg-navy-dark text-slate-300">
       <div className="container-custom py-16 lg:py-20">
-        <div className="grid grid-cols-2 gap-10 lg:grid-cols-5 lg:gap-8">
+        <div className="grid grid-cols-2 gap-10 lg:grid-cols-6 lg:gap-8">
           {/* Brand */}
           <div className="col-span-2 lg:col-span-1">
             <Link to="/" className="flex items-center gap-2.5">
@@ -54,6 +62,7 @@ export default function Footer() {
 
           <FooterCol title="Company" links={company} />
           <FooterCol title="Services" links={services} />
+          <FooterCol title="Legal" links={legal} />
 
           <div>
             <h4 className="text-sm font-bold uppercase tracking-wider text-white">

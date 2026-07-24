@@ -19,6 +19,8 @@ import Faq from './pages/Faq'
 import PrivacyPolicy from './pages/PrivacyPolicy'
 import Terms from './pages/Terms'
 import RefundPolicy from './pages/RefundPolicy'
+import Disclaimer from './pages/Disclaimer'
+import CookiePolicy from './pages/CookiePolicy'
 import NotFound from './pages/NotFound'
 
 export default function App() {
@@ -43,6 +45,8 @@ export default function App() {
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/refund-policy" element={<RefundPolicy />} />
+          <Route path="/disclaimer" element={<Disclaimer />} />
+          <Route path="/cookie-policy" element={<CookiePolicy />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
