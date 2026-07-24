@@ -15,12 +15,9 @@ import {
   Plus,
 } from 'lucide-react'
 
-// ─────────────────────────────────────────────────────────────
-// Replace this with your live payment page / link (Razorpay Payment
-// Page, PayU, Cashfree, etc.). Booking details are appended as
-// prefill query params (Razorpay Payment Page format).
+// Live EaseMyOffice Razorpay payment page. Booking details (name, email,
+// contact, amount, description) are appended as prefill query params.
 const PAYMENT_GATEWAY_URL = 'https://pages.razorpay.com/easemyoffice'
-// ─────────────────────────────────────────────────────────────
 
 const emptyForm = { name: '', phone: '', email: '' }
 
