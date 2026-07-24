@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import CAServiceHero from '../components/ca-services/CAServiceHero'
+import ComplianceServices from '../components/ca-services/ComplianceServices'
 import CAServicesGrid from '../components/ca-services/CAServicesGrid'
 import CAServiceFinder from '../components/ca-services/CAServiceFinder'
 import CAPackages from '../components/ca-services/CAPackages'
@@ -19,6 +20,9 @@ export default function CAServices() {
     <>
       {/* Hero: 1,200+ accounts highlight + searchable service finder */}
       <CAServiceHero query={query} setQuery={setQuery} cat={cat} setCat={setCat} />
+
+      {/* Flagship CA services — "Get started" opens the contact popup (no routing) */}
+      <ComplianceServices />
 
       {/* Tabbed service finder by category (moved up) */}
       <CAServiceFinder />
