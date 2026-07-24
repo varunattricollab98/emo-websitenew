@@ -20,6 +20,8 @@ import SmartImage from '../ui/SmartImage'
 import { voCities, getSpaces, spacesByCity, cityMatches, slugifySpace } from '../../data/spaces'
 import { resolvePincode } from '../../data/pincodes'
 import { resolveCity } from '../../utils/resolveCity'
+import { getStateDescription, toBlocks } from '../../data/descriptions'
+import ArticleBlocks from '../ui/ArticleBlocks'
 
 // name lookup + a flat list of every space across all cities that has data
 const cityNameBySlug = Object.fromEntries(voCities.map((c) => [c.slug, c.name]))
@@ -121,6 +123,7 @@ export default function ExploreSpaces() {
   const cityName = city ? cityNameBySlug[city] || 'your city' : ''
   // what the results are scoped to, for headings
   const scopeLabel = stateFilter || (city ? cityName : '')
+  const stateDescBlocks = stateFilter ? toBlocks(getStateDescription(stateFilter)) : []
 
   const filteredCities = useMemo(() => {
     const q = cityInput.trim().toLowerCase()
@@ -480,6 +483,12 @@ export default function ExploreSpaces() {
               </button>
             </div>
           </div>
+
+          {stateFilter && stateDescBlocks.length > 0 && (
+            <div className="mt-8 max-w-3xl">
+              <ArticleBlocks blocks={stateDescBlocks} />
+            </div>
+          )}
 
           {visible.length === 0 ? (
             <p className="mt-12 rounded-2xl border border-dashed border-primary-200 bg-surface-light p-10 text-center text-slate-500">

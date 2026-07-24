@@ -25,6 +25,7 @@ import ArticleBlocks from '../components/ui/ArticleBlocks'
 import { voCities, getSpaceBySlug } from '../data/spaces'
 import { getCityBySlug } from '../data/cities'
 import { getSpaceDetail } from '../data/spaceDetails'
+import { getLocalityDescription, toBlocks } from '../data/descriptions'
 import { useLeadModal } from '../context/LeadModalContext'
 
 const DEFAULT_IMG =
@@ -108,6 +109,9 @@ export default function SpaceDetail() {
     : typeof description === 'string'
       ? description.split('\n\n').filter(Boolean)
       : [String(description)]
+
+  // optional locality (area) description — separate from the space description
+  const localityBlocks = toBlocks(getLocalityDescription(city, space))
 
   const [activeImg, setActiveImg] = useState(featuredImage)
   // all photos — no cap, so any number from the CSV renders
@@ -309,6 +313,16 @@ export default function SpaceDetail() {
           <div className="mt-10 max-w-3xl">
             <ArticleBlocks blocks={descriptionBlocks} />
           </div>
+
+          {/* about the locality / area (editable, optional) */}
+          {localityBlocks.length > 0 && (
+            <div className="mt-10 max-w-3xl">
+              <h3 className="text-xl font-bold text-navy-dark">About {areaName}</h3>
+              <div className="mt-4">
+                <ArticleBlocks blocks={localityBlocks} />
+              </div>
+            </div>
+          )}
         </div>
       </section>
 

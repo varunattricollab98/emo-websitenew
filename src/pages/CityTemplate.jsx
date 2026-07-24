@@ -28,6 +28,8 @@ import ClientsStrip from '../components/virtual-office/ClientsStrip'
 import { voCities, getSpaces, slugifySpace } from '../data/spaces'
 import { getCityBySlug } from '../data/cities'
 import { serviceOrder, serviceLandings } from '../data/serviceLandings'
+import { getCityDescription, toBlocks } from '../data/descriptions'
+import ArticleBlocks from '../components/ui/ArticleBlocks'
 import { useLeadModal } from '../context/LeadModalContext'
 
 function toTitle(str = '') {
@@ -48,6 +50,15 @@ export default function CityTemplate() {
   const basePrice = extra?.price || 899
   const spaces = getSpaces(city)
   const addresses = extra?.addresses || spaces.length
+
+  // city description (custom from descriptions.js, else a sensible default)
+  const cityDescBlocks = (() => {
+    const custom = toBlocks(getCityDescription(city))
+    if (custom.length) return custom
+    return [
+      `${cityName} is a key business hub in ${region}. A virtual office in ${cityName} gives your company a prestigious, GST-ready address for company registration, mail handling and more — without the cost of a physical office, activated in just 2\u20133 business days.`,
+    ]
+  })()
 
   const openLead = (svc) =>
     openLeadModal({
@@ -207,6 +218,21 @@ export default function CityTemplate() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* About virtual offices in this city (editable description) */}
+      <section className="section-padding bg-white">
+        <div className="container-custom max-w-3xl">
+          <SectionHeading
+            align="left"
+            eyebrow={`About ${cityName}`}
+            title={`Virtual Office in ${cityName}`}
+            accent={cityName}
+          />
+          <div className="mt-6">
+            <ArticleBlocks blocks={cityDescBlocks} />
           </div>
         </div>
       </section>
