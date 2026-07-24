@@ -27,6 +27,7 @@ import GoogleReviews from '../components/virtual-office/GoogleReviews'
 import ClientsStrip from '../components/virtual-office/ClientsStrip'
 import { voCities, getSpaces, slugifySpace } from '../data/spaces'
 import { getCityBySlug } from '../data/cities'
+import { serviceOrder, serviceLandings } from '../data/serviceLandings'
 import { useLeadModal } from '../context/LeadModalContext'
 
 function toTitle(str = '') {
@@ -290,6 +291,25 @@ export default function CityTemplate() {
                 </div>
               </Reveal>
             ))}
+          </div>
+
+          {/* cluster links → service landing pages (pillar → cluster, SEO) */}
+          <div className="mt-12">
+            <p className="text-center text-sm font-bold uppercase tracking-wider text-slate-400">
+              Popular virtual office services in {cityName}
+            </p>
+            <div className="mt-4 flex flex-wrap justify-center gap-3">
+              {serviceOrder.map((slug) => (
+                <Link
+                  key={slug}
+                  to={`/space/${city}/${slug}`}
+                  className="inline-flex items-center gap-2 rounded-full border border-primary-200 bg-white px-5 py-2.5 text-sm font-semibold text-navy-dark shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary hover:text-primary hover:shadow-card"
+                >
+                  {serviceLandings[slug].name} in {cityName}
+                  <ArrowRight className="h-4 w-4 text-primary" />
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       </section>
