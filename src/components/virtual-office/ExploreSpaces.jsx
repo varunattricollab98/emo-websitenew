@@ -1,4 +1,5 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
   MapPin,
@@ -12,6 +13,8 @@ import {
   BadgeCheck,
   Clock,
   ShieldCheck,
+  LayoutGrid,
+  List,
 } from 'lucide-react'
 import SmartImage from '../ui/SmartImage'
 import { voCities, getSpaces, spacesByCity, cityMatches } from '../../data/spaces'
@@ -22,6 +25,19 @@ const cityNameBySlug = Object.fromEntries(voCities.map((c) => [c.slug, c.name]))
 const allSpaces = Object.entries(spacesByCity).flatMap(([slug, arr]) =>
   arr.map((sp) => ({ ...sp, citySlug: slug, cityName: cityNameBySlug[slug] || slug }))
 )
+
+// Resolve a ?city= query (city name, old/alias name, or pincode) to a real city.
+function resolveCityFromQuery(q) {
+  const raw = String(q || '').trim()
+  if (!raw) return null
+  if (/^\d+$/.test(raw)) {
+    const m = resolvePincode(raw)
+    return m[0] ? { slug: m[0].slug, name: m[0].name } : null
+  }
+  const exact = voCities.find((c) => c.name.toLowerCase() === raw.toLowerCase())
+  const match = exact || voCities.find((c) => cityMatches(c, raw))
+  return match ? { slug: match.slug, name: match.name } : null
+}
 
 const VISIBLE = 8
 
@@ -66,12 +82,27 @@ const highlights = [
 ]
 
 export default function ExploreSpaces() {
-  const [city, setCity] = useState('') // '' = all cities
+  const [searchParams] = useSearchParams()
+  const initialCity = resolveCityFromQuery(searchParams.get('city'))
+
+  const [city, setCity] = useState(initialCity?.slug || '') // '' = all cities
   const [query, setQuery] = useState('')
   const [purpose, setPurpose] = useState('')
   const [showAll, setShowAll] = useState(false)
+  const [view, setView] = useState('grid') // 'grid' | 'list'
   const [cityOpen, setCityOpen] = useState(false)
-  const [cityInput, setCityInput] = useState('')
+  const [cityInput, setCityInput] = useState(initialCity?.name || '')
+
+  // keep the selection in sync when arriving with (or changing) a ?city= param
+  useEffect(() => {
+    const r = resolveCityFromQuery(searchParams.get('city'))
+    if (r) {
+      setCity(r.slug)
+      setCityInput(r.name)
+      setShowAll(false)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams])
 
   const cityName = city ? cityNameBySlug[city] || 'your city' : ''
 
@@ -384,6 +415,34 @@ export default function ExploreSpaces() {
                 {results.length} verified {results.length === 1 ? 'space' : 'spaces'} available
               </p>
             </div>
+
+            {/* grid / list view toggle */}
+            <div className="inline-flex items-center gap-1 rounded-xl border border-primary-100 bg-white p-1 shadow-soft">
+              <button
+                type="button"
+                onClick={() => setView('grid')}
+                aria-label="Grid view"
+                className={`inline-flex h-9 w-9 items-center justify-center rounded-lg transition-colors ${
+                  view === 'grid'
+                    ? 'bg-primary-gradient text-white shadow-card'
+                    : 'text-slate-400 hover:text-primary'
+                }`}
+              >
+                <LayoutGrid className="h-4 w-4" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setView('list')}
+                aria-label="List view"
+                className={`inline-flex h-9 w-9 items-center justify-center rounded-lg transition-colors ${
+                  view === 'list'
+                    ? 'bg-primary-gradient text-white shadow-card'
+                    : 'text-slate-400 hover:text-primary'
+                }`}
+              >
+                <List className="h-4 w-4" />
+              </button>
+            </div>
           </div>
 
           {visible.length === 0 ? (
@@ -391,7 +450,13 @@ export default function ExploreSpaces() {
               No spaces match your filters. Try another locality or purpose.
             </p>
           ) : (
-            <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <div
+              className={
+                view === 'grid'
+                  ? 'mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4'
+                  : 'mt-10 flex flex-col gap-4'
+              }
+            >
               {visible.map((sp, i) => (
                 <motion.div
                   key={`${sp.name}-${i}`}
@@ -400,8 +465,18 @@ export default function ExploreSpaces() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: (i % 4) * 0.05 }}
                 >
-                  <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-primary-100/60 bg-white shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover">
-                    <div className="relative h-40 overflow-hidden bg-primary-gradient">
+                  <div
+                    className={`group overflow-hidden rounded-2xl border border-primary-100/60 bg-white shadow-card transition-all duration-300 hover:shadow-card-hover ${
+                      view === 'list'
+                        ? 'flex flex-col sm:flex-row'
+                        : 'flex h-full flex-col hover:-translate-y-1.5'
+                    }`}
+                  >
+                    <div
+                      className={`relative overflow-hidden bg-primary-gradient ${
+                        view === 'list' ? 'h-44 sm:h-auto sm:w-60 sm:flex-none' : 'h-40'
+                      }`}
+                    >
                       <SmartImage
                         src={sp.image}
                         alt={`${sp.name}, ${sp.cityName}`}

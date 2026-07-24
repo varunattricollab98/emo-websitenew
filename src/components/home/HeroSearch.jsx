@@ -41,7 +41,9 @@ export default function HeroSearch() {
 
   const handleSearch = (e) => {
     e.preventDefault()
-    navigate(serviceRoutes[service] || '/virtual-office')
+    const base = serviceRoutes[service] || '/virtual-office'
+    const loc = location.trim()
+    navigate(loc ? `${base}?city=${encodeURIComponent(loc)}` : base)
   }
 
   return (
