@@ -1,15 +1,28 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { MapPin, Star, ArrowRight, Users, Sun } from 'lucide-react'
+import { MapPin, Star, ArrowRight, Users, Sun, ArrowDownWideNarrow, ChevronDown } from 'lucide-react'
 import SectionHeading from '../ui/SectionHeading'
 import SmartImage from '../ui/SmartImage'
 import Button from '../ui/Button'
 import { coworkingCities, getCoworkingSpaces } from '../../data/coworkingSpaces'
 
+const sortOptions = [
+  { v: 'featured', l: 'Featured' },
+  { v: 'low', l: 'Price: Low to High' },
+  { v: 'high', l: 'Price: High to Low' },
+]
+
 export default function CoworkingSpaces() {
   const [active, setActive] = useState('bangalore')
-  const spaces = getCoworkingSpaces(active)
+  const [sort, setSort] = useState('featured')
   const activeName = coworkingCities.find((c) => c.slug === active)?.name
+
+  const spaces = useMemo(() => {
+    const list = [...getCoworkingSpaces(active)]
+    if (sort === 'low') list.sort((a, b) => a.price - b.price)
+    else if (sort === 'high') list.sort((a, b) => b.price - a.price)
+    return list
+  }, [active, sort])
 
   return (
     <section className="section-padding relative overflow-hidden bg-surface-light">
@@ -22,25 +35,45 @@ export default function CoworkingSpaces() {
           subtitle="Hand-picked, move-in-ready workspaces in India's top business districts — with transparent pricing and zero brokerage."
         />
 
-        {/* city tabs */}
-        <div className="sky-scroll mt-12 flex gap-2.5 overflow-x-auto pb-3">
-          {coworkingCities.map((c) => {
-            const isActive = c.slug === active
-            return (
-              <button
-                key={c.slug}
-                type="button"
-                onClick={() => setActive(c.slug)}
-                className={`whitespace-nowrap rounded-full px-5 py-2.5 text-sm font-bold transition-all ${
-                  isActive
-                    ? 'bg-primary-gradient text-white shadow-card'
-                    : 'border border-primary-100 bg-white text-navy-dark shadow-soft hover:border-primary/40 hover:text-primary'
-                }`}
-              >
-                {c.name}
-              </button>
-            )
-          })}
+        {/* city tabs + price sort */}
+        <div className="mt-12 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="sky-scroll flex gap-2.5 overflow-x-auto pb-3 lg:pb-0">
+            {coworkingCities.map((c) => {
+              const isActive = c.slug === active
+              return (
+                <button
+                  key={c.slug}
+                  type="button"
+                  onClick={() => setActive(c.slug)}
+                  className={`whitespace-nowrap rounded-full px-5 py-2.5 text-sm font-bold transition-all ${
+                    isActive
+                      ? 'bg-primary-gradient text-white shadow-card'
+                      : 'border border-primary-100 bg-white text-navy-dark shadow-soft hover:border-primary/40 hover:text-primary'
+                  }`}
+                >
+                  {c.name}
+                </button>
+              )
+            })}
+          </div>
+
+          {/* price sort */}
+          <div className="relative flex-none">
+            <ArrowDownWideNarrow className="pointer-events-none absolute left-3.5 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-primary" />
+            <select
+              value={sort}
+              onChange={(e) => setSort(e.target.value)}
+              aria-label="Sort spaces by price"
+              className="w-full appearance-none rounded-full border border-primary-100 bg-white py-2.5 pl-10 pr-9 text-sm font-bold text-navy-dark shadow-soft focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20 lg:w-auto"
+            >
+              {sortOptions.map((o) => (
+                <option key={o.v} value={o.v}>
+                  {o.l}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+          </div>
         </div>
 
         {/* space cards */}
