@@ -287,6 +287,23 @@ export const cityAliases = {
   guwahati: ['gauhati'],
   jodhpur: ['jodhpur', 'blue city'],
   udaipur: ['udaipur', 'lake city'],
+  // more former / alternate / colloquial names
+  amritsar: ['ambarsar'],
+  jalandhar: ['jullundur'],
+  jamshedpur: ['tatanagar', 'tata nagar'],
+  cuttack: ['kataka'],
+  coimbatore: ['kovai'],
+  nashik: ['nasik'],
+  mohali: ['sas nagar', 'sahibzada ajit singh nagar', 'ajit singh nagar'],
+  patna: ['pataliputra'],
+  ujjain: ['avantika', 'ujjayini'],
+  tirunelveli: ['nellai'],
+  jaipur: ['pink city'],
+  nagpur: ['orange city'],
+  panipat: ['paanipat'],
+  faridabad: ['ballabgarh'],
+  ludhiana: ['ludhiyana'],
+  bareilly: ['bans bareilly'],
 }
 
 // True if the query matches a city's current name, state, or any alias.
