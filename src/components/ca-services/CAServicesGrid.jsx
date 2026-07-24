@@ -2,11 +2,13 @@ import { useState, useMemo, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { ChevronDown, ArrowRight, Clock, FileCheck2, Sparkles } from 'lucide-react'
 import { caServices, caCategories } from '../../data/caServices'
+import { useLeadModal } from '../../context/LeadModalContext'
 
 const VISIBLE = 8
 const catMap = Object.fromEntries(caCategories.map((c) => [c.key, c]))
 
 export default function CAServicesGrid({ query = '', cat = '' }) {
+  const { openLeadModal } = useLeadModal()
   const [showAll, setShowAll] = useState(false)
 
   const results = useMemo(() => {
@@ -82,13 +84,20 @@ export default function CAServicesGrid({ query = '', cat = '' }) {
                         <Clock className="h-3.5 w-3.5" />
                         {s.turn}
                       </span>
-                      <a
-                        href="#ca-form"
+                      <button
+                        type="button"
+                        onClick={() =>
+                          openLeadModal({
+                            title: s.name,
+                            subtitle: 'Share your details and our experts will get in touch.',
+                            service: s.name,
+                          })
+                        }
                         className="inline-flex items-center gap-1 text-xs font-bold text-primary transition-colors hover:text-primary-700"
                       >
                         Get started
                         <ArrowRight className="h-3.5 w-3.5" />
-                      </a>
+                      </button>
                     </div>
                   </div>
                 </motion.div>

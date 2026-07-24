@@ -15,6 +15,7 @@ import {
   Headset,
 } from 'lucide-react'
 import { caServices } from '../../data/caServices'
+import { useLeadModal } from '../../context/LeadModalContext'
 
 const trustPoints = [
   { icon: Briefcase, label: '1,200+ business accounts managed' },
@@ -24,6 +25,7 @@ const trustPoints = [
 ]
 
 export default function CACallback() {
+  const { openLeadModal } = useLeadModal()
   const [submitted, setSubmitted] = useState(false)
   const [form, setForm] = useState({ name: '', phone: '', service: '' })
 
@@ -82,13 +84,19 @@ export default function CACallback() {
               </ul>
 
               <div className="mt-8 flex flex-wrap gap-4">
-                <a
-                  href="#ca-form"
+                <button
+                  type="button"
+                  onClick={() =>
+                    openLeadModal({
+                      title: 'Get a Free Consultation',
+                      subtitle: 'Share your details and a compliance expert will call you back.',
+                    })
+                  }
                   className="btn-base bg-gradient-to-r from-gold to-gold-dark px-8 py-4 text-base text-white shadow-card transition-all hover:shadow-gold-glow hover:brightness-105"
                 >
                   Get a Free Consultation
                   <ArrowRight className="h-5 w-5" />
-                </a>
+                </button>
                 <a
                   href="tel:8882735038"
                   className="btn-base border-2 border-white/40 px-8 py-4 text-base text-white transition-colors hover:bg-white/10"

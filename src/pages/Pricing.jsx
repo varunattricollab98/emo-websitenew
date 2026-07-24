@@ -6,6 +6,7 @@ import FaqAccordion from '../components/ui/FaqAccordion'
 import CTABand from '../components/ui/CTABand'
 import Button from '../components/ui/Button'
 import { faqs } from '../data/faqs'
+import { useLeadModal } from '../context/LeadModalContext'
 
 const plans = [
   {
@@ -81,6 +82,7 @@ function Mark({ v }) {
 }
 
 function PricingCard({ plan }) {
+  const { openLeadModal } = useLeadModal()
   return (
     <div
       className={`group relative flex h-full flex-col rounded-3xl p-8 transition-all duration-300 hover:-translate-y-1.5 ${
@@ -133,7 +135,17 @@ function PricingCard({ plan }) {
         ))}
       </ul>
 
-      <Button to="/contact" variant={plan.popular ? 'gold' : 'primary'} className="relative mt-8 w-full">
+      <Button
+        onClick={() =>
+          openLeadModal({
+            title: `${plan.name} — ₹${plan.price}/year`,
+            subtitle: 'Share your details and we will get you set up quickly.',
+            service: plan.name,
+          })
+        }
+        variant={plan.popular ? 'gold' : 'primary'}
+        className="relative mt-8 w-full"
+      >
         {plan.cta}
         <ArrowRight className="h-4 w-4" />
       </Button>

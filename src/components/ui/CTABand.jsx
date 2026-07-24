@@ -1,13 +1,14 @@
 import { motion } from 'framer-motion'
 import { Phone, ArrowRight } from 'lucide-react'
 import Button from './Button'
+import { useLeadModal } from '../../context/LeadModalContext'
 
 export default function CTABand({
   title = 'Ready to Set Up Your Business Address?',
   subtitle = 'Join 5,000+ businesses that trust EaseMyOffice. Get started in minutes with a dedicated compliance manager by your side.',
   primaryLabel = 'Get Started',
-  primaryTo = '/contact',
 }) {
+  const { openLeadModal } = useLeadModal()
   return (
     <section className="section-padding">
       <div className="container-custom">
@@ -24,7 +25,11 @@ export default function CTABand({
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white text-balance">{title}</h2>
             <p className="mt-4 text-lg text-primary-100">{subtitle}</p>
             <div className="mt-8 flex flex-wrap justify-center gap-4">
-              <Button to={primaryTo} variant="white" size="lg">
+              <Button
+                onClick={() => openLeadModal({ title: primaryLabel, subtitle })}
+                variant="white"
+                size="lg"
+              >
                 {primaryLabel}
                 <ArrowRight className="h-5 w-5" />
               </Button>

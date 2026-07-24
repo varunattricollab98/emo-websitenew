@@ -3,10 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { FileCheck2, Landmark, Award, ArrowRight, Check, Clock } from 'lucide-react'
 import SectionHeading from '../ui/SectionHeading'
 import { caCategories, caServices } from '../../data/caServices'
+import { useLeadModal } from '../../context/LeadModalContext'
 
 const icons = { gst: FileCheck2, registration: Landmark, licenses: Award }
 
 export default function CAServiceFinder() {
+  const { openLeadModal } = useLeadModal()
   const [active, setActive] = useState('gst')
   const current = caCategories.find((c) => c.key === active)
   const list = caServices.filter((s) => s.cat === active)
@@ -81,10 +83,17 @@ export default function CAServiceFinder() {
 
             <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {list.map((s) => (
-                <a
+                <button
                   key={s.name}
-                  href="#ca-form"
-                  className="group flex items-start gap-3 rounded-2xl border border-primary-100/70 bg-surface-light p-4 transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:bg-white hover:shadow-card"
+                  type="button"
+                  onClick={() =>
+                    openLeadModal({
+                      title: s.name,
+                      subtitle: 'Share your details and our experts will get in touch.',
+                      service: s.name,
+                    })
+                  }
+                  className="group flex items-start gap-3 rounded-2xl border border-primary-100/70 bg-surface-light p-4 text-left transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:bg-white hover:shadow-card"
                 >
                   <span
                     className="mt-0.5 inline-flex h-6 w-6 flex-none items-center justify-center rounded-full text-white"
@@ -99,17 +108,23 @@ export default function CAServiceFinder() {
                       {s.turn}
                     </span>
                   </span>
-                </a>
+                </button>
               ))}
             </div>
 
-            <a
-              href="#ca-form"
+            <button
+              type="button"
+              onClick={() =>
+                openLeadModal({
+                  title: 'Tell us your requirement',
+                  subtitle: "Describe what you need and our experts will help you out.",
+                })
+              }
               className="mt-7 inline-flex items-center gap-2 rounded-xl bg-primary-gradient px-6 py-3 text-sm font-bold text-white shadow-card transition-all hover:shadow-glow hover:brightness-110"
             >
               Not listed? Tell us your requirement
               <ArrowRight className="h-4 w-4" />
-            </a>
+            </button>
           </motion.div>
         </AnimatePresence>
       </div>

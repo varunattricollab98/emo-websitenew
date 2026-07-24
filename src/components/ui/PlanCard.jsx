@@ -1,7 +1,7 @@
 import { Check, ArrowRight, Crown } from 'lucide-react'
 import Button from './Button'
 
-export default function PlanCard({ plan }) {
+export default function PlanCard({ plan, onCta }) {
   const {
     name,
     price,
@@ -76,7 +76,11 @@ export default function PlanCard({ plan }) {
         ))}
       </ul>
 
-      <Button to={to} variant={popular ? 'gold' : 'primary'} className="relative mt-8 w-full">
+      <Button
+        {...(onCta ? { onClick: onCta, type: 'button' } : { to })}
+        variant={popular ? 'gold' : 'primary'}
+        className="relative mt-8 w-full"
+      >
         {cta}
         <ArrowRight className="h-4 w-4" />
       </Button>

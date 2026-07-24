@@ -3,6 +3,7 @@ import SectionHeading from '../ui/SectionHeading'
 import Reveal from '../ui/Reveal'
 import PlanCard from '../ui/PlanCard'
 import { caPackages } from '../../data/caServices'
+import { useLeadModal } from '../../context/LeadModalContext'
 
 const guarantees = [
   { icon: ShieldCheck, label: 'No hidden charges' },
@@ -12,6 +13,7 @@ const guarantees = [
 ]
 
 export default function CAPackages() {
+  const { openLeadModal } = useLeadModal()
   return (
     <section
       id="packages"
@@ -31,7 +33,16 @@ export default function CAPackages() {
         <div className="mt-16 grid items-start gap-6 md:grid-cols-2 lg:grid-cols-3">
           {caPackages.map((plan, i) => (
             <Reveal key={plan.name} delay={i * 0.07}>
-              <PlanCard plan={plan} />
+              <PlanCard
+                plan={plan}
+                onCta={() =>
+                  openLeadModal({
+                    title: `Get started — ${plan.name}`,
+                    subtitle: 'Share your details and our compliance team will call you back.',
+                    service: `${plan.name} (Compliance Package)`,
+                  })
+                }
+              />
             </Reveal>
           ))}
         </div>
