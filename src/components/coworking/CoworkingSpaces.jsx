@@ -1,10 +1,21 @@
 import { useState, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { MapPin, Star, ArrowRight, Users, Sun, ArrowDownWideNarrow, ChevronDown } from 'lucide-react'
+import {
+  MapPin,
+  Star,
+  ArrowRight,
+  Users,
+  Sun,
+  ArrowDownWideNarrow,
+  ChevronDown,
+  Check,
+} from 'lucide-react'
 import SectionHeading from '../ui/SectionHeading'
 import SmartImage from '../ui/SmartImage'
 import Button from '../ui/Button'
 import { coworkingCities, getCoworkingSpaces } from '../../data/coworkingSpaces'
+import { voCities, cityMatches } from '../../data/spaces'
+import { resolvePincode } from '../../data/pincodes'
 
 const sortOptions = [
   { v: 'featured', l: 'Featured' },
@@ -12,10 +23,22 @@ const sortOptions = [
   { v: 'high', l: 'Price: High to Low' },
 ]
 
+const cityNameBySlug = Object.fromEntries(voCities.map((c) => [c.slug, c.name]))
+
 export default function CoworkingSpaces() {
   const [active, setActive] = useState('bangalore')
   const [sort, setSort] = useState('featured')
-  const activeName = coworkingCities.find((c) => c.slug === active)?.name
+  const [cityInput, setCityInput] = useState('Bengaluru')
+  const [cityOpen, setCityOpen] = useState(false)
+
+  const activeName = cityNameBySlug[active] || 'Bengaluru'
+
+  const filteredCities = useMemo(() => {
+    const q = cityInput.trim().toLowerCase()
+    if (!q || q === activeName.toLowerCase()) return voCities
+    if (/^\d+$/.test(q)) return resolvePincode(q)
+    return voCities.filter((c) => cityMatches(c, q))
+  }, [cityInput, activeName])
 
   const spaces = useMemo(() => {
     const list = [...getCoworkingSpaces(active)]
@@ -23,6 +46,12 @@ export default function CoworkingSpaces() {
     else if (sort === 'high') list.sort((a, b) => b.price - a.price)
     return list
   }, [active, sort])
+
+  const selectCity = (slug, name) => {
+    setActive(slug)
+    setCityInput(name)
+    setCityOpen(false)
+  }
 
   return (
     <section className="section-padding relative overflow-hidden bg-surface-light">
@@ -32,29 +61,79 @@ export default function CoworkingSpaces() {
           eyebrow="Explore Spaces"
           title="Browse Coworking Spaces City by City"
           accent="City by City"
-          subtitle="Hand-picked, move-in-ready workspaces in India's top business districts — with transparent pricing and zero brokerage."
+          subtitle="Search any city across India for move-in-ready workspaces — with transparent pricing and zero brokerage."
         />
 
-        {/* city tabs + price sort */}
-        <div className="mt-12 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <div className="sky-scroll flex gap-2.5 overflow-x-auto pb-3 lg:pb-0">
-            {coworkingCities.map((c) => {
-              const isActive = c.slug === active
-              return (
-                <button
-                  key={c.slug}
-                  type="button"
-                  onClick={() => setActive(c.slug)}
-                  className={`whitespace-nowrap rounded-full px-5 py-2.5 text-sm font-bold transition-all ${
-                    isActive
-                      ? 'bg-primary-gradient text-white shadow-card'
-                      : 'border border-primary-100 bg-white text-navy-dark shadow-soft hover:border-primary/40 hover:text-primary'
-                  }`}
-                >
-                  {c.name}
-                </button>
-              )
-            })}
+        {/* city search + price sort */}
+        <div className="mt-12 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          {/* searchable city combobox */}
+          <div className="relative w-full sm:max-w-sm">
+            <MapPin className="pointer-events-none absolute left-3.5 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-primary" />
+            <input
+              value={cityInput}
+              onChange={(e) => {
+                setCityInput(e.target.value)
+                setCityOpen(true)
+              }}
+              onFocus={(e) => {
+                setCityOpen(true)
+                e.target.select()
+              }}
+              placeholder="Search a city, state or pincode…"
+              aria-label="Search city"
+              className="w-full rounded-full border border-primary-100 bg-white py-3 pl-10 pr-9 text-sm font-bold text-navy-dark shadow-soft placeholder:font-normal placeholder:text-slate-400 focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20"
+            />
+            <ChevronDown
+              className={`pointer-events-none absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 transition-transform ${
+                cityOpen ? 'rotate-180' : ''
+              }`}
+            />
+            {cityOpen && (
+              <>
+                <div
+                  className="fixed inset-0 z-30"
+                  onClick={() => {
+                    setCityOpen(false)
+                    setCityInput(activeName)
+                  }}
+                />
+                <div className="absolute left-0 right-0 z-40 mt-2 rounded-2xl border border-primary-100 bg-white p-2 shadow-card-hover">
+                  <ul className="sky-scroll max-h-60 space-y-0.5 overflow-y-auto pr-1">
+                    {filteredCities.length === 0 ? (
+                      <li className="px-3 py-2 text-sm text-slate-400">No city found</li>
+                    ) : (
+                      filteredCities.map((c) => (
+                        <li key={c.slug}>
+                          <button
+                            type="button"
+                            onClick={() => selectCity(c.slug, c.name)}
+                            className={`flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2.5 text-left transition-colors ${
+                              c.slug === active
+                                ? 'bg-primary-50 text-primary'
+                                : 'text-navy-dark hover:bg-surface-light'
+                            }`}
+                          >
+                            <span className="min-w-0">
+                              <span
+                                className={`block truncate text-sm ${
+                                  c.slug === active ? 'font-bold' : 'font-semibold'
+                                }`}
+                              >
+                                {c.name}
+                              </span>
+                              <span className="block truncate text-[11px] text-slate-400">
+                                {c.state}
+                              </span>
+                            </span>
+                            {c.slug === active && <Check className="h-4 w-4 flex-none text-primary" />}
+                          </button>
+                        </li>
+                      ))
+                    )}
+                  </ul>
+                </div>
+              </>
+            )}
           </div>
 
           {/* price sort */}
@@ -64,7 +143,7 @@ export default function CoworkingSpaces() {
               value={sort}
               onChange={(e) => setSort(e.target.value)}
               aria-label="Sort spaces by price"
-              className="w-full appearance-none rounded-full border border-primary-100 bg-white py-2.5 pl-10 pr-9 text-sm font-bold text-navy-dark shadow-soft focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20 lg:w-auto"
+              className="w-full appearance-none rounded-full border border-primary-100 bg-white py-3 pl-10 pr-9 text-sm font-bold text-navy-dark shadow-soft focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20 sm:w-auto"
             >
               {sortOptions.map((o) => (
                 <option key={o.v} value={o.v}>
@@ -74,6 +153,27 @@ export default function CoworkingSpaces() {
             </select>
             <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
           </div>
+        </div>
+
+        {/* popular quick chips */}
+        <div className="sky-scroll mt-4 flex items-center gap-2 overflow-x-auto pb-1">
+          <span className="flex-none text-xs font-semibold uppercase tracking-wider text-slate-400">
+            Popular:
+          </span>
+          {coworkingCities.map((c) => (
+            <button
+              key={c.slug}
+              type="button"
+              onClick={() => selectCity(c.slug, c.name)}
+              className={`whitespace-nowrap rounded-full px-4 py-1.5 text-xs font-bold transition-all ${
+                c.slug === active
+                  ? 'bg-primary-gradient text-white shadow-card'
+                  : 'border border-primary-100 bg-white text-navy-dark hover:border-primary/40 hover:text-primary'
+              }`}
+            >
+              {c.name}
+            </button>
+          ))}
         </div>
 
         {/* space cards */}
@@ -160,8 +260,8 @@ export default function CoworkingSpaces() {
         </AnimatePresence>
 
         <p className="mt-8 text-center text-sm text-slate-500">
-          Showing top spaces in {activeName}. Prices are indicative — get an exact, brokerage-free
-          quote from your dedicated manager.
+          Showing spaces in {activeName}. Prices are indicative — get an exact, brokerage-free quote
+          from your dedicated manager.
         </p>
       </div>
     </section>

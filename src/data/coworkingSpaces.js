@@ -91,6 +91,15 @@ export const spacesByCity = {
   ],
 }
 
+// Generic move-in-ready spaces for cities we haven't curated in detail yet,
+// so every city a client searches shows relevant coworking options.
+const GENERIC = [
+  sp('Signature Business Hub', 'Central Business District', 6800, 499, '4–150 seats', 4.7, ['Prime location', '24x7 access', 'Cafeteria'], 0, true),
+  sp('TechPark Coworking', 'IT & Tech Park', 6200, 449, '10–200 seats', 4.6, ['IT corridor', 'Parking', 'Cafe'], 1),
+  sp('Metro Central Workspaces', 'City Centre', 6900, 499, '2–90 seats', 4.7, ['Metro nearby', 'Lounge', 'Parking'], 2),
+  sp('Enterprise Corner', 'Business Bay', 5900, 449, '10–160 seats', 4.6, ['Value pick', 'Power backup', 'Cafeteria'], 3),
+]
+
 export function getCoworkingSpaces(slug) {
-  return spacesByCity[slug] || []
+  return spacesByCity[slug] || GENERIC
 }
