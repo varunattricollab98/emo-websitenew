@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
   MapPin,
@@ -414,6 +414,15 @@ export default function ExploreSpaces() {
               <p className="mt-2 text-sm text-slate-500">
                 {results.length} verified {results.length === 1 ? 'space' : 'spaces'} available
               </p>
+              {city && (
+                <Link
+                  to={`/virtual-office/${city}`}
+                  className="mt-3 inline-flex items-center gap-1.5 text-sm font-bold text-primary transition-colors hover:text-primary-700"
+                >
+                  View full {cityName} guide &amp; pricing
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              )}
             </div>
 
             {/* grid / list view toggle */}
