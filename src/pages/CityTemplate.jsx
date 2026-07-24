@@ -467,62 +467,117 @@ export default function CityTemplate() {
             <div className="pointer-events-none absolute -left-20 -bottom-20 h-72 w-72 animate-pulse-slow rounded-full bg-gold/12 blur-3xl" />
             <span className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/50 to-transparent" />
 
-            <div className="relative mx-auto max-w-2xl">
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.18em] text-primary-100 backdrop-blur">
-                <span className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold/60" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-gold" />
+            <div className="relative grid items-center gap-12 text-center lg:grid-cols-[1.1fr_0.9fr] lg:gap-14 lg:text-left">
+              {/* left: copy */}
+              <div>
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.18em] text-primary-100 backdrop-blur">
+                  <span className="relative flex h-2 w-2">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold/60" />
+                    <span className="relative inline-flex h-2 w-2 rounded-full bg-gold" />
+                  </span>
+                  Ready in 2–3 days
                 </span>
-                Ready in 2–3 days
-              </span>
 
-              <h2 className="mt-5 text-3xl font-extrabold leading-tight text-white text-balance sm:text-4xl lg:text-[2.75rem]">
-                Set up your <span className="gold-text">{cityName}</span> business address today
-              </h2>
-              <p className="mx-auto mt-4 max-w-xl text-lg text-primary-100">
-                Join <span className="font-bold text-white">5,000+ businesses</span> registered with
-                EaseMyOffice across {region}.
-              </p>
+                <h2 className="mt-5 text-3xl font-extrabold leading-tight text-white text-balance sm:text-4xl lg:text-[2.6rem]">
+                  Set up your <span className="gold-text">{cityName}</span> business address today
+                </h2>
+                <p className="mx-auto mt-4 max-w-xl text-lg text-primary-100 lg:mx-0">
+                  Join <span className="font-bold text-white">5,000+ businesses</span> registered with
+                  EaseMyOffice across {region}.
+                </p>
 
-              <div className="mt-8 flex flex-wrap justify-center gap-4">
-                <button
-                  type="button"
-                  onClick={() => openLead()}
-                  className="btn-base bg-gradient-to-r from-gold to-gold-dark px-8 py-4 text-base text-white shadow-card transition-all hover:shadow-gold-glow hover:brightness-105"
-                >
-                  Get Started <ArrowRight className="h-5 w-5" />
-                </button>
-                <a
-                  href="tel:8882735038"
-                  className="btn-base border-2 border-white/40 px-8 py-4 text-base text-white transition-colors hover:bg-white/10"
-                >
-                  <Phone className="h-5 w-5" />
-                  888-273-5038
-                </a>
+                <div className="mt-8 flex flex-wrap justify-center gap-4 lg:justify-start">
+                  <button
+                    type="button"
+                    onClick={() => openLead()}
+                    className="btn-base bg-gradient-to-r from-gold to-gold-dark px-8 py-4 text-base text-white shadow-card transition-all hover:shadow-gold-glow hover:brightness-105"
+                  >
+                    Get Started <ArrowRight className="h-5 w-5" />
+                  </button>
+                  <a
+                    href="tel:8882735038"
+                    className="btn-base border-2 border-white/40 px-8 py-4 text-base text-white transition-colors hover:bg-white/10"
+                  >
+                    <Phone className="h-5 w-5" />
+                    888-273-5038
+                  </a>
+                </div>
+
+                {/* trust chips */}
+                <div className="mt-9 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 border-t border-white/10 pt-7 text-sm font-medium text-primary-100/80 lg:justify-start">
+                  <span className="inline-flex items-center gap-1.5">
+                    <Star className="h-4 w-4 fill-gold text-gold" />
+                    4.9/5 on Google
+                  </span>
+                  <span className="inline-flex items-center gap-1.5">
+                    <BadgeCheck className="h-4 w-4 text-emerald-300" />
+                    98.7% approval
+                  </span>
+                  <span className="inline-flex items-center gap-1.5">
+                    <ShieldCheck className="h-4 w-4 text-emerald-300" />
+                    No lock-in
+                  </span>
+                </div>
               </div>
 
-              {/* trust chips */}
-              <div className="mt-9 flex flex-wrap items-center justify-center gap-x-7 gap-y-3 border-t border-white/10 pt-7 text-sm font-medium text-primary-100/80">
-                <span className="inline-flex items-center gap-1.5">
+              {/* right: verified address card mockup */}
+              <div className="relative mx-auto w-full max-w-sm">
+                <div className="pointer-events-none absolute -inset-4 rounded-[2rem] bg-gold/10 blur-2xl" />
+                <div className="relative overflow-hidden rounded-2xl border border-white/15 bg-white/10 p-6 text-left shadow-card-hover backdrop-blur-xl">
+                  <span className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-gold via-gold-dark to-gold" />
+                  <div className="flex items-center justify-between">
+                    <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-white/15 text-white ring-1 ring-white/25">
+                      <Building2 className="h-5 w-5" />
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-400/15 px-2.5 py-1 text-[11px] font-bold text-emerald-300 ring-1 ring-emerald-300/30">
+                      <BadgeCheck className="h-3.5 w-3.5" />
+                      Verified
+                    </span>
+                  </div>
+
+                  <p className="mt-5 text-[11px] font-bold uppercase tracking-wider text-primary-100/60">
+                    Your registered address
+                  </p>
+                  <p className="mt-1.5 text-lg font-bold leading-snug text-white">
+                    Your Company Pvt. Ltd.
+                  </p>
+                  <p className="mt-1 text-sm leading-relaxed text-primary-100/90">
+                    {spaces[0]?.name || 'Central Business District'}, {cityName}
+                    <br />
+                    {region}, India
+                  </p>
+
+                  <div className="mt-5 flex flex-wrap gap-2 border-t border-white/10 pt-4">
+                    {['GST Ready', 'MCA Ready', 'Mail Handling'].map((t) => (
+                      <span
+                        key={t}
+                        className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-semibold text-primary-100"
+                      >
+                        <Check className="h-3 w-3 text-emerald-300" strokeWidth={3} />
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* floating rating badge */}
+                <div className="absolute -bottom-4 -left-4 flex items-center gap-2 rounded-xl border border-white/15 bg-navy-dark/80 px-3 py-2 shadow-card-hover backdrop-blur">
                   <Star className="h-4 w-4 fill-gold text-gold" />
-                  4.9/5 on Google
-                </span>
-                <span className="inline-flex items-center gap-1.5">
-                  <BadgeCheck className="h-4 w-4 text-emerald-300" />
-                  98.7% approval rate
-                </span>
-                <span className="inline-flex items-center gap-1.5">
-                  <ShieldCheck className="h-4 w-4 text-emerald-300" />
-                  No lock-in · No hidden fees
-                </span>
-                <Link
-                  to="/virtual-office"
-                  className="inline-flex items-center gap-1.5 font-bold text-white underline-offset-4 hover:underline"
-                >
-                  Explore all cities
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
+                  <span className="text-xs font-bold text-white">4.9/5</span>
+                  <span className="text-[11px] text-primary-100/70">1,200+ reviews</span>
+                </div>
               </div>
+            </div>
+
+            {/* explore all cities link */}
+            <div className="relative mt-10 text-center">
+              <Link
+                to="/virtual-office"
+                className="inline-flex items-center gap-1.5 text-sm font-bold text-white underline-offset-4 hover:underline"
+              >
+                Explore all cities
+                <ArrowRight className="h-4 w-4" />
+              </Link>
             </div>
           </motion.div>
         </div>
