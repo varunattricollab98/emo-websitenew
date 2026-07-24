@@ -333,13 +333,18 @@ export function getSpaceBySlug(citySlug, spaceSlug) {
 
 // Deterministic placeholder stats derived from a key, so numbers stay stable
 // per space until the real backend is wired in (then replace this).
+// Uses an unsigned FNV-1a hash + unsigned shifts so values are always positive.
+// Ranges: weekly 5–10, monthly 12–32, occupancy 62–94, seatsAvail 8–40.
 export function spaceStats(key = '') {
-  let h = 0
-  for (let i = 0; i < key.length; i++) h = (h * 31 + key.charCodeAt(i)) >>> 0
+  let h = 2166136261 >>> 0
+  for (let i = 0; i < key.length; i++) {
+    h ^= key.charCodeAt(i)
+    h = Math.imul(h, 16777619) >>> 0
+  }
   return {
-    monthly: 80 + (h % 170), // bookings this month
-    weekly: 12 + ((h >> 3) % 40), // bookings this week
-    occupancy: 62 + (h % 33), // % occupancy
-    seatsAvail: 6 + ((h >> 5) % 44), // seats available now
+    weekly: 5 + (h % 6), // 5–10 bookings this week
+    monthly: 12 + ((h >>> 5) % 21), // 12–32 bookings this month
+    occupancy: 62 + ((h >>> 11) % 33), // 62–94 % occupancy
+    seatsAvail: 8 + ((h >>> 17) % 33), // 8–40 seats available now
   }
 }

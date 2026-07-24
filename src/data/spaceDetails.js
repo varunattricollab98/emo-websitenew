@@ -20,6 +20,11 @@
 //   pricing_MA_Plan_Price           -> pricing.ma
 //
 // Anything omitted falls back to sensible defaults in the SpaceDetail page.
+//
+// OPTIONAL — override the "live" activity numbers shown in the hero
+// (otherwise they are auto-generated per space: weekly 5–10, monthly 12–32):
+//   stats: { weekly: 8, monthly: 27, seatsAvail: 15, occupancy: 88 }
+//   reviewCount: 154
 
 export const spaceDetails = {
   'gurgaon/sohna-road': {

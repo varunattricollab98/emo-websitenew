@@ -118,9 +118,10 @@ export default function SpaceDetail() {
   // all photos — no cap, so any number from the CSV renders
   const thumbs = [...new Set([featuredImage, ...gallery].filter(Boolean))]
 
-  // deterministic "live" activity numbers (replace with backend later)
-  const stats = spaceStats(`${city}-${space}`)
-  const reviewCount = 40 + (stats.monthly % 120)
+  // "live" activity numbers — auto-generated & stable per space, but any field
+  // can be overridden per space via `stats` in spaceDetails.js (or a backend later).
+  const stats = { ...spaceStats(`${city}-${space}`), ...(detail?.stats || {}) }
+  const reviewCount = detail?.reviewCount || 40 + (stats.monthly % 120)
 
   const book = () =>
     openLeadModal({
