@@ -10,6 +10,7 @@ import {
   ArrowDownWideNarrow,
   ChevronDown,
   Check,
+  X,
 } from 'lucide-react'
 import SectionHeading from '../ui/SectionHeading'
 import SmartImage from '../ui/SmartImage'
@@ -36,7 +37,15 @@ export default function CoworkingSpaces() {
   const [cityInput, setCityInput] = useState(cityNameBySlug[initialSlug] || 'Bengaluru')
   const [cityOpen, setCityOpen] = useState(false)
 
-  const activeName = cityNameBySlug[active] || 'Bengaluru'
+  const isAll = active === 'all'
+  const activeName = isAll ? '' : cityNameBySlug[active] || 'Bengaluru'
+
+  // clear the city → show a mix of spaces across all cities
+  const clearCity = () => {
+    setActive('all')
+    setCityInput('')
+    setCityOpen(true)
+  }
 
   // respond to ?city= changes (e.g. clicking a city chip elsewhere on the page)
   useEffect(() => {
@@ -57,11 +66,24 @@ export default function CoworkingSpaces() {
   }, [cityInput, activeName])
 
   const spaces = useMemo(() => {
-    const list = [...getCoworkingSpaces(active)]
-    if (sort === 'low') list.sort((a, b) => a.price - b.price)
-    else if (sort === 'high') list.sort((a, b) => b.price - a.price)
+    let list
+    if (isAll) {
+      // round-robin interleave across cities so the mix spans many cities
+      const perCity = coworkingCities.map((c) =>
+        getCoworkingSpaces(c.slug).map((sp) => ({ ...sp, cityName: c.name, citySlug: c.slug }))
+      )
+      list = []
+      for (let i = 0; perCity.some((l) => l[i]); i++) {
+        perCity.forEach((l) => l[i] && list.push(l[i]))
+      }
+      list = list.slice(0, 12)
+    } else {
+      list = getCoworkingSpaces(active).map((sp) => ({ ...sp, cityName: activeName, citySlug: active }))
+    }
+    if (sort === 'low') list = [...list].sort((a, b) => a.price - b.price)
+    else if (sort === 'high') list = [...list].sort((a, b) => b.price - a.price)
     return list
-  }, [active, sort])
+  }, [active, sort, isAll, activeName])
 
   const selectCity = (slug, name) => {
     setActive(slug)
@@ -100,8 +122,19 @@ export default function CoworkingSpaces() {
               }}
               placeholder="Search a city, state or pincode…"
               aria-label="Search city"
-              className="w-full rounded-full border border-primary-100 bg-white py-3 pl-10 pr-9 text-sm font-bold text-navy-dark shadow-soft placeholder:font-normal placeholder:text-slate-400 focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20"
+              className="w-full rounded-full border border-primary-100 bg-white py-3 pl-10 pr-16 text-sm font-bold text-navy-dark shadow-soft placeholder:font-normal placeholder:text-slate-400 focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20"
             />
+            {/* clear button — resets to a mix of all cities */}
+            {(cityInput || !isAll) && (
+              <button
+                type="button"
+                onClick={clearCity}
+                aria-label="Clear city and show all"
+                className="absolute right-9 top-1/2 z-10 inline-flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-primary-50 hover:text-primary"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
             <ChevronDown
               className={`pointer-events-none absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 transition-transform ${
                 cityOpen ? 'rotate-180' : ''
@@ -207,7 +240,7 @@ export default function CoworkingSpaces() {
           >
             {spaces.map((s) => (
               <div
-                key={s.name + s.locality}
+                key={(s.citySlug || '') + s.name + s.locality}
                 className="group flex h-full flex-col overflow-hidden rounded-3xl border border-primary-100/70 bg-white shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover"
               >
                 {/* image */}
@@ -230,7 +263,7 @@ export default function CoworkingSpaces() {
                   <div className="absolute bottom-3 left-3 flex items-center gap-1.5 text-white">
                     <MapPin className="h-4 w-4" />
                     <span className="text-sm font-semibold drop-shadow">
-                      {s.locality}, {activeName}
+                      {s.locality}, {s.cityName || activeName}
                     </span>
                   </div>
                 </div>
@@ -279,8 +312,10 @@ export default function CoworkingSpaces() {
         </AnimatePresence>
 
         <p className="mt-8 text-center text-sm text-slate-500">
-          Showing spaces in {activeName}. Prices are indicative — get an exact, brokerage-free quote
-          from your dedicated manager.
+          {isAll
+            ? 'Showing a mix of spaces across cities. '
+            : `Showing spaces in ${activeName}. `}
+          Prices are indicative — get an exact, brokerage-free quote from your dedicated manager.
         </p>
       </div>
     </section>
