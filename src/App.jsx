@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { LeadModalProvider } from './context/LeadModalContext'
 import { BookingModalProvider } from './context/BookingModalContext'
@@ -6,61 +7,75 @@ import Footer from './components/layout/Footer'
 import WhatsAppButton from './components/layout/WhatsAppButton'
 import ScrollToTop from './components/layout/ScrollToTop'
 
+// Home is eager so the landing page paints instantly (no chunk round-trip).
 import Home from './pages/Home'
-import VirtualOffice from './pages/VirtualOffice'
-import Coworking from './pages/Coworking'
-import MeetingRooms from './pages/MeetingRooms'
-import CAServices from './pages/CAServices'
-import Pricing from './pages/Pricing'
-import About from './pages/About'
-import Contact from './pages/Contact'
-import ListYourSpace from './pages/ListYourSpace'
-import CityTemplate from './pages/CityTemplate'
-import SpaceDetail from './pages/SpaceDetail'
-import SpaceOrService from './pages/SpaceOrService'
-import ServiceLanding from './pages/ServiceLanding'
-import Faq from './pages/Faq'
-import PrivacyPolicy from './pages/PrivacyPolicy'
-import Terms from './pages/Terms'
-import RefundPolicy from './pages/RefundPolicy'
-import Disclaimer from './pages/Disclaimer'
-import CookiePolicy from './pages/CookiePolicy'
-import NotFound from './pages/NotFound'
+
+// Every other route is lazy-loaded → tiny initial bundle, fast first paint.
+const VirtualOffice = lazy(() => import('./pages/VirtualOffice'))
+const Coworking = lazy(() => import('./pages/Coworking'))
+const MeetingRooms = lazy(() => import('./pages/MeetingRooms'))
+const CAServices = lazy(() => import('./pages/CAServices'))
+const Pricing = lazy(() => import('./pages/Pricing'))
+const About = lazy(() => import('./pages/About'))
+const Contact = lazy(() => import('./pages/Contact'))
+const ListYourSpace = lazy(() => import('./pages/ListYourSpace'))
+const CityTemplate = lazy(() => import('./pages/CityTemplate'))
+const SpaceDetail = lazy(() => import('./pages/SpaceDetail'))
+const SpaceOrService = lazy(() => import('./pages/SpaceOrService'))
+const ServiceLanding = lazy(() => import('./pages/ServiceLanding'))
+const Faq = lazy(() => import('./pages/Faq'))
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'))
+const Terms = lazy(() => import('./pages/Terms'))
+const RefundPolicy = lazy(() => import('./pages/RefundPolicy'))
+const Disclaimer = lazy(() => import('./pages/Disclaimer'))
+const CookiePolicy = lazy(() => import('./pages/CookiePolicy'))
+const NotFound = lazy(() => import('./pages/NotFound'))
+
+// Lightweight fallback while a route chunk loads (no layout shift).
+function RouteFallback() {
+  return (
+    <div className="flex min-h-[60vh] items-center justify-center">
+      <span className="h-9 w-9 animate-spin rounded-full border-[3px] border-primary-100 border-t-primary" />
+    </div>
+  )
+}
 
 export default function App() {
   return (
     <LeadModalProvider>
-    <BookingModalProvider>
-    <div className="flex min-h-screen flex-col">
-      <ScrollToTop />
-      <Navbar />
-      <main className="flex-1 pt-16 lg:pt-20">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/virtual-office" element={<VirtualOffice />} />
-          <Route path="/virtual-office/:city" element={<CityTemplate />} />
-          <Route path="/space/:city/:space" element={<SpaceOrService />} />
-          <Route path="/space/:city/:locality/:service" element={<ServiceLanding />} />
-          <Route path="/coworking" element={<Coworking />} />
-          <Route path="/meeting-rooms" element={<MeetingRooms />} />
-          <Route path="/ca-services" element={<CAServices />} />
-          <Route path="/pricing" element={<Pricing />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/list-your-space" element={<ListYourSpace />} />
-          <Route path="/faq" element={<Faq />} />
-          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-          <Route path="/terms" element={<Terms />} />
-          <Route path="/refund-policy" element={<RefundPolicy />} />
-          <Route path="/disclaimer" element={<Disclaimer />} />
-          <Route path="/cookie-policy" element={<CookiePolicy />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </main>
-      <Footer />
-      <WhatsAppButton />
-    </div>
-    </BookingModalProvider>
+      <BookingModalProvider>
+        <div className="flex min-h-screen flex-col">
+          <ScrollToTop />
+          <Navbar />
+          <main className="flex-1 pt-16 lg:pt-20">
+            <Suspense fallback={<RouteFallback />}>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/virtual-office" element={<VirtualOffice />} />
+                <Route path="/virtual-office/:city" element={<CityTemplate />} />
+                <Route path="/space/:city/:space" element={<SpaceOrService />} />
+                <Route path="/space/:city/:locality/:service" element={<ServiceLanding />} />
+                <Route path="/coworking" element={<Coworking />} />
+                <Route path="/meeting-rooms" element={<MeetingRooms />} />
+                <Route path="/ca-services" element={<CAServices />} />
+                <Route path="/pricing" element={<Pricing />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/list-your-space" element={<ListYourSpace />} />
+                <Route path="/faq" element={<Faq />} />
+                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                <Route path="/terms" element={<Terms />} />
+                <Route path="/refund-policy" element={<RefundPolicy />} />
+                <Route path="/disclaimer" element={<Disclaimer />} />
+                <Route path="/cookie-policy" element={<CookiePolicy />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Suspense>
+          </main>
+          <Footer />
+          <WhatsAppButton />
+        </div>
+      </BookingModalProvider>
     </LeadModalProvider>
   )
 }
