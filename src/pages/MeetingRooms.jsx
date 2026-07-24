@@ -11,6 +11,8 @@ import {
   Check,
   Clock,
   CalendarSearch,
+  CalendarDays,
+  ChevronDown,
   Handshake,
   UserCheck,
   Video,
@@ -22,6 +24,7 @@ import SectionHeading from '../components/ui/SectionHeading'
 import Reveal from '../components/ui/Reveal'
 import Button from '../components/ui/Button'
 import CTABand from '../components/ui/CTABand'
+import { useLeadModal } from '../context/LeadModalContext'
 
 const rooms = [
   {
@@ -31,6 +34,7 @@ const rooms = [
     desc: 'Intimate, well-lit rooms perfect for client meetings and team huddles.',
     price: '499',
     unit: '/hour',
+    avail: 6,
     grad: 'linear-gradient(135deg, #3c82c2 0%, #11417c 100%)',
   },
   {
@@ -40,6 +44,7 @@ const rooms = [
     desc: 'Spacious boardrooms with premium AV for presentations and pitches.',
     price: '999',
     unit: '/hour',
+    avail: 3,
     grad: 'linear-gradient(135deg, #fbbf24 0%, #d97706 100%)',
     popular: true,
   },
@@ -50,9 +55,12 @@ const rooms = [
     desc: 'Flexible layouts for workshops, training sessions and town halls.',
     price: '1,499',
     unit: '/hour',
+    avail: 2,
     grad: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)',
   },
 ]
+
+const bookingCities = ['Bengaluru', 'Gurugram', 'Mumbai', 'Delhi', 'Hyderabad', 'Pune', 'Chennai', 'Noida']
 
 const amenities = [
   { icon: Monitor, label: '4K displays & screen share' },
@@ -77,6 +85,13 @@ const steps = [
 ]
 
 export default function MeetingRooms() {
+  const { openLeadModal } = useLeadModal()
+  const bookRoom = (name) =>
+    openLeadModal({
+      title: `Book a ${name}`,
+      subtitle: 'Tell us your city, date and time — we will confirm your slot.',
+      service: `${name} booking`,
+    })
   return (
     <>
       <SubPageHero
@@ -88,51 +103,111 @@ export default function MeetingRooms() {
         visual={
           <div className="relative">
             <div className="pointer-events-none absolute -inset-3 rounded-[2rem] bg-primary-300/20 blur-2xl" />
-            <div className="relative overflow-hidden rounded-3xl border border-white/80 bg-white/95 p-7 shadow-card-hover ring-1 ring-primary-100/70 backdrop-blur-xl">
+            <div className="relative overflow-hidden rounded-3xl border border-white/80 bg-white/95 p-6 shadow-card-hover ring-1 ring-primary-100/70 backdrop-blur-xl sm:p-7">
               <span className="pointer-events-none absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-gold via-gold-dark to-gold" />
-              <div className="flex items-center gap-3">
-                <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary-gradient text-white shadow-card">
-                  <CalendarSearch className="h-6 w-6" />
+
+              {/* header + live badge */}
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-primary-gradient text-white shadow-card">
+                    <CalendarSearch className="h-5 w-5" />
+                  </span>
+                  <div>
+                    <p className="text-sm font-bold text-navy-dark">Instant booking</p>
+                    <p className="text-xs text-slate-500">Rooms from ₹499/hour</p>
+                  </div>
+                </div>
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-accent-green/10 px-2.5 py-1 text-[11px] font-bold text-accent-emerald">
+                  <span className="relative flex h-1.5 w-1.5">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/70" />
+                    <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                  </span>
+                  Live
                 </span>
-                <div>
-                  <p className="text-sm font-bold text-navy-dark">Instant booking</p>
-                  <p className="text-xs text-slate-500">Rooms from ₹499/hour</p>
+              </div>
+
+              {/* booking selectors */}
+              <div className="mt-5 grid grid-cols-3 gap-2">
+                <div className="relative">
+                  <MapPin className="pointer-events-none absolute left-2.5 top-1/2 z-10 h-3.5 w-3.5 -translate-y-1/2 text-primary" />
+                  <select
+                    aria-label="City"
+                    defaultValue="Bengaluru"
+                    className="w-full appearance-none rounded-xl border border-primary-100 bg-surface-light py-2.5 pl-8 pr-6 text-xs font-bold text-navy-dark focus:border-primary/60 focus:outline-none"
+                  >
+                    {bookingCities.map((c) => (
+                      <option key={c}>{c}</option>
+                    ))}
+                  </select>
+                  <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
+                </div>
+                <div className="flex items-center gap-1.5 rounded-xl border border-primary-100 bg-surface-light px-2.5 py-2.5 text-xs font-bold text-navy-dark">
+                  <CalendarDays className="h-3.5 w-3.5 flex-none text-primary" />
+                  Today
+                </div>
+                <div className="flex items-center gap-1.5 rounded-xl border border-primary-100 bg-surface-light px-2.5 py-2.5 text-xs font-bold text-navy-dark">
+                  <Clock className="h-3.5 w-3.5 flex-none text-primary" />
+                  10:00 AM
                 </div>
               </div>
-              <div className="mt-6 space-y-3">
+
+              {/* room rows with availability */}
+              <div className="mt-4 space-y-2.5">
                 {rooms.map((r) => (
                   <div
                     key={r.title}
-                    className="flex items-center justify-between rounded-2xl border border-primary-100/70 bg-surface-light px-4 py-3"
+                    className="flex items-center justify-between gap-3 rounded-2xl border border-primary-100/70 bg-surface-light px-3.5 py-3"
                   >
-                    <div className="flex items-center gap-3">
+                    <div className="flex min-w-0 items-center gap-3">
                       <span
-                        className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-white"
+                        className="inline-flex h-9 w-9 flex-none items-center justify-center rounded-lg text-white"
                         style={{ background: r.grad }}
                       >
                         <r.icon className="h-4 w-4" />
                       </span>
-                      <div>
-                        <p className="text-sm font-bold text-navy-dark">{r.title}</p>
-                        <p className="text-[11px] text-slate-500">{r.capacity}</p>
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-bold text-navy-dark">{r.title}</p>
+                        <p className="flex items-center gap-1.5 text-[11px] font-medium text-accent-emerald">
+                          <span className="inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                          {r.avail} available today
+                        </p>
                       </div>
                     </div>
-                    <p className="text-sm font-extrabold text-primary">
-                      ₹{r.price}
-                      <span className="text-[11px] font-medium text-slate-400">{r.unit}</span>
-                    </p>
+                    <div className="flex flex-none items-center gap-2.5">
+                      <p className="text-sm font-extrabold text-primary">
+                        ₹{r.price}
+                        <span className="text-[11px] font-medium text-slate-400">{r.unit}</span>
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => bookRoom(r.title)}
+                        className="rounded-lg bg-primary-gradient px-3 py-1.5 text-[11px] font-bold text-white shadow-sm transition-all hover:shadow-glow hover:brightness-110"
+                      >
+                        Book
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
-              <div className="mt-5 flex items-center gap-2 rounded-2xl border border-primary-100 bg-white px-4 py-3 shadow-soft">
-                <Star className="h-5 w-5 fill-gold text-gold" />
-                <p className="text-sm font-semibold text-navy">Rated 4.9/5 by 5,000+ professionals</p>
+
+              {/* rating footer */}
+              <div className="mt-4 flex items-center gap-2 rounded-2xl border border-primary-100 bg-white px-4 py-2.5 shadow-soft">
+                <Star className="h-4 w-4 fill-gold text-gold" />
+                <p className="text-xs font-semibold text-navy">Rated 4.9/5 by 5,000+ professionals</p>
               </div>
             </div>
           </div>
         }
       >
-        <Button to="/contact" size="lg">
+        <Button
+          onClick={() =>
+            openLeadModal({
+              title: 'Check Room Availability',
+              subtitle: 'Share your city, date and time — we will confirm available rooms.',
+            })
+          }
+          size="lg"
+        >
           Check Availability <ArrowRight className="h-5 w-5" />
         </Button>
       </SubPageHero>
@@ -178,7 +253,7 @@ export default function MeetingRooms() {
                     <span className="mb-1 text-sm text-slate-500">{r.unit}</span>
                   </div>
                   <Button
-                    to="/contact"
+                    onClick={() => bookRoom(r.title)}
                     variant={r.popular ? 'gold' : 'primary'}
                     className="mt-7 w-full"
                   >
