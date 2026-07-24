@@ -34,17 +34,13 @@ export default function Footer() {
         <div className="grid grid-cols-2 gap-10 lg:grid-cols-6 lg:gap-8">
           {/* Brand */}
           <div className="col-span-2 lg:col-span-1">
-            <Link
-              to="/"
-              className="inline-flex items-center rounded-xl bg-white px-3.5 py-2.5 shadow-soft"
-              aria-label="EaseMyOffice home"
-            >
+            <Link to="/" className="inline-flex items-center" aria-label="EaseMyOffice home">
               <img
                 src="/emo-logo.webp"
                 alt="EaseMyOffice"
                 width="800"
                 height="200"
-                className="h-8 w-auto"
+                className="h-9 w-auto brightness-0 invert"
               />
             </Link>
             <p className="mt-4 text-sm leading-relaxed text-slate-400">
