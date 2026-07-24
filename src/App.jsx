@@ -16,6 +16,7 @@ import About from './pages/About'
 import Contact from './pages/Contact'
 import ListYourSpace from './pages/ListYourSpace'
 import CityTemplate from './pages/CityTemplate'
+import SpaceDetail from './pages/SpaceDetail'
 import Faq from './pages/Faq'
 import PrivacyPolicy from './pages/PrivacyPolicy'
 import Terms from './pages/Terms'
@@ -36,6 +37,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/virtual-office" element={<VirtualOffice />} />
           <Route path="/virtual-office/:city" element={<CityTemplate />} />
+          <Route path="/space/:city/:space" element={<SpaceDetail />} />
           <Route path="/coworking" element={<Coworking />} />
           <Route path="/meeting-rooms" element={<MeetingRooms />} />
           <Route path="/ca-services" element={<CAServices />} />

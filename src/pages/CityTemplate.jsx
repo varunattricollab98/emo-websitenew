@@ -25,7 +25,7 @@ import SmartImage from '../components/ui/SmartImage'
 import TrustBar from '../components/home/TrustBar'
 import GoogleReviews from '../components/virtual-office/GoogleReviews'
 import ClientsStrip from '../components/virtual-office/ClientsStrip'
-import { voCities, getSpaces } from '../data/spaces'
+import { voCities, getSpaces, slugifySpace } from '../data/spaces'
 import { getCityBySlug } from '../data/cities'
 import { useLeadModal } from '../context/LeadModalContext'
 
@@ -228,7 +228,10 @@ export default function CityTemplate() {
             {spaces.map((sp, i) => (
               <Reveal key={`${sp.name}-${i}`} delay={(i % 4) * 0.05}>
                 <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-primary-100/60 bg-white shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover">
-                  <div className="relative h-40 overflow-hidden bg-primary-gradient">
+                  <Link
+                    to={`/space/${city}/${slugifySpace(sp.name)}`}
+                    className="relative block h-40 overflow-hidden bg-primary-gradient"
+                  >
                     <SmartImage
                       src={sp.image}
                       alt={`${sp.name}, ${cityName}`}
@@ -244,9 +247,14 @@ export default function CityTemplate() {
                       <Star className="h-3.5 w-3.5 fill-gold text-gold" />
                       {sp.rating}
                     </span>
-                  </div>
+                  </Link>
                   <div className="flex flex-1 flex-col p-5">
-                    <h3 className="text-base font-bold text-navy-dark">{sp.name}</h3>
+                    <Link
+                      to={`/space/${city}/${slugifySpace(sp.name)}`}
+                      className="text-base font-bold text-navy-dark transition-colors hover:text-primary"
+                    >
+                      {sp.name}
+                    </Link>
                     <p className="mt-0.5 flex items-center gap-1 text-xs text-slate-500">
                       <MapPin className="h-3 w-3 text-primary/60" />
                       {cityName}

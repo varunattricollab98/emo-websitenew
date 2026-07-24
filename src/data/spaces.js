@@ -251,3 +251,31 @@ export function cityMatches(city, query) {
   const aliases = cityAliases[city.slug]
   return aliases ? aliases.some((a) => a.includes(q) || q.includes(a)) : false
 }
+
+
+// ── Space detail helpers ─────────────────────────────────────
+export function slugifySpace(name) {
+  return String(name || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+}
+
+// Find a single space (locality) within a city by its slug.
+export function getSpaceBySlug(citySlug, spaceSlug) {
+  const list = getSpaces(citySlug) || []
+  return list.find((s) => slugifySpace(s.name) === spaceSlug) || null
+}
+
+// Deterministic placeholder stats derived from a key, so numbers stay stable
+// per space until the real backend is wired in (then replace this).
+export function spaceStats(key = '') {
+  let h = 0
+  for (let i = 0; i < key.length; i++) h = (h * 31 + key.charCodeAt(i)) >>> 0
+  return {
+    monthly: 80 + (h % 170), // bookings this month
+    weekly: 12 + ((h >> 3) % 40), // bookings this week
+    occupancy: 62 + (h % 33), // % occupancy
+    seatsAvail: 6 + ((h >> 5) % 44), // seats available now
+  }
+}

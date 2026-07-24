@@ -17,7 +17,7 @@ import {
   List,
 } from 'lucide-react'
 import SmartImage from '../ui/SmartImage'
-import { voCities, getSpaces, spacesByCity, cityMatches } from '../../data/spaces'
+import { voCities, getSpaces, spacesByCity, cityMatches, slugifySpace } from '../../data/spaces'
 import { resolvePincode } from '../../data/pincodes'
 
 // name lookup + a flat list of every space across all cities that has data
@@ -486,8 +486,9 @@ export default function ExploreSpaces() {
                         : 'flex h-full flex-col hover:-translate-y-1.5'
                     }`}
                   >
-                    <div
-                      className={`relative overflow-hidden bg-primary-gradient ${
+                    <Link
+                      to={`/space/${sp.citySlug}/${slugifySpace(sp.name)}`}
+                      className={`relative block overflow-hidden bg-primary-gradient ${
                         view === 'list' ? 'h-44 sm:h-auto sm:w-60 sm:flex-none' : 'h-40'
                       }`}
                     >
@@ -506,9 +507,14 @@ export default function ExploreSpaces() {
                         <Star className="h-3.5 w-3.5 fill-gold text-gold" />
                         {sp.rating}
                       </span>
-                    </div>
+                    </Link>
                     <div className="flex flex-1 flex-col p-5">
-                      <h3 className="text-base font-bold text-navy-dark">{sp.name}</h3>
+                      <Link
+                        to={`/space/${sp.citySlug}/${slugifySpace(sp.name)}`}
+                        className="text-base font-bold text-navy-dark transition-colors hover:text-primary"
+                      >
+                        {sp.name}
+                      </Link>
                       <p className="mt-0.5 flex items-center gap-1 text-xs text-slate-500">
                         <MapPin className="h-3 w-3 text-primary/60" />
                         {sp.cityName}
