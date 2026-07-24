@@ -136,7 +136,7 @@ export default function Coworking() {
                 </span>
                 <div>
                   <p className="text-sm font-bold text-navy-dark">Workspaces near you</p>
-                  <p className="text-xs text-slate-500">Across 14 cities in India</p>
+                  <p className="text-xs text-slate-500">Across all major cities in India</p>
                 </div>
               </div>
               <div className="mt-6 grid grid-cols-2 gap-3">

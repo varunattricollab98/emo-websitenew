@@ -347,7 +347,7 @@ export default function MeetingRooms() {
           <div className="mt-10 flex justify-center">
             <span className="inline-flex items-center gap-2 rounded-full border border-primary-200 bg-white px-5 py-2.5 text-sm font-semibold text-navy shadow-soft">
               <MapPin className="h-4 w-4 text-primary" />
-              Available across 14 cities in India
+              Available across all major cities in India
             </span>
           </div>
         </div>

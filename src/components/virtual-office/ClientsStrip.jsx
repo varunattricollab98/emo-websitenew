@@ -3,7 +3,7 @@ import { Users, MapPin, Building2, Star } from 'lucide-react'
 import Counter from '../ui/Counter'
 
 const stats = [
-  { icon: Users, value: 5000, suffix: '+', label: 'Businesses served', sub: 'Across 14+ cities' },
+  { icon: Users, value: 5000, suffix: '+', label: 'Businesses served', sub: 'Across 100+ cities' },
   { icon: MapPin, value: 250, suffix: '+', label: 'Prime locations', sub: 'Metro & tier-2 hubs' },
   { icon: Building2, value: 28, suffix: '', label: 'States covered', sub: 'Pan-India presence' },
   {
