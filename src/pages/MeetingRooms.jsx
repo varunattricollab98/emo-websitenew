@@ -26,6 +26,7 @@ import Reveal from '../components/ui/Reveal'
 import Button from '../components/ui/Button'
 import CTABand from '../components/ui/CTABand'
 import { useLeadModal } from '../context/LeadModalContext'
+import { useBookingModal } from '../context/BookingModalContext'
 import { voCities } from '../data/spaces'
 
 const rooms = [
@@ -99,6 +100,7 @@ const steps = [
 
 export default function MeetingRooms() {
   const { openLeadModal } = useLeadModal()
+  const { openBooking } = useBookingModal()
 
   const today = new Date().toISOString().split('T')[0]
   const [bCity, setBCity] = useState('Bengaluru')
@@ -114,13 +116,14 @@ export default function MeetingRooms() {
     })
   }
 
-  const bookRoom = (name) =>
-    openLeadModal({
-      title: `Book a ${name}`,
-      subtitle: `${bCity} · ${prettyDate(bDate)} · ${bTime}`,
-      service: `${name} — ${bCity}`,
+  // instant booking → opens booking form with auto-fetched details, then payment
+  const bookRoom = (name, price) =>
+    openBooking({
+      room: name,
+      price: Number(String(price).replace(/,/g, '')),
       city: bCity,
-      message: `Requested booking: ${name} in ${bCity} on ${prettyDate(bDate)} at ${bTime}.`,
+      date: bDate,
+      time: bTime,
     })
 
   const checkAvailability = () =>
@@ -244,7 +247,7 @@ export default function MeetingRooms() {
                       </p>
                       <button
                         type="button"
-                        onClick={() => bookRoom(r.title)}
+                        onClick={() => bookRoom(r.title, r.price)}
                         className="rounded-lg bg-primary-gradient px-3 py-1.5 text-[11px] font-bold text-white shadow-sm transition-all hover:shadow-glow hover:brightness-110"
                       >
                         Book
@@ -309,7 +312,7 @@ export default function MeetingRooms() {
                     <span className="mb-1 text-sm text-slate-500">{r.unit}</span>
                   </div>
                   <Button
-                    onClick={() => bookRoom(r.title)}
+                    onClick={() => bookRoom(r.title, r.price)}
                     variant={r.popular ? 'gold' : 'primary'}
                     className="mt-7 w-full"
                   >

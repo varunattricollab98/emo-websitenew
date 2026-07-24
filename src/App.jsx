@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import { LeadModalProvider } from './context/LeadModalContext'
+import { BookingModalProvider } from './context/BookingModalContext'
 import Navbar from './components/layout/Navbar'
 import Footer from './components/layout/Footer'
 import WhatsAppButton from './components/layout/WhatsAppButton'
@@ -26,6 +27,7 @@ import NotFound from './pages/NotFound'
 export default function App() {
   return (
     <LeadModalProvider>
+    <BookingModalProvider>
     <div className="flex min-h-screen flex-col">
       <ScrollToTop />
       <Navbar />
@@ -53,6 +55,7 @@ export default function App() {
       <Footer />
       <WhatsAppButton />
     </div>
+    </BookingModalProvider>
     </LeadModalProvider>
   )
 }
