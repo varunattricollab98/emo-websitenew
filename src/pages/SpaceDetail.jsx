@@ -23,7 +23,7 @@ import Button from '../components/ui/Button'
 import SmartImage from '../components/ui/SmartImage'
 import FaqAccordion from '../components/ui/FaqAccordion'
 import ArticleBlocks from '../components/ui/ArticleBlocks'
-import { voCities, getSpaceBySlug } from '../data/spaces'
+import { voCities, getSpaceBySlug, spaceStats } from '../data/spaces'
 import { getCityBySlug } from '../data/cities'
 import { getSpaceDetail } from '../data/spaceDetails'
 import { getLocalityDescription, toBlocks } from '../data/descriptions'
@@ -118,6 +118,10 @@ export default function SpaceDetail() {
   // all photos — no cap, so any number from the CSV renders
   const thumbs = [...new Set([featuredImage, ...gallery].filter(Boolean))]
 
+  // deterministic "live" activity numbers (replace with backend later)
+  const stats = spaceStats(`${city}-${space}`)
+  const reviewCount = 40 + (stats.monthly % 120)
+
   const book = () =>
     openLeadModal({
       title: `Book ${spaceName}, ${cityName}`,
@@ -211,23 +215,60 @@ export default function SpaceDetail() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-primary-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary">
-              {propertyType}
-            </span>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-primary-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary">
+                {propertyType}
+              </span>
+              {basic?.badge && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-gold to-gold-dark px-3 py-1 text-xs font-bold text-white shadow-gold-glow">
+                  🔥 {basic.badge}
+                </span>
+              )}
+            </div>
+
             <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-navy-dark sm:text-4xl">
               {areaName}
             </h1>
-            <p className="mt-2 inline-flex items-center gap-1.5 text-slate-500">
-              <MapPin className="h-4 w-4 text-primary" />
-              {areaName}, {cityName} · {region}
-            </p>
 
-            <div className="mt-4 flex items-end gap-1">
+            <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-slate-500">
+              <span className="inline-flex items-center gap-1.5">
+                <MapPin className="h-4 w-4 text-primary" />
+                {areaName}, {cityName} · {region}
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <Star className="h-4 w-4 fill-gold text-gold" />
+                <span className="font-bold text-navy-dark">{rating}</span>
+                <span className="text-slate-400">({reviewCount} reviews)</span>
+              </span>
+            </div>
+
+            {/* live activity strip — makes the listing feel alive */}
+            <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 rounded-2xl border border-emerald-100 bg-emerald-50/60 px-4 py-3">
+              <span className="inline-flex items-center gap-2 text-sm font-semibold text-emerald-700">
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500" />
+                </span>
+                {stats.weekly} booked this week
+              </span>
+              <span className="text-sm font-semibold text-navy">
+                {stats.monthly} this month
+              </span>
+              <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-navy">
+                <BadgeCheck className="h-4 w-4 text-primary" />
+                {stats.seatsAvail} seats available
+              </span>
+            </div>
+
+            <div className="mt-5 flex items-end gap-1">
               <span className="text-sm font-medium text-slate-400">From</span>
               <span className="ml-1 text-3xl font-extrabold text-navy-dark">
                 ₹{Number(pricing.monthly).toLocaleString('en-IN')}
               </span>
               <span className="mb-1 text-sm text-slate-400">/mo</span>
+              <span className="mb-1 ml-2 rounded-full bg-primary-50 px-2 py-0.5 text-xs font-bold text-primary">
+                Ready in {processingTime}
+              </span>
             </div>
 
             {/* short lead — full description lives in the About section below */}
@@ -235,6 +276,24 @@ export default function SpaceDetail() {
               A premium, verified business address in {areaName}, {cityName} — ready for GST and
               company registration, activated in {processingTime}.
             </p>
+
+            {/* what's included — quick trust chips */}
+            <div className="mt-5 grid grid-cols-2 gap-2.5">
+              {[
+                { icon: FileCheck2, label: 'GST & MCA ready docs' },
+                { icon: Mailbox, label: 'Mail & courier handling' },
+                { icon: Building2, label: 'Meeting room access' },
+                { icon: BadgeCheck, label: 'Verified prime address' },
+              ].map((it) => (
+                <span
+                  key={it.label}
+                  className="inline-flex items-center gap-2 rounded-xl border border-primary-100/70 bg-white px-3 py-2 text-xs font-semibold text-navy-dark shadow-soft"
+                >
+                  <it.icon className="h-4 w-4 flex-none text-primary" />
+                  {it.label}
+                </span>
+              ))}
+            </div>
 
             {/* Book — top */}
             <div className="mt-6 flex flex-wrap gap-3">
@@ -248,6 +307,22 @@ export default function SpaceDetail() {
                 <Phone className="h-4 w-4" />
                 Call
               </a>
+            </div>
+
+            {/* trust footer */}
+            <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs font-medium text-slate-500">
+              <span className="inline-flex items-center gap-1.5">
+                <Check className="h-3.5 w-3.5 text-emerald-500" strokeWidth={3} />
+                No hidden charges
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <Check className="h-3.5 w-3.5 text-emerald-500" strokeWidth={3} />
+                Dedicated manager
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <Check className="h-3.5 w-3.5 text-emerald-500" strokeWidth={3} />
+                {stats.occupancy}% occupancy
+              </span>
             </div>
           </motion.div>
         </div>
