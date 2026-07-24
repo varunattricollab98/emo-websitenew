@@ -21,6 +21,7 @@ import SectionHeading from '../components/ui/SectionHeading'
 import Reveal from '../components/ui/Reveal'
 import Button from '../components/ui/Button'
 import FaqAccordion from '../components/ui/FaqAccordion'
+import ArticleBlocks from '../components/ui/ArticleBlocks'
 import { voCities, getSpaces, slugifySpace } from '../data/spaces'
 import { getCityBySlug } from '../data/cities'
 import { getServiceLanding, serviceOrder, serviceLandings } from '../data/serviceLandings'
@@ -252,13 +253,11 @@ export default function ServiceLanding() {
             title={`${svc.name} with a Virtual Office in ${cityName}`}
             accent={cityName}
           />
-          <div className="mt-6 space-y-4">
-            {svc.intro(cityName, region).map((p, i) => (
-              <Reveal key={i} delay={i * 0.04}>
-                <p className="leading-relaxed text-slate-600">{p}</p>
-              </Reveal>
-            ))}
-          </div>
+          <Reveal className="mt-6">
+            <ArticleBlocks
+              blocks={svc.article ? svc.article(cityName, region) : svc.intro(cityName, region)}
+            />
+          </Reveal>
         </div>
       </section>
 

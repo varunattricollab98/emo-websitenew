@@ -71,6 +71,37 @@ export const serviceLandings = {
       `We provide the full documentation kit accepted by the Ministry of Corporate Affairs (MCA) and ROC — a notarised rent agreement, NOC from the owner, and a recent utility bill — along with board-resolution support. This makes your Private Limited Company, LLP or One Person Company (OPC) incorporation smooth and compliant.`,
       `A registered office in ${city} also boosts your brand credibility with clients, banks and investors, and you can receive all official government and legal correspondence at the address, forwarded to you wherever you are.`,
     ],
+    // Rich long-form blog (headings + lists + paragraphs). When `article` is present
+    // it is used instead of `intro`, so you can add as much content as you like here.
+    article: (city, region) => [
+      `Every company incorporated in India needs a registered office address. A virtual office in ${city} lets you use a credible, well-located commercial address as your registered office for the Ministry of Corporate Affairs (MCA) — without the heavy cost of leasing physical space in ${region}.`,
+      { h: 'Documents you receive' },
+      `Your ${city} registered-office package includes the complete documentation set accepted by the MCA and ROC:`,
+      {
+        list: [
+          'Notarised rent / lease agreement',
+          'No Objection Certificate (NOC) from the property owner',
+          'A recent electricity / utility bill',
+          'Board-resolution drafting support',
+        ],
+      },
+      { h: `Which entities can register in ${city}?` },
+      `Almost any business structure can use a ${city} virtual office as its registered office:`,
+      {
+        list: [
+          'Private Limited Company',
+          'Limited Liability Partnership (LLP)',
+          'One Person Company (OPC)',
+          'Sole Proprietorship & Partnership Firm',
+        ],
+      },
+      { h: `Why choose ${city} for your registered office` },
+      `A registered office in ${city} instantly boosts your brand credibility with clients, banks and investors. It signals that your business has a genuine, professional presence in ${region} — which helps with everything from opening a current account to winning enterprise deals.`,
+      `You also receive all official government and legal correspondence at the address, and our team forwards it to you wherever you are. Once you choose a plan, exact address details are shared and your documentation is ready in just 2–3 business days.`,
+      {
+        quote: `Tip: many founders pair a ${city} registered office with GST registration on the same address to keep all compliance under one roof.`,
+      },
+    ],
     why: [
       { title: 'Registered office', desc: 'A compliant MCA registered-office address in a prime location.' },
       { title: 'Full MCA kit', desc: 'Rent agreement, NOC, utility bill and board-resolution support.' },
