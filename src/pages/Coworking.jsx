@@ -93,7 +93,7 @@ const whyUs = [
 
 const stats = [
   { icon: Building2, to: 200, suffix: '+', label: 'Workspaces', sub: 'Move-in ready' },
-  { icon: MapPin, to: 14, suffix: '', label: 'Cities', sub: 'Across India' },
+  { icon: MapPin, to: 100, suffix: '+', label: 'Cities', sub: 'Across India' },
   { icon: Users, to: 5000, suffix: '+', label: 'Members', sub: 'Founders & teams' },
   { icon: Star, to: 4.9, suffix: '/5', label: 'Member rating', decimals: 1, sub: '1,200+ reviews', rating: true },
 ]
@@ -143,7 +143,7 @@ export default function Coworking() {
               <div className="mt-6 grid grid-cols-2 gap-3">
                 {[
                   { k: '200+', v: 'Ready workspaces' },
-                  { k: '14', v: 'Cities' },
+                  { k: '100+', v: 'Cities' },
                   { k: '5,000+', v: 'Members' },
                   { k: '4.9/5', v: 'Member rating' },
                 ].map((s) => (
