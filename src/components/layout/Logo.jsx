@@ -8,7 +8,7 @@ export default function Logo() {
         alt="EaseMyOffice"
         width="800"
         height="200"
-        className="h-9 w-auto sm:h-10"
+        className="h-9 w-auto mix-blend-multiply sm:h-10"
       />
     </Link>
   )
