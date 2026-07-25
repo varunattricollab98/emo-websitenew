@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { LeadModalProvider } from './context/LeadModalContext'
 import { BookingModalProvider } from './context/BookingModalContext'
+import { SpacesProvider } from './context/SpacesContext'
 import Navbar from './components/layout/Navbar'
 import Footer from './components/layout/Footer'
 import WhatsAppButton from './components/layout/WhatsAppButton'
@@ -43,6 +44,7 @@ function RouteFallback() {
 
 export default function App() {
   return (
+    <SpacesProvider>
     <LeadModalProvider>
       <BookingModalProvider>
         <div className="flex min-h-screen flex-col">
@@ -79,5 +81,6 @@ export default function App() {
         </div>
       </BookingModalProvider>
     </LeadModalProvider>
+    </SpacesProvider>
   )
 }

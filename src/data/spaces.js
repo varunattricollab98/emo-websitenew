@@ -1,6 +1,8 @@
 // Virtual office / workspace listings per city (drives the Explore section + counts).
 import { generatedSpaceDetails } from './spaceDetails.generated.js'
-import { getSupabaseSpacesForCity } from '../lib/spacesStore'
+
+// getSupabaseSpacesForCity is no longer used here — React components
+// use the SpacesContext directly for live Supabase data.
 
 const img = [
   'https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=800&q=80',
@@ -207,17 +209,11 @@ function importedCards(slug) {
 }
 
 export function getSpaces(slug) {
-  const fromDb = getSupabaseSpacesForCity(slug)
   const imported = importedCards(slug)
-  const curated = spacesByCity[slug]
-  
-  // Merge: DB first → imported → curated → fallback generic
-  const all = [...fromDb, ...imported, ...(curated || [])]
-  if (all.length) {
-    // dedupe by space slug so links stay unique
+  if (imported.length) {
     const seen = new Set()
     const merged = []
-    for (const sp of all) {
+    for (const sp of imported) {
       const key = slugifySpace(sp.name)
       if (seen.has(key)) continue
       seen.add(key)

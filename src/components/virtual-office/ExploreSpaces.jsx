@@ -19,6 +19,7 @@ import {
 } from 'lucide-react'
 import SmartImage from '../ui/SmartImage'
 import { voCities, getSpaces, spacesByCity, cityMatches, slugifySpace, citiesForState } from '../../data/spaces'
+import { useSpacesForCity } from '../../context/SpacesContext'
 import { resolvePincode } from '../../data/pincodes'
 import { resolveCity } from '../../utils/resolveCity'
 import { getStateDescription, toBlocks } from '../../data/descriptions'
@@ -138,19 +139,25 @@ export default function ExploreSpaces() {
     return matches
   }, [cityInput, cityName])
 
+  const dbSpaces = useSpacesForCity('') // all cities from Supabase
+
   const results = useMemo(() => {
-    // state selected → every space across that state; city → that city; else all India
-    let list = stateFilter
-      ? spacesForState(stateFilter)
-      : city
-        ? (getSpaces(city) || []).map((sp) => ({
-            ...sp,
-            citySlug: city,
-            cityName: cityNameBySlug[city] || city,
-          }))
-        : allSpaces
+    // Use Supabase data; add citySlug to each
+    let list = dbSpaces.map((sp) => ({
+      ...sp,
+      citySlug: sp.citySlug || slugifySpace(sp.cityName || ''),
+    }))
+
+    // Filter by state or city
+    if (stateFilter) {
+      const st = stateFilter.toLowerCase()
+      const stateCitySlugs = citiesForState(st).map((c) => c.slug)
+      list = list.filter((sp) => stateCitySlugs.includes(sp.citySlug))
+    } else if (city) {
+      list = list.filter((sp) => sp.citySlug === city)
+    }
+
     if (purpose === 'Compliance') {
-      // compliance management covers GST + company/MCA-ready addresses
       list = list.filter((s) => s.tags.includes('GST') || s.tags.includes('Company Reg'))
     } else if (purpose) {
       list = list.filter((s) => s.tags.includes(purpose))
@@ -162,7 +169,7 @@ export default function ExploreSpaces() {
       )
     }
     return list
-  }, [city, stateFilter, query, purpose])
+  }, [dbSpaces, city, stateFilter, query, purpose])
 
   const visible = showAll ? results : results.slice(0, VISIBLE)
 

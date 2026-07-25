@@ -26,6 +26,7 @@ import ArticleBlocks from '../components/ui/ArticleBlocks'
 import { voCities, getSpaceBySlug, spaceStats } from '../data/spaces'
 import { getCityBySlug } from '../data/cities'
 import { getSpaceDetail } from '../data/spaceDetails'
+import { useSpaceDetailFromDb } from '../context/SpacesContext'
 import { getLocalityDescription, toBlocks } from '../data/descriptions'
 import { useLeadModal } from '../context/LeadModalContext'
 
@@ -60,7 +61,7 @@ export default function SpaceDetail() {
   const { openLeadModal } = useLeadModal()
 
   const basic = getSpaceBySlug(city, space)
-  const detail = getSpaceDetail(city, space)
+  const detail = useSpaceDetailFromDb(city, space) || getSpaceDetail(city, space)
   const cityName = voCities.find((c) => c.slug === city)?.name || detail?.city || toTitle(city)
   const region = voCities.find((c) => c.slug === city)?.state || detail?.state || 'India'
 
