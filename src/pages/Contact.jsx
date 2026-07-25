@@ -14,6 +14,7 @@ import SubPageHero from '../components/ui/SubPageHero'
 import SectionHeading from '../components/ui/SectionHeading'
 import Reveal from '../components/ui/Reveal'
 import LocationSelect from '../components/ui/LocationSelect'
+import { saveLead } from '../lib/leads'
 
 const details = [
   { icon: Phone, label: 'Call us', value: '888-273-5038', href: 'tel:8882735038' },
@@ -39,12 +40,20 @@ const supportPoints = [
 
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState('')
   const [form, setForm] = useState({ name: '', email: '', phone: '', city: '', message: '' })
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value })
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    setSubmitted(true)
+    if (submitting) return
+    setSubmitting(true)
+    setError('')
+    const res = await saveLead({ ...form, source: 'contact-page' })
+    setSubmitting(false)
+    if (res.ok || res.skipped) setSubmitted(true)
+    else setError('Sorry, something went wrong. Please try again or call 888-273-5038.')
   }
 
   return (
@@ -196,11 +205,18 @@ export default function Contact() {
                       placeholder="Tell us how we can help..."
                     />
                   </div>
+                  {error && (
+                    <p className="rounded-xl bg-red-50 px-4 py-2.5 text-center text-sm font-medium text-red-600">
+                      {error}
+                    </p>
+                  )}
                   <button
                     type="submit"
-                    className="btn-base w-full bg-primary-gradient px-6 py-3.5 text-white shadow-card hover:shadow-glow"
+                    disabled={submitting}
+                    className="btn-base w-full bg-primary-gradient px-6 py-3.5 text-white shadow-card hover:shadow-glow disabled:cursor-not-allowed disabled:opacity-70"
                   >
-                    Send Message <Send className="h-4 w-4" />
+                    {submitting ? 'Sending…' : 'Send Message'}
+                    {!submitting && <Send className="h-4 w-4" />}
                   </button>
                 </form>
               )}

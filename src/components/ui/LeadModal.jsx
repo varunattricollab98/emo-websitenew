@@ -13,12 +13,15 @@ import {
   Headset,
 } from 'lucide-react'
 import LocationSelect from './LocationSelect'
+import { saveLead } from '../../lib/leads'
 
 const emptyForm = { name: '', phone: '', email: '', interest: '', city: '', message: '' }
 
 export default function LeadModal({ open, config = {}, onClose }) {
   const [form, setForm] = useState(emptyForm)
   const [submitted, setSubmitted] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState('')
 
   const {
     title = 'Get a Free Consultation',
@@ -33,6 +36,8 @@ export default function LeadModal({ open, config = {}, onClose }) {
     if (open) {
       setForm({ ...emptyForm, interest: service, city, message })
       setSubmitted(false)
+      setSubmitting(false)
+      setError('')
     }
   }, [open, service, city, message])
 
@@ -50,9 +55,18 @@ export default function LeadModal({ open, config = {}, onClose }) {
   }, [open, onClose])
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }))
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    setSubmitted(true)
+    if (submitting) return
+    setSubmitting(true)
+    setError('')
+    const res = await saveLead({ ...form, source: config.source || 'lead-modal' })
+    setSubmitting(false)
+    if (res.ok || res.skipped) {
+      setSubmitted(true)
+    } else {
+      setError('Sorry, something went wrong. Please try again or call us at 888-273-5038.')
+    }
   }
 
   const inputClass =
@@ -188,12 +202,19 @@ export default function LeadModal({ open, config = {}, onClose }) {
                     className="w-full rounded-xl border border-primary-100 bg-surface-light px-4 py-3 text-sm text-navy-dark placeholder:text-slate-400 transition-all focus:border-primary/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20"
                   />
 
+                  {error && (
+                    <p className="rounded-xl bg-red-50 px-4 py-2.5 text-center text-sm font-medium text-red-600">
+                      {error}
+                    </p>
+                  )}
+
                   <button
                     type="submit"
-                    className="btn-base w-full bg-gradient-to-r from-gold to-gold-dark px-6 py-3.5 text-base text-white shadow-card transition-all hover:shadow-gold-glow hover:brightness-105"
+                    disabled={submitting}
+                    className="btn-base w-full bg-gradient-to-r from-gold to-gold-dark px-6 py-3.5 text-base text-white shadow-card transition-all hover:shadow-gold-glow hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-70"
                   >
-                    Submit Request
-                    <ArrowRight className="h-4 w-4" />
+                    {submitting ? 'Submitting…' : 'Submit Request'}
+                    {!submitting && <ArrowRight className="h-4 w-4" />}
                   </button>
                   <p className="flex items-center justify-center gap-1.5 text-center text-xs text-slate-400">
                     <ShieldCheck className="h-3.5 w-3.5 text-accent-emerald" />
