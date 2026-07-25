@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { resolveCity, resolveState } from '../../utils/resolveCity'
+import { voCities, slugifySpace } from '../../data/spaces'
+import { getSupabaseSpaces } from '../../lib/spacesStore'
 import {
   MapPin,
   Search,
@@ -43,16 +45,54 @@ export default function HeroSearch() {
   const handleSearch = (e) => {
     e.preventDefault()
     const loc = location.trim()
+    if (!loc) return navigate(serviceRoutes[service] || '/virtual-office')
+
     // Virtual Office + a recognised city → that city's page; a state → all its spaces
     if (service === 'virtual-office') {
       const c = resolveCity(loc)
       if (c) return navigate(`/virtual-office/${c.slug}`)
       const st = resolveState(loc)
       if (st) return navigate(`/virtual-office?state=${encodeURIComponent(st)}`)
-      return navigate(loc ? `/virtual-office?city=${encodeURIComponent(loc)}` : '/virtual-office')
+
+      // Try matching a space/area name (keyword search) → go to its detail page
+      const q = loc.toLowerCase()
+      const dbSpaces = getSupabaseSpaces()
+      const match = dbSpaces.find(
+        (s) =>
+          s.address_area?.toLowerCase().includes(q) ||
+          s.space_name?.toLowerCase().includes(q) ||
+          s.listing_address?.toLowerCase().includes(q)
+      )
+      if (match) {
+        const citySlug = slugifySpace(match.address_city)
+        const areaSlug = slugifySpace(match.address_area)
+        return navigate(`/space/${citySlug}/${areaSlug}`)
+      }
+
+      // Also check static city list for partial area matches in city names
+      const cityByArea = voCities.find((c) => c.name.toLowerCase().includes(q))
+      if (cityByArea) return navigate(`/virtual-office/${cityByArea.slug}`)
+
+      return navigate(`/virtual-office?city=${encodeURIComponent(loc)}`)
     }
+
+    // Coworking — try keyword match against space names
+    if (service === 'coworking') {
+      const q = loc.toLowerCase()
+      const dbSpaces = getSupabaseSpaces()
+      const match = dbSpaces.find(
+        (s) =>
+          s.address_area?.toLowerCase().includes(q) ||
+          s.space_name?.toLowerCase().includes(q)
+      )
+      if (match) {
+        const citySlug = slugifySpace(match.address_city)
+        return navigate(`/coworking?city=${citySlug}`)
+      }
+    }
+
     const base = serviceRoutes[service] || '/virtual-office'
-    navigate(loc ? `${base}?city=${encodeURIComponent(loc)}` : base)
+    navigate(`${base}?city=${encodeURIComponent(loc)}`)
   }
 
   return (
@@ -104,7 +144,7 @@ export default function HeroSearch() {
                 type="text"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
-                placeholder="Search your city, location or pincode…"
+                placeholder="Search city, area, space name or pincode…"
                 className="w-full bg-transparent text-sm font-medium text-navy-dark placeholder:text-slate-400 focus:outline-none"
               />
             </div>
