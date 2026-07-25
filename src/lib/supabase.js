@@ -1,18 +1,15 @@
 import { createClient } from '@supabase/supabase-js'
 
 // ── Supabase connection ──────────────────────────────────────
-// Set these two values as environment variables:
-//   VITE_SUPABASE_URL       e.g. https://xxxxxxxx.supabase.co
-//   VITE_SUPABASE_ANON_KEY  the public "anon" key from Project Settings → API
-//
 // The anon key is SAFE to expose in the browser — your data is protected by
 // Row Level Security (RLS) policies (see supabase/schema.sql).
-//
-// Local dev: put them in a .env file (see .env.example).
-// Cloudflare: add them as Build environment variables so they're baked in at build time.
+// These values are your Supabase project credentials (anon = public-safe).
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || ''
-const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || ''
+const SUPABASE_URL =
+  import.meta.env.VITE_SUPABASE_URL || 'https://oijtkvkyefqfwuycibcv.supabase.co'
+const SUPABASE_ANON_KEY =
+  import.meta.env.VITE_SUPABASE_ANON_KEY ||
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9panRrdmt5ZWZxZnd1eWNpYmN2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5NjUwODksImV4cCI6MjEwMDU0MTA4OX0.wzNvJ2nRN4appxtLFhinIy4aEQ-qT9LpqngWhzfPgrw'
 
 export const isSupabaseConfigured = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY)
 
