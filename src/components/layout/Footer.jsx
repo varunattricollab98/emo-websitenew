@@ -36,11 +36,11 @@ export default function Footer() {
           <div className="col-span-2 lg:col-span-1">
             <Link to="/" className="inline-flex items-center" aria-label="EaseMyOffice home">
               <img
-                src="/emo-logo-transparent.webp"
+                src="/emo-logo-white.webp"
                 alt="EaseMyOffice"
                 width="800"
                 height="200"
-                className="h-9 w-auto brightness-0 invert"
+                className="h-9 w-auto"
               />
             </Link>
             <p className="mt-4 text-sm leading-relaxed text-slate-400">
