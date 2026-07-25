@@ -10,16 +10,23 @@ export function SpacesProvider({ children }) {
 
   useEffect(() => {
     if (!isSupabaseConfigured || !supabase) {
+      console.log('[SpacesContext] Supabase not configured')
       setLoaded(true)
       return
     }
+    console.log('[SpacesContext] Fetching spaces from Supabase...')
     supabase
       .from('spaces')
       .select('*')
       .eq('is_active', true)
       .order('rating', { ascending: false })
       .limit(500)
-      .then(({ data }) => {
+      .then(({ data, error }) => {
+        if (error) {
+          console.error('[SpacesContext] Error:', error.message)
+        } else {
+          console.log('[SpacesContext] Loaded', (data||[]).length, 'spaces from Supabase')
+        }
         setRows(data || [])
         setLoaded(true)
       })
