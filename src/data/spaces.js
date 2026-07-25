@@ -176,66 +176,9 @@ export function citiesForState(state) {
 }
 
 export const spacesByCity = {
-  bangalore: [
-    s('Koramangala', 999, 4.9, [T.gst, T.co, T.mail], 0, 'Most Sold'),
-    s('Indiranagar', 1099, 4.8, [T.gst, T.co], 1, 'Trending'),
-    s('MG Road', 1199, 4.8, [T.gst, T.co, T.apob], 2),
-    s('HSR Layout', 949, 4.7, [T.gst, T.mail], 3),
-    s('Whitefield', 899, 4.7, [T.gst, T.apob], 4),
-    s('Electronic City', 899, 4.6, [T.gst, T.co], 5),
-    s('JP Nagar', 949, 4.7, [T.gst, T.mail], 6),
-    s('Jayanagar', 999, 4.8, [T.gst, T.co], 7),
-    s('Marathahalli', 899, 4.6, [T.gst, T.apob], 8),
-    s('Hebbal', 949, 4.7, [T.gst, T.co, T.mail], 9),
-  ],
-  delhi: [
-    s('Connaught Place', 999, 4.9, [T.gst, T.co, T.mail], 7, 'Most Sold'),
-    s('Nehru Place', 949, 4.8, [T.gst, T.co], 2),
-    s('Saket', 999, 4.7, [T.gst, T.apob], 1),
-    s('Okhla', 899, 4.6, [T.gst, T.co], 5),
-    s('Rajouri Garden', 899, 4.6, [T.gst, T.mail], 3),
-    s('Janakpuri', 949, 4.7, [T.gst, T.co], 0),
-  ],
-  mumbai: [
-    s('Andheri East', 1199, 4.9, [T.gst, T.co, T.apob], 2, 'Most Sold'),
-    s('BKC', 1499, 4.9, [T.gst, T.co], 4, 'Premium'),
-    s('Lower Parel', 1299, 4.8, [T.gst, T.co], 1),
-    s('Powai', 1199, 4.7, [T.gst, T.mail], 8),
-    s('Malad', 1099, 4.6, [T.gst, T.apob], 5),
-    s('Thane', 999, 4.6, [T.gst, T.co], 6),
-  ],
-  gurgaon: [
-    s('Cyber City', 1099, 4.9, [T.gst, T.co, T.apob], 1, 'Trending'),
-    s('Sohna Road', 999, 4.7, [T.gst, T.co], 3),
-    s('Golf Course Road', 1199, 4.8, [T.gst, T.co], 4),
-    s('Udyog Vihar', 949, 4.6, [T.gst, T.apob], 5),
-    s('MG Road', 999, 4.7, [T.gst, T.mail], 0),
-  ],
-  hyderabad: [
-    s('HITEC City', 999, 4.8, [T.gst, T.co, T.apob], 3, 'Most Sold'),
-    s('Gachibowli', 999, 4.7, [T.gst, T.co], 9),
-    s('Banjara Hills', 1099, 4.8, [T.gst, T.co], 2),
-    s('Madhapur', 949, 4.6, [T.gst, T.mail], 5),
-    s('Kondapur', 899, 4.6, [T.gst, T.apob], 6),
-  ],
-  pune: [
-    s('Baner', 899, 4.7, [T.gst, T.co], 4, 'Trending'),
-    s('Hinjewadi', 899, 4.7, [T.gst, T.apob], 6),
-    s('Kharadi', 949, 4.6, [T.gst, T.co], 8),
-    s('Viman Nagar', 899, 4.6, [T.gst, T.mail], 0),
-  ],
-  chennai: [
-    s('OMR', 999, 4.7, [T.gst, T.co, T.apob], 5, 'Trending'),
-    s('Guindy', 949, 4.6, [T.gst, T.co], 2),
-    s('T. Nagar', 999, 4.7, [T.gst, T.mail], 1),
-    s('Anna Nagar', 899, 4.6, [T.gst, T.co], 3),
-  ],
-  noida: [
-    s('Sector 62', 899, 4.8, [T.gst, T.co, T.apob], 6, 'Most Sold'),
-    s('Sector 63', 899, 4.7, [T.gst, T.co], 7),
-    s('Sector 132', 949, 4.6, [T.gst, T.mail], 8),
-    s('Sector 16', 899, 4.6, [T.gst, T.co], 0),
-  ],
+  // All listing data now lives in Supabase (public.spaces table).
+  // This object is kept empty so existing code that references it doesn't break.
+  // The getSpaces() function fetches live data from Supabase automatically.
 }
 
 // Generic areas for cities without an explicit listing yet.
