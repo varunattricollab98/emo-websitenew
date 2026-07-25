@@ -26,7 +26,7 @@ import TrustBar from '../components/home/TrustBar'
 import GoogleReviews from '../components/virtual-office/GoogleReviews'
 import ClientsStrip from '../components/virtual-office/ClientsStrip'
 import { voCities, getSpaces, slugifySpace } from '../data/spaces'
-import { useSpacesForCity } from '../context/SpacesContext'
+import { useSpacesForCity, useSupabaseSpaces } from '../context/SpacesContext'
 import { getCityBySlug } from '../data/cities'
 import { serviceOrder, serviceLandings } from '../data/serviceLandings'
 import { getCityDescription, toBlocks } from '../data/descriptions'
@@ -49,6 +49,7 @@ export default function CityTemplate() {
   const cityName = vo?.name || extra?.name || toTitle(city)
   const region = vo?.state || extra?.region || 'India'
   const basePrice = extra?.price || 899
+  const { rows, loaded } = useSupabaseSpaces()
   const dbSpaces = useSpacesForCity(city)
   const spaces = dbSpaces.length ? dbSpaces : getSpaces(city)
   const addresses = extra?.addresses || spaces.length
