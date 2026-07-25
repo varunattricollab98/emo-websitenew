@@ -13,6 +13,8 @@ export default function SmartImage({ src, alt = '', className = '', ...props }) 
       src={src}
       alt={alt}
       loading="lazy"
+      referrerPolicy="no-referrer"
+      crossOrigin="anonymous"
       onError={() => setFailed(true)}
       className={className}
       {...props}
