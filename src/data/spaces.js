@@ -1,5 +1,6 @@
 // Virtual office / workspace listings per city (drives the Explore section + counts).
 import { generatedSpaceDetails } from './spaceDetails.generated.js'
+import { getSupabaseSpacesForCity } from '../lib/spacesStore'
 
 const img = [
   'https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=800&q=80',
@@ -263,13 +264,17 @@ function importedCards(slug) {
 }
 
 export function getSpaces(slug) {
+  const fromDb = getSupabaseSpacesForCity(slug)
   const imported = importedCards(slug)
   const curated = spacesByCity[slug]
-  if (curated || imported.length) {
-    // merge (imported first), dedupe by space slug so links stay unique
+  
+  // Merge: DB first → imported → curated → fallback generic
+  const all = [...fromDb, ...imported, ...(curated || [])]
+  if (all.length) {
+    // dedupe by space slug so links stay unique
     const seen = new Set()
     const merged = []
-    for (const sp of [...imported, ...(curated || [])]) {
+    for (const sp of all) {
       const key = slugifySpace(sp.name)
       if (seen.has(key)) continue
       seen.add(key)

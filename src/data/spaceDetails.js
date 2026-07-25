@@ -85,11 +85,14 @@ export const spaceDetails = {
 }
 
 import { generatedSpaceDetails } from './spaceDetails.generated.js'
+import { getSupabaseSpaceDetail } from '../lib/spacesStore'
 
 // Hand-written entries above win; CSV-imported entries fill in the rest.
+// Supabase (live DB) has highest priority.
 export function getSpaceDetail(citySlug, areaSlug) {
   const key = `${citySlug}/${areaSlug}`
-  return spaceDetails[key] || generatedSpaceDetails[key] || null
+  // Priority: Supabase (live) → hand-written → CSV-generated
+  return getSupabaseSpaceDetail(citySlug, areaSlug) || spaceDetails[key] || generatedSpaceDetails[key] || null
 }
 
 // All CSV-imported areas for a city → used to list imported spaces on city pages.
