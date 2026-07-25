@@ -4,7 +4,7 @@ export default function Logo() {
   return (
     <Link to="/" className="flex items-center" aria-label="EaseMyOffice home">
       <img
-        src="/emo-logo.webp"
+        src="/emo-logo-transparent.webp"
         alt="EaseMyOffice"
         width="800"
         height="200"

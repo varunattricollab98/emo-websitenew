@@ -36,7 +36,7 @@ export default function Footer() {
           <div className="col-span-2 lg:col-span-1">
             <Link to="/" className="inline-flex items-center" aria-label="EaseMyOffice home">
               <img
-                src="/emo-logo.webp"
+                src="/emo-logo-transparent.webp"
                 alt="EaseMyOffice"
                 width="800"
                 height="200"
