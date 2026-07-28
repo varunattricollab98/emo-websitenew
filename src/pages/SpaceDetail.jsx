@@ -116,6 +116,7 @@ export default function SpaceDetail() {
   const localityBlocks = toBlocks(getLocalityDescription(city, space))
 
   const [activeImg, setActiveImg] = useState(featuredImage)
+  const [activePlan, setActivePlan] = useState('gst')
   // all photos — no cap, so any number from the CSV renders
   const thumbs = [...new Set([featuredImage, ...gallery].filter(Boolean))]
 
@@ -270,15 +271,46 @@ export default function SpaceDetail() {
               </span>
             </div>
 
-            <div className="mt-5 flex items-end gap-1">
-              <span className="text-sm font-medium text-slate-400">From</span>
-              <span className="ml-1 text-3xl font-extrabold text-navy-dark">
-                ₹{Number(pricing.monthly).toLocaleString('en-IN')}
-              </span>
-              <span className="mb-1 text-sm text-slate-400">/mo</span>
-              <span className="mb-1 ml-2 rounded-full bg-primary-50 px-2 py-0.5 text-xs font-bold text-primary">
-                Ready in {processingTime}
-              </span>
+            <div className="mt-5 flex flex-wrap items-end gap-x-4 gap-y-3">
+              {/* Plan switcher — hover/click to see plan-specific price */}
+              {(() => {
+                const planOpts = [
+                  { key: 'gst', label: 'GST', price: pricing.gst },
+                  { key: 'br', label: 'Business Reg', price: pricing.br },
+                  { key: 'ma', label: 'Mailing', price: pricing.ma },
+                ]
+                return (
+                  <div className="flex w-full flex-col gap-3">
+                    <div className="flex flex-wrap gap-2">
+                      {planOpts.map((p) => (
+                        <button
+                          key={p.key}
+                          type="button"
+                          onMouseEnter={() => setActivePlan(p.key)}
+                          onClick={() => setActivePlan(p.key)}
+                          className={`rounded-full px-4 py-1.5 text-xs font-bold transition-all ${
+                            activePlan === p.key
+                              ? 'bg-primary-gradient text-white shadow-card'
+                              : 'border border-primary-100 bg-white text-navy-dark hover:border-primary/40 hover:text-primary'
+                          }`}
+                        >
+                          {p.label}
+                        </button>
+                      ))}
+                    </div>
+                    <div className="flex items-end gap-1">
+                      <span className="text-sm font-medium text-slate-400">From</span>
+                      <span className="ml-1 text-3xl font-extrabold text-navy-dark">
+                        ₹{Number(planOpts.find((p) => p.key === activePlan)?.price || pricing.monthly).toLocaleString('en-IN')}
+                      </span>
+                      <span className="mb-1 text-sm text-slate-400">/year</span>
+                      <span className="mb-1 ml-2 rounded-full bg-primary-50 px-2 py-0.5 text-xs font-bold text-primary">
+                        Ready in {processingTime}
+                      </span>
+                    </div>
+                  </div>
+                )
+              })()}
             </div>
 
             {/* short lead — full description lives in the About section below */}
