@@ -305,11 +305,14 @@ export default function SpaceDetail() {
                       <span className="ml-1 text-3xl font-extrabold text-navy-dark">
                         ₹{Number(planOpts.find((p) => p.key === activePlan)?.price || pricing.monthly).toLocaleString('en-IN')}
                       </span>
-                      <span className="mb-1 text-sm text-slate-400">/year</span>
+                      <span className="mb-1 text-sm text-slate-400">/mo</span>
                       <span className="mb-1 ml-2 rounded-full bg-primary-50 px-2 py-0.5 text-xs font-bold text-primary">
                         Ready in {processingTime}
                       </span>
                     </div>
+                    <p className="mt-1.5 text-[11px] font-medium text-slate-400">
+                      *Billed annually · Payment on yearly basis
+                    </p>
                   </div>
                 )
               })()}
