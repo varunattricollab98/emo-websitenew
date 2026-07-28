@@ -116,7 +116,7 @@ export default function SpaceDetail() {
   const localityBlocks = toBlocks(getLocalityDescription(city, space))
 
   const [activeImg, setActiveImg] = useState(featuredImage)
-  const [activePlan, setActivePlan] = useState('gst')
+  const [activePlan, setActivePlan] = useState('ma')
   // all photos — no cap, so any number from the CSV renders
   const thumbs = [...new Set([featuredImage, ...gallery].filter(Boolean))]
 
@@ -275,9 +275,9 @@ export default function SpaceDetail() {
               {/* Plan switcher — hover/click to see plan-specific price */}
               {(() => {
                 const planOpts = [
+                  { key: 'ma', label: 'Mailing', price: pricing.ma },
                   { key: 'gst', label: 'GST', price: pricing.gst },
                   { key: 'br', label: 'Business Reg', price: pricing.br },
-                  { key: 'ma', label: 'Mailing', price: pricing.ma },
                 ]
                 return (
                   <div className="flex w-full flex-col gap-3">
