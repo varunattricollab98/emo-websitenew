@@ -288,13 +288,15 @@ export default function SpaceDetail() {
                           type="button"
                           onMouseEnter={() => setActivePlan(p.key)}
                           onClick={() => setActivePlan(p.key)}
-                          className={`rounded-full px-4 py-1.5 text-xs font-bold transition-all ${
+                          className={`relative overflow-hidden rounded-full px-5 py-2 text-xs font-bold transition-all duration-300 ${
                             activePlan === p.key
-                              ? 'bg-primary-gradient text-white shadow-card'
-                              : 'border border-primary-100 bg-white text-navy-dark hover:border-primary/40 hover:text-primary'
+                              ? 'bg-primary-gradient text-white shadow-card ring-2 ring-primary/30'
+                              : 'border border-primary-100 bg-white/80 text-navy-dark backdrop-blur hover:border-primary/50 hover:bg-primary-50/60 hover:text-primary hover:shadow-soft'
                           }`}
                         >
-                          {p.label}
+                          {/* glass tint overlay on hover */}
+                          <span className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-br from-white/40 via-transparent to-primary/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                          <span className="relative">{p.label}</span>
                         </button>
                       ))}
                     </div>
