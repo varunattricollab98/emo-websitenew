@@ -44,8 +44,18 @@ const steps = [
 
 export default function ServiceLanding() {
   const params = useParams()
-  const { city, locality } = params
-  const serviceSlug = (params.service || params.space || '').toLowerCase()
+  const { locality, state } = params
+  // city param — in /virtual-office/:state/:city/:service, city is second; in /space/:city/:service, it's first
+  const city = params.city || ''
+  // Normalize service slug — handle "Gstregistration", "GST-Registration", "gst-registration" etc.
+  const rawService = (params.service || params.space || '').toLowerCase()
+  const serviceSlug = rawService
+    .replace(/gstregistration/i, 'gst-registration')
+    .replace(/businessregistration/i, 'business-registration')
+    .replace(/mailingaddress/i, 'mailing-address')
+    .replace(/deskplan/i, 'desk-plan')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
   const { openLeadModal } = useLeadModal()
 
   const svc = getServiceLanding(serviceSlug)
