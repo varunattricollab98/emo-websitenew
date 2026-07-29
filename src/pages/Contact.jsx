@@ -15,6 +15,7 @@ import SectionHeading from '../components/ui/SectionHeading'
 import Reveal from '../components/ui/Reveal'
 import LocationSelect from '../components/ui/LocationSelect'
 import { saveLead } from '../lib/leads'
+import { getWhatsAppLink } from '../data/salesTeam'
 
 const details = [
   { icon: Phone, label: 'Call us', value: '888-273-5038', href: 'tel:8882735038' },
@@ -85,9 +86,8 @@ export default function Contact() {
                   </div>
                 </a>
                 <a
-                  href="https://wa.me/918882735038"
-                  target="_blank"
-                  rel="noreferrer"
+                  href="#"
+                  onClick={(e) => { e.preventDefault(); window.open(getWhatsAppLink('Hi, I need help with a virtual office.'), '_blank') }}
                   className="flex items-center gap-3 rounded-2xl border border-primary-100 bg-surface-light px-4 py-3 transition-all hover:-translate-y-0.5 hover:shadow-card"
                 >
                   <span

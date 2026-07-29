@@ -1,3 +1,5 @@
+import { getWhatsAppLink } from '../../data/salesTeam'
+
 // Official WhatsApp glyph
 function WhatsAppLogo({ className }) {
   return (
@@ -8,11 +10,15 @@ function WhatsAppLogo({ className }) {
 }
 
 export default function WhatsAppButton() {
+  const handleClick = (e) => {
+    e.preventDefault()
+    window.open(getWhatsAppLink('Hi, I am interested in a virtual office. Please help!'), '_blank')
+  }
+
   return (
     <a
-      href="https://wa.me/918882735038"
-      target="_blank"
-      rel="noopener noreferrer"
+      href="#"
+      onClick={handleClick}
       aria-label="Chat with us on WhatsApp"
       className="group fixed bottom-6 right-6 z-40 inline-flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-card-hover transition-transform hover:scale-110"
     >
