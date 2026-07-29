@@ -1,4 +1,4 @@
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate, Navigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
   MapPin,
@@ -40,19 +40,54 @@ function toTitle(str = '') {
     .join(' ')
 }
 
-export default function CityTemplate() {
-  const { city } = useParams()
-  const { openLeadModal } = useLeadModal()
+// Redirects to the Virtual Office state view when URL is /virtual-office/:state (no city)
+function StateRedirect({ stateName }) {
+  return <Navigate to={`/virtual-office?state=${encodeURIComponent(stateName)}`} replace />
+}
 
-  const vo = voCities.find((c) => c.slug === city)
-  const extra = getCityBySlug(city)
-  const cityName = vo?.name || extra?.name || toTitle(city)
-  const region = vo?.state || extra?.region || 'India'
+export default function CityTemplate() {
+  const { city, state } = useParams()
+  const { openLeadModal } = useLeadModal()
+  const navigate = useNavigate()
+
+  // If only state param is provided (no city), redirect to state view
+  // e.g. /virtual-office/haryana → shows all Haryana cities
+  // But if state+city both provided, use the city param
+  // Also handle case where "city" param is actually a state name (old URL format)
+  const resolvedCity = (() => {
+    if (state && city) return city // /virtual-office/haryana/gurgaon → city = gurgaon
+    // Check if the single "city" param is actually a state
+    const isState = voCities.some((c) => (c.state || '').toLowerCase().replace(/[^a-z0-9]+/g, '-') === city)
+    if (isState) return null // will show state view
+    return city
+  })()
+
+  const resolvedState = (() => {
+    if (state) return state
+    // Check if city param is a state slug
+    const match = voCities.find((c) => (c.state || '').toLowerCase().replace(/[^a-z0-9]+/g, '-') === city)
+    return match ? match.state : null
+  })()
+
+  // If this is a state-only URL, redirect to state view
+  if (resolvedState && !resolvedCity) {
+    const stateName = voCities.find((c) => (c.state || '').toLowerCase().replace(/[^a-z0-9]+/g, '-') === city)?.state
+    if (stateName) {
+      // Render state view (all cities in that state)
+      return <StateRedirect stateName={stateName} />
+    }
+  }
+
+  const citySlug = resolvedCity || city
+  const vo = voCities.find((c) => c.slug === citySlug)
+  const extra = getCityBySlug(citySlug)
+  const cityName = vo?.name || extra?.name || toTitle(citySlug)
+  const region = vo?.state || extra?.region || resolvedState || 'India'
   const basePrice = extra?.price || 899
   const { rows, loaded } = useSupabaseSpaces()
-  const dbSpaces = useSpacesForCity(city)
+  const dbSpaces = useSpacesForCity(citySlug)
   // While Supabase is loading, show a spinner; once loaded, show DB data (or GENERIC fallback)
-  const spaces = loaded ? (dbSpaces.length ? dbSpaces : getSpaces(city)) : []
+  const spaces = loaded ? (dbSpaces.length ? dbSpaces : getSpaces(citySlug)) : []
   const addresses = extra?.addresses || Math.max(spaces.length, 6)
 
   // city description (custom from descriptions.js, else a sensible default)
@@ -260,7 +295,7 @@ export default function CityTemplate() {
               <Reveal key={`${sp.name}-${i}`} delay={(i % 4) * 0.05}>
                 <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-primary-100/60 bg-white shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover">
                   <Link
-                    to={`/space/${city}/${slugifySpace(sp.name)}`}
+                    to={`/space/${citySlug}/${slugifySpace(sp.name)}`}
                     className="relative block h-40 overflow-hidden bg-primary-gradient"
                   >
                     <SmartImage
@@ -281,7 +316,7 @@ export default function CityTemplate() {
                   </Link>
                   <div className="flex flex-1 flex-col p-5">
                     <Link
-                      to={`/space/${city}/${slugifySpace(sp.name)}`}
+                      to={`/space/${citySlug}/${slugifySpace(sp.name)}`}
                       className="text-base font-bold text-navy-dark transition-colors hover:text-primary"
                     >
                       {sp.name}
@@ -332,7 +367,7 @@ export default function CityTemplate() {
               {serviceOrder.map((slug) => (
                 <Link
                   key={slug}
-                  to={`/space/${city}/${slug}`}
+                  to={`/space/${citySlug}/${slug}`}
                   className="inline-flex items-center gap-2 rounded-full border border-primary-200 bg-white px-5 py-2.5 text-sm font-semibold text-navy-dark shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary hover:text-primary hover:shadow-card"
                 >
                   {serviceLandings[slug].name} in {cityName}

@@ -56,7 +56,9 @@ export default function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/virtual-office" element={<VirtualOffice />} />
                 <Route path="/virtual-office/:city" element={<CityTemplate />} />
+                <Route path="/virtual-office/:state/:city" element={<CityTemplate />} />
                 <Route path="/space/:city/:space" element={<SpaceOrService />} />
+                <Route path="/space/:state/:city/:space" element={<SpaceOrService />} />
                 <Route path="/space/:city/:locality/:service" element={<ServiceLanding />} />
                 <Route path="/coworking" element={<Coworking />} />
                 <Route path="/coworking/:city/:space" element={<CoworkingDetail />} />

@@ -57,8 +57,11 @@ function toTitle(str = '') {
 }
 
 export default function SpaceDetail() {
-  const { city, space } = useParams()
+  const { city: cityParam, space, state } = useParams()
   const { openLeadModal } = useLeadModal()
+
+  // Support both /space/:city/:space and /space/:state/:city/:space
+  const city = cityParam
 
   const basic = getSpaceBySlug(city, space)
   const detail = useSpaceDetailFromDb(city, space) || getSpaceDetail(city, space)
