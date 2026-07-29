@@ -25,6 +25,10 @@ function useFaqSchema(items) {
       })),
     }
 
+    // Remove any existing FAQ schema (prerendered static one, or a previous
+    // page's during client-side navigation) so there's never a duplicate.
+    document.querySelectorAll('script[data-faq-schema]').forEach((n) => n.remove())
+
     const el = document.createElement('script')
     el.type = 'application/ld+json'
     el.setAttribute('data-faq-schema', 'true')
@@ -32,7 +36,7 @@ function useFaqSchema(items) {
     document.head.appendChild(el)
 
     return () => {
-      document.head.removeChild(el)
+      if (el.parentNode) el.parentNode.removeChild(el)
     }
   }, [items])
 }
