@@ -3,13 +3,24 @@ import { getServiceLanding } from '../data/serviceLandings'
 import ServiceLanding from './ServiceLanding'
 import SpaceDetail from './SpaceDetail'
 
-// /space/:city/:space OR /space/:state/:city/:space
-// If the last segment is a known service (gst-registration, etc.) render service landing;
-// otherwise treat it as a locality/space and render the space detail page.
+/**
+ * Dispatcher — checks if the last URL segment is a service (gst-registration, etc.)
+ * or a space/locality. Renders the appropriate page.
+ *
+ * Handles: /space/:city/:space, /space/:state/:city/:space,
+ *          /virtual-office/:city/:space (via CityOrSpace which renders this)
+ */
 export default function SpaceOrService() {
-  const { space, city, state } = useParams()
-  // In the 4-segment route /space/:state/:city/:space, "space" is the actual space
-  // In the 3-segment route /space/:city/:space, "space" is the space
-  const spaceSlug = space || city
-  return getServiceLanding(spaceSlug) ? <ServiceLanding /> : <SpaceDetail />
+  const params = useParams()
+  // The "space" slug is the last meaningful param
+  const spaceSlug = (params.space || params.second || params.city || '').toLowerCase()
+
+  // Normalize common service slug variants
+  const normalized = spaceSlug
+    .replace(/gstregistration/i, 'gst-registration')
+    .replace(/businessregistration/i, 'business-registration')
+    .replace(/mailingaddress/i, 'mailing-address')
+    .replace(/deskplan/i, 'desk-plan')
+
+  return getServiceLanding(normalized) ? <ServiceLanding /> : <SpaceDetail />
 }

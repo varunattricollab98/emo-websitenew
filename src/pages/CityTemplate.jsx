@@ -1,4 +1,4 @@
-import { useParams, Link, useNavigate, Navigate } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
   MapPin,
@@ -40,45 +40,15 @@ function toTitle(str = '') {
     .join(' ')
 }
 
-// Redirects to the Virtual Office state view when URL is /virtual-office/:state (no city)
-function StateRedirect({ stateName }) {
-  return <Navigate to={`/virtual-office?state=${encodeURIComponent(stateName)}`} replace />
-}
-
 export default function CityTemplate() {
-  const { city, state } = useParams()
+  const params = useParams()
   const { openLeadModal } = useLeadModal()
-  const navigate = useNavigate()
 
-  // If only state param is provided (no city), redirect to state view
-  // e.g. /virtual-office/haryana → shows all Haryana cities
-  // But if state+city both provided, use the city param
-  // Also handle case where "city" param is actually a state name (old URL format)
-  const resolvedCity = (() => {
-    if (state && city) return city // /virtual-office/haryana/gurgaon → city = gurgaon
-    // Check if the single "city" param is actually a state
-    const isState = voCities.some((c) => (c.state || '').toLowerCase().replace(/[^a-z0-9]+/g, '-') === city)
-    if (isState) return null // will show state view
-    return city
-  })()
-
-  const resolvedState = (() => {
-    if (state) return state
-    // Check if city param is a state slug
-    const match = voCities.find((c) => (c.state || '').toLowerCase().replace(/[^a-z0-9]+/g, '-') === city)
-    return match ? match.state : null
-  })()
-
-  // If this is a state-only URL, redirect to state view
-  if (resolvedState && !resolvedCity) {
-    const stateName = voCities.find((c) => (c.state || '').toLowerCase().replace(/[^a-z0-9]+/g, '-') === city)?.state
-    if (stateName) {
-      // Render state view (all cities in that state)
-      return <StateRedirect stateName={stateName} />
-    }
-  }
-
-  const citySlug = resolvedCity || city
+  // Handle multiple route patterns:
+  // /virtual-office/:city (city only)
+  // /virtual-office/:first/:second via CityOrSpace (state/city — second is the city)
+  // /virtual-office/:state/:city (direct route)
+  const citySlug = params.second || params.city || params.first || ''
   const vo = voCities.find((c) => c.slug === citySlug)
   const extra = getCityBySlug(citySlug)
   const cityName = vo?.name || extra?.name || toTitle(citySlug)

@@ -24,6 +24,7 @@ const ListYourSpace = lazy(() => import('./pages/ListYourSpace'))
 const CityTemplate = lazy(() => import('./pages/CityTemplate'))
 const SpaceDetail = lazy(() => import('./pages/SpaceDetail'))
 const SpaceOrService = lazy(() => import('./pages/SpaceOrService'))
+const CityOrSpace = lazy(() => import('./pages/CityOrSpace'))
 const ServiceLanding = lazy(() => import('./pages/ServiceLanding'))
 const Faq = lazy(() => import('./pages/Faq'))
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'))
@@ -55,11 +56,10 @@ export default function App() {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/virtual-office" element={<VirtualOffice />} />
-                <Route path="/virtual-office/:city" element={<CityTemplate />} />
-                <Route path="/virtual-office/:state/:city" element={<CityTemplate />} />
                 <Route path="/virtual-office/:state/:city/:service" element={<ServiceLanding />} />
-                <Route path="/virtual-office/:city/:space" element={<SpaceOrService />} />
                 <Route path="/virtual-office/:city/:locality/:service" element={<ServiceLanding />} />
+                <Route path="/virtual-office/:first/:second" element={<CityOrSpace />} />
+                <Route path="/virtual-office/:city" element={<CityTemplate />} />
                 {/* Legacy /space/ URLs still work (backward compatible) */}
                 <Route path="/space/:city/:space" element={<SpaceOrService />} />
                 <Route path="/space/:state/:city/:space" element={<SpaceOrService />} />

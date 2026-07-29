@@ -26,7 +26,7 @@ import ArticleBlocks from '../components/ui/ArticleBlocks'
 import { voCities, getSpaceBySlug, spaceStats } from '../data/spaces'
 import { getCityBySlug } from '../data/cities'
 import { getSpaceDetail } from '../data/spaceDetails'
-import { useSpaceDetailFromDb } from '../context/SpacesContext'
+import { useSpaceDetailFromDb, useSupabaseSpaces } from '../context/SpacesContext'
 import { getLocalityDescription, toBlocks } from '../data/descriptions'
 import { useLeadModal } from '../context/LeadModalContext'
 
@@ -57,16 +57,30 @@ function toTitle(str = '') {
 }
 
 export default function SpaceDetail() {
-  const { city: cityParam, space, state } = useParams()
+  const params = useParams()
   const { openLeadModal } = useLeadModal()
 
-  // Support both /space/:city/:space and /space/:state/:city/:space
-  const city = cityParam
+  // Handle multiple route patterns:
+  // /virtual-office/:city/:space via CityOrSpace (first=city, second=space)
+  // /space/:city/:space (legacy)
+  const city = params.city || params.first || ''
+  const space = params.space || params.second || ''
 
   const basic = getSpaceBySlug(city, space)
-  const detail = useSpaceDetailFromDb(city, space) || getSpaceDetail(city, space)
+  const dbDetail = useSpaceDetailFromDb(city, space)
+  const detail = dbDetail || getSpaceDetail(city, space)
+  const { loaded } = useSupabaseSpaces()
   const cityName = voCities.find((c) => c.slug === city)?.name || detail?.city || toTitle(city)
   const region = voCities.find((c) => c.slug === city)?.state || detail?.state || 'India'
+
+  // Show loading spinner while Supabase is fetching (prevents empty flash on first load)
+  if (!loaded && !basic && !detail) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <span className="h-9 w-9 animate-spin rounded-full border-[3px] border-primary-100 border-t-primary" />
+      </div>
+    )
+  }
 
   if (!basic && !detail) {
     return (
