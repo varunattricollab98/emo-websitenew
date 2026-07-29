@@ -114,6 +114,8 @@ function transformToDetail(row) {
     propertyType: row.property_type || 'Virtual Office & Coworking',
     amenities,
     badge: row.badge || null,
+    // optional precise map location (lat,long / Plus Code / place query); falls back to address
+    mapQuery: row.map_query || row.map_location || '',
   }
 }
 

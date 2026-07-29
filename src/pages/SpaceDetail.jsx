@@ -115,6 +115,11 @@ export default function SpaceDetail() {
   const propertyType = detail?.propertyType || 'Virtual Office & Coworking'
   const processingTime = detail?.processingTime || '2\u20133 business days'
   const fullAddress = detail?.fullAddress || `${areaName}, ${cityName}, ${region}`
+  // Map location — use an explicit map query/coords if provided, else the full address.
+  // Supports: detail.mapQuery (e.g. "28.6139,77.2090" or a Plus Code) OR falls back to the address.
+  const mapQuery = detail?.mapQuery || detail?.map_query || fullAddress
+  const mapEmbedUrl = `https://www.google.com/maps?q=${encodeURIComponent(mapQuery)}&hl=en&z=15&output=embed`
+  const mapLinkUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`
   const description =
     detail?.description ||
     `${areaName} is a sought-after business location in ${cityName}, ${region}. A virtual office here gives your company a credible address for GST and company registration, along with optional coworking desks and professional mail handling — activated in just 2\u20133 business days.`
@@ -562,6 +567,52 @@ export default function SpaceDetail() {
                 <span className="text-sm font-semibold text-navy-dark">{a}</span>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== Location / Map ===== */}
+      <section className="section-padding bg-white">
+        <div className="container-custom">
+          <SectionHeading eyebrow="Location" title="Where You'll Be" accent="Be" />
+
+          <div className="mx-auto mt-10 max-w-5xl">
+            {/* address bar */}
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-t-3xl border border-primary-100/70 bg-surface-light px-5 py-4">
+              <div className="flex items-start gap-3">
+                <span className="inline-flex h-10 w-10 flex-none items-center justify-center rounded-xl bg-primary-gradient text-white shadow-card">
+                  <MapPin className="h-5 w-5" />
+                </span>
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                    Address
+                  </p>
+                  <p className="text-sm font-semibold leading-snug text-navy-dark">{fullAddress}</p>
+                </div>
+              </div>
+              <a
+                href={mapLinkUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-full border border-primary-200 bg-white px-4 py-2 text-sm font-bold text-primary shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary hover:shadow-card"
+              >
+                Get Directions
+                <ArrowRight className="h-4 w-4" />
+              </a>
+            </div>
+
+            {/* embedded google map */}
+            <div className="overflow-hidden rounded-b-3xl border border-t-0 border-primary-100/70 shadow-card">
+              <iframe
+                title={`Map of ${areaName}, ${cityName}`}
+                src={mapEmbedUrl}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="h-[360px] w-full sm:h-[420px]"
+                style={{ border: 0 }}
+                allowFullScreen
+              />
+            </div>
           </div>
         </div>
       </section>

@@ -87,6 +87,12 @@ export default function CoworkingDetail() {
   // amenities = curated tags + base set (deduped)
   const amenities = [...new Set([...(sp.tags || []), ...BASE_AMENITIES])]
 
+  // map location — uses the locality + city address
+  const fullAddress = `${sp.locality}, ${cityName}, ${region}`
+  const mapQuery = sp.mapQuery || fullAddress
+  const mapEmbedUrl = `https://www.google.com/maps?q=${encodeURIComponent(mapQuery)}&hl=en&z=15&output=embed`
+  const mapLinkUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`
+
   const book = (plan) =>
     openLeadModal({
       title: `Book a tour — ${sp.name}, ${cityName}`,
@@ -387,6 +393,48 @@ export default function CoworkingDetail() {
                 <span className="text-sm font-semibold text-navy-dark">{a}</span>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== Location / Map ===== */}
+      <section className="section-padding bg-white">
+        <div className="container-custom">
+          <SectionHeading eyebrow="Location" title="Where You'll Be" accent="Be" />
+          <div className="mx-auto mt-10 max-w-5xl">
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-t-3xl border border-primary-100/70 bg-surface-light px-5 py-4">
+              <div className="flex items-start gap-3">
+                <span className="inline-flex h-10 w-10 flex-none items-center justify-center rounded-xl bg-primary-gradient text-white shadow-card">
+                  <MapPin className="h-5 w-5" />
+                </span>
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                    Address
+                  </p>
+                  <p className="text-sm font-semibold leading-snug text-navy-dark">{fullAddress}</p>
+                </div>
+              </div>
+              <a
+                href={mapLinkUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-full border border-primary-200 bg-white px-4 py-2 text-sm font-bold text-primary shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary hover:shadow-card"
+              >
+                Get Directions
+                <ArrowRight className="h-4 w-4" />
+              </a>
+            </div>
+            <div className="overflow-hidden rounded-b-3xl border border-t-0 border-primary-100/70 shadow-card">
+              <iframe
+                title={`Map of ${sp.locality}, ${cityName}`}
+                src={mapEmbedUrl}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="h-[360px] w-full sm:h-[420px]"
+                style={{ border: 0 }}
+                allowFullScreen
+              />
+            </div>
           </div>
         </div>
       </section>
