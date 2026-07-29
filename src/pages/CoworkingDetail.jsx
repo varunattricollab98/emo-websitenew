@@ -59,6 +59,9 @@ export default function CoworkingDetail() {
   const { city, space } = useParams()
   const { openLeadModal } = useLeadModal()
 
+  // Hook must be called unconditionally, before any early return
+  const [activeImg, setActiveImg] = useState(null)
+
   const sp = getCoworkingSpaceBySlug(city, space)
   const cityName = voCities.find((c) => c.slug === city)?.name || toTitle(city)
   const region = voCities.find((c) => c.slug === city)?.state || 'India'
@@ -76,7 +79,7 @@ export default function CoworkingDetail() {
     )
   }
 
-  const [activeImg, setActiveImg] = useState(sp.image || DEFAULT_GALLERY[0])
+  const shownImg = activeImg || sp.image || DEFAULT_GALLERY[0]
   const thumbs = [...new Set([sp.image, ...DEFAULT_GALLERY].filter(Boolean))]
   const stats = spaceStats(`cowork-${city}-${space}`)
   const reviewCount = 40 + (stats.monthly % 120)
@@ -197,7 +200,7 @@ export default function CoworkingDetail() {
             <div className="relative overflow-hidden rounded-3xl shadow-card-hover ring-1 ring-navy-dark/10">
               <div className="relative h-72 bg-primary-gradient sm:h-96">
                 <SmartImage
-                  src={activeImg}
+                  src={shownImg}
                   alt={`${sp.name}, ${sp.locality}, ${cityName}`}
                   className="h-full w-full object-cover"
                 />
@@ -220,7 +223,7 @@ export default function CoworkingDetail() {
                   onClick={() => setActiveImg(img)}
                   aria-label={`Photo ${i + 1}`}
                   className={`h-16 w-24 flex-none overflow-hidden rounded-xl ring-2 transition ${
-                    activeImg === img ? 'ring-primary' : 'ring-transparent hover:ring-primary/40'
+                    shownImg === img ? 'ring-primary' : 'ring-transparent hover:ring-primary/40'
                   }`}
                 >
                   <SmartImage src={img} alt="" className="h-full w-full object-cover" />

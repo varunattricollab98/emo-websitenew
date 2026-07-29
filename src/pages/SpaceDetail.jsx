@@ -66,6 +66,10 @@ export default function SpaceDetail() {
   const city = params.city || params.first || ''
   const space = params.space || params.second || ''
 
+  // ── All hooks MUST be called unconditionally, before any early return ──
+  const [activeImg, setActiveImg] = useState(null)
+  const [activePlan, setActivePlan] = useState('ma')
+
   const basic = getSpaceBySlug(city, space)
   const dbDetail = useSpaceDetailFromDb(city, space)
   const detail = dbDetail || getSpaceDetail(city, space)
@@ -132,8 +136,8 @@ export default function SpaceDetail() {
   // optional locality (area) description — separate from the space description
   const localityBlocks = toBlocks(getLocalityDescription(city, space))
 
-  const [activeImg, setActiveImg] = useState(featuredImage)
-  const [activePlan, setActivePlan] = useState('ma')
+  // active image falls back to the featured image until the user picks a thumb
+  const shownImg = activeImg || featuredImage
   // all photos — no cap, so any number from the CSV renders
   const thumbs = [...new Set([featuredImage, ...gallery].filter(Boolean))]
 
@@ -200,7 +204,7 @@ export default function SpaceDetail() {
             <div className="relative overflow-hidden rounded-3xl shadow-card-hover ring-1 ring-navy-dark/10">
               <div className="relative h-72 bg-primary-gradient sm:h-96">
                 <SmartImage
-                  src={activeImg}
+                  src={shownImg}
                   alt={`${areaName}, ${cityName}`}
                   className="h-full w-full object-cover"
                 />
@@ -224,7 +228,7 @@ export default function SpaceDetail() {
                     onClick={() => setActiveImg(img)}
                     aria-label={`Photo ${i + 1}`}
                     className={`h-16 w-24 flex-none overflow-hidden rounded-xl ring-2 transition ${
-                      activeImg === img ? 'ring-primary' : 'ring-transparent hover:ring-primary/40'
+                      shownImg === img ? 'ring-primary' : 'ring-transparent hover:ring-primary/40'
                     }`}
                   >
                     <SmartImage src={img} alt="" className="h-full w-full object-cover" />

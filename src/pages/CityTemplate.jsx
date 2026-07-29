@@ -52,7 +52,7 @@ export default function CityTemplate() {
   const vo = voCities.find((c) => c.slug === citySlug)
   const extra = getCityBySlug(citySlug)
   const cityName = vo?.name || extra?.name || toTitle(citySlug)
-  const region = vo?.state || extra?.region || resolvedState || 'India'
+  const region = vo?.state || extra?.region || 'India'
   const basePrice = extra?.price || 899
   const { rows, loaded } = useSupabaseSpaces()
   const dbSpaces = useSpacesForCity(citySlug)
@@ -62,7 +62,7 @@ export default function CityTemplate() {
 
   // city description (custom from descriptions.js, else a sensible default)
   const cityDescBlocks = (() => {
-    const custom = toBlocks(getCityDescription(city))
+    const custom = toBlocks(getCityDescription(citySlug))
     if (custom.length) return custom
     return [
       `${cityName} is a key business hub in ${region}. A virtual office in ${cityName} gives your company a prestigious, GST-ready address for company registration, mail handling and more — without the cost of a physical office, activated in just 2\u20133 business days.`,

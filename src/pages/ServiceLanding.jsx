@@ -44,11 +44,15 @@ const steps = [
 
 export default function ServiceLanding() {
   const params = useParams()
-  const { locality, state } = params
-  // city param — in /virtual-office/:state/:city/:service, city is second; in /space/:city/:service, it's first
-  const city = params.city || ''
-  // Normalize service slug — handle "Gstregistration", "GST-Registration", "gst-registration" etc.
-  const rawService = (params.service || params.space || '').toLowerCase()
+  const { locality } = params
+  // city param across all route shapes:
+  //   /virtual-office/:state/:city/:service → params.city
+  //   /virtual-office/:first/:second (2-seg service) → params.first
+  //   /space/:city/:service → params.city
+  const city = params.city || params.first || ''
+  // service slug across all route shapes:
+  //   :service (3-seg), :second (2-seg via CityOrSpace), :space (legacy)
+  const rawService = (params.service || params.second || params.space || '').toLowerCase()
   const serviceSlug = rawService
     .replace(/gstregistration/i, 'gst-registration')
     .replace(/businessregistration/i, 'business-registration')
@@ -97,7 +101,7 @@ export default function ServiceLanding() {
     { label: `Virtual Office in ${cityName}`, to: `/virtual-office/${city}` },
     ...topLocalities.map((s) => ({
       label: `${s.name} Location`,
-      to: `/space/${city}/${slugifySpace(s.name)}`,
+      to: `/virtual-office/${city}/${slugifySpace(s.name)}`,
     })),
     { label: 'Pricing & Plans', to: '/pricing' },
     { label: `Coworking in ${cityName}`, to: '/coworking' },
@@ -363,7 +367,7 @@ export default function ServiceLanding() {
               return (
                 <Link
                   key={slug}
-                  to={`/space/${city}/${slug}`}
+                  to={`/virtual-office/${city}/${slug}`}
                   className="group flex items-center gap-4 rounded-2xl border border-primary-100/70 bg-white p-5 shadow-soft transition-all hover:-translate-y-1 hover:border-primary/40 hover:shadow-card"
                 >
                   <span

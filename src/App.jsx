@@ -7,6 +7,7 @@ import Navbar from './components/layout/Navbar'
 import Footer from './components/layout/Footer'
 import WhatsAppButton from './components/layout/WhatsAppButton'
 import ScrollToTop from './components/layout/ScrollToTop'
+import ErrorBoundary from './components/layout/ErrorBoundary'
 
 // Home is eager so the landing page paints instantly (no chunk round-trip).
 import Home from './pages/Home'
@@ -52,6 +53,7 @@ export default function App() {
           <ScrollToTop />
           <Navbar />
           <main className="flex-1 pt-16 lg:pt-20">
+            <ErrorBoundary>
             <Suspense fallback={<RouteFallback />}>
               <Routes>
                 <Route path="/" element={<Home />} />
@@ -81,6 +83,7 @@ export default function App() {
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
+            </ErrorBoundary>
           </main>
           <Footer />
           <WhatsAppButton />
