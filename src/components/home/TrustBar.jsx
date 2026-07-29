@@ -3,6 +3,7 @@ import { useState } from 'react'
 // Real client logos (served from /public/logos). Verizon first (marquee start).
 const logos = [
   { name: 'Verizon', src: '/logos/verizon.png' },
+  { name: 'Third Wave Coffee', src: 'https://images.crunchbase.com/image/upload/c_pad,h_170,w_170,f_auto,b_white,q_auto:eco,dpr_2/iajzcxfqcpinnxkflkns' },
   { name: 'Kinetic Green', src: '/logos/kineticgreen.png' },
   { name: 'IndiaMART', src: '/logos/indiamart.png' },
   { name: "Dr. Reddy's", src: '/logos/drreddys.png' },
