@@ -58,6 +58,9 @@ export default function App() {
                 <Route path="/virtual-office/:city" element={<CityTemplate />} />
                 <Route path="/virtual-office/:state/:city" element={<CityTemplate />} />
                 <Route path="/virtual-office/:state/:city/:service" element={<ServiceLanding />} />
+                <Route path="/virtual-office/:city/:space" element={<SpaceOrService />} />
+                <Route path="/virtual-office/:city/:locality/:service" element={<ServiceLanding />} />
+                {/* Legacy /space/ URLs still work (backward compatible) */}
                 <Route path="/space/:city/:space" element={<SpaceOrService />} />
                 <Route path="/space/:state/:city/:space" element={<SpaceOrService />} />
                 <Route path="/space/:city/:locality/:service" element={<ServiceLanding />} />

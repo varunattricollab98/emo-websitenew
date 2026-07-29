@@ -546,7 +546,7 @@ export default function ExploreSpaces() {
                     }`}
                   >
                     <Link
-                      to={`/space/${sp.citySlug}/${slugifySpace(sp.name)}`}
+                      to={`/virtual-office/${sp.citySlug}/${slugifySpace(sp.name)}`}
                       className={`relative block overflow-hidden bg-primary-gradient ${
                         view === 'list' ? 'h-44 sm:h-auto sm:w-60 sm:flex-none' : 'h-40'
                       }`}
@@ -569,7 +569,7 @@ export default function ExploreSpaces() {
                     </Link>
                     <div className="flex flex-1 flex-col p-5">
                       <Link
-                        to={`/space/${sp.citySlug}/${slugifySpace(sp.name)}`}
+                        to={`/virtual-office/${sp.citySlug}/${slugifySpace(sp.name)}`}
                         className="text-base font-bold text-navy-dark transition-colors hover:text-primary"
                       >
                         {sp.name}
