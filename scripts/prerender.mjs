@@ -56,10 +56,19 @@ async function main() {
     return template.replace('</head>', `${tag}</head>`)
   }
 
+  // Write as "<route>.html" (NOT "<route>/index.html") so Cloudflare's
+  // auto-trailing-slash serves it at the extensionless, no-slash URL
+  // (e.g. /virtual-office/delhi) — matching the app's internal links & how
+  // Google tests URLs. Also write the directory index for the slash variant.
   const write = (routePath, schemaObj) => {
-    const out = join(dist, routePath, 'index.html')
-    mkdirSync(dirname(out), { recursive: true })
-    writeFileSync(out, inject(schemaObj))
+    const html = inject(schemaObj)
+    const fileOut = join(dist, `${routePath}.html`)
+    mkdirSync(dirname(fileOut), { recursive: true })
+    writeFileSync(fileOut, html)
+    // also cover the trailing-slash variant
+    const dirOut = join(dist, routePath, 'index.html')
+    mkdirSync(dirname(dirOut), { recursive: true })
+    writeFileSync(dirOut, html)
   }
 
   // Pull live spaces from Supabase
