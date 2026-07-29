@@ -2,10 +2,42 @@ import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Plus } from 'lucide-react'
 
+// Strip any HTML tags from answers so the schema stays clean plain text.
+const stripHtml = (s = '') => String(s).replace(/<[^>]*>/g, '').trim()
+
+// Builds Google FAQPage structured data (JSON-LD) from the FAQ items.
+function FaqSchema({ items }) {
+  if (!items || items.length === 0) return null
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: items
+      .filter((it) => it && it.q && it.a)
+      .map((it) => ({
+        '@type': 'Question',
+        name: stripHtml(it.q),
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: stripHtml(it.a),
+        },
+      })),
+  }
+  return (
+    <script
+      type="application/ld+json"
+      // JSON-LD is data, not executable script — safe to inject
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  )
+}
+
 export default function FaqAccordion({ items = [] }) {
   const [open, setOpen] = useState(0)
   return (
     <div className="space-y-4">
+      {/* SEO: FAQ rich-result structured data for search engines */}
+      <FaqSchema items={items} />
+
       {items.map((item, i) => {
         const isOpen = open === i
         return (
