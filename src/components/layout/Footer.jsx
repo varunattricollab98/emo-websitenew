@@ -40,7 +40,7 @@ export default function Footer() {
                 alt="EaseMyOffice"
                 width="800"
                 height="200"
-                className="h-9 w-auto"
+                className="h-10 w-auto sm:h-11"
               />
             </Link>
             <p className="mt-4 text-sm leading-relaxed text-slate-400">
