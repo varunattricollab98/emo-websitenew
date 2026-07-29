@@ -1,25 +1,38 @@
 // ── Sales Team WhatsApp Numbers ──────────────────────────────
-// Add or remove numbers here — the site randomly picks one on each click.
-// Format: country code + number (no + sign, no spaces).
-//
-// Example: '918882735038' = +91 88827 35038
-//
-// To add a new person: just add their number to the array.
-// To remove: delete the line. That's it!
+// Numbers are fetched LIVE from Supabase (table: sales_team).
+// To add/remove numbers: Supabase Dashboard → Table Editor → sales_team
+//   - Add row: name + phone (e.g. "918882735038") → is_active = true
+//   - Remove: set is_active = false
+// No code changes needed!
 
-export const salesNumbers = [
-  '918882735038',
-  // '919876543210',  // ← uncomment or add new numbers here
-  // '919988776655',
-]
+import { supabase, isSupabaseConfigured } from '../lib/supabase'
+
+// Fallback number if Supabase isn't ready yet
+const FALLBACK = '918882735038'
+
+let _numbers = [FALLBACK]
+let _fetched = false
+
+// Fetch sales numbers from Supabase on app load
+if (isSupabaseConfigured && supabase) {
+  supabase
+    .from('sales_team')
+    .select('phone')
+    .eq('is_active', true)
+    .then(({ data }) => {
+      if (data && data.length > 0) {
+        _numbers = data.map((r) => r.phone)
+        _fetched = true
+      }
+    })
+}
 
 /**
  * Returns a random WhatsApp number from the sales team.
- * If only one number exists, it always returns that one.
  */
 export function getRandomSalesWhatsApp() {
-  const idx = Math.floor(Math.random() * salesNumbers.length)
-  return salesNumbers[idx]
+  const idx = Math.floor(Math.random() * _numbers.length)
+  return _numbers[idx]
 }
 
 /**
