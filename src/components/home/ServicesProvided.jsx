@@ -52,7 +52,7 @@ const services = [
     to: '/meeting-rooms',
     chip: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)',
     image:
-      'https://images.unsplash.com/photo-1600494603989-9650cf6ddd3d?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80',
   },
   {
     icon: FileCheck2,
@@ -62,7 +62,7 @@ const services = [
     to: '/ca-services',
     chip: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
     image:
-      'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1554224154-26032ffc0d07?auto=format&fit=crop&w=800&q=80',
   },
   {
     icon: Landmark,
@@ -72,7 +72,7 @@ const services = [
     to: '/ca-services',
     chip: 'linear-gradient(135deg, #fbbf24 0%, #d97706 100%)',
     image:
-      'https://images.unsplash.com/photo-1573497491208-6b1acb260507?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=800&q=80',
   },
   {
     icon: BadgeCheck,
@@ -82,7 +82,7 @@ const services = [
     to: '/ca-services',
     chip: 'linear-gradient(135deg, #38bdf8 0%, #2c679e 100%)',
     image:
-      'https://images.unsplash.com/photo-1505664194779-8beaceb93744?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&w=800&q=80',
   },
 ]
 
