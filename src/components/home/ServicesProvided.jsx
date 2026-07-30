@@ -51,8 +51,9 @@ const services = [
     meta: 'Hourly booking',
     to: '/meeting-rooms',
     chip: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)',
+    // Professional boardroom with large table, chairs, TV screen — actual meeting room
     image:
-      'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1517502884422-41eaead166d4?auto=format&fit=crop&w=800&q=80',
   },
   {
     icon: FileCheck2,
@@ -61,8 +62,9 @@ const services = [
     meta: 'Expert-assisted',
     to: '/ca-services',
     chip: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+    // Accountant/CA reviewing tax documents on desk — tax filing, ITR, GST return feel
     image:
-      'https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1586486855514-8c015a120aef?auto=format&fit=crop&w=800&q=80',
   },
   {
     icon: Landmark,
@@ -71,8 +73,9 @@ const services = [
     meta: 'Pvt Ltd · LLP · OPC',
     to: '/ca-services',
     chip: 'linear-gradient(135deg, #fbbf24 0%, #d97706 100%)',
+    // Business professionals shaking hands after signing — company formation/agreement
     image:
-      'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=800&q=80',
   },
   {
     icon: BadgeCheck,
@@ -81,8 +84,9 @@ const services = [
     meta: 'Brand + Tax',
     to: '/ca-services',
     chip: 'linear-gradient(135deg, #38bdf8 0%, #2c679e 100%)',
+    // Stamp/seal on official document — trademark/legal compliance feel
     image:
-      'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1607013407627-6ee814329547?auto=format&fit=crop&w=800&q=80',
   },
 ]
 
