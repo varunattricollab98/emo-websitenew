@@ -62,7 +62,7 @@ const services = [
     to: '/ca-services',
     chip: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
     image:
-      'https://images.unsplash.com/photo-1554224154-26032ffc0d07?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=800&q=80',
   },
   {
     icon: Landmark,
