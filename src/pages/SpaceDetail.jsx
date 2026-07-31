@@ -122,7 +122,7 @@ export default function SpaceDetail() {
   const mapEmbedUrl = `https://www.google.com/maps?q=${encodeURIComponent(mapQuery)}&hl=en&z=15&output=embed`
   const mapLinkUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`
   const description =
-    detail?.description ||
+    detail?.overview || detail?.description ||
     `${areaName} is a sought-after business location in ${cityName}, ${region}. A virtual office here gives your company a credible address for GST and company registration, along with optional coworking desks and professional mail handling — activated in just 2\u20133 business days.`
   const reviews = detail?.reviews?.length
     ? detail.reviews

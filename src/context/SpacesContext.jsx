@@ -116,6 +116,8 @@ function transformToDetail(row) {
     badge: row.badge || null,
     // optional precise map location (lat,long / Plus Code / place query); falls back to address
     mapQuery: row.map_query || row.map_location || '',
+    // detailed overview for "About" section (falls back to description)
+    overview: row.overview || '',
   }
 }
 
