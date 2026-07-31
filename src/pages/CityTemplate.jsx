@@ -33,6 +33,7 @@ import { getCityDescription, toBlocks } from '../data/descriptions'
 import { cityFaqs as buildCityFaqs } from '../data/pageFaqs'
 import ArticleBlocks from '../components/ui/ArticleBlocks'
 import { useLeadModal } from '../context/LeadModalContext'
+import TalkToExpert from '../components/ui/TalkToExpert'
 
 function toTitle(str = '') {
   return str
@@ -613,6 +614,9 @@ export default function CityTemplate() {
           </motion.div>
         </div>
       </section>
+
+      {/* Sticky "Talk to an Expert" bar */}
+      <TalkToExpert city={cityName} />
     </>
   )
 }

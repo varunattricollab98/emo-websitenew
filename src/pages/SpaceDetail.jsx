@@ -29,6 +29,7 @@ import { getSpaceDetail } from '../data/spaceDetails'
 import { useSpaceDetailFromDb, useSupabaseSpaces } from '../context/SpacesContext'
 import { getLocalityDescription, toBlocks } from '../data/descriptions'
 import { spaceFaqs as buildSpaceFaqs } from '../data/pageFaqs'
+import TalkToExpert from '../components/ui/TalkToExpert'
 import { useLeadModal } from '../context/LeadModalContext'
 
 const DEFAULT_IMG =
@@ -230,7 +231,22 @@ export default function SpaceDetail() {
               </div>
             )}
             {thumbs.length > 1 && (
-              <p className="mt-2 text-xs text-slate-400">{thumbs.length} photos · tap to preview</p>
+              <p className="mt-2 flex items-center justify-between text-xs text-slate-400">
+                <span>{thumbs.length} photos · tap to preview</span>
+                <button
+                  type="button"
+                  onClick={() => openLeadModal({
+                    title: `View more images — ${areaName}, ${cityName}`,
+                    subtitle: 'Share your details and we\'ll send you the full photo gallery and a virtual tour link.',
+                    service: `Gallery request — ${areaName}, ${cityName}`,
+                    city: cityName,
+                  })}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-primary-200 bg-white px-3 py-1.5 text-xs font-bold text-primary shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary hover:shadow-card"
+                >
+                  View more images
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </button>
+              </p>
             )}
           </motion.div>
 
@@ -754,6 +770,9 @@ export default function SpaceDetail() {
           </Reveal>
         </div>
       </section>
+
+      {/* Sticky "Talk to an Expert" bar */}
+      <TalkToExpert city={cityName} space={areaName} />
     </>
   )
 }
