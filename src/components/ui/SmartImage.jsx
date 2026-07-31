@@ -13,6 +13,7 @@ export default function SmartImage({ src, alt = '', className = '', ...props }) 
       src={src}
       alt={alt}
       loading="lazy"
+      decoding="async"
       referrerPolicy="no-referrer"
       onError={() => setFailed(true)}
       className={className}
