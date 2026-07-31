@@ -118,6 +118,8 @@ function transformToDetail(row) {
     mapQuery: row.map_query || row.map_location || '',
     // detailed overview for "About" section (falls back to description)
     overview: row.overview || '',
+    // "What's included" highlight chips (pipe-separated); falls back to defaults
+    highlights: row.highlights || '',
   }
 }
 

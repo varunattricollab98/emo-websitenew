@@ -338,22 +338,35 @@ export default function SpaceDetail() {
               company registration, activated in {processingTime}.
             </p>
 
-            {/* what's included — quick trust chips */}
+            {/* what's included — highlight chips (from Supabase highlights column or defaults) */}
             <div className="mt-5 grid grid-cols-2 gap-2.5">
-              {[
-                { icon: FileCheck2, label: 'GST & MCA ready docs' },
-                { icon: Mailbox, label: 'Mail & courier handling' },
-                { icon: Building2, label: 'Meeting room access' },
-                { icon: BadgeCheck, label: 'Verified prime address' },
-              ].map((it) => (
-                <span
-                  key={it.label}
-                  className="inline-flex items-center gap-2 rounded-xl border border-primary-100/70 bg-white px-3 py-2 text-xs font-semibold text-navy-dark shadow-soft"
-                >
-                  <it.icon className="h-4 w-4 flex-none text-primary" />
-                  {it.label}
-                </span>
-              ))}
+              {(() => {
+                const defaultChips = [
+                  { icon: FileCheck2, label: 'GST & MCA ready docs' },
+                  { icon: Mailbox, label: 'Mail & courier handling' },
+                  { icon: Building2, label: 'Meeting room access' },
+                  { icon: BadgeCheck, label: 'Verified prime address' },
+                ]
+                const customHighlights = (detail?.highlights || '')
+                  .split('|')
+                  .map((s) => s.trim())
+                  .filter(Boolean)
+                const chips = customHighlights.length
+                  ? customHighlights.map((label, i) => ({
+                      icon: [FileCheck2, Mailbox, Building2, BadgeCheck, Clock, MapPin][i % 6],
+                      label,
+                    }))
+                  : defaultChips
+                return chips.map((it) => (
+                  <span
+                    key={it.label}
+                    className="inline-flex items-center gap-2 rounded-xl border border-primary-100/70 bg-white px-3 py-2 text-xs font-semibold text-navy-dark shadow-soft"
+                  >
+                    <it.icon className="h-4 w-4 flex-none text-primary" />
+                    {it.label}
+                  </span>
+                ))
+              })()}
             </div>
 
             {/* Book — top */}
