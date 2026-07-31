@@ -402,7 +402,7 @@ export default function CoworkingDetail() {
         <div className="container-custom">
           <SectionHeading eyebrow="Location" title="Where You'll Be" accent="Be" />
           <div className="mx-auto mt-10 max-w-5xl">
-            <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-primary-100/70 bg-surface-light px-5 py-4">
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-t-3xl border border-primary-100/70 bg-surface-light px-5 py-4">
               <div className="flex items-start gap-3">
                 <span className="inline-flex h-10 w-10 flex-none items-center justify-center rounded-xl bg-primary-gradient text-white shadow-card">
                   <MapPin className="h-5 w-5" />
@@ -427,6 +427,18 @@ export default function CoworkingDetail() {
                 Get Exact Location
                 <ArrowRight className="h-4 w-4" />
               </button>
+            </div>
+            {/* Map shows broad area only */}
+            <div className="overflow-hidden rounded-b-3xl border border-t-0 border-primary-100/70 shadow-card">
+              <iframe
+                title={`${sp.locality}, ${cityName} area`}
+                src={`https://www.google.com/maps?q=${encodeURIComponent(sp.locality + ', ' + cityName)}&hl=en&z=14&output=embed`}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="h-[360px] w-full sm:h-[420px]"
+                style={{ border: 0 }}
+                allowFullScreen
+              />
             </div>
           </div>
         </div>
