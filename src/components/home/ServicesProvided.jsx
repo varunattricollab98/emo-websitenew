@@ -16,6 +16,7 @@ import {
 } from 'lucide-react'
 import SmartImage from '../ui/SmartImage'
 import SectionHeading from '../ui/SectionHeading'
+import { useLeadModal } from '../../context/LeadModalContext'
 
 const trustBadges = [
   { icon: Clock, label: 'Ready in 2–3 days' },
@@ -60,7 +61,7 @@ const services = [
     title: 'GST Registration',
     desc: 'Fast, compliant GST registration with dedicated expert support end-to-end.',
     meta: 'Expert-assisted',
-    to: '/ca-services',
+    to: '/contact',
     chip: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
     // Person using calculator with financial documents/spreadsheets — tax/GST filing
     image:
@@ -71,7 +72,7 @@ const services = [
     title: 'Company Registration',
     desc: 'Incorporate your Pvt Ltd, LLP or OPC end-to-end with full compliance handled.',
     meta: 'Pvt Ltd · LLP · OPC',
-    to: '/ca-services',
+    to: '/contact',
     chip: 'linear-gradient(135deg, #fbbf24 0%, #d97706 100%)',
     // Person signing official documents with pen — paperwork, registration, incorporation
     image:
@@ -82,7 +83,7 @@ const services = [
     title: 'Trademark & ITR Filing',
     desc: 'Protect your brand with trademark registration and stay compliant with ITR filing.',
     meta: 'Brand + Tax',
-    to: '/ca-services',
+    to: '/contact',
     chip: 'linear-gradient(135deg, #38bdf8 0%, #2c679e 100%)',
     // Gavel/judge hammer on legal books — law, trademark, compliance
     image:
@@ -91,6 +92,18 @@ const services = [
 ]
 
 export default function ServicesProvided() {
+  const { openLeadModal } = useLeadModal()
+
+  const handleCardClick = (s) => {
+    if (s.to === '/contact') {
+      openLeadModal({
+        title: `Get Started — ${s.title}`,
+        subtitle: 'Share your details and our expert team will guide you through the process.',
+        service: s.title,
+      })
+    }
+  }
+
   return (
     <section className="section-padding relative overflow-hidden bg-white">
       {/* subtle tech dot backdrop */}
@@ -129,6 +142,7 @@ export default function ServicesProvided() {
             >
               <Link
                 to={s.to}
+                onClick={(e) => { if (s.to === '/contact') { e.preventDefault(); handleCardClick(s) } }}
                 className={`group flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover ${
                   s.flagship ? 'ring-2 ring-gold/60' : 'ring-1 ring-primary-100/70 hover:ring-primary/40'
                 }`}

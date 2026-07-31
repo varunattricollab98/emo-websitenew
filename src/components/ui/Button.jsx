@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { useLeadModal } from '../../context/LeadModalContext'
 
 const variants = {
   primary:
@@ -24,26 +25,46 @@ export default function Button({
   to,
   href,
   className = '',
+  onClick,
   ...props
 }) {
+  const { openLeadModal } = useLeadModal()
   const classes = `${variants[variant] || variants.primary} ${sizes[size] || sizes.md} ${className}`
+
+  // Intercept /contact links → open lead popup instead of navigating
+  if (to === '/contact' && !onClick) {
+    return (
+      <button
+        className={classes}
+        onClick={() =>
+          openLeadModal({
+            title: 'Get a Free Consultation',
+            subtitle: 'Share your details and our team will call you back within one business day.',
+          })
+        }
+        {...props}
+      >
+        {children}
+      </button>
+    )
+  }
 
   if (to) {
     return (
-      <Link to={to} className={classes} {...props}>
+      <Link to={to} className={classes} onClick={onClick} {...props}>
         {children}
       </Link>
     )
   }
   if (href) {
     return (
-      <a href={href} className={classes} {...props}>
+      <a href={href} className={classes} onClick={onClick} {...props}>
         {children}
       </a>
     )
   }
   return (
-    <button className={classes} {...props}>
+    <button className={classes} onClick={onClick} {...props}>
       {children}
     </button>
   )

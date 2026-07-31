@@ -6,7 +6,6 @@ import FaqAccordion from '../components/ui/FaqAccordion'
 import CTABand from '../components/ui/CTABand'
 import Button from '../components/ui/Button'
 import { faqs } from '../data/faqs'
-import { useLeadModal } from '../context/LeadModalContext'
 
 const plans = [
   {
