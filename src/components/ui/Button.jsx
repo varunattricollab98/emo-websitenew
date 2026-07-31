@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
-import { useLeadModal } from '../../context/LeadModalContext'
+import { useContext } from 'react'
+import { LeadModalContext } from '../../context/LeadModalContext'
 
 const variants = {
   primary:
@@ -28,11 +29,13 @@ export default function Button({
   onClick,
   ...props
 }) {
-  const { openLeadModal } = useLeadModal()
+  // Safe access to lead modal — won't crash if context isn't available
+  const ctx = useContext(LeadModalContext)
+  const openLeadModal = ctx?.openLeadModal
   const classes = `${variants[variant] || variants.primary} ${sizes[size] || sizes.md} ${className}`
 
   // Intercept /contact links → open lead popup instead of navigating
-  if (to === '/contact' && !onClick) {
+  if (to === '/contact' && !onClick && openLeadModal) {
     return (
       <button
         className={classes}

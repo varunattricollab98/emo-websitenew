@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useCallback } from 'react'
 import LeadModal from '../components/ui/LeadModal'
 
-const LeadModalContext = createContext({ openLeadModal: () => {}, closeLeadModal: () => {} })
+export const LeadModalContext = createContext({ openLeadModal: () => {}, closeLeadModal: () => {} })
 
 export function useLeadModal() {
   return useContext(LeadModalContext)
