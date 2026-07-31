@@ -15,7 +15,7 @@ const FALLBACK = [
 ]
 
 const amenities = [
-  { icon: ShieldCheck, label: 'GST Ready' },
+  { icon: ShieldCheck, label: 'GST & MCA Ready' },
   { icon: Users, label: 'Meeting Rooms' },
   { icon: Mail, label: 'Mail Handling' },
 ]
