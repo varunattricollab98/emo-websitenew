@@ -430,7 +430,7 @@ export default function SpaceDetail() {
           />
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {[
-              { icon: MapPin, label: 'Address', value: fullAddress },
+              { icon: MapPin, label: 'Address', value: `${areaName}, ${cityName}, ${region}` },
               { icon: Building2, label: 'Property type', value: propertyType },
               { icon: Clock, label: 'Activation', value: processingTime },
               { icon: BadgeCheck, label: 'Compliance', value: 'GST & MCA accepted' },
@@ -588,47 +588,36 @@ export default function SpaceDetail() {
         </div>
       </section>
 
-      {/* ===== Location / Map ===== */}
+      {/* ===== Location (area-level only — exact address hidden for privacy) ===== */}
       <section className="section-padding bg-white">
         <div className="container-custom">
           <SectionHeading eyebrow="Location" title="Where You'll Be" accent="Be" />
-
           <div className="mx-auto mt-10 max-w-5xl">
-            {/* address bar */}
-            <div className="flex flex-wrap items-center justify-between gap-3 rounded-t-3xl border border-primary-100/70 bg-surface-light px-5 py-4">
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-primary-100/70 bg-surface-light px-5 py-4">
               <div className="flex items-start gap-3">
                 <span className="inline-flex h-10 w-10 flex-none items-center justify-center rounded-xl bg-primary-gradient text-white shadow-card">
                   <MapPin className="h-5 w-5" />
                 </span>
                 <div>
                   <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-                    Address
+                    Location
                   </p>
-                  <p className="text-sm font-semibold leading-snug text-navy-dark">{fullAddress}</p>
+                  <p className="text-sm font-semibold leading-snug text-navy-dark">
+                    {areaName}, {cityName}, {region}
+                  </p>
+                  <p className="mt-1 text-xs text-slate-400">
+                    Exact address shared after booking confirmation
+                  </p>
                 </div>
               </div>
-              <a
-                href={mapLinkUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                type="button"
+                onClick={book}
                 className="inline-flex items-center gap-1.5 rounded-full border border-primary-200 bg-white px-4 py-2 text-sm font-bold text-primary shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary hover:shadow-card"
               >
-                Get Directions
+                Get Exact Location
                 <ArrowRight className="h-4 w-4" />
-              </a>
-            </div>
-
-            {/* embedded google map */}
-            <div className="overflow-hidden rounded-b-3xl border border-t-0 border-primary-100/70 shadow-card">
-              <iframe
-                title={`Map of ${areaName}, ${cityName}`}
-                src={mapEmbedUrl}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                className="h-[360px] w-full sm:h-[420px]"
-                style={{ border: 0 }}
-                allowFullScreen
-              />
+              </button>
             </div>
           </div>
         </div>
