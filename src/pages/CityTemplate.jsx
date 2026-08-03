@@ -1,4 +1,4 @@
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, Navigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
   MapPin,
@@ -26,6 +26,7 @@ import TrustBar from '../components/home/TrustBar'
 import GoogleReviews from '../components/virtual-office/GoogleReviews'
 import ClientsStrip from '../components/virtual-office/ClientsStrip'
 import { voCities, getSpaces, slugifySpace } from '../data/spaces'
+import { resolveCity } from '../utils/resolveCity'
 import { useSpacesForCity, useSupabaseSpaces } from '../context/SpacesContext'
 import { getCityBySlug } from '../data/cities'
 import { serviceOrder, serviceLandings } from '../data/serviceLandings'
@@ -54,6 +55,21 @@ export default function CityTemplate() {
   // /virtual-office/:state/:city (direct route)
   const citySlug = params.second || params.city || params.first || ''
   const vo = voCities.find((c) => c.slug === citySlug)
+
+  // If the slug isn't recognised directly but matches via alias (e.g. "gurugram" → "gurgaon"),
+  // redirect to the canonical URL so the page renders correctly.
+  if (!vo) {
+    const resolved = resolveCity(citySlug)
+    if (resolved && resolved.slug !== citySlug) {
+      // Build the redirect path preserving any state prefix
+      const state = params.first && params.second ? params.first : null
+      const redirectPath = state
+        ? `/virtual-office/${state}/${resolved.slug}`
+        : `/virtual-office/${resolved.slug}`
+      return <Navigate to={redirectPath} replace />
+    }
+  }
+
   const extra = getCityBySlug(citySlug)
   const cityName = vo?.name || extra?.name || toTitle(citySlug)
   const region = vo?.state || extra?.region || 'India'
