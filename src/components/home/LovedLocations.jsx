@@ -39,7 +39,7 @@ const locations = [
     businesses: '2,400+',
     price: '999',
     image:
-      'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80',
   },
   {
     name: 'Hyderabad',
