@@ -16,6 +16,7 @@ import {
 } from 'lucide-react'
 import { caServices } from '../../data/caServices'
 import { useLeadModal } from '../../context/LeadModalContext'
+import { saveLead } from '../../lib/leads'
 
 const trustPoints = [
   { icon: Briefcase, label: '1,200+ business accounts managed' },
@@ -32,6 +33,7 @@ export default function CACallback() {
   const handleChange = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }))
   const handleSubmit = (e) => {
     e.preventDefault()
+    saveLead({ name: form.name, phone: form.phone, interest: form.service, source: 'ca-callback' })
     setSubmitted(true)
   }
 

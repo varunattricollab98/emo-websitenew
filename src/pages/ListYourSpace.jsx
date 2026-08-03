@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { saveLead } from '../lib/leads'
 import {
   TrendingUp,
   Users2,
@@ -68,6 +69,15 @@ export default function ListYourSpace() {
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value })
   const handleSubmit = (e) => {
     e.preventDefault()
+    saveLead({
+      name: form.name,
+      phone: form.phone,
+      email: form.email,
+      interest: `List Space — ${form.spaceType}`,
+      city: form.city,
+      message: form.message ? `Company: ${form.company || '-'}. ${form.message}` : `Company: ${form.company || '-'}`,
+      source: 'list-your-space',
+    })
     setSubmitted(true)
   }
 
