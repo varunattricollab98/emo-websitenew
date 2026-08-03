@@ -1,4 +1,4 @@
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, Navigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
   FileCheck2,
@@ -24,6 +24,7 @@ import FaqAccordion from '../components/ui/FaqAccordion'
 import ArticleBlocks from '../components/ui/ArticleBlocks'
 import BlogArticleSection from '../components/ui/BlogArticleSection'
 import { voCities, getSpaces, slugifySpace } from '../data/spaces'
+import { resolveCity } from '../utils/resolveCity'
 import { serviceArticle } from '../data/blogArticles'
 import { useBlogArticle } from '../hooks/useBlogArticle'
 import { getCityBySlug } from '../data/cities'
@@ -72,16 +73,14 @@ export default function ServiceLanding() {
   const localityName = locality ? toTitle(locality) : ''
 
   if (!svc) {
-    return (
-      <section className="section-padding bg-white">
-        <div className="container-custom max-w-lg text-center">
-          <h1 className="text-2xl font-bold text-navy-dark">Page not found</h1>
-          <Button to={`/virtual-office/${city}`} className="mt-6">
-            Explore {cityName} <ArrowRight className="h-4 w-4" />
-          </Button>
-        </div>
-      </section>
-    )
+    // The 3rd URL segment isn't a known service → it's likely a space/area slug.
+    // e.g. /virtual-office/haryana/gurugram/golf-course-extension
+    //      state='haryana', city='gurugram', service='golf-course-extension'
+    // Resolve the city alias and redirect to the space detail page.
+    const resolved = resolveCity(city)
+    const actualCity = resolved?.slug || city
+    const spaceSlug = serviceSlug // the "service" param is actually the space slug
+    return <Navigate to={`/virtual-office/${actualCity}/${spaceSlug}`} replace />
   }
 
   const Icon = iconMap[svc.icon] || FileCheck2
