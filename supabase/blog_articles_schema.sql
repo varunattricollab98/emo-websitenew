@@ -50,9 +50,14 @@ CREATE TABLE IF NOT EXISTS blog_articles (
   eyebrow TEXT DEFAULT 'Guide',
   subtitle TEXT,
 
-  -- The actual article content (JSON array of blocks)
-  -- See format examples above
+  -- The actual article content
+  -- For JSON format: JSONB array of blocks (see format above)
+  -- For Markdown format: plain text string with # headings, * bullets, > quotes
   content JSONB NOT NULL DEFAULT '[]'::jsonb,
+
+  -- Content format: 'json' (default) or 'markdown'
+  -- Use 'markdown' to write plain text instead of JSON arrays!
+  content_format TEXT DEFAULT 'json',
 
   -- SEO / meta (optional, for future use)
   meta_title TEXT,

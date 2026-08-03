@@ -1,8 +1,13 @@
 import { useState, useEffect } from 'react'
 import { supabase, isSupabaseConfigured } from '../lib/supabase'
+import { markdownToBlocks } from '../utils/markdownToBlocks'
 
 /**
  * Fetches a blog article from the Supabase `blog_articles` table.
+ *
+ * Supports TWO content formats:
+ *   1. JSON array (content_format = 'json' or null) — ArticleBlocks format
+ *   2. Markdown text (content_format = 'markdown') — plain text, auto-converted
  *
  * If no article is found in the DB (or Supabase isn't configured),
  * returns null — the calling component should fall back to the
@@ -11,12 +16,6 @@ import { supabase, isSupabaseConfigured } from '../lib/supabase'
  * Usage:
  *   const article = useBlogArticle({ pageType: 'city', citySlug: 'gurgaon' })
  *   // article = { title, eyebrow, subtitle, blocks } or null
- *
- * @param {Object} params
- * @param {string} params.pageType   — 'city' | 'space' | 'coworking' | 'service'
- * @param {string} [params.citySlug]  — city slug (e.g. 'gurgaon')
- * @param {string} [params.areaSlug]  — area/space slug (e.g. 'cyber-hub')
- * @param {string} [params.serviceSlug] — service slug (e.g. 'gst-registration')
  */
 export function useBlogArticle({ pageType, citySlug, areaSlug, serviceSlug }) {
   const [article, setArticle] = useState(null)
@@ -27,7 +26,7 @@ export function useBlogArticle({ pageType, citySlug, areaSlug, serviceSlug }) {
 
     let query = supabase
       .from('blog_articles')
-      .select('title, eyebrow, subtitle, content')
+      .select('title, eyebrow, subtitle, content, content_format')
       .eq('page_type', pageType)
       .eq('is_active', true)
       .order('sort_order', { ascending: true })
@@ -45,11 +44,27 @@ export function useBlogArticle({ pageType, citySlug, areaSlug, serviceSlug }) {
       }
       if (data && data.length > 0) {
         const row = data[0]
+        // Support both JSON blocks and Markdown text
+        let blocks = []
+        if (row.content_format === 'markdown' && typeof row.content === 'string') {
+          blocks = markdownToBlocks(row.content)
+        } else if (typeof row.content === 'string') {
+          // Try parsing as JSON string
+          try {
+            blocks = JSON.parse(row.content)
+          } catch {
+            // If it fails, treat as markdown
+            blocks = markdownToBlocks(row.content)
+          }
+        } else if (Array.isArray(row.content)) {
+          blocks = row.content
+        }
+
         setArticle({
           title: row.title,
           eyebrow: row.eyebrow || 'Guide',
           subtitle: row.subtitle || '',
-          blocks: Array.isArray(row.content) ? row.content : [],
+          blocks,
         })
       }
     })
