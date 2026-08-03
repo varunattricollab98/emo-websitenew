@@ -24,6 +24,7 @@ import FaqAccordion from '../components/ui/FaqAccordion'
 import ArticleBlocks from '../components/ui/ArticleBlocks'
 import BlogArticleSection from '../components/ui/BlogArticleSection'
 import { voCities, getSpaces, slugifySpace } from '../data/spaces'
+import { serviceArticle } from '../data/blogArticles'
 import { getCityBySlug } from '../data/cities'
 import { getServiceLanding, serviceOrder, serviceLandings } from '../data/serviceLandings'
 import { useLeadModal } from '../context/LeadModalContext'
@@ -97,30 +98,7 @@ export default function ServiceLanding() {
   const otherServices = serviceOrder.filter((s) => s !== svc.slug)
 
   // Blog / long-form article blocks for the service guide section
-  const serviceArticleBlocks = svc.articleBlocks || [
-    `${svc.name} in ${cityName} is a crucial step for businesses looking to establish legal compliance in ${region}. Whether you're registering for GST, incorporating a company, or setting up a professional mailing address, EaseMyOffice provides end-to-end support with verified commercial addresses and complete documentation.`,
-    { h: `Why You Need ${svc.name} in ${cityName}` },
-    `${cityName} is a top business destination in ${region}, and having a registered address here gives your business credibility with government authorities, banks, and clients. Our ${svc.name.toLowerCase()} service ensures your documentation is authority-accepted and ready for verification on the first attempt.`,
-    { list: [
-      `Verified commercial address in ${cityName} for ${svc.name.toLowerCase()}`,
-      'Complete documentation: rent agreement, NOC, utility bill',
-      'Dedicated compliance manager for end-to-end support',
-      '2–3 business day activation — fastest in the industry',
-      '98.7% first-attempt approval rate',
-    ]},
-    { h: 'Documents Required' },
-    `The ${svc.name.toLowerCase()} process in ${cityName} requires minimal documentation from your end. Our team handles the rest — from preparing the rent agreement to coordinating with authorities if needed.`,
-    { bullets: [
-      'PAN card of the business / directors',
-      'Aadhaar card of authorized signatory',
-      'Passport-size photographs',
-      'Business registration certificate (if applicable)',
-      'Address proof of directors',
-    ]},
-    { h: 'How EaseMyOffice Helps' },
-    `We don't just provide an address — we provide a complete compliance-ready package. From document preparation to post-registration support, our team ensures your ${svc.name.toLowerCase()} in ${cityName} is smooth, fast, and hassle-free.`,
-    { quote: `"The ${svc.name.toLowerCase()} process through EaseMyOffice was incredibly smooth. Documents were ready in 2 days and everything was accepted without any issues." — Verified Client, ${cityName}` },
-  ]
+  const serviceArticleBlocks = svc.articleBlocks || serviceArticle(svc.name, cityName, region)
 
   // ≥5 related internal links (pillar page + cluster) for SEO crawlability
   const topLocalities = (getSpaces(city) || []).slice(0, 3)

@@ -26,6 +26,7 @@ import FaqAccordion from '../components/ui/FaqAccordion'
 import BlogArticleSection from '../components/ui/BlogArticleSection'
 import { getCoworkingSpaceBySlug, slugifyCoworking } from '../data/coworkingSpaces'
 import { voCities, spaceStats } from '../data/spaces'
+import { coworkingArticle } from '../data/blogArticles'
 import { useLeadModal } from '../context/LeadModalContext'
 
 const DEFAULT_GALLERY = [
@@ -179,36 +180,7 @@ export default function CoworkingDetail() {
   ]
 
   // Blog / long-form article blocks for the coworking guide section
-  const coworkingArticleBlocks = [
-    `${sp.name} in ${sp.locality}, ${cityName} is a modern coworking space designed for startups, freelancers, and growing teams. With flexible seating from ${sp.seats}, high-speed internet, and a vibrant community, it's the perfect workspace to boost productivity without the burden of a traditional office lease.`,
-    { h: `Why Choose ${sp.name}?` },
-    `Located in ${sp.locality}, one of ${cityName}'s most accessible business areas, ${sp.name} offers everything from hot desks to private cabins. Whether you need a quiet corner for focused work or a collaborative environment for your team, this space is built to adapt to your workstyle.`,
-    { list: [
-      `Prime location in ${sp.locality}, ${cityName}`,
-      'High-speed Wi-Fi and ergonomic workstations',
-      'Meeting rooms and conference facilities',
-      'Pantry, cafeteria, and unlimited coffee',
-      '24x7 access for dedicated desk members',
-      'Networking events and community perks',
-    ]},
-    { h: 'Plans & Flexibility' },
-    `${sp.name} offers multiple plans to match your needs — from daily drop-ins (₹${sp.dayPass}/day) to dedicated desks (₹${Number(sp.price).toLocaleString('en-IN')}/month) and private cabins for teams. All plans include core amenities like Wi-Fi, power backup, housekeeping, and access to common areas.`,
-    { bullets: [
-      'Hot Desk — flexible open seating, ideal for freelancers',
-      'Dedicated Desk — your own fixed spot with storage and 24x7 access',
-      'Private Cabin — lockable office for teams needing privacy',
-      'Day Pass — drop in for a day with full amenity access',
-    ]},
-    { h: 'Ideal For' },
-    'This coworking space is perfect for:',
-    { bullets: [
-      'Startups and early-stage companies looking to scale affordably',
-      'Remote workers and freelancers needing a professional environment',
-      'Enterprise teams setting up a satellite office without long-term lease',
-      'Businesses that also need a registered address for GST or company registration',
-    ]},
-    { quote: `"${sp.name} in ${sp.locality} has been our home for 6 months now. The community, facilities, and location are unbeatable for the price." — Coworking Member` },
-  ]
+  const coworkingArticleBlocks = coworkingArticle(sp.name, sp.locality, cityName, sp.seats, sp.dayPass, sp.price)
 
   return (
     <>

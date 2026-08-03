@@ -30,6 +30,7 @@ import { getSpaceDetail } from '../data/spaceDetails'
 import { useSpaceDetailFromDb, useSupabaseSpaces } from '../context/SpacesContext'
 import { getLocalityDescription, toBlocks } from '../data/descriptions'
 import { spaceFaqs as buildSpaceFaqs } from '../data/pageFaqs'
+import { spaceArticle } from '../data/blogArticles'
 import TalkToExpert from '../components/ui/TalkToExpert'
 import { useLeadModal } from '../context/LeadModalContext'
 
@@ -171,28 +172,7 @@ export default function SpaceDetail() {
   const faqs = detail?.faqs?.length ? detail.faqs : buildSpaceFaqs(areaName, cityName, processingTime)
 
   // Blog / long-form article blocks for the space guide section
-  // Content can be overridden per space from Supabase (detail.articleBlocks) later.
-  const spaceArticleBlocks = detail?.articleBlocks || [
-    `${areaName} in ${cityName}, ${region} is a prime commercial location trusted by businesses for GST registration, company incorporation, and establishing a professional presence. A virtual office here gives your business a verified address in one of ${cityName}'s most respected business districts — activated in just ${processingTime}.`,
-    { h: `Why ${areaName} for Your Business?` },
-    `Located in the heart of ${cityName}, ${areaName} is known for its commercial significance, excellent connectivity, and proximity to government offices and banking institutions. Businesses registered here benefit from faster GST verification, smoother bank account openings, and a credible address that impresses clients and partners.`,
-    { list: [
-      `Premium commercial address in ${areaName}, ${cityName}`,
-      'GST & MCA verification-ready documentation',
-      'Professional mail handling and courier forwarding',
-      `Meeting room access in ${cityName} when needed`,
-      'Dedicated relationship manager for ongoing support',
-    ]},
-    { h: 'Services Available' },
-    `At our ${areaName} virtual office, you get a complete compliance-ready package. Whether you need an address for GST registration, company incorporation (Pvt Ltd, LLP, OPC), or simply a professional mailing address — we handle the documentation end-to-end so you can focus on growing your business.`,
-    { bullets: [
-      'GST Registration — address proof + rent agreement + NOC',
-      'Business Registration — registered office with MCA-accepted documents',
-      'Mailing Address — professional address with mail handling',
-      'APOB Registration — additional place of business for e-commerce sellers',
-    ]},
-    { quote: `"Getting our GST registered at ${areaName} was seamless. EaseMyOffice delivered all documents within 2 days and the verification passed on the first attempt." — Verified Business Owner` },
-  ]
+  const spaceArticleBlocks = detail?.articleBlocks || spaceArticle(areaName, cityName, region, processingTime)
 
   return (
     <>
