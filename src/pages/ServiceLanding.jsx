@@ -25,6 +25,7 @@ import ArticleBlocks from '../components/ui/ArticleBlocks'
 import BlogArticleSection from '../components/ui/BlogArticleSection'
 import { voCities, getSpaces, slugifySpace } from '../data/spaces'
 import { serviceArticle } from '../data/blogArticles'
+import { useBlogArticle } from '../hooks/useBlogArticle'
 import { getCityBySlug } from '../data/cities'
 import { getServiceLanding, serviceOrder, serviceLandings } from '../data/serviceLandings'
 import { useLeadModal } from '../context/LeadModalContext'
@@ -67,6 +68,7 @@ export default function ServiceLanding() {
   const svc = getServiceLanding(serviceSlug)
   const cityName = voCities.find((c) => c.slug === city)?.name || toTitle(city)
   const region = voCities.find((c) => c.slug === city)?.state || 'India'
+  const dbArticle = useBlogArticle({ pageType: 'service', citySlug: city, serviceSlug })
   const localityName = locality ? toTitle(locality) : ''
 
   if (!svc) {
@@ -98,7 +100,9 @@ export default function ServiceLanding() {
   const otherServices = serviceOrder.filter((s) => s !== svc.slug)
 
   // Blog / long-form article blocks for the service guide section
-  const serviceArticleBlocks = svc.articleBlocks || serviceArticle(svc.name, cityName, region)
+  const serviceArticleBlocks = dbArticle?.blocks?.length
+    ? dbArticle.blocks
+    : (svc.articleBlocks || serviceArticle(svc.name, cityName, region))
 
   // ≥5 related internal links (pillar page + cluster) for SEO crawlability
   const topLocalities = (getSpaces(city) || []).slice(0, 3)
@@ -423,10 +427,10 @@ export default function ServiceLanding() {
 
       {/* Blog Article — deep-dive guide for the service */}
       <BlogArticleSection
-        title={`${svc.name} in ${cityName} — Complete Guide`}
+        title={dbArticle?.title || `${svc.name} in ${cityName} — Complete Guide`}
         accent={cityName}
-        eyebrow="Guide"
-        subtitle={`Everything you need to know about ${svc.name.toLowerCase()} in ${cityName} — process, documents, pricing, and compliance.`}
+        eyebrow={dbArticle?.eyebrow || 'Guide'}
+        subtitle={dbArticle?.subtitle || `Everything you need to know about ${svc.name.toLowerCase()} in ${cityName} — process, documents, pricing, and compliance.`}
         blocks={serviceArticleBlocks}
         bg="bg-white"
       />

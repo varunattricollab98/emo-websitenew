@@ -36,6 +36,7 @@ import ArticleBlocks from '../components/ui/ArticleBlocks'
 import BlogArticleSection from '../components/ui/BlogArticleSection'
 import { useLeadModal } from '../context/LeadModalContext'
 import { cityArticle } from '../data/blogArticles'
+import { useBlogArticle } from '../hooks/useBlogArticle'
 import TalkToExpert from '../components/ui/TalkToExpert'
 
 function toTitle(str = '') {
@@ -55,6 +56,9 @@ export default function CityTemplate() {
   // /virtual-office/:state/:city (direct route)
   const citySlug = params.second || params.city || params.first || ''
   const vo = voCities.find((c) => c.slug === citySlug)
+
+  // Fetch blog article from Supabase (hook must be called before any early return)
+  const dbArticle = useBlogArticle({ pageType: 'city', citySlug })
 
   // If the slug isn't recognised directly but matches via alias (e.g. "gurugram" → "gurgaon"),
   // redirect to the canonical URL so the page renders correctly.
@@ -142,7 +146,8 @@ export default function CityTemplate() {
   const cityFaqs = buildCityFaqs(cityName, region, basePrice)
 
   // Blog / long-form article blocks for the city guide section
-  const cityArticleBlocks = cityArticle(cityName, region)
+  // Priority: Supabase DB → hardcoded default
+  const cityArticleBlocks = dbArticle?.blocks?.length ? dbArticle.blocks : cityArticle(cityName, region)
 
   return (
     <>
@@ -496,10 +501,10 @@ export default function CityTemplate() {
 
       {/* Blog / Long-form article — dynamic content from data or Supabase */}
       <BlogArticleSection
-        title={`Virtual Office in ${cityName} — Complete Guide`}
+        title={dbArticle?.title || `Virtual Office in ${cityName} — Complete Guide`}
         accent={cityName}
-        eyebrow="Guide"
-        subtitle={`Everything you need to know about getting a virtual office address in ${cityName} for GST registration, company incorporation, and business growth.`}
+        eyebrow={dbArticle?.eyebrow || 'Guide'}
+        subtitle={dbArticle?.subtitle || `Everything you need to know about getting a virtual office address in ${cityName} for GST registration, company incorporation, and business growth.`}
         blocks={cityArticleBlocks}
         bg="bg-white"
       />

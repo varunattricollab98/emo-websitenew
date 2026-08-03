@@ -27,6 +27,7 @@ import BlogArticleSection from '../components/ui/BlogArticleSection'
 import { getCoworkingSpaceBySlug, slugifyCoworking } from '../data/coworkingSpaces'
 import { voCities, spaceStats } from '../data/spaces'
 import { coworkingArticle } from '../data/blogArticles'
+import { useBlogArticle } from '../hooks/useBlogArticle'
 import { useLeadModal } from '../context/LeadModalContext'
 
 const DEFAULT_GALLERY = [
@@ -67,6 +68,7 @@ export default function CoworkingDetail() {
   const sp = getCoworkingSpaceBySlug(city, space)
   const cityName = voCities.find((c) => c.slug === city)?.name || toTitle(city)
   const region = voCities.find((c) => c.slug === city)?.state || 'India'
+  const dbArticle = useBlogArticle({ pageType: 'coworking', citySlug: city, areaSlug: space })
 
   if (!sp) {
     return (
@@ -180,7 +182,9 @@ export default function CoworkingDetail() {
   ]
 
   // Blog / long-form article blocks for the coworking guide section
-  const coworkingArticleBlocks = coworkingArticle(sp.name, sp.locality, cityName, sp.seats, sp.dayPass, sp.price)
+  const coworkingArticleBlocks = dbArticle?.blocks?.length
+    ? dbArticle.blocks
+    : coworkingArticle(sp.name, sp.locality, cityName, sp.seats, sp.dayPass, sp.price)
 
   return (
     <>
@@ -579,10 +583,10 @@ export default function CoworkingDetail() {
 
       {/* ===== Blog Article ===== */}
       <BlogArticleSection
-        title={`${sp.name}, ${cityName} — Coworking Guide`}
+        title={dbArticle?.title || `${sp.name}, ${cityName} — Coworking Guide`}
         accent={sp.name}
-        eyebrow="Guide"
-        subtitle={`A complete guide to coworking at ${sp.name} in ${sp.locality}, ${cityName} — plans, amenities, and everything you need to know.`}
+        eyebrow={dbArticle?.eyebrow || 'Guide'}
+        subtitle={dbArticle?.subtitle || `A complete guide to coworking at ${sp.name} in ${sp.locality}, ${cityName} — plans, amenities, and everything you need to know.`}
         blocks={coworkingArticleBlocks}
         bg="bg-white"
       />

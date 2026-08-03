@@ -31,6 +31,7 @@ import { useSpaceDetailFromDb, useSupabaseSpaces } from '../context/SpacesContex
 import { getLocalityDescription, toBlocks } from '../data/descriptions'
 import { spaceFaqs as buildSpaceFaqs } from '../data/pageFaqs'
 import { spaceArticle } from '../data/blogArticles'
+import { useBlogArticle } from '../hooks/useBlogArticle'
 import TalkToExpert from '../components/ui/TalkToExpert'
 import { useLeadModal } from '../context/LeadModalContext'
 
@@ -78,6 +79,7 @@ export default function SpaceDetail() {
   const dbDetail = useSpaceDetailFromDb(city, space)
   const detail = dbDetail || getSpaceDetail(city, space)
   const { loaded } = useSupabaseSpaces()
+  const dbArticle = useBlogArticle({ pageType: 'space', citySlug: city, areaSlug: space })
   const cityName = voCities.find((c) => c.slug === city)?.name || detail?.city || toTitle(city)
   const region = voCities.find((c) => c.slug === city)?.state || detail?.state || 'India'
 
@@ -172,7 +174,9 @@ export default function SpaceDetail() {
   const faqs = detail?.faqs?.length ? detail.faqs : buildSpaceFaqs(areaName, cityName, processingTime)
 
   // Blog / long-form article blocks for the space guide section
-  const spaceArticleBlocks = detail?.articleBlocks || spaceArticle(areaName, cityName, region, processingTime)
+  const spaceArticleBlocks = dbArticle?.blocks?.length
+    ? dbArticle.blocks
+    : (detail?.articleBlocks || spaceArticle(areaName, cityName, region, processingTime))
 
   return (
     <>
@@ -769,10 +773,10 @@ export default function SpaceDetail() {
 
       {/* ===== Blog Article ===== */}
       <BlogArticleSection
-        title={`Virtual Office in ${areaName}, ${cityName} — Complete Guide`}
+        title={dbArticle?.title || `Virtual Office in ${areaName}, ${cityName} — Complete Guide`}
         accent={areaName}
-        eyebrow="Guide"
-        subtitle={`Everything you need to know about setting up a virtual office in ${areaName}, ${cityName} for GST, company registration, and business compliance.`}
+        eyebrow={dbArticle?.eyebrow || 'Guide'}
+        subtitle={dbArticle?.subtitle || `Everything you need to know about setting up a virtual office in ${areaName}, ${cityName} for GST, company registration, and business compliance.`}
         blocks={spaceArticleBlocks}
         bg="bg-white"
       />
