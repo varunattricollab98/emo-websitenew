@@ -3,7 +3,7 @@ import { supabase, isSupabaseConfigured } from './supabase'
 // ── Web3Forms Access Key ──────────────────────────────────────
 // Get yours from: https://web3forms.com (free — up to 250 emails/month)
 // Set it as VITE_WEB3FORMS_KEY in your .env file, or hardcode below.
-const WEB3FORMS_KEY = import.meta.env.VITE_WEB3FORMS_KEY || ''
+const WEB3FORMS_KEY = import.meta.env.VITE_WEB3FORMS_KEY || '24c2a048-dac6-4a5a-8956-2b36139f22fc'
 
 /**
  * Send form data to Web3Forms → email notification to your inbox.
