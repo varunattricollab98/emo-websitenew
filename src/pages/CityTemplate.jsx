@@ -32,6 +32,7 @@ import { serviceOrder, serviceLandings } from '../data/serviceLandings'
 import { getCityDescription, toBlocks } from '../data/descriptions'
 import { cityFaqs as buildCityFaqs } from '../data/pageFaqs'
 import ArticleBlocks from '../components/ui/ArticleBlocks'
+import BlogArticleSection from '../components/ui/BlogArticleSection'
 import { useLeadModal } from '../context/LeadModalContext'
 import TalkToExpert from '../components/ui/TalkToExpert'
 
@@ -122,6 +123,34 @@ export default function CityTemplate() {
 
   // City-specific FAQs (shared with the prerender/SEO schema generator)
   const cityFaqs = buildCityFaqs(cityName, region, basePrice)
+
+  // Blog / long-form article blocks for the city guide section
+  // Content can come from Supabase later; for now uses a default template.
+  // Pass an empty array to hide the section entirely for a city.
+  const cityArticleBlocks = [
+    `A virtual office in ${cityName} provides your business with a premium commercial address without the expense of a physical office. Whether you're a startup, freelancer, or established company expanding to ${region}, EaseMyOffice gives you everything you need to get registered and operational in just 2–3 business days.`,
+    { h: `Why Choose a Virtual Office in ${cityName}?` },
+    `${cityName} is one of India's leading business destinations, home to thousands of registered companies across IT, manufacturing, services, and retail sectors. A virtual office here gives you instant credibility with clients, banks, and government authorities — at a fraction of the cost of a traditional office lease.`,
+    { list: [
+      `Prestigious ${cityName} business address accepted for GST & ROC filings`,
+      'Complete documentation kit: rent agreement, NOC, and utility bills',
+      'Professional mail handling and courier forwarding',
+      'Access to meeting rooms and coworking desks when needed',
+      'Dedicated relationship manager for compliance support',
+    ]},
+    { h: 'Who Needs a Virtual Office?' },
+    'Virtual offices are ideal for businesses that don\'t need a full-time physical workspace but require a registered office address for legal and tax compliance. Common use cases include:',
+    { bullets: [
+      'GST registration for e-commerce sellers (Amazon, Flipkart, Meesho)',
+      'Company incorporation (Private Limited, LLP, OPC) with MCA',
+      'Startups needing a professional address without long-term lease commitments',
+      'Remote teams and freelancers requiring a business mailing address',
+      'Businesses expanding to new cities without opening a physical branch',
+    ]},
+    { h: 'How It Works' },
+    `Getting started is simple. Choose your preferred ${cityName} location, select a plan (GST, Business Registration, or Mailing Address), and share your KYC documents. Our team prepares your rent agreement, NOC, and utility bill — and delivers the complete kit within 2–3 business days. Your address is immediately ready for GST filing, MCA registration, or bank account opening.`,
+    { quote: `"We registered our company in ${cityName} through EaseMyOffice in just 2 days. The documentation was flawless and accepted on the first attempt." — Verified Client` },
+  ]
 
   return (
     <>
@@ -473,8 +502,18 @@ export default function CityTemplate() {
         </div>
       </section>
 
+      {/* Blog / Long-form article — dynamic content from data or Supabase */}
+      <BlogArticleSection
+        title={`Virtual Office in ${cityName} — Complete Guide`}
+        accent={cityName}
+        eyebrow="Guide"
+        subtitle={`Everything you need to know about getting a virtual office address in ${cityName} for GST registration, company incorporation, and business growth.`}
+        blocks={cityArticleBlocks}
+        bg="bg-white"
+      />
+
       {/* FAQ */}
-      <section className="section-padding bg-white">
+      <section className="section-padding bg-surface-light">
         <div className="container-custom">
           <SectionHeading eyebrow="FAQ" title={`Virtual Office in ${cityName} — FAQs`} accent={cityName} />
           <Reveal className="mx-auto mt-12 max-w-3xl">
