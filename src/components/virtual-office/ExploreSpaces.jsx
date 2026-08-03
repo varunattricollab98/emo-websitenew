@@ -21,7 +21,7 @@ import SmartImage from '../ui/SmartImage'
 import { voCities, getSpaces, spacesByCity, cityMatches, slugifySpace, citiesForState } from '../../data/spaces'
 import { useSpacesForCity } from '../../context/SpacesContext'
 import { resolvePincode } from '../../data/pincodes'
-import { resolveCity } from '../../utils/resolveCity'
+import { resolveCity, resolveState } from '../../utils/resolveCity'
 import { getStateDescription, toBlocks } from '../../data/descriptions'
 import ArticleBlocks from '../ui/ArticleBlocks'
 
@@ -137,6 +137,13 @@ export default function ExploreSpaces() {
     const states = new Set(matches.map((c) => (c.state || '').toLowerCase()))
     if (states.size === 1) return citiesForState([...states][0])
     return matches
+  }, [cityInput, cityName])
+
+  // Detect if the typed query matches a state name (for showing "Haryana — All cities" option)
+  const matchedState = useMemo(() => {
+    const q = cityInput.trim()
+    if (!q || q === cityName) return null
+    return resolveState(q)
   }, [cityInput, cityName])
 
   const dbSpaces = useSpacesForCity('') // all cities from Supabase
@@ -344,7 +351,38 @@ export default function ExploreSpaces() {
                             {filteredCities.length === 0 ? (
                               <li className="px-3 py-2 text-sm text-slate-400">No city found</li>
                             ) : (
-                              filteredCities.map((c) => (
+                              <>
+                                {/* State-level option — appears when search matches a state */}
+                                {matchedState && (
+                                  <li>
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        setCity('')
+                                        setStateFilter(matchedState)
+                                        setCityInput(matchedState)
+                                        setCityOpen(false)
+                                        setShowAll(false)
+                                      }}
+                                      className={`flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2.5 text-left transition-colors ${
+                                        stateFilter === matchedState
+                                          ? 'bg-primary-50 text-primary'
+                                          : 'text-navy-dark hover:bg-surface-light'
+                                      }`}
+                                    >
+                                      <span className="min-w-0">
+                                        <span className={`block text-sm ${stateFilter === matchedState ? 'font-bold' : 'font-semibold'}`}>
+                                          {matchedState} — All Cities
+                                        </span>
+                                        <span className="block text-[11px] text-slate-400">
+                                          View all spaces in {matchedState}
+                                        </span>
+                                      </span>
+                                      <MapPin className="h-4 w-4 flex-none text-primary" />
+                                    </button>
+                                  </li>
+                                )}
+                                {filteredCities.map((c) => (
                                 <li key={c.slug}>
                                   <button
                                     type="button"
@@ -378,7 +416,8 @@ export default function ExploreSpaces() {
                                     )}
                                   </button>
                                 </li>
-                              ))
+                              ))}
+                              </>
                             )}
                           </ul>
                         </div>
