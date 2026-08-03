@@ -109,6 +109,7 @@ export default function WhyVirtualOffice() {
       <SmartImage
         src="https://easemyoffice.in/wp-content/uploads/2024/09/98rkhw.webp"
         alt=""
+        enhance={false}
         className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-[0.12] mix-blend-luminosity"
       />
       <div className="pointer-events-none absolute inset-0 tech-grid opacity-[0.06]" />
