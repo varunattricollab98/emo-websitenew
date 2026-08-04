@@ -18,7 +18,7 @@ const logos = [
   { name: 'Tuckit', src: '/logos/tuckit.png' },
   { name: 'Rudra Gas', src: '/logos/rudragas.jpg' },
   { name: 'Bizz Stay', src: '/logos/bizzstay.png' },
-  { name: 'Rosier Foods', src: '/logos/rosierfoods.png' },
+  { name: 'Rosier Foods', src: 'https://www.rosierfoods.com/cdn/shop/files/black-logo-01_1.png?v=1750171672&width=300' },
 ]
 
 // duplicated once for a seamless infinite loop
