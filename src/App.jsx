@@ -8,6 +8,8 @@ import Footer from './components/layout/Footer'
 import WhatsAppButton from './components/layout/WhatsAppButton'
 import ScrollToTop from './components/layout/ScrollToTop'
 import ErrorBoundary from './components/layout/ErrorBoundary'
+import SchemaScript from './components/seo/SchemaScript'
+import { organizationSchema, webSiteSchema } from './components/seo/schemas'
 
 // Home is eager so the landing page paints instantly (no chunk round-trip).
 import Home from './pages/Home'
@@ -53,6 +55,7 @@ export default function App() {
       <BookingModalProvider>
         <div className="flex min-h-screen flex-col">
           <ScrollToTop />
+          <SchemaScript schemas={[organizationSchema(), webSiteSchema()]} />
           <Navbar />
           <main className="flex-1 pt-16 lg:pt-20">
             <ErrorBoundary>

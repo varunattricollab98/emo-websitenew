@@ -24,7 +24,7 @@ import SmartImage from '../components/ui/SmartImage'
 import FaqAccordion from '../components/ui/FaqAccordion'
 import ArticleBlocks from '../components/ui/ArticleBlocks'
 import BlogArticleSection from '../components/ui/BlogArticleSection'
-import { voCities, getSpaceBySlug, spaceStats, cityUrl } from '../data/spaces'
+import { voCities, getSpaceBySlug, spaceStats, cityUrl, getStateSlugForCity, slugifySpace } from '../data/spaces'
 import { getCityBySlug } from '../data/cities'
 import { getSpaceDetail } from '../data/spaceDetails'
 import { useSpaceDetailFromDb, useSupabaseSpaces } from '../context/SpacesContext'
@@ -33,6 +33,8 @@ import { spaceFaqs as buildSpaceFaqs } from '../data/pageFaqs'
 import { spaceArticle } from '../data/blogArticles'
 import { useBlogArticle } from '../hooks/useBlogArticle'
 import TalkToExpert from '../components/ui/TalkToExpert'
+import SchemaScript from '../components/seo/SchemaScript'
+import { webPageSchema, breadcrumbSchema, faqSchema, articleSchema, reviewSchema } from '../components/seo/schemas'
 import { useLeadModal } from '../context/LeadModalContext'
 
 const DEFAULT_IMG =
@@ -182,16 +184,38 @@ export default function SpaceDetail() {
 
   return (
     <>
+      <SchemaScript schemas={[
+        webPageSchema({
+          title: `${areaName} Virtual Office — ${cityName}`,
+          description: `Virtual office in ${areaName}, ${cityName}. GST & company registration ready, activated in ${processingTime}.`,
+          url: `/virtual-office/${getStateSlugForCity(city)}/${city}/${slugifySpace(space)}`,
+        }),
+        breadcrumbSchema([
+          { name: 'Home', url: '/' },
+          { name: 'Virtual Office', url: '/virtual-office' },
+          { name: region, url: `/virtual-office/${getStateSlugForCity(city)}` },
+          { name: cityName, url: cityUrl(city) },
+          { name: areaName },
+        ]),
+        faqSchema(faqs),
+        articleSchema({
+          title: `Virtual Office in ${areaName}, ${cityName} — Complete Guide`,
+          description: `Everything about virtual offices in ${areaName}, ${cityName}.`,
+          url: `/virtual-office/${getStateSlugForCity(city)}/${city}/${slugifySpace(space)}`,
+        }),
+        reviewSchema(reviews, `${areaName} Virtual Office`, `/virtual-office/${getStateSlugForCity(city)}/${city}/${slugifySpace(space)}`),
+      ].filter(Boolean)} />
+
       {/* Breadcrumb */}
       <div className="border-b border-primary-100 bg-white">
         <div className="container-custom flex flex-wrap items-center gap-1.5 py-4 text-sm text-slate-500">
-          <Link to="/virtual-office" className="hover:text-primary">
-            Virtual Office
-          </Link>
+          <Link to="/" className="hover:text-primary">Home</Link>
           <span>/</span>
-          <Link to={cityUrl(city)} className="hover:text-primary">
-            {cityName}
-          </Link>
+          <Link to="/virtual-office" className="hover:text-primary">Virtual Office</Link>
+          <span>/</span>
+          <Link to={`/virtual-office/${getStateSlugForCity(city)}`} className="hover:text-primary">{region}</Link>
+          <span>/</span>
+          <Link to={cityUrl(city)} className="hover:text-primary">{cityName}</Link>
           <span>/</span>
           <span className="font-semibold text-navy-dark">{areaName}</span>
         </div>

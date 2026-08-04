@@ -13,6 +13,8 @@ import WhyVirtualOffice from '../components/home/WhyVirtualOffice'
 import MarketplacesGST from '../components/home/MarketplacesGST'
 import HomeFAQ from '../components/home/HomeFAQ'
 import BookYourSpace from '../components/home/BookYourSpace'
+import SchemaScript from '../components/seo/SchemaScript'
+import { localBusinessSchema, webPageSchema } from '../components/seo/schemas'
 
 export default function Home() {
   const { hash } = useLocation()
@@ -31,6 +33,14 @@ export default function Home() {
 
   return (
     <>
+      <SchemaScript schemas={[
+        localBusinessSchema('India', 'India', '₹799 - ₹1,999'),
+        webPageSchema({
+          title: 'EaseMyOffice — Virtual Offices & Business Compliance in India',
+          description: 'India\'s most trusted platform for virtual offices, coworking spaces, meeting rooms and business compliance. GST & company registration made simple.',
+          url: '/',
+        }),
+      ]} />
       <HeroSearch />
       <LovedLocations />
       <TrustBar />

@@ -38,6 +38,8 @@ import { useLeadModal } from '../context/LeadModalContext'
 import { cityArticle, getCityArticle } from '../data/blogArticles'
 import { useBlogArticle } from '../hooks/useBlogArticle'
 import TalkToExpert from '../components/ui/TalkToExpert'
+import SchemaScript from '../components/seo/SchemaScript'
+import { webPageSchema, breadcrumbSchema, faqSchema, articleSchema, localBusinessSchema } from '../components/seo/schemas'
 
 function toTitle(str = '') {
   return str
@@ -149,8 +151,48 @@ export default function CityTemplate() {
   // Priority: Supabase DB → city-specific hardcoded → default template
   const cityArticleBlocks = dbArticle?.blocks?.length ? dbArticle.blocks : getCityArticle(citySlug, cityName, region)
 
+  const stateSlugVal = stateSlug || getStateSlugForCity(citySlug)
+
+  // Breadcrumb items for schema + visible breadcrumb
+  const breadcrumbs = [
+    { name: 'Home', url: '/' },
+    { name: 'Virtual Office', url: '/virtual-office' },
+    { name: region, url: `/virtual-office/${stateSlugVal}` },
+    { name: cityName },
+  ]
+
   return (
     <>
+      <SchemaScript schemas={[
+        webPageSchema({
+          title: `Virtual Office in ${cityName} — GST & Company Registration`,
+          description: `Get a premium ${cityName} business address for GST and company registration. ${addresses}+ verified locations, activated in 2–3 days.`,
+          url: `/virtual-office/${stateSlugVal}/${citySlug}`,
+          breadcrumbs,
+        }),
+        breadcrumbSchema(breadcrumbs),
+        localBusinessSchema(cityName, region),
+        faqSchema(cityFaqs),
+        articleSchema({
+          title: `Virtual Office in ${cityName} — Complete Guide`,
+          description: `Everything about virtual offices in ${cityName} for GST registration and company incorporation.`,
+          url: `/virtual-office/${stateSlugVal}/${citySlug}`,
+        }),
+      ]} />
+
+      {/* Breadcrumb */}
+      <div className="border-b border-primary-100 bg-white">
+        <div className="container-custom flex flex-wrap items-center gap-1.5 py-4 text-sm text-slate-500">
+          <Link to="/" className="hover:text-primary">Home</Link>
+          <span>/</span>
+          <Link to="/virtual-office" className="hover:text-primary">Virtual Office</Link>
+          <span>/</span>
+          <Link to={`/virtual-office/${stateSlugVal}`} className="hover:text-primary">{region}</Link>
+          <span>/</span>
+          <span className="font-semibold text-navy-dark">{cityName}</span>
+        </div>
+      </div>
+
       <SubPageHero
         eyebrow={`Virtual Office · ${region}`}
         title={`Virtual Office in ${cityName}`}
