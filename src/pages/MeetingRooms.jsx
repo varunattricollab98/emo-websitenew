@@ -358,12 +358,22 @@ export default function MeetingRooms() {
           <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {useCases.map((u, i) => (
               <Reveal key={u.title} delay={(i % 4) * 0.07}>
-                <div className="premium-card h-full p-7">
-                  <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary-gradient text-white shadow-card">
-                    <u.icon className="h-6 w-6" />
+                <div className="group relative h-full overflow-hidden rounded-2xl border-2 border-navy-dark/10 bg-gradient-to-b from-white via-white to-slate-50 p-8 shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/30 hover:shadow-card-hover">
+                  {/* Nameplate screws — four corners */}
+                  <span className="absolute left-3 top-3 h-2.5 w-2.5 rounded-full bg-gradient-to-br from-slate-300 to-slate-400 shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)] ring-1 ring-slate-200" />
+                  <span className="absolute right-3 top-3 h-2.5 w-2.5 rounded-full bg-gradient-to-br from-slate-300 to-slate-400 shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)] ring-1 ring-slate-200" />
+                  <span className="absolute bottom-3 left-3 h-2.5 w-2.5 rounded-full bg-gradient-to-br from-slate-300 to-slate-400 shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)] ring-1 ring-slate-200" />
+                  <span className="absolute bottom-3 right-3 h-2.5 w-2.5 rounded-full bg-gradient-to-br from-slate-300 to-slate-400 shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)] ring-1 ring-slate-200" />
+                  {/* Top accent line */}
+                  <span className="pointer-events-none absolute inset-x-6 top-0 h-[2px] bg-gradient-to-r from-transparent via-primary/40 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+
+                  <span className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-gradient text-white shadow-card ring-2 ring-white/50">
+                    <u.icon className="h-7 w-7" />
                   </span>
-                  <h3 className="mt-4 font-bold text-navy-dark">{u.title}</h3>
+                  <h3 className="mt-5 text-lg font-bold text-navy-dark">{u.title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-slate-600">{u.desc}</p>
+                  {/* Bottom accent bar */}
+                  <span className="mt-5 block h-1 w-10 rounded-full bg-gradient-to-r from-gold to-gold-dark transition-all duration-300 group-hover:w-16" />
                 </div>
               </Reveal>
             ))}
