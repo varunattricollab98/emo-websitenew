@@ -2,8 +2,7 @@ import { supabase, isSupabaseConfigured } from './supabase'
 
 // ── Web3Forms Access Key ──────────────────────────────────────
 // Get yours from: https://web3forms.com (free — up to 250 emails/month)
-// Set it as VITE_WEB3FORMS_KEY in your .env file, or hardcode below.
-const WEB3FORMS_KEY = import.meta.env.VITE_WEB3FORMS_KEY || '24c2a048-dac6-4a5a-8956-2b36139f22fc'
+const WEB3FORMS_KEY = '24c2a048-dac6-4a5a-8956-2b36139f22fc'
 
 /**
  * Send form data to Web3Forms → email notification to your inbox.
@@ -16,32 +15,34 @@ async function sendEmailNotification(payload) {
   }
 
   try {
+    console.log('[leads] Sending email notification via Web3Forms...')
     const res = await fetch('https://api.web3forms.com/submit', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
       body: JSON.stringify({
         access_key: WEB3FORMS_KEY,
         subject: `New Lead — ${payload.interest || 'General Enquiry'} | ${payload.city || 'India'}`,
         from_name: 'EaseMyOffice Website',
-        // Lead details
-        Name: payload.name,
-        Phone: payload.phone,
-        Email: payload.email || 'Not provided',
-        'Interested In': payload.interest || 'General Enquiry',
-        City: payload.city || 'Not specified',
-        Message: payload.message || '-',
-        Source: payload.source,
-        Page: payload.page || '/',
-        // Timestamp
-        'Submitted At': new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
+        name: payload.name,
+        phone: payload.phone,
+        email: payload.email || 'not-provided@example.com',
+        interest: payload.interest || 'General Enquiry',
+        city: payload.city || 'Not specified',
+        message: payload.message || '-',
+        source: payload.source,
+        page: payload.page || '/',
       }),
     })
     const data = await res.json()
+    console.log('[leads] Web3Forms response:', data)
     if (!data.success) {
       console.warn('[leads] Web3Forms error:', data.message)
     }
   } catch (err) {
-    console.warn('[leads] Email notification failed:', err.message)
+    console.error('[leads] Email notification failed:', err.message)
   }
 }
 
