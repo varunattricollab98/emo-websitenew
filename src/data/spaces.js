@@ -308,9 +308,20 @@ export function slugifyState(state) {
 }
 
 // Get the state slug for a given city slug (e.g. "gurgaon" → "haryana")
+// Also handles name-based slugs (e.g. "gurugram" → "haryana")
 export function getStateSlugForCity(citySlug) {
+  // Direct match
   const city = voCities.find((c) => c.slug === citySlug)
-  return city ? slugifyState(city.state) : ''
+  if (city) return slugifyState(city.state)
+  // Match by display name slug (e.g. "gurugram" → Gurugram → Haryana)
+  const byName = voCities.find((c) => slugifySpace(c.name) === citySlug)
+  if (byName) return slugifyState(byName.state)
+  // Match by alias
+  const byAlias = voCities.find((c) =>
+    (cityAliases[c.slug] || []).includes(citySlug)
+  )
+  if (byAlias) return slugifyState(byAlias.state)
+  return ''
 }
 
 // Get the state name from a state slug (e.g. "haryana" → "Haryana")
@@ -335,16 +346,26 @@ export function getAllStates() {
 
 // Build the canonical URL for a city page: /virtual-office/{stateSlug}/{citySlug}
 export function cityUrl(citySlug) {
-  const stateSlug = getStateSlugForCity(citySlug)
-  return stateSlug ? `/virtual-office/${stateSlug}/${citySlug}` : `/virtual-office/${citySlug}`
+  // Resolve to canonical slug (e.g. "gurugram" → "gurgaon")
+  const canonical = voCities.find((c) => c.slug === citySlug)?.slug
+    || voCities.find((c) => slugifySpace(c.name) === citySlug)?.slug
+    || voCities.find((c) => (cityAliases[c.slug] || []).includes(citySlug))?.slug
+    || citySlug
+  const stateSlug = getStateSlugForCity(canonical)
+  return stateSlug ? `/virtual-office/${stateSlug}/${canonical}` : `/virtual-office/${canonical}`
 }
 
 // Build the canonical URL for a space page: /virtual-office/{stateSlug}/{citySlug}/{spaceSlug}
 export function spaceUrl(citySlug, spaceSlug) {
-  const stateSlug = getStateSlugForCity(citySlug)
+  // Resolve to canonical slug
+  const canonical = voCities.find((c) => c.slug === citySlug)?.slug
+    || voCities.find((c) => slugifySpace(c.name) === citySlug)?.slug
+    || voCities.find((c) => (cityAliases[c.slug] || []).includes(citySlug))?.slug
+    || citySlug
+  const stateSlug = getStateSlugForCity(canonical)
   return stateSlug
-    ? `/virtual-office/${stateSlug}/${citySlug}/${spaceSlug}`
-    : `/virtual-office/${citySlug}/${spaceSlug}`
+    ? `/virtual-office/${stateSlug}/${canonical}/${spaceSlug}`
+    : `/virtual-office/${canonical}/${spaceSlug}`
 }
 
 // Find a single space (locality) within a city by its slug.
