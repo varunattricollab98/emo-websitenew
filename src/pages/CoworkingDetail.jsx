@@ -24,6 +24,8 @@ import Button from '../components/ui/Button'
 import SmartImage from '../components/ui/SmartImage'
 import FaqAccordion from '../components/ui/FaqAccordion'
 import BlogArticleSection from '../components/ui/BlogArticleSection'
+import SchemaScript from '../components/seo/SchemaScript'
+import { webPageSchema, breadcrumbSchema, faqSchema } from '../components/seo/schemas'
 import { getCoworkingSpaceBySlug, slugifyCoworking } from '../data/coworkingSpaces'
 import { voCities, spaceStats } from '../data/spaces'
 import { coworkingArticle } from '../data/blogArticles'
@@ -186,11 +188,35 @@ export default function CoworkingDetail() {
     ? dbArticle.blocks
     : coworkingArticle(sp.name, sp.locality, cityName, sp.seats, sp.dayPass, sp.price)
 
+  const breadcrumbItems = [
+    { name: 'Home', url: '/' },
+    { name: 'Coworking', url: '/coworking' },
+    { name: cityName, url: `/coworking?city=${city}` },
+    { name: sp.name },
+  ]
+
+  const schemas = [
+    webPageSchema({
+      title: `${sp.name} — Coworking Space in ${sp.locality}, ${cityName}`,
+      description: `${sp.name} is a move-in-ready coworking space in ${sp.locality}, ${cityName} with flexible plans starting at ₹${sp.price}/mo.`,
+      url: `/coworking/${city}/${space}`,
+      breadcrumbs: breadcrumbItems,
+    }),
+    breadcrumbSchema(breadcrumbItems),
+    faqSchema(faqs),
+  ].filter(Boolean)
+
   return (
     <>
+      <SchemaScript schemas={schemas} />
+
       {/* Breadcrumb */}
       <div className="border-b border-primary-100 bg-white">
         <div className="container-custom flex flex-wrap items-center gap-1.5 py-4 text-sm text-slate-500">
+          <Link to="/" className="hover:text-primary">
+            Home
+          </Link>
+          <span>/</span>
           <Link to="/coworking" className="hover:text-primary">
             Coworking
           </Link>

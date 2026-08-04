@@ -22,6 +22,8 @@ import BlogArticleSection from '../components/ui/BlogArticleSection'
 import TrustBar from '../components/home/TrustBar'
 import GoogleReviews from '../components/virtual-office/GoogleReviews'
 import ClientsStrip from '../components/virtual-office/ClientsStrip'
+import SchemaScript from '../components/seo/SchemaScript'
+import { webPageSchema, breadcrumbSchema, faqSchema, articleSchema } from '../components/seo/schemas'
 import { voCities, citiesForState, slugifyState, getStateNameFromSlug, slugifySpace } from '../data/spaces'
 import { useSpacesForCity, useSupabaseSpaces } from '../context/SpacesContext'
 import { getCityBySlug } from '../data/cities'
@@ -86,12 +88,38 @@ export default function StateTemplate() {
 
   return (
     <>
+      <SchemaScript schemas={[
+        webPageSchema({
+          title: `Virtual Office in ${stateName} — EaseMyOffice`,
+          description: `${cities.length} cities available across ${stateName}. Get a premium business address for GST registration, company incorporation, and professional mail handling — starting at just ₹${basePrice}/mo.`,
+          url: `/virtual-office/${stateSlug}`,
+          breadcrumbs: [
+            { name: 'Home', url: '/' },
+            { name: 'Virtual Office', url: '/virtual-office' },
+            { name: stateName },
+          ],
+        }),
+        breadcrumbSchema([
+          { name: 'Home', url: '/' },
+          { name: 'Virtual Office', url: '/virtual-office' },
+          { name: stateName },
+        ]),
+        faqSchema(stateFaqs),
+        articleSchema({
+          title: `Virtual Office in ${stateName} — Complete Guide`,
+          description: `Everything you need to know about getting a virtual office in ${stateName} for GST registration, company incorporation, and business growth.`,
+          url: `/virtual-office/${stateSlug}`,
+        }),
+      ].filter(Boolean)} />
+
       {/* Hero */}
       <section className="relative overflow-hidden bg-hero-gradient">
         <div className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full bg-primary-200/40 blur-3xl" />
         <div className="pointer-events-none absolute -left-20 bottom-0 h-64 w-64 rounded-full bg-primary-100/50 blur-3xl" />
         <div className="container-custom relative py-16 lg:py-20">
           <div className="flex flex-wrap items-center gap-1.5 text-sm text-slate-500">
+            <Link to="/" className="hover:text-primary">Home</Link>
+            <span>/</span>
             <Link to="/virtual-office" className="hover:text-primary">Virtual Office</Link>
             <span>/</span>
             <span className="font-semibold text-navy-dark">{stateName}</span>

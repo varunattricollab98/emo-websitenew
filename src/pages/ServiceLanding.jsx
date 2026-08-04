@@ -23,6 +23,8 @@ import Button from '../components/ui/Button'
 import FaqAccordion from '../components/ui/FaqAccordion'
 import ArticleBlocks from '../components/ui/ArticleBlocks'
 import BlogArticleSection from '../components/ui/BlogArticleSection'
+import SchemaScript from '../components/seo/SchemaScript'
+import { webPageSchema, breadcrumbSchema, faqSchema, serviceSchema } from '../components/seo/schemas'
 import { voCities, getSpaces, slugifySpace, cityUrl, spaceUrl, getStateSlugForCity } from '../data/spaces'
 import { resolveCity } from '../utils/resolveCity'
 import { serviceArticle } from '../data/blogArticles'
@@ -113,8 +115,37 @@ export default function ServiceLanding() {
     { label: `Coworking in ${cityName}`, to: '/coworking' },
   ]
 
+  const breadcrumbItems = [
+    { name: 'Home', url: '/' },
+    { name: 'Virtual Office', url: '/virtual-office' },
+    { name: cityName, url: cityUrl(city) },
+    ...(localityName ? [{ name: localityName }] : []),
+    { name: svc.name },
+  ]
+
+  const serviceFaqs = svc.faqs(cityName)
+
+  const schemas = [
+    webPageSchema({
+      title: `${svc.name} in ${cityName} — EaseMyOffice`,
+      description: svc.lead(cityName),
+      url: spaceUrl(city, svc.slug),
+      breadcrumbs: breadcrumbItems,
+    }),
+    breadcrumbSchema(breadcrumbItems),
+    faqSchema(serviceFaqs),
+    serviceSchema({
+      name: svc.name,
+      description: svc.lead(cityName),
+      cityName,
+      url: spaceUrl(city, svc.slug),
+      price,
+    }),
+  ].filter(Boolean)
+
   return (
     <>
+      <SchemaScript schemas={schemas} />
       {/* Hero */}
       <section className="relative overflow-hidden bg-hero-gradient">
         <div className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full bg-primary-200/40 blur-3xl" />
@@ -122,6 +153,10 @@ export default function ServiceLanding() {
         <div className="container-custom relative py-12 lg:py-16">
           {/* breadcrumb */}
           <div className="flex flex-wrap items-center gap-1.5 text-sm text-slate-500">
+            <Link to="/" className="hover:text-primary">
+              Home
+            </Link>
+            <span>/</span>
             <Link to="/virtual-office" className="hover:text-primary">
               Virtual Office
             </Link>
@@ -441,7 +476,7 @@ export default function ServiceLanding() {
             accent={cityName}
           />
           <Reveal className="mx-auto mt-12 max-w-3xl">
-            <FaqAccordion items={svc.faqs(cityName)} />
+            <FaqAccordion items={serviceFaqs} />
           </Reveal>
         </div>
       </section>
