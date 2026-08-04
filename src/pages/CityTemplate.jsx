@@ -35,7 +35,7 @@ import { cityFaqs as buildCityFaqs } from '../data/pageFaqs'
 import ArticleBlocks from '../components/ui/ArticleBlocks'
 import BlogArticleSection from '../components/ui/BlogArticleSection'
 import { useLeadModal } from '../context/LeadModalContext'
-import { cityArticle } from '../data/blogArticles'
+import { cityArticle, getCityArticle } from '../data/blogArticles'
 import { useBlogArticle } from '../hooks/useBlogArticle'
 import TalkToExpert from '../components/ui/TalkToExpert'
 
@@ -146,8 +146,8 @@ export default function CityTemplate() {
   const cityFaqs = buildCityFaqs(cityName, region, basePrice)
 
   // Blog / long-form article blocks for the city guide section
-  // Priority: Supabase DB → hardcoded default
-  const cityArticleBlocks = dbArticle?.blocks?.length ? dbArticle.blocks : cityArticle(cityName, region)
+  // Priority: Supabase DB → city-specific hardcoded → default template
+  const cityArticleBlocks = dbArticle?.blocks?.length ? dbArticle.blocks : getCityArticle(citySlug, cityName, region)
 
   return (
     <>
