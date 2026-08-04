@@ -271,7 +271,7 @@ export default function MeetingRooms() {
                   subtitle: `${bCity} · ${prettyDate(bDate)} · ${bTime}`,
                   service: `Meeting Room — ${bCity}`,
                   city: bCity,
-                  message: `Checking availability in ${bCity} on ${prettyDate(bDate)} at ${bTime}. Please share available rooms, capacity options, and hourly rates.`,
+                  message: `City: ${bCity}\nDate: ${prettyDate(bDate)}\nTime: ${bTime}\nNumber of People: \nHours Required: `,
                   source: 'meeting-room-availability',
                 })}
                 className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl bg-primary-gradient px-5 py-3.5 text-sm font-bold text-white shadow-card transition-all hover:shadow-glow hover:brightness-110"
