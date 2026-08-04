@@ -4,7 +4,7 @@ import { Star, ShieldCheck, Users, Mail, ArrowRight, Flame, ChevronLeft, Chevron
 import SectionHeading from '../ui/SectionHeading'
 import SmartImage from '../ui/SmartImage'
 import { useSupabaseSpaces } from '../../context/SpacesContext'
-import { slugifySpace } from '../../data/spaces'
+import { slugifySpace, spaceUrl } from '../../data/spaces'
 
 // Fallback static data (shown until Supabase loads, or if no trending spaces set)
 const FALLBACK = [
@@ -109,8 +109,8 @@ export default function TopCoworking() {
             {spaces.map((s) => (
               <div key={s.name} className="w-[300px] flex-none snap-start">
                 <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-primary-100/60 bg-white shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover">
-                  {/* image */}
-                  <div className="relative h-44 overflow-hidden bg-primary-gradient">
+                  {/* image — clickable, links to space detail */}
+                  <Link to={spaceUrl(s.slug, s.areaSlug || slugifySpace(s.name))} className="relative block h-44 overflow-hidden bg-primary-gradient">
                     <SmartImage
                       src={s.image}
                       alt={s.name}
@@ -126,7 +126,7 @@ export default function TopCoworking() {
                       <Star className="h-3.5 w-3.5 fill-gold text-gold" />
                       {s.rating}
                     </span>
-                  </div>
+                  </Link>
 
                   {/* body */}
                   <div className="flex flex-1 flex-col p-5">
@@ -151,7 +151,7 @@ export default function TopCoworking() {
                         </p>
                       </div>
                       <Link
-                        to={`/virtual-office/${s.slug}/${s.areaSlug || slugifySpace(s.name)}`}
+                        to={spaceUrl(s.slug, s.areaSlug || slugifySpace(s.name))}
                         className="btn-base bg-primary-50 px-4 py-2 text-xs text-primary-700 hover:bg-primary-100"
                       >
                         View Details
