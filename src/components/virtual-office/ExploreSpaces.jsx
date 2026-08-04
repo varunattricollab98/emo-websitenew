@@ -165,7 +165,11 @@ export default function ExploreSpaces() {
     if (stateFilter) {
       const st = stateFilter.toLowerCase()
       const stateCitySlugs = citiesForState(st).map((c) => c.slug)
-      list = list.filter((sp) => stateCitySlugs.includes(sp.citySlug))
+      // Also match by city name slug (e.g. "gurugram" from Supabase vs "gurgaon" in voCities)
+      const stateCityNames = citiesForState(st).map((c) => slugifySpace(c.name))
+      list = list.filter((sp) =>
+        stateCitySlugs.includes(sp.citySlug) || stateCityNames.includes(sp.citySlug)
+      )
     } else if (city) {
       list = list.filter((sp) => sp.citySlug === city)
     }
