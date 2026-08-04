@@ -49,7 +49,7 @@ const locations = [
     businesses: '2,100+',
     price: '999',
     image:
-      'https://holidayszone.in/images/charminar-sightseeing-place.jpg',
+      'https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=400,height=265,dpr=2/tour_img/1cbf46d0ff04a1b01cbf0b13b7020c5d02cc8021e67532a124824e06f32d214e.png',
   },
   {
     name: 'Chennai',
