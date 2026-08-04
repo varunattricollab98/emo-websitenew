@@ -141,10 +141,16 @@ export default function ExploreSpaces() {
 
   // Detect if the typed query matches a state name (for showing "Haryana — All cities" option)
   const matchedState = useMemo(() => {
-    const q = cityInput.trim()
-    if (!q || q === cityName) return null
-    return resolveState(q)
-  }, [cityInput, cityName])
+    const q = cityInput.trim().toLowerCase()
+    if (!q) return null
+    // Check against all unique state names from voCities
+    const allStates = [...new Set(voCities.map((c) => c.state).filter(Boolean))]
+    return (
+      allStates.find((s) => s.toLowerCase() === q) ||
+      allStates.find((s) => q.length >= 4 && s.toLowerCase().includes(q)) ||
+      null
+    )
+  }, [cityInput])
 
   const dbSpaces = useSpacesForCity('') // all cities from Supabase
 
