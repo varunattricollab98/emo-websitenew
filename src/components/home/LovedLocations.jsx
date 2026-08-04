@@ -49,7 +49,7 @@ const locations = [
     businesses: '2,100+',
     price: '999',
     image:
-      'https://images.unsplash.com/photo-1587135941948-670b381f08ce?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1572018057886-0e0fbb63024f?auto=format&fit=crop&w=800&q=80',
   },
   {
     name: 'Chennai',
