@@ -262,6 +262,23 @@ export default function MeetingRooms() {
                 <Star className="h-4 w-4 fill-gold text-gold" />
                 <p className="text-xs font-semibold text-navy">Rated 4.9/5 by 5,000+ professionals</p>
               </div>
+
+              {/* Check Availability button */}
+              <button
+                type="button"
+                onClick={() => openLeadModal({
+                  title: 'Check Room Availability',
+                  subtitle: `${bCity} · ${prettyDate(bDate)} · ${bTime}`,
+                  service: `Meeting Room — ${bCity}`,
+                  city: bCity,
+                  message: `Checking availability in ${bCity} on ${prettyDate(bDate)} at ${bTime}. Please share available rooms, capacity options, and hourly rates.`,
+                  source: 'meeting-room-availability',
+                })}
+                className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl bg-primary-gradient px-5 py-3.5 text-sm font-bold text-white shadow-card transition-all hover:shadow-glow hover:brightness-110"
+              >
+                Check Availability
+                <ArrowRight className="h-4 w-4" />
+              </button>
             </div>
           </div>
         }
