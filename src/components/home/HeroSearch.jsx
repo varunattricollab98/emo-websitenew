@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { resolveCity, resolveState } from '../../utils/resolveCity'
-import { voCities, slugifySpace } from '../../data/spaces'
+import { voCities, slugifySpace, cityUrl, spaceUrl, slugifyState } from '../../data/spaces'
 import { getSupabaseSpaces } from '../../lib/spacesStore'
 import {
   MapPin,
@@ -50,9 +50,9 @@ export default function HeroSearch() {
     // Virtual Office + a recognised city → that city's page; a state → all its spaces
     if (service === 'virtual-office') {
       const c = resolveCity(loc)
-      if (c) return navigate(`/virtual-office/${c.slug}`)
+      if (c) return navigate(cityUrl(c.slug))
       const st = resolveState(loc)
-      if (st) return navigate(`/virtual-office?state=${encodeURIComponent(st)}`)
+      if (st) return navigate(`/virtual-office/${slugifyState(st)}`)
 
       // Try matching a space/area name (keyword search) → go to its detail page
       const q = loc.toLowerCase()
@@ -66,12 +66,12 @@ export default function HeroSearch() {
       if (match) {
         const citySlug = slugifySpace(match.address_city)
         const areaSlug = slugifySpace(match.address_area)
-        return navigate(`/space/${citySlug}/${areaSlug}`)
+        return navigate(spaceUrl(citySlug, areaSlug))
       }
 
       // Also check static city list for partial area matches in city names
       const cityByArea = voCities.find((c) => c.name.toLowerCase().includes(q))
-      if (cityByArea) return navigate(`/virtual-office/${cityByArea.slug}`)
+      if (cityByArea) return navigate(cityUrl(cityByArea.slug))
 
       return navigate(`/virtual-office?city=${encodeURIComponent(loc)}`)
     }

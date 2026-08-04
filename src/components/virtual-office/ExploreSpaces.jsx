@@ -18,7 +18,7 @@ import {
   X,
 } from 'lucide-react'
 import SmartImage from '../ui/SmartImage'
-import { voCities, getSpaces, spacesByCity, cityMatches, slugifySpace, citiesForState } from '../../data/spaces'
+import { voCities, getSpaces, spacesByCity, cityMatches, slugifySpace, citiesForState, cityUrl, spaceUrl, slugifyState } from '../../data/spaces'
 import { useSpacesForCity } from '../../context/SpacesContext'
 import { resolvePincode } from '../../data/pincodes'
 import { resolveCity, resolveState } from '../../utils/resolveCity'
@@ -368,11 +368,8 @@ export default function ExploreSpaces() {
                                     <button
                                       type="button"
                                       onClick={() => {
-                                        setCity('')
-                                        setStateFilter(matchedState)
-                                        setCityInput(matchedState)
-                                        setCityOpen(false)
-                                        setShowAll(false)
+                                        const st = slugifyState(matchedState)
+                                        navigate(`/virtual-office/${st}`)
                                       }}
                                       className={`flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2.5 text-left transition-colors ${
                                         stateFilter === matchedState
@@ -482,7 +479,7 @@ export default function ExploreSpaces() {
                 <button
                   type="button"
                   onClick={() => {
-                    if (city) navigate(`/virtual-office/${city}`)
+                    if (city) navigate(cityUrl(city))
                     else document.getElementById('spaces')?.scrollIntoView({ behavior: 'smooth' })
                   }}
                   className="btn-base w-full bg-primary-gradient px-6 py-3.5 text-sm text-white shadow-card transition-all hover:shadow-glow hover:brightness-110"
@@ -523,7 +520,7 @@ export default function ExploreSpaces() {
               </p>
               {city && (
                 <Link
-                  to={`/virtual-office/${city}`}
+                  to={cityUrl(city)}
                   className="mt-3 inline-flex items-center gap-1.5 text-sm font-bold text-primary transition-colors hover:text-primary-700"
                 >
                   View full {cityName} guide &amp; pricing
@@ -595,7 +592,7 @@ export default function ExploreSpaces() {
                     }`}
                   >
                     <Link
-                      to={`/virtual-office/${sp.citySlug}/${slugifySpace(sp.name)}`}
+                      to={spaceUrl(sp.citySlug, slugifySpace(sp.name))}
                       className={`relative block overflow-hidden bg-primary-gradient ${
                         view === 'list' ? 'h-44 sm:h-auto sm:w-60 sm:flex-none' : 'h-40'
                       }`}
@@ -618,7 +615,7 @@ export default function ExploreSpaces() {
                     </Link>
                     <div className="flex flex-1 flex-col p-5">
                       <Link
-                        to={`/virtual-office/${sp.citySlug}/${slugifySpace(sp.name)}`}
+                        to={spaceUrl(sp.citySlug, slugifySpace(sp.name))}
                         className="text-base font-bold text-navy-dark transition-colors hover:text-primary"
                       >
                         {sp.name}

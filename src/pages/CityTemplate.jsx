@@ -25,7 +25,7 @@ import SmartImage from '../components/ui/SmartImage'
 import TrustBar from '../components/home/TrustBar'
 import GoogleReviews from '../components/virtual-office/GoogleReviews'
 import ClientsStrip from '../components/virtual-office/ClientsStrip'
-import { voCities, getSpaces, slugifySpace } from '../data/spaces'
+import { voCities, getSpaces, slugifySpace, cityUrl, spaceUrl, getStateSlugForCity } from '../data/spaces'
 import { resolveCity } from '../utils/resolveCity'
 import { useSpacesForCity, useSupabaseSpaces } from '../context/SpacesContext'
 import { getCityBySlug } from '../data/cities'
@@ -50,11 +50,11 @@ export default function CityTemplate() {
   const params = useParams()
   const { openLeadModal } = useLeadModal()
 
-  // Handle multiple route patterns:
-  // /virtual-office/:city (city only)
-  // /virtual-office/:first/:second via CityOrSpace (state/city — second is the city)
-  // /virtual-office/:state/:city (direct route)
+  // Handle multiple route patterns (new structure):
+  // /virtual-office/:state/:city → params.first=state, params.second=city (via VODispatcher)
+  // Legacy patterns still work via redirect
   const citySlug = params.second || params.city || params.first || ''
+  const stateSlug = params.second ? params.first : ''
   const vo = voCities.find((c) => c.slug === citySlug)
 
   // Fetch blog article from Supabase (hook must be called before any early return)
@@ -260,7 +260,7 @@ export default function CityTemplate() {
               <Reveal key={`${sp.name}-${i}`} delay={(i % 4) * 0.05}>
                 <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-primary-100/60 bg-white shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover">
                   <Link
-                    to={`/virtual-office/${citySlug}/${slugifySpace(sp.name)}`}
+                    to={spaceUrl(citySlug, slugifySpace(sp.name))}
                     className="relative block h-40 overflow-hidden bg-primary-gradient"
                   >
                     <SmartImage
@@ -281,7 +281,7 @@ export default function CityTemplate() {
                   </Link>
                   <div className="flex flex-1 flex-col p-5">
                     <Link
-                      to={`/virtual-office/${citySlug}/${slugifySpace(sp.name)}`}
+                      to={spaceUrl(citySlug, slugifySpace(sp.name))}
                       className="text-base font-bold text-navy-dark transition-colors hover:text-primary"
                     >
                       {sp.name}
@@ -332,7 +332,7 @@ export default function CityTemplate() {
               {serviceOrder.map((slug) => (
                 <Link
                   key={slug}
-                  to={`/virtual-office/${citySlug}/${slug}`}
+                  to={spaceUrl(citySlug, slug)}
                   className="inline-flex items-center gap-2 rounded-full border border-primary-200 bg-white px-5 py-2.5 text-sm font-semibold text-navy-dark shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary hover:text-primary hover:shadow-card"
                 >
                   {serviceLandings[slug].name} in {cityName}

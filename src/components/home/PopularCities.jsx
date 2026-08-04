@@ -3,6 +3,7 @@ import { MapPin, ArrowRight } from 'lucide-react'
 import SectionHeading from '../ui/SectionHeading'
 import Reveal from '../ui/Reveal'
 import { cities } from '../../data/cities'
+import { cityUrl } from '../../data/spaces'
 
 export default function PopularCities() {
   return (
@@ -17,7 +18,7 @@ export default function PopularCities() {
           {cities.map((city, i) => (
             <Reveal key={city.slug} delay={(i % 4) * 0.06}>
               <Link
-                to={`/virtual-office/${city.slug}`}
+                to={cityUrl(city.slug)}
                 className="premium-card group relative block h-full overflow-hidden p-6"
               >
                 <div className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-primary-50 transition-transform group-hover:scale-150" />

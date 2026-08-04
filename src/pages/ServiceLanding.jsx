@@ -23,7 +23,7 @@ import Button from '../components/ui/Button'
 import FaqAccordion from '../components/ui/FaqAccordion'
 import ArticleBlocks from '../components/ui/ArticleBlocks'
 import BlogArticleSection from '../components/ui/BlogArticleSection'
-import { voCities, getSpaces, slugifySpace } from '../data/spaces'
+import { voCities, getSpaces, slugifySpace, cityUrl, spaceUrl, getStateSlugForCity } from '../data/spaces'
 import { resolveCity } from '../utils/resolveCity'
 import { serviceArticle } from '../data/blogArticles'
 import { useBlogArticle } from '../hooks/useBlogArticle'
@@ -49,14 +49,12 @@ const steps = [
 export default function ServiceLanding() {
   const params = useParams()
   const { locality } = params
-  // city param across all route shapes:
-  //   /virtual-office/:state/:city/:service → params.city
-  //   /virtual-office/:first/:second (2-seg service) → params.first
-  //   /space/:city/:service → params.city
-  const city = params.city || params.first || ''
-  // service slug across all route shapes:
-  //   :service (3-seg), :second (2-seg via CityOrSpace), :space (legacy)
-  const rawService = (params.service || params.second || params.space || '').toLowerCase()
+  // New URL structure: /virtual-office/:state/:city/:service (first=state, second=city, third=service)
+  // Legacy: /virtual-office/:city/:service, /space/:city/:service
+  const city = params.third ? params.second : (params.city || params.first || '')
+  const stateSlug = params.third ? params.first : ''
+  // service slug:
+  const rawService = (params.third || params.service || params.second || params.space || '').toLowerCase()
   const serviceSlug = rawService
     .replace(/gstregistration/i, 'gst-registration')
     .replace(/businessregistration/i, 'business-registration')
@@ -80,7 +78,7 @@ export default function ServiceLanding() {
     const resolved = resolveCity(city)
     const actualCity = resolved?.slug || city
     const spaceSlug = serviceSlug // the "service" param is actually the space slug
-    return <Navigate to={`/virtual-office/${actualCity}/${spaceSlug}`} replace />
+    return <Navigate to={spaceUrl(actualCity, spaceSlug)} replace />
   }
 
   const Icon = iconMap[svc.icon] || FileCheck2
@@ -128,7 +126,7 @@ export default function ServiceLanding() {
               Virtual Office
             </Link>
             <span>/</span>
-            <Link to={`/virtual-office/${city}`} className="hover:text-primary">
+            <Link to={cityUrl(city)} className="hover:text-primary">
               {cityName}
             </Link>
             {localityName && (
@@ -186,7 +184,7 @@ export default function ServiceLanding() {
                 <Button onClick={openLead} size="lg">
                   Book Now <ArrowRight className="h-5 w-5" />
                 </Button>
-                <Button to={`/virtual-office/${city}`} variant="outline" size="lg">
+                <Button to={cityUrl(city)} variant="outline" size="lg">
                   Explore Spaces
                 </Button>
               </div>
@@ -375,7 +373,7 @@ export default function ServiceLanding() {
               return (
                 <Link
                   key={slug}
-                  to={`/virtual-office/${city}/${slug}`}
+                  to={spaceUrl(city, slug)}
                   className="group flex items-center gap-4 rounded-2xl border border-primary-100/70 bg-white p-5 shadow-soft transition-all hover:-translate-y-1 hover:border-primary/40 hover:shadow-card"
                 >
                   <span
@@ -414,7 +412,7 @@ export default function ServiceLanding() {
 
           <div className="mt-8 text-center">
             <Link
-              to={`/virtual-office/${city}`}
+              to={cityUrl(city)}
               className="inline-flex items-center gap-1.5 text-sm font-bold text-primary hover:text-primary-700"
             >
               View the full {cityName} guide

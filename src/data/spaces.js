@@ -299,6 +299,54 @@ export function slugifySpace(name) {
     .replace(/^-|-$/g, '')
 }
 
+// Slugify a state name for URLs (e.g. "Uttar Pradesh" → "uttar-pradesh")
+export function slugifyState(state) {
+  return String(state || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+}
+
+// Get the state slug for a given city slug (e.g. "gurgaon" → "haryana")
+export function getStateSlugForCity(citySlug) {
+  const city = voCities.find((c) => c.slug === citySlug)
+  return city ? slugifyState(city.state) : ''
+}
+
+// Get the state name from a state slug (e.g. "haryana" → "Haryana")
+export function getStateNameFromSlug(stateSlug) {
+  const slug = (stateSlug || '').toLowerCase()
+  const city = voCities.find((c) => slugifyState(c.state) === slug)
+  return city ? city.state : ''
+}
+
+// Get all unique states as { slug, name } pairs
+export function getAllStates() {
+  const seen = new Set()
+  return voCities
+    .filter((c) => {
+      const key = (c.state || '').toLowerCase()
+      if (!key || seen.has(key)) return false
+      seen.add(key)
+      return true
+    })
+    .map((c) => ({ slug: slugifyState(c.state), name: c.state }))
+}
+
+// Build the canonical URL for a city page: /virtual-office/{stateSlug}/{citySlug}
+export function cityUrl(citySlug) {
+  const stateSlug = getStateSlugForCity(citySlug)
+  return stateSlug ? `/virtual-office/${stateSlug}/${citySlug}` : `/virtual-office/${citySlug}`
+}
+
+// Build the canonical URL for a space page: /virtual-office/{stateSlug}/{citySlug}/{spaceSlug}
+export function spaceUrl(citySlug, spaceSlug) {
+  const stateSlug = getStateSlugForCity(citySlug)
+  return stateSlug
+    ? `/virtual-office/${stateSlug}/${citySlug}/${spaceSlug}`
+    : `/virtual-office/${citySlug}/${spaceSlug}`
+}
+
 // Find a single space (locality) within a city by its slug.
 export function getSpaceBySlug(citySlug, spaceSlug) {
   const list = getSpaces(citySlug) || []
