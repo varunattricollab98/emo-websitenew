@@ -23,10 +23,12 @@ import { fileURLToPath } from 'node:url'
 
 const SITE = 'https://easemyoffice.in'
 
-// Preferred social image. If public/og-image.jpg isn't present we fall back to
-// the logo so previews are never broken (see FALLBACK_IMAGE below).
-const PREFERRED_IMAGE = '/og-image.jpg'
-const FALLBACK_IMAGE = '/emo-logo-full.webp'
+// Default social share card, first match wins. og-image.jpg is checked first so
+// a designer-supplied file can override the generated PNG without a code change.
+// The logo is a last resort so previews are never broken.
+const IMAGE_CANDIDATES = ['/og-image.jpg', '/og-image.png', '/emo-logo-full.webp']
+
+const MIME = { '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp' }
 
 // ── HTML helpers ────────────────────────────────────────────────────────────
 
@@ -106,13 +108,19 @@ async function main() {
   }
 
   // Use whichever social image actually shipped in the build.
-  const hasPreferred = existsSync(join(dist, PREFERRED_IMAGE.replace(/^\//, '')))
-  const DEFAULT_IMAGE = hasPreferred ? PREFERRED_IMAGE : FALLBACK_IMAGE
-  if (!hasPreferred) {
+  const DEFAULT_IMAGE =
+    IMAGE_CANDIDATES.find((c) => existsSync(join(dist, c.replace(/^\//, '')))) ||
+    IMAGE_CANDIDATES[IMAGE_CANDIDATES.length - 1]
+  const ext = DEFAULT_IMAGE.slice(DEFAULT_IMAGE.lastIndexOf('.'))
+  const DEFAULT_IMAGE_TYPE = MIME[ext] || 'image/png'
+  const isLogoFallback = DEFAULT_IMAGE.includes('emo-logo')
+  if (isLogoFallback) {
     console.warn(
-      `[prerender] ${PREFERRED_IMAGE} not found, falling back to ${FALLBACK_IMAGE}.\n` +
-        '            Add a 1200x630 JPG/PNG at public/og-image.jpg for proper previews.'
+      '[prerender] No og-image.jpg/.png found, falling back to the logo.\n' +
+        '            Run: node scripts/make-og-image.mjs'
     )
+  } else {
+    console.log(`[prerender] Social share card: ${DEFAULT_IMAGE} (${DEFAULT_IMAGE_TYPE})`)
   }
 
   let template = readFileSync(indexPath, 'utf8')
@@ -141,8 +149,9 @@ async function main() {
   template = setMeta(template, 'property', 'og:image', SITE + DEFAULT_IMAGE)
   template = setMeta(template, 'property', 'og:image:secure_url', SITE + DEFAULT_IMAGE)
   template = setMeta(template, 'name', 'twitter:image', SITE + DEFAULT_IMAGE)
-  if (!hasPreferred) {
-    template = setMeta(template, 'property', 'og:image:type', 'image/webp')
+  template = setMeta(template, 'property', 'og:image:type', DEFAULT_IMAGE_TYPE)
+  if (isLogoFallback) {
+    // The logo isn't 1200x630, so don't claim dimensions we don't have.
     template = removeMeta(template, 'property', 'og:image:width')
     template = removeMeta(template, 'property', 'og:image:height')
   }
