@@ -29,6 +29,7 @@ import { voCities, getSpaces, slugifySpace, cityUrl, spaceUrl, getStateSlugForCi
 import { resolveCity } from '../utils/resolveCity'
 import { serviceArticle } from '../data/blogArticles'
 import { useBlogArticle } from '../hooks/useBlogArticle'
+import { useMeta } from '../hooks/useMeta'
 import { getCityBySlug } from '../data/cities'
 import { getServiceLanding, serviceOrder, serviceLandings } from '../data/serviceLandings'
 import { useLeadModal } from '../context/LeadModalContext'
@@ -70,6 +71,11 @@ export default function ServiceLanding() {
   const cityName = voCities.find((c) => c.slug === city)?.name || toTitle(city)
   const region = voCities.find((c) => c.slug === city)?.state || 'India'
   const dbArticle = useBlogArticle({ pageType: 'service', citySlug: city, serviceSlug })
+  useMeta({
+    title: svc ? `${svc.name} in ${cityName} | EaseMyOffice` : 'EaseMyOffice',
+    description: svc?.lead ? svc.lead(cityName) : undefined,
+    path: `/virtual-office/${getStateSlugForCity(city)}/${city}/${serviceSlug}`,
+  })
   const localityName = locality ? toTitle(locality) : ''
 
   if (!svc) {

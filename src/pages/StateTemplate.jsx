@@ -31,6 +31,7 @@ import { cityFaqs as buildCityFaqs } from '../data/pageFaqs'
 import { getStateDescription, toBlocks } from '../data/descriptions'
 import { cityArticle } from '../data/blogArticles'
 import { useBlogArticle } from '../hooks/useBlogArticle'
+import { useMeta } from '../hooks/useMeta'
 import ArticleBlocks from '../components/ui/ArticleBlocks'
 import TalkToExpert from '../components/ui/TalkToExpert'
 import { useLeadModal } from '../context/LeadModalContext'
@@ -59,6 +60,11 @@ export default function StateTemplate() {
 
   // Blog article from Supabase or default
   const dbArticle = useBlogArticle({ pageType: 'city', citySlug: stateSlug })
+  useMeta({
+    title: `Virtual Office in ${stateName}, All Cities | EaseMyOffice`,
+    description: `Verified virtual office addresses across ${cities.length} cities in ${stateName}. GST and company registration ready, from ₹${basePrice}/mo.`,
+    path: `/virtual-office/${stateSlug}`,
+  })
   const articleBlocks = dbArticle?.blocks?.length ? dbArticle.blocks : cityArticle(stateName, stateName)
 
   // FAQs for the state (uses the top city's FAQ pattern)

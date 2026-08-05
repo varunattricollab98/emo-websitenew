@@ -30,6 +30,7 @@ import { getCoworkingSpaceBySlug, slugifyCoworking } from '../data/coworkingSpac
 import { voCities, spaceStats } from '../data/spaces'
 import { coworkingArticle } from '../data/blogArticles'
 import { useBlogArticle } from '../hooks/useBlogArticle'
+import { useMeta } from '../hooks/useMeta'
 import { useLeadModal } from '../context/LeadModalContext'
 
 const DEFAULT_GALLERY = [
@@ -71,6 +72,16 @@ export default function CoworkingDetail() {
   const cityName = voCities.find((c) => c.slug === city)?.name || toTitle(city)
   const region = voCities.find((c) => c.slug === city)?.state || 'India'
   const dbArticle = useBlogArticle({ pageType: 'coworking', citySlug: city, areaSlug: space })
+  useMeta({
+    title: sp
+      ? `${sp.name}, Coworking in ${sp.locality}, ${cityName} | EaseMyOffice`
+      : 'Coworking Spaces | EaseMyOffice',
+    description: sp
+      ? `${sp.name} in ${sp.locality}, ${cityName}. ${sp.seats}, day passes from ₹${sp.dayPass}.`
+      : undefined,
+    path: `/coworking/${city}/${space}`,
+    image: sp?.image,
+  })
 
   if (!sp) {
     return (

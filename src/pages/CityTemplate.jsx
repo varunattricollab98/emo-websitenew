@@ -37,6 +37,7 @@ import BlogArticleSection from '../components/ui/BlogArticleSection'
 import { useLeadModal } from '../context/LeadModalContext'
 import { cityArticle, getCityArticle } from '../data/blogArticles'
 import { useBlogArticle } from '../hooks/useBlogArticle'
+import { useMeta } from '../hooks/useMeta'
 import TalkToExpert from '../components/ui/TalkToExpert'
 import SchemaScript from '../components/seo/SchemaScript'
 import { webPageSchema, breadcrumbSchema, faqSchema, articleSchema, localBusinessSchema } from '../components/seo/schemas'
@@ -59,8 +60,20 @@ export default function CityTemplate() {
   const stateSlug = params.second ? params.first : ''
   const vo = voCities.find((c) => c.slug === citySlug)
 
-  // Fetch blog article from Supabase (hook must be called before any early return)
+  const extra = getCityBySlug(citySlug)
+  const cityName = vo?.name || extra?.name || toTitle(citySlug)
+  const region = vo?.state || extra?.region || 'India'
+  const basePrice = extra?.price || 899
+
+  // ── ALL hooks must run unconditionally, before any early return ──────────
   const dbArticle = useBlogArticle({ pageType: 'city', citySlug })
+  const { rows, loaded } = useSupabaseSpaces()
+  const dbSpaces = useSpacesForCity(citySlug)
+  useMeta({
+    title: `Virtual Office in ${cityName} for GST & Company Registration | EaseMyOffice`,
+    description: `Verified virtual office addresses in ${cityName}, ${region}. GST and MCA ready documentation, activated in 2\u20133 days. Plans from ₹${basePrice}/mo.`,
+    path: `/virtual-office/${stateSlug || getStateSlugForCity(citySlug)}/${citySlug}`,
+  })
 
   // If the slug isn't recognised directly but matches via alias (e.g. "gurugram" → "gurgaon"),
   // redirect to the canonical URL so the page renders correctly.
@@ -76,12 +89,6 @@ export default function CityTemplate() {
     }
   }
 
-  const extra = getCityBySlug(citySlug)
-  const cityName = vo?.name || extra?.name || toTitle(citySlug)
-  const region = vo?.state || extra?.region || 'India'
-  const basePrice = extra?.price || 899
-  const { rows, loaded } = useSupabaseSpaces()
-  const dbSpaces = useSpacesForCity(citySlug)
   // While Supabase is loading, show a spinner; once loaded, show only real DB data
   const spaces = loaded ? dbSpaces : []
   const addresses = extra?.addresses || Math.max(spaces.length, 6)

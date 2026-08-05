@@ -32,6 +32,7 @@ import { getLocalityDescription, toBlocks } from '../data/descriptions'
 import { spaceFaqs as buildSpaceFaqs } from '../data/pageFaqs'
 import { spaceArticle } from '../data/blogArticles'
 import { useBlogArticle } from '../hooks/useBlogArticle'
+import { useMeta } from '../hooks/useMeta'
 import TalkToExpert from '../components/ui/TalkToExpert'
 import SchemaScript from '../components/seo/SchemaScript'
 import { webPageSchema, breadcrumbSchema, faqSchema, articleSchema, reviewSchema } from '../components/seo/schemas'
@@ -86,6 +87,14 @@ export default function SpaceDetail() {
   const dbArticle = useBlogArticle({ pageType: 'space', citySlug: city, areaSlug: space })
   const cityName = voCities.find((c) => c.slug === city)?.name || detail?.city || toTitle(city)
   const region = voCities.find((c) => c.slug === city)?.state || detail?.state || 'India'
+  useMeta({
+    title: `Virtual Office in ${detail?.area || toTitle(space)}, ${cityName} | EaseMyOffice`,
+    description:
+      detail?.description ||
+      `A verified virtual office address in ${detail?.area || toTitle(space)}, ${cityName}. Accepted for GST and company registration.`,
+    path: `/virtual-office/${getStateSlugForCity(city)}/${city}/${space}`,
+    image: detail?.featuredImage || basic?.image,
+  })
 
   // Show loading spinner while Supabase is fetching (prevents empty flash on first load)
   if (!loaded && !basic && !detail) {
