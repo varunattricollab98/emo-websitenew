@@ -9,9 +9,11 @@
  * Re-run after changing logo or brand colours: node scripts/make-og-image.mjs
  */
 import { deflateSync, inflateSync } from 'node:zlib'
-import { writeFileSync, readFileSync, existsSync } from 'node:fs'
+import { writeFileSync, readFileSync, existsSync, unlinkSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
+import { execSync } from 'node:child_process'
 import https from 'node:https'
+import path from 'node:path'
 
 const W = 1200
 const H = 630
@@ -21,7 +23,7 @@ const CH = H * SS
 
 // Logo URL from Supabase Storage
 const LOGO_URL =
-  'https://oijtkvkyefqfwuycibcv.supabase.co/storage/v1/object/public/website-assets/EaseMyOffice-Logo-1.png'
+  'https://oijtkvkyefqfwuycibcv.supabase.co/storage/v1/object/public/website-assets/EaseMyOffice-Logo-2.webp'
 
 // ── Brand palette ───────────────────────────────────────────────────────────
 const NAVY_DARK = [0x0f, 0x1a, 0x2e]
@@ -263,15 +265,77 @@ for (let y = 0; y < RULE_H; y++) {
 // ── Place logo ──────────────────────────────────────────────────────────────
 async function main() {
   let logoImg
+  const scriptsDir = path.dirname(fileURLToPath(import.meta.url))
+  const tmpLogoOriginal = path.join(scriptsDir, '_tmp_logo_original')
+  const tmpLogoPng = path.join(scriptsDir, '_tmp_logo.png')
 
-  // Try to fetch from URL, fallback to local file
+  // Try to fetch from URL, convert if needed, then decode PNG
   try {
     console.log('Fetching logo from Supabase...')
     const logoBuf = await fetchBuffer(LOGO_URL)
-    logoImg = decodePNG(logoBuf)
+    console.log(`Downloaded ${(logoBuf.length / 1024).toFixed(1)} KB`)
+
+    // Detect format from magic bytes
+    const isPNG =
+      logoBuf[0] === 0x89 && logoBuf[1] === 0x50 && logoBuf[2] === 0x4e && logoBuf[3] === 0x47
+    const isJPEG = logoBuf[0] === 0xff && logoBuf[1] === 0xd8
+    const isWebP =
+      logoBuf[0] === 0x52 &&
+      logoBuf[1] === 0x49 &&
+      logoBuf[2] === 0x46 &&
+      logoBuf[3] === 0x46 &&
+      logoBuf[8] === 0x57 &&
+      logoBuf[9] === 0x45 &&
+      logoBuf[10] === 0x42 &&
+      logoBuf[11] === 0x50
+
+    if (isPNG) {
+      console.log('Format: PNG (native)')
+      logoImg = decodePNG(logoBuf)
+    } else if (isWebP || isJPEG) {
+      const ext = isWebP ? '.webp' : '.jpeg'
+      console.log(`Format: ${isWebP ? 'WebP' : 'JPEG'} — converting to PNG...`)
+      const tmpFile = tmpLogoOriginal + ext
+      writeFileSync(tmpFile, logoBuf)
+
+      // Try sips (macOS) first, then convert (ImageMagick), then ffmpeg
+      let converted = false
+      const converters = [
+        `sips -s format png "${tmpFile}" --out "${tmpLogoPng}"`,
+        `convert "${tmpFile}" "${tmpLogoPng}"`,
+        `magick "${tmpFile}" "${tmpLogoPng}"`,
+        `ffmpeg -y -i "${tmpFile}" "${tmpLogoPng}"`,
+      ]
+      for (const cmd of converters) {
+        try {
+          execSync(cmd, { stdio: 'pipe', timeout: 15000 })
+          if (existsSync(tmpLogoPng)) {
+            converted = true
+            console.log(`Converted with: ${cmd.split(' ')[0]}`)
+            break
+          }
+        } catch {
+          // try next converter
+        }
+      }
+
+      // Clean up original temp
+      try { unlinkSync(tmpFile) } catch {}
+
+      if (converted) {
+        const pngBuf = readFileSync(tmpLogoPng)
+        logoImg = decodePNG(pngBuf)
+        try { unlinkSync(tmpLogoPng) } catch {}
+      } else {
+        throw new Error('No image converter found (need sips/convert/magick/ffmpeg)')
+      }
+    } else {
+      throw new Error('Not a valid PNG, JPEG, or WebP file')
+    }
+
     console.log(`Logo decoded: ${logoImg.width}x${logoImg.height}`)
   } catch (e) {
-    console.warn(`Could not fetch logo: ${e.message}`)
+    console.warn(`Could not fetch/decode logo: ${e.message}`)
     // Try local fallback
     const localPath = fileURLToPath(new URL('../public/emo-logo-full.webp', import.meta.url))
     if (existsSync(localPath)) {
@@ -280,6 +344,10 @@ async function main() {
       console.log('No logo available, generating mark-only card')
     }
     logoImg = null
+    // Clean up temp files just in case
+    try { unlinkSync(tmpLogoOriginal + '.webp') } catch {}
+    try { unlinkSync(tmpLogoOriginal + '.jpeg') } catch {}
+    try { unlinkSync(tmpLogoPng) } catch {}
   }
 
   if (logoImg) {
