@@ -7,6 +7,7 @@ import Navbar from './components/layout/Navbar'
 import Footer from './components/layout/Footer'
 import WhatsAppButton from './components/layout/WhatsAppButton'
 import ScrollToTop from './components/layout/ScrollToTop'
+import AutoLeadPopup from './components/layout/AutoLeadPopup'
 import ErrorBoundary from './components/layout/ErrorBoundary'
 import SchemaScript from './components/seo/SchemaScript'
 import { organizationSchema, webSiteSchema } from './components/seo/schemas'
@@ -55,6 +56,8 @@ export default function App() {
       <BookingModalProvider>
         <div className="flex min-h-screen flex-col">
           <ScrollToTop />
+          {/* Opens the lead modal at 25% scroll depth or on exit intent */}
+          <AutoLeadPopup />
           <SchemaScript schemas={[organizationSchema(), webSiteSchema()]} />
           <Navbar />
           <main className="flex-1 pt-16 lg:pt-20">
