@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { resolveCity, resolveState } from '../../utils/resolveCity'
 import { voCities, slugifySpace, cityUrl, spaceUrl, slugifyState } from '../../data/spaces'
-import { getSupabaseSpaces } from '../../lib/spacesStore'
+import { getSupabaseSpaces, onLoad } from '../../lib/spacesStore'
 import {
   MapPin,
   Search,
@@ -43,8 +43,14 @@ export default function HeroSearch() {
   const [service, setService] = useState('virtual-office')
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [activeIdx, setActiveIdx] = useState(-1)
+  const [spacesReady, setSpacesReady] = useState(false)
   const inputRef = useRef(null)
   const listRef = useRef(null)
+
+  // Re-build suggestions once Supabase spaces have loaded (they fetch async)
+  useEffect(() => {
+    onLoad(() => setSpacesReady(true))
+  }, [])
 
   // ── Build a searchable suggestions list from all available sources ─────
   const allSuggestions = useMemo(() => {
@@ -76,7 +82,7 @@ export default function HeroSearch() {
       }
     })
     return items
-  }, [])
+  }, [spacesReady])
 
   // ── Fuzzy matching: Levenshtein distance for typo tolerance ────────────
   function fuzzyMatch(query, target) {
