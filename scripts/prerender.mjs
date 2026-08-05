@@ -21,7 +21,7 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-const SITE = 'https://easemyoffice.in'
+const SITE = 'https://emo-websitenew.emo-crm.workers.dev'
 
 // Default social share card, first match wins. og-image.jpg is checked first so
 // a designer-supplied file can override the generated PNG without a code change.
