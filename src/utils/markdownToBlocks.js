@@ -103,8 +103,34 @@ export function markdownToBlocks(markdown) {
       continue
     }
 
-    // Table rows (skip, too complex for simple rendering)
+    // Table: | Col A | Col B |
+    //        |-------|-------|
+    //        | val   | val   |
     if (/^\|/.test(trimmed)) {
+      flushBullets()
+      flushParagraph()
+
+      const splitRow = (row) =>
+        row
+          .trim()
+          .replace(/^\|/, '')
+          .replace(/\|$/, '')
+          .split('|')
+          .map((c) => c.trim())
+
+      const headers = splitRow(trimmed)
+      const rows = []
+
+      // Consume the separator row (|---|---|) if present, then all body rows.
+      let j = i + 1
+      if (j < lines.length && /^\|[\s\-:|]+\|?$/.test(lines[j].trim())) j++
+      while (j < lines.length && /^\|/.test(lines[j].trim())) {
+        rows.push(splitRow(lines[j]))
+        j++
+      }
+      i = j - 1
+
+      blocks.push({ table: { headers, rows } })
       continue
     }
 
