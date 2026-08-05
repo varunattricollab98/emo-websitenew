@@ -16,8 +16,9 @@ let _listeners = []
 if (isSupabaseConfigured && supabase) {
   supabase
     .from('spaces')
-    .select('address_area,address_city,address_state,space_name,listing_address,pricing_monthly,pricing_gst,pricing_br,pricing_ma,rating,featured_image,space_images,property_feature,description,overview,full_address,processing_time,property_type,map_query,map_location,badge,highlights')
-    .eq('is_active', true)
+    .select('*')
+    // Treat NULL as active — only explicitly deactivated rows are hidden.
+    .or('is_active.is.null,is_active.eq.true')
     .order('rating', { ascending: false })
     .limit(500)
     .then(({ data }) => {
