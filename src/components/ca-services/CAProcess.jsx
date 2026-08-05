@@ -6,7 +6,7 @@ const steps = [
   {
     icon: MessageSquare,
     title: 'Share your requirement',
-    desc: 'Tell us what you need — a registration, a filing or full monthly compliance.',
+    desc: 'Tell us what you need, a registration, a filing or full monthly compliance.',
   },
   {
     icon: FileUp,
@@ -33,7 +33,7 @@ export default function CAProcess() {
           eyebrow="How It Works"
           title="A Simple, Guided 4-Step Process"
           accent="4-Step Process"
-          subtitle="Fully online, from your first message to your final certificate — with a dedicated manager keeping you updated at every step."
+          subtitle="Fully online, from your first message to your final certificate, with a dedicated manager keeping you updated at every step."
         />
 
         <div className="relative mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">

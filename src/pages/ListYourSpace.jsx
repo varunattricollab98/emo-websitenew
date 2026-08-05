@@ -73,7 +73,7 @@ export default function ListYourSpace() {
       name: form.name,
       phone: form.phone,
       email: form.email,
-      interest: `List Space — ${form.spaceType}`,
+      interest: `List Space, ${form.spaceType}`,
       city: form.city,
       message: form.message ? `Company: ${form.company || '-'}. ${form.message}` : `Company: ${form.company || '-'}`,
       source: 'list-your-space',

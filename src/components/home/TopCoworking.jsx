@@ -79,7 +79,7 @@ export default function TopCoworking() {
           eyebrow="Premium Workspaces"
           title="Our Top Picked Premium Locations"
           accent="Premium Locations"
-          subtitle="Handpicked, highest-rated workspaces and business addresses our clients love — verified and ready to move in."
+          subtitle="Handpicked, highest-rated workspaces and business addresses our clients love, verified and ready to move in."
         />
 
         <div className="relative mt-14">
@@ -109,7 +109,7 @@ export default function TopCoworking() {
             {spaces.map((s) => (
               <div key={s.name} className="w-[300px] flex-none snap-start">
                 <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-primary-100/60 bg-white shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover">
-                  {/* image — clickable, links to space detail */}
+                  {/* image, clickable, links to space detail */}
                   <Link to={spaceUrl(s.slug, s.areaSlug || slugifySpace(s.name))} className="relative block h-44 overflow-hidden bg-primary-gradient">
                     <SmartImage
                       src={s.image}

@@ -12,8 +12,8 @@ export default function TalkToExpert({ city = '', space = '' }) {
     openLeadModal({
       title: 'Talk to Our Expert Team',
       subtitle:
-        'Get personalized guidance on choosing the right virtual office, pricing, and compliance — free, no obligations.',
-      service: space ? `Expert consultation — ${space}, ${city}` : `Expert consultation — ${city}`,
+        'Get personalized guidance on choosing the right virtual office, pricing, and compliance, free, no obligations.',
+      service: space ? `Expert consultation, ${space}, ${city}` : `Expert consultation, ${city}`,
       city,
     })
 
@@ -26,7 +26,7 @@ export default function TalkToExpert({ city = '', space = '' }) {
           </span>
           <div className="hidden sm:block">
             <p className="text-sm font-bold text-navy-dark">Need help choosing?</p>
-            <p className="text-xs text-slate-500">Our experts will guide you — free consultation</p>
+            <p className="text-xs text-slate-500">Our experts will guide you, free consultation</p>
           </div>
           <p className="text-sm font-bold text-navy-dark sm:hidden">Need help?</p>
         </div>

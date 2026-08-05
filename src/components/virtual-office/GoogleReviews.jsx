@@ -9,7 +9,7 @@ const reviews = [
     initial: 'R',
     role: 'Founder, D2C Brand',
     color: '#2c679e',
-    text: 'Got my GST address in Bangalore in just 2 days. The documentation was accepted on the first attempt — smooth and completely hassle-free.',
+    text: 'Got my GST address in Bangalore in just 2 days. The documentation was accepted on the first attempt, smooth and completely hassle-free.',
   },
   {
     name: 'Ananya Iyer',
@@ -30,7 +30,7 @@ const reviews = [
     initial: 'M',
     role: 'Freelance Consultant',
     color: '#d97706',
-    text: 'A prestigious address without renting an office — perfect for my consulting practice. My invoices and website look far more credible now.',
+    text: 'A prestigious address without renting an office, perfect for my consulting practice. My invoices and website look far more credible now.',
   },
   {
     name: 'Vikram Singh',

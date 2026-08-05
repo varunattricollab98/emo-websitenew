@@ -76,7 +76,7 @@ export default function HeroSearch() {
       return navigate(`/virtual-office?city=${encodeURIComponent(loc)}`)
     }
 
-    // Coworking — try keyword match against space names
+    // Coworking, try keyword match against space names
     if (service === 'coworking') {
       const q = loc.toLowerCase()
       const dbSpaces = getSupabaseSpaces()
@@ -124,7 +124,7 @@ export default function HeroSearch() {
 
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-slate-600">
             Premium business addresses for GST &amp; company registration, coworking spaces, and
-            meeting rooms — in 250+ locations across 28 states.
+            meeting rooms in 250+ locations across 28 states.
           </p>
         </motion.div>
 

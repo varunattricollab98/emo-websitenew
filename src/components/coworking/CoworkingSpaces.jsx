@@ -102,7 +102,7 @@ export default function CoworkingSpaces() {
           eyebrow="Explore Spaces"
           title="Browse Coworking Spaces City by City"
           accent="City by City"
-          subtitle="Search any city across India for move-in-ready workspaces — with transparent pricing and zero brokerage."
+          subtitle="Search any city across India for move-in-ready workspaces, with transparent pricing and zero brokerage."
         />
 
         {/* city search + price sort */}
@@ -124,7 +124,7 @@ export default function CoworkingSpaces() {
               aria-label="Search city"
               className="w-full rounded-full border border-primary-100 bg-white py-3 pl-10 pr-16 text-sm font-bold text-navy-dark shadow-soft placeholder:font-normal placeholder:text-slate-400 focus:border-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/20"
             />
-            {/* clear button — resets to a mix of all cities */}
+            {/* clear button, resets to a mix of all cities */}
             {(cityInput || !isAll) && (
               <button
                 type="button"
@@ -323,7 +323,7 @@ export default function CoworkingSpaces() {
           {isAll
             ? 'Showing a mix of spaces across cities. '
             : `Showing spaces in ${activeName}. `}
-          Prices are indicative — get an exact, brokerage-free quote from your dedicated manager.
+          Prices are indicative. Get an exact, brokerage-free quote from your dedicated manager.
         </p>
       </div>
     </section>

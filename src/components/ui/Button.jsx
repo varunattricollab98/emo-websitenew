@@ -29,7 +29,7 @@ export default function Button({
   onClick,
   ...props
 }) {
-  // Safe access to lead modal — won't crash if context isn't available
+  // Safe access to lead modal, won't crash if context isn't available
   const ctx = useContext(LeadModalContext)
   const openLeadModal = ctx?.openLeadModal
   const classes = `${variants[variant] || variants.primary} ${sizes[size] || sizes.md} ${className}`

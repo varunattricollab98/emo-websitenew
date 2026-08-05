@@ -11,7 +11,7 @@ const features = [
   {
     icon: FileCheck2,
     title: 'Compliant Paperwork',
-    desc: 'Notarised rent agreement, NOC and utility bill — accepted by GST and MCA authorities.',
+    desc: 'Notarised rent agreement, NOC and utility bill, accepted by GST and MCA authorities.',
   },
   {
     icon: Zap,

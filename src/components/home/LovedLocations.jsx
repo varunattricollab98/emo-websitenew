@@ -88,7 +88,7 @@ export default function LovedLocations() {
           eyebrow="Locations"
           title="Explore Our Most-Loved Locations by Clients"
           accent="Most-Loved Locations"
-          subtitle="Highest-rated business addresses across India — loved by founders and sellers alike."
+          subtitle="Highest-rated business addresses across India, loved by founders and sellers alike."
         />
 
         <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">

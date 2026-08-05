@@ -57,7 +57,7 @@ export default class ErrorBoundary extends Component {
             Something went wrong
           </h1>
           <p className="mt-3 max-w-md text-slate-500">
-            Sorry, this page ran into an unexpected error. Please try again — our team has been
+            Sorry, this page ran into an unexpected error. Please try again. Our team has been
             notified.
           </p>
           <div className="mt-7 flex flex-wrap justify-center gap-3">

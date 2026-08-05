@@ -6,11 +6,11 @@ import { markdownToBlocks } from '../utils/markdownToBlocks'
  * Fetches a blog article from the Supabase `blog_articles` table.
  *
  * Supports TWO content formats:
- *   1. JSON array (content_format = 'json' or null) — ArticleBlocks format
- *   2. Markdown text (content_format = 'markdown') — plain text, auto-converted
+ *   1. JSON array (content_format = 'json' or null), ArticleBlocks format
+ *   2. Markdown text (content_format = 'markdown'), plain text, auto-converted
  *
  * If no article is found in the DB (or Supabase isn't configured),
- * returns null — the calling component should fall back to the
+ * returns null, the calling component should fall back to the
  * hardcoded default content from src/data/blogArticles.js.
  *
  * Usage:

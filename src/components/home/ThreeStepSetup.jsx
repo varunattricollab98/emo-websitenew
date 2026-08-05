@@ -16,7 +16,7 @@ const steps = [
   {
     icon: FileText,
     title: 'Submit KYC Documents',
-    desc: 'Upload your KYC online — our team verifies everything for you.',
+    desc: 'Upload your KYC online and our team verifies everything for you.',
     chip: '100% online',
     grad: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)',
     glow: 'rgba(139,92,246,0.45)',
@@ -47,7 +47,7 @@ export default function ThreeStepSetup() {
           eyebrow="How It Works"
           title="Get Set Up in 3 Simple Steps"
           accent="3 Simple Steps"
-          subtitle="From choosing a location to a ready-to-use business address — fully online."
+          subtitle="From choosing a location to a ready-to-use business address, fully online."
         />
 
         <div className="relative mt-20">
@@ -101,7 +101,7 @@ export default function ThreeStepSetup() {
                   >
                     <s.icon className="h-9 w-9" />
                   </span>
-                  {/* gradient checkmark badge — completed-step feel */}
+                  {/* gradient checkmark badge, completed-step feel */}
                   <span
                     className="absolute -right-3 -top-3 inline-flex h-9 w-9 items-center justify-center rounded-full text-white shadow-card ring-[3px] ring-white"
                     style={{ background: s.grad }}

@@ -68,8 +68,8 @@ export default function SpaceDetail() {
   const { openLeadModal } = useLeadModal()
 
   // Handle multiple route patterns:
-  // /virtual-office/:state/:city/:space (new structure — first=state, second=city, third=space)
-  // /virtual-office/:city/:space (legacy — first=city, second=space)
+  // /virtual-office/:state/:city/:space (new structure, first=state, second=city, third=space)
+  // /virtual-office/:city/:space (legacy, first=city, second=space)
   // /space/:city/:space (legacy)
   const city = params.third ? params.second : (params.city || params.first || '')
   const space = params.third || params.space || params.second || ''
@@ -125,18 +125,18 @@ export default function SpaceDetail() {
   const propertyType = detail?.propertyType || 'Virtual Office & Coworking'
   const processingTime = detail?.processingTime || '2\u20133 business days'
   const fullAddress = detail?.fullAddress || `${areaName}, ${cityName}, ${region}`
-  // Map location — use an explicit map query/coords if provided, else the full address.
+  // Map location, use an explicit map query/coords if provided, else the full address.
   // Supports: detail.mapQuery (e.g. "28.6139,77.2090" or a Plus Code) OR falls back to the address.
   const mapQuery = detail?.mapQuery || detail?.map_query || fullAddress
   const mapEmbedUrl = `https://www.google.com/maps?q=${encodeURIComponent(mapQuery)}&hl=en&z=15&output=embed`
   const mapLinkUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`
   const description =
     detail?.overview || detail?.description ||
-    `${areaName} is a sought-after business location in ${cityName}, ${region}. A virtual office here gives your company a credible address for GST and company registration, along with optional coworking desks and professional mail handling — activated in just 2\u20133 business days.`
+    `${areaName} is a sought-after business location in ${cityName}, ${region}. A virtual office here gives your company a credible address for GST and company registration, along with optional coworking desks and professional mail handling, activated in just 2\u20133 business days.`
   const reviews = detail?.reviews?.length
     ? detail.reviews
     : [
-        { name: 'Rahul Sharma', role: 'Founder', rating: 5, text: `Smooth GST registration on the ${areaName} address — documents were ready in days.` },
+        { name: 'Rahul Sharma', role: 'Founder', rating: 5, text: `Smooth GST registration on the ${areaName} address, documents were ready in days.` },
         { name: 'Ananya Kapoor', role: 'Chartered Accountant', rating: 5, text: 'Verification-ready paperwork and a helpful, responsive team. Highly recommend.' },
         { name: 'Mohit Verma', role: 'Startup Co-founder', rating: 4, text: `Premium ${cityName} address at a fair price. Great value for a growing business.` },
       ]
@@ -148,15 +148,15 @@ export default function SpaceDetail() {
       ? description.split('\n\n').filter(Boolean)
       : [String(description)]
 
-  // optional locality (area) description — separate from the space description
+  // optional locality (area) description, separate from the space description
   const localityBlocks = toBlocks(getLocalityDescription(city, space))
 
   // active image falls back to the featured image until the user picks a thumb
   const shownImg = activeImg || featuredImage
-  // all photos — no cap, so any number from the CSV renders
+  // all photos, no cap, so any number from the CSV renders
   const thumbs = [...new Set([featuredImage, ...gallery].filter(Boolean))]
 
-  // "live" activity numbers — auto-generated & stable per space, but any field
+  // "live" activity numbers, auto-generated & stable per space, but any field
   // can be overridden per space via `stats` in spaceDetails.js (or a backend later).
   const stats = { ...spaceStats(`${city}-${space}`), ...(detail?.stats || {}) }
   const reviewCount = detail?.reviewCount || 40 + (stats.monthly % 120)
@@ -165,7 +165,7 @@ export default function SpaceDetail() {
     openLeadModal({
       title: `Book ${spaceName}, ${cityName}`,
       subtitle: 'Share your details and our team will confirm this space with you shortly.',
-      service: `${areaName} — ${cityName}`,
+      service: `${areaName}, ${cityName}`,
       city: cityName,
     })
 
@@ -186,7 +186,7 @@ export default function SpaceDetail() {
     <>
       <SchemaScript schemas={[
         webPageSchema({
-          title: `${areaName} Virtual Office — ${cityName}`,
+          title: `${areaName} Virtual Office, ${cityName}`,
           description: `Virtual office in ${areaName}, ${cityName}. GST & company registration ready, activated in ${processingTime}.`,
           url: `/virtual-office/${getStateSlugForCity(city)}/${city}/${slugifySpace(space)}`,
         }),
@@ -199,7 +199,7 @@ export default function SpaceDetail() {
         ]),
         faqSchema(faqs),
         articleSchema({
-          title: `Virtual Office in ${areaName}, ${cityName} — Complete Guide`,
+          title: `Virtual Office in ${areaName}, ${cityName}: Complete Guide`,
           description: `Everything about virtual offices in ${areaName}, ${cityName}.`,
           url: `/virtual-office/${getStateSlugForCity(city)}/${city}/${slugifySpace(space)}`,
         }),
@@ -271,9 +271,9 @@ export default function SpaceDetail() {
                 <button
                   type="button"
                   onClick={() => openLeadModal({
-                    title: `View more images — ${areaName}, ${cityName}`,
+                    title: `View more images, ${areaName}, ${cityName}`,
                     subtitle: 'Share your details and we\'ll send you the full photo gallery and a virtual tour link.',
-                    service: `Gallery request — ${areaName}, ${cityName}`,
+                    service: `Gallery request, ${areaName}, ${cityName}`,
                     city: cityName,
                   })}
                   className="inline-flex items-center gap-1.5 rounded-full border border-primary-200 bg-white px-3 py-1.5 text-xs font-bold text-primary shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary hover:shadow-card"
@@ -318,7 +318,7 @@ export default function SpaceDetail() {
               </span>
             </div>
 
-            {/* live activity strip — makes the listing feel alive */}
+            {/* live activity strip, makes the listing feel alive */}
             <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 rounded-2xl border border-emerald-100 bg-emerald-50/60 px-4 py-3">
               <span className="inline-flex items-center gap-2 text-sm font-semibold text-emerald-700">
                 <span className="relative flex h-2.5 w-2.5">
@@ -337,7 +337,7 @@ export default function SpaceDetail() {
             </div>
 
             <div className="mt-5 flex flex-wrap items-end gap-x-4 gap-y-3">
-              {/* Plan switcher — hover/click to see plan-specific price */}
+              {/* Plan switcher, hover/click to see plan-specific price */}
               {(() => {
                 const planOpts = [
                   { key: 'ma', label: 'Mailing', price: pricing.ma },
@@ -383,13 +383,13 @@ export default function SpaceDetail() {
               })()}
             </div>
 
-            {/* short lead — full description lives in the About section below */}
+            {/* short lead, full description lives in the About section below */}
             <p className="mt-4 leading-relaxed text-slate-600">
-              A premium, verified business address in {areaName}, {cityName} — ready for GST and
+              A premium, verified business address in {areaName}, {cityName}, ready for GST and
               company registration, activated in {processingTime}.
             </p>
 
-            {/* what's included — highlight chips (from Supabase highlights column or defaults) */}
+            {/* what's included, highlight chips (from Supabase highlights column or defaults) */}
             <div className="mt-5 grid grid-cols-2 gap-2.5">
               {(() => {
                 const defaultChips = [
@@ -420,7 +420,7 @@ export default function SpaceDetail() {
               })()}
             </div>
 
-            {/* Book — top */}
+            {/* Book: top */}
             <div className="mt-6 flex flex-wrap gap-3">
               <Button onClick={book} size="lg">
                 Book This Space <ArrowRight className="h-5 w-5" />
@@ -461,7 +461,7 @@ export default function SpaceDetail() {
             eyebrow="About the space"
             title={spaceName}
             accent={areaName}
-            subtitle={`A verified virtual office & coworking address in ${cityName}, ${region} — accepted for GST and company registration, activated in ${processingTime}.`}
+            subtitle={`A verified virtual office & coworking address in ${cityName}, ${region}, accepted for GST and company registration, activated in ${processingTime}.`}
           />
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {[
@@ -510,7 +510,7 @@ export default function SpaceDetail() {
             </button>
           </div>
 
-          {/* full space description / blog + area guide — premium reading cards */}
+          {/* full space description / blog + area guide, premium reading cards */}
           <div className="mt-10 grid gap-6 lg:grid-cols-3">
             {/* main article */}
             <div className="lg:col-span-2">
@@ -623,7 +623,7 @@ export default function SpaceDetail() {
         </div>
       </section>
 
-      {/* ===== Location (area-level only — exact address hidden) ===== */}
+      {/* ===== Location (area-level only, exact address hidden) ===== */}
       <section className="section-padding bg-white">
         <div className="container-custom">
           <SectionHeading eyebrow="Location" title="Where You'll Be" accent="Be" />
@@ -677,7 +677,7 @@ export default function SpaceDetail() {
             eyebrow="Plans & Pricing"
             title={`Plans at ${areaName}`}
             accent={areaName}
-            subtitle="Transparent pricing with no hidden charges — pick what fits your business."
+            subtitle="Transparent pricing with no hidden charges. Pick what fits your business."
           />
           <div className="mt-14 grid gap-6 lg:grid-cols-3">
             {plans.map((p) => (
@@ -720,7 +720,7 @@ export default function SpaceDetail() {
         </div>
       </section>
 
-      {/* ===== Book this space — bottom band ===== */}
+      {/* ===== Book this space, bottom band ===== */}
       <section className="section-padding bg-surface-light">
         <div className="container-custom">
           <div
@@ -799,7 +799,7 @@ export default function SpaceDetail() {
 
       {/* ===== Blog Article ===== */}
       <BlogArticleSection
-        title={dbArticle?.title || `Virtual Office in ${areaName}, ${cityName} — Complete Guide`}
+        title={dbArticle?.title || `Virtual Office in ${areaName}, ${cityName}: Complete Guide`}
         accent={areaName}
         eyebrow={dbArticle?.eyebrow || 'Guide'}
         subtitle={dbArticle?.subtitle || `Everything you need to know about setting up a virtual office in ${areaName}, ${cityName} for GST, company registration, and business compliance.`}
@@ -810,7 +810,7 @@ export default function SpaceDetail() {
       {/* ===== FAQ ===== */}
       <section className="section-padding bg-surface-light">
         <div className="container-custom">
-          <SectionHeading eyebrow="FAQ" title={`${areaName} — Questions Answered`} accent="Questions Answered" />
+          <SectionHeading eyebrow="FAQ" title={`${areaName}: Questions Answered`} accent="Questions Answered" />
           <Reveal className="mx-auto mt-12 max-w-3xl">
             <FaqAccordion items={faqs} />
           </Reveal>

@@ -137,7 +137,7 @@ function PricingCard({ plan }) {
       <Button
         onClick={() =>
           openLeadModal({
-            title: `${plan.name} — ₹${plan.price}/year`,
+            title: `${plan.name}, ₹${plan.price}/year`,
             subtitle: 'Share your details and we will get you set up quickly.',
             service: plan.name,
           })
@@ -175,7 +175,7 @@ export default function Pricing() {
                 <span className="mb-1.5 text-sm font-medium text-slate-400">/year</span>
               </div>
               <p className="mt-2 text-sm text-slate-500">
-                Everything you need to launch — address, documentation and a dedicated manager.
+                Everything you need to launch, address, documentation and a dedicated manager.
               </p>
               <ul className="mt-5 space-y-2.5">
                 {['GST & company registration ready', 'Authority-accepted documents', 'Priority 2–3 day activation'].map(

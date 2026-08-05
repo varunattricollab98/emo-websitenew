@@ -93,7 +93,7 @@ export default function CoworkingDetail() {
   // amenities = curated tags + base set (deduped)
   const amenities = [...new Set([...(sp.tags || []), ...BASE_AMENITIES])]
 
-  // map location — uses the locality + city address
+  // map location, uses the locality + city address
   const fullAddress = `${sp.locality}, ${cityName}, ${region}`
   const mapQuery = sp.mapQuery || fullAddress
   const mapEmbedUrl = `https://www.google.com/maps?q=${encodeURIComponent(mapQuery)}&hl=en&z=15&output=embed`
@@ -101,9 +101,9 @@ export default function CoworkingDetail() {
 
   const book = (plan) =>
     openLeadModal({
-      title: `Book a tour — ${sp.name}, ${cityName}`,
+      title: `Book a tour, ${sp.name}, ${cityName}`,
       subtitle: 'Share your details and our team will schedule a visit and confirm availability.',
-      service: `${plan ? plan + ' — ' : ''}${sp.name}, ${sp.locality}, ${cityName}`,
+      service: `${plan ? plan + ', ' : ''}${sp.name}, ${sp.locality}, ${cityName}`,
       city: cityName,
     })
 
@@ -113,7 +113,7 @@ export default function CoworkingDetail() {
       price: round100(sp.price * 0.55),
       unit: '/seat/mo',
       icon: Armchair,
-      note: 'Flexible open-desk access — sit anywhere, any day.',
+      note: 'Flexible open-desk access, sit anywhere, any day.',
     },
     {
       name: 'Dedicated Desk',
@@ -144,7 +144,7 @@ export default function CoworkingDetail() {
       name: 'Karan Mehta',
       role: 'Founder, SaaS Startup',
       rating: 5,
-      text: `Great vibe at ${sp.name}. Fast Wi-Fi, clean meeting rooms and a helpful front desk — our team loves it.`,
+      text: `Great vibe at ${sp.name}. Fast Wi-Fi, clean meeting rooms and a helpful front desk. Our team loves it.`,
     },
     {
       name: 'Priya Nair',
@@ -197,7 +197,7 @@ export default function CoworkingDetail() {
 
   const schemas = [
     webPageSchema({
-      title: `${sp.name} — Coworking Space in ${sp.locality}, ${cityName}`,
+      title: `${sp.name}, Coworking Space in ${sp.locality}, ${cityName}`,
       description: `${sp.name} is a move-in-ready coworking space in ${sp.locality}, ${cityName} with flexible plans starting at ₹${sp.price}/mo.`,
       url: `/coworking/${city}/${space}`,
       breadcrumbs: breadcrumbItems,
@@ -327,7 +327,7 @@ export default function CoworkingDetail() {
             </div>
 
             <p className="mt-4 leading-relaxed text-slate-600">
-              {sp.name} is a move-in-ready coworking space in {sp.locality}, {cityName} — designed for
+              {sp.name} is a move-in-ready coworking space in {sp.locality}, {cityName}, designed for
               focused work with premium amenities, flexible plans and a vibrant community. No lock-in,
               no brokerage.
             </p>
@@ -385,7 +385,7 @@ export default function CoworkingDetail() {
             eyebrow="About the space"
             title={sp.name}
             accent={sp.locality}
-            subtitle={`A flexible coworking space in ${sp.locality}, ${cityName} — built for productivity with premium amenities and a thriving community.`}
+            subtitle={`A flexible coworking space in ${sp.locality}, ${cityName}, built for productivity with premium amenities and a thriving community.`}
           />
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {[
@@ -432,7 +432,7 @@ export default function CoworkingDetail() {
         </div>
       </section>
 
-      {/* ===== Location (area-level only — exact address hidden) ===== */}
+      {/* ===== Location (area-level only, exact address hidden) ===== */}
       <section className="section-padding bg-white">
         <div className="container-custom">
           <SectionHeading eyebrow="Location" title="Where You'll Be" accent="Be" />
@@ -486,7 +486,7 @@ export default function CoworkingDetail() {
             eyebrow="Plans & Pricing"
             title={`Plans at ${sp.name}`}
             accent={sp.name}
-            subtitle="Transparent, brokerage-free pricing — pick the plan that fits your team."
+            subtitle="Transparent, brokerage-free pricing. Pick the plan that fits your team."
           />
           <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {plans.map((p) => (
@@ -609,10 +609,10 @@ export default function CoworkingDetail() {
 
       {/* ===== Blog Article ===== */}
       <BlogArticleSection
-        title={dbArticle?.title || `${sp.name}, ${cityName} — Coworking Guide`}
+        title={dbArticle?.title || `${sp.name}, ${cityName}: Coworking Guide`}
         accent={sp.name}
         eyebrow={dbArticle?.eyebrow || 'Guide'}
-        subtitle={dbArticle?.subtitle || `A complete guide to coworking at ${sp.name} in ${sp.locality}, ${cityName} — plans, amenities, and everything you need to know.`}
+        subtitle={dbArticle?.subtitle || `A complete guide to coworking at ${sp.name} in ${sp.locality}, ${cityName}, plans, amenities, and everything you need to know.`}
         blocks={coworkingArticleBlocks}
         bg="bg-white"
       />
@@ -622,7 +622,7 @@ export default function CoworkingDetail() {
         <div className="container-custom">
           <SectionHeading
             eyebrow="FAQ"
-            title={`${sp.name} — Questions Answered`}
+            title={`${sp.name}: Questions Answered`}
             accent="Questions Answered"
           />
           <Reveal className="mx-auto mt-12 max-w-3xl">

@@ -77,7 +77,7 @@ const whyUs = [
   {
     icon: CalendarCheck,
     title: 'Flexible Terms',
-    desc: 'Daily, monthly or annual — scale up or down with zero long lock-ins.',
+    desc: 'Daily, monthly or annual, scale up or down with zero long lock-ins.',
   },
   {
     icon: Sparkles,
@@ -124,7 +124,7 @@ export default function Coworking() {
         eyebrow="Coworking Spaces"
         title="Flexible Coworking Spaces in Prime Locations"
         accent="Prime Locations"
-        subtitle="Dedicated desks, private cabins and hot seats built for productivity — with premium amenities and a thriving community across India."
+        subtitle="Dedicated desks, private cabins and hot seats built for productivity, with premium amenities and a thriving community across India."
         chips={['Move-in ready', '24x7 access', 'No long lock-ins']}
         visual={
           <div className="relative">

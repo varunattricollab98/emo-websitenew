@@ -1,7 +1,7 @@
 // Virtual office / workspace listings per city (drives the Explore section + counts).
 import { generatedSpaceDetails } from './spaceDetails.generated.js'
 
-// getSupabaseSpacesForCity is no longer used here — React components
+// getSupabaseSpacesForCity is no longer used here, React components
 // use the SpacesContext directly for live Supabase data.
 
 const img = [
@@ -221,7 +221,7 @@ export function getSpaces(slug) {
     }
     return merged
   }
-  // No generic/fake listings — only show real data from Supabase
+  // No generic/fake listings, only show real data from Supabase
   return []
 }
 

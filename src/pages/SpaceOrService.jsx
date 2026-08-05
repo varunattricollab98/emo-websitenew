@@ -4,7 +4,7 @@ import ServiceLanding from './ServiceLanding'
 import SpaceDetail from './SpaceDetail'
 
 /**
- * Dispatcher — checks if the last URL segment is a service (gst-registration, etc.)
+ * Dispatcher, checks if the last URL segment is a service (gst-registration, etc.)
  * or a space/locality. Renders the appropriate page.
  *
  * Handles: /space/:city/:space, /space/:state/:city/:space,

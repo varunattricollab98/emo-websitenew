@@ -1,7 +1,7 @@
 import { supabase, isSupabaseConfigured } from './supabase'
 
 // ── Web3Forms Access Key ──────────────────────────────────────
-// Get yours from: https://web3forms.com (free — up to 250 emails/month)
+// Get yours from: https://web3forms.com (free, up to 250 emails/month)
 const WEB3FORMS_KEY = '24c2a048-dac6-4a5a-8956-2b36139f22fc'
 
 /**
@@ -10,7 +10,7 @@ const WEB3FORMS_KEY = '24c2a048-dac6-4a5a-8956-2b36139f22fc'
  */
 async function sendEmailNotification(payload) {
   if (!WEB3FORMS_KEY) {
-    console.warn('[leads] Web3Forms key not set — email notification skipped')
+    console.warn('[leads] Web3Forms key not set, email notification skipped')
     return
   }
 
@@ -24,7 +24,7 @@ async function sendEmailNotification(payload) {
       },
       body: JSON.stringify({
         access_key: WEB3FORMS_KEY,
-        subject: `New Lead — ${payload.interest || 'General Enquiry'} | ${payload.city || 'India'}`,
+        subject: `New Lead, ${payload.interest || 'General Enquiry'} | ${payload.city || 'India'}`,
         from_name: 'EaseMyOffice Website',
         name: payload.name,
         phone: payload.phone,
@@ -64,7 +64,7 @@ export async function saveLead(lead = {}) {
     page: typeof window !== 'undefined' ? window.location.pathname : null,
   }
 
-  // Send email notification (fire & forget — don't block the UI)
+  // Send email notification (fire & forget, don't block the UI)
   sendEmailNotification(payload)
 
   if (!isSupabaseConfigured || !supabase) {

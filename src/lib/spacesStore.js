@@ -1,5 +1,5 @@
 /**
- * Global spaces store — provides getSupabaseSpaces() for components
+ * Global spaces store, provides getSupabaseSpaces() for components
  * that need access outside React context (like HeroSearch).
  *
  * Now fetches ONCE with limited columns (not SELECT *) to reduce
@@ -17,7 +17,7 @@ if (isSupabaseConfigured && supabase) {
   supabase
     .from('spaces')
     .select('*')
-    // Treat NULL as active — only explicitly deactivated rows are hidden.
+    // Treat NULL as active, only explicitly deactivated rows are hidden.
     .or('is_active.is.null,is_active.eq.true')
     .order('rating', { ascending: false })
     .limit(500)

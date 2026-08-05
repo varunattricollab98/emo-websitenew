@@ -108,7 +108,7 @@ export default function KycDocs() {
               ))}
             </div>
             <p className="mt-5 text-xs text-slate-500">
-              Documents may vary slightly by state and use-case — your relationship manager will
+              Documents may vary slightly by state and use-case, your relationship manager will
               confirm the exact list for your registration.
             </p>
           </div>

@@ -15,7 +15,7 @@ const needs = [
   {
     icon: FileCheck2,
     title: 'For GST Registration',
-    desc: 'Secure your GSTIN with a fully verified address — notarised rent agreement, NOC and utility bill accepted the first time.',
+    desc: 'Secure your GSTIN with a fully verified address, notarised rent agreement, NOC and utility bill accepted the first time.',
     tag: 'Proprietors · Firms · GSTIN',
     cta: 'Get My GST Address',
     service: 'GST Registration',
@@ -26,7 +26,7 @@ const needs = [
   {
     icon: Landmark,
     title: 'For New Company Registration',
-    desc: 'Incorporate your Pvt Ltd, LLP or OPC with an MCA-accepted registered office — no need to rent a physical office.',
+    desc: 'Incorporate your Pvt Ltd, LLP or OPC with an MCA-accepted registered office, no need to rent a physical office.',
     tag: 'Pvt Ltd · LLP · OPC',
     cta: 'Register My Business',
     service: 'Company Registration (Pvt Ltd / LLP / OPC)',
@@ -70,7 +70,7 @@ const needs = [
   {
     icon: Rocket,
     title: 'For Startups & Founders',
-    desc: 'Need an address before opening a bank account or filing GST? Get one in the right city — without an expensive lease.',
+    desc: 'Need an address before opening a bank account or filing GST? Get one in the right city, without an expensive lease.',
     tag: 'Investor-ready credibility',
     cta: 'Register My Business',
     service: 'Business Registration (Startup)',
@@ -95,7 +95,7 @@ export default function ChooseByRequirement() {
           eyebrow="Choose by Requirement"
           title="Not Sure Which Plan? Choose by Your Need"
           accent="Choose by Your Need"
-          subtitle="Tell us what you're setting up — we'll match you with the right virtual office plan."
+          subtitle="Tell us what you're setting up and we'll match you with the right virtual office plan."
         />
 
         <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

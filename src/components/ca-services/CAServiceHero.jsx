@@ -98,7 +98,7 @@ export default function CAServiceHero({ query, setQuery, cat, setCat }) {
             <span className="gradient-text">GST, Tax &amp; Business Compliance</span>
           </h1>
           <p className="mt-5 max-w-xl text-lg leading-relaxed text-slate-600">
-            From registration to timely filings — our teams manage{' '}
+            From registration to timely filings, our teams manage{' '}
             <span className="font-bold text-navy-dark">1,200+ business accounts</span>, keeping your
             taxes and department requirements on track, all year round.
           </p>
@@ -210,7 +210,7 @@ export default function CAServiceHero({ query, setQuery, cat, setCat }) {
                         <ul className="sky-scroll max-h-60 space-y-0.5 overflow-y-auto pr-1">
                           {suggestions.length === 0 ? (
                             <li className="px-3 py-2 text-sm text-slate-400">
-                              No service found — tell us your requirement below.
+                              No service found. Tell us your requirement below.
                             </li>
                           ) : (
                             suggestions.map((s) => {

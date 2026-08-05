@@ -9,7 +9,7 @@ import TopCoworking from '../components/home/TopCoworking'
 import SchemaScript from '../components/seo/SchemaScript'
 import { localBusinessSchema, webPageSchema } from '../components/seo/schemas'
 
-// Below-fold sections — lazy loaded for faster initial paint
+// Below-fold sections, lazy loaded for faster initial paint
 const ThreeStepSetup = lazy(() => import('../components/home/ThreeStepSetup'))
 const ChooseByRequirement = lazy(() => import('../components/home/ChooseByRequirement'))
 const TransparentPricing = lazy(() => import('../components/home/TransparentPricing'))
@@ -38,7 +38,7 @@ export default function Home() {
       <SchemaScript schemas={[
         localBusinessSchema('India', 'India', '₹799 - ₹1,999'),
         webPageSchema({
-          title: 'EaseMyOffice — Virtual Offices & Business Compliance in India',
+          title: 'EaseMyOffice, Virtual Offices & Business Compliance in India',
           description: 'India\'s most trusted platform for virtual offices, coworking spaces, meeting rooms and business compliance. GST & company registration made simple.',
           url: '/',
         }),

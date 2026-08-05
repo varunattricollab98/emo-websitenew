@@ -139,7 +139,7 @@ export default function ExploreSpaces() {
     return matches
   }, [cityInput, cityName])
 
-  // Detect if the typed query matches a state name (for showing "Haryana — All cities" option)
+  // Detect if the typed query matches a state name (for showing "Haryana, All cities" option)
   const matchedState = useMemo(() => {
     const q = cityInput.trim().toLowerCase()
     if (!q) return null
@@ -218,7 +218,7 @@ export default function ExploreSpaces() {
               <span className="gradient-text">GST, Company Registration &amp; Business Address</span>
             </h1>
             <p className="mt-5 max-w-xl text-lg leading-relaxed text-slate-600">
-              Get a premium, compliant business address without the cost of physical space — with the
+              Get a premium, compliant business address without the cost of physical space, with the
               full documentation kit, ready in days.
             </p>
 
@@ -276,7 +276,7 @@ export default function ExploreSpaces() {
               </div>
 
               <div className="mt-6 space-y-4">
-                {/* city — searchable dropdown */}
+                {/* city, searchable dropdown */}
                 <div>
                   <label className="mb-1.5 block text-[11px] font-bold uppercase tracking-wider text-slate-400">
                     City
@@ -362,7 +362,7 @@ export default function ExploreSpaces() {
                               <li className="px-3 py-2 text-sm text-slate-400">No city found</li>
                             ) : (
                               <>
-                                {/* State-level option — appears when search matches a state */}
+                                {/* State-level option, appears when search matches a state */}
                                 {matchedState && (
                                   <li>
                                     <button
@@ -379,7 +379,7 @@ export default function ExploreSpaces() {
                                     >
                                       <span className="min-w-0">
                                         <span className={`block text-sm ${stateFilter === matchedState ? 'font-bold' : 'font-semibold'}`}>
-                                          {matchedState} — All Cities
+                                          {matchedState}: All Cities
                                         </span>
                                         <span className="block text-[11px] text-slate-400">
                                           View all spaces in {matchedState}

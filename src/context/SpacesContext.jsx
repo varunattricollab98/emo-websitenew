@@ -18,7 +18,7 @@ export function SpacesProvider({ children }) {
     supabase
       .from('spaces')
       .select('*')
-      // Treat NULL as active — only explicitly deactivated rows are hidden.
+      // Treat NULL as active, only explicitly deactivated rows are hidden.
       .or('is_active.is.null,is_active.eq.true')
       .order('rating', { ascending: false })
       .limit(500)

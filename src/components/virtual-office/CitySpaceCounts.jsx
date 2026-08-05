@@ -29,7 +29,7 @@ export default function CitySpaceCounts() {
           eyebrow="Our Coverage"
           title="Verified Spaces Across India"
           accent="Across India"
-          subtitle="Live availability in every major business hub — pick your city and register in a premium address near you."
+          subtitle="Live availability in every major business hub. Pick your city and register in a premium address near you."
         />
 
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">

@@ -2,7 +2,7 @@
  * Converts simple Markdown text into ArticleBlocks format.
  *
  * This allows blog content to be written in plain Markdown in Supabase
- * instead of complex JSON arrays — much easier to write and edit!
+ * instead of complex JSON arrays, much easier to write and edit!
  *
  * Supported Markdown:
  *   # Heading        → { h: "Heading" }         (H2)
@@ -48,14 +48,14 @@ export function markdownToBlocks(markdown) {
     const line = lines[i]
     const trimmed = line.trim()
 
-    // Empty line — flush current paragraph
+    // Empty line, flush current paragraph
     if (!trimmed) {
       flushBullets()
       flushParagraph()
       continue
     }
 
-    // Horizontal rule (section divider) — skip
+    // Horizontal rule (section divider), skip
     if (/^-{3,}$/.test(trimmed) || /^\*{3,}$/.test(trimmed)) {
       flushBullets()
       flushParagraph()
@@ -103,12 +103,12 @@ export function markdownToBlocks(markdown) {
       continue
     }
 
-    // Table rows (skip — too complex for simple rendering)
+    // Table rows (skip, too complex for simple rendering)
     if (/^\|/.test(trimmed)) {
       continue
     }
 
-    // Regular text — accumulate into paragraph
+    // Regular text, accumulate into paragraph
     // If previous line was also text (no blank line between), join them
     if (currentBullets.length) {
       flushBullets()

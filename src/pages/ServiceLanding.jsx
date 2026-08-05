@@ -44,7 +44,7 @@ function toTitle(str = '') {
 
 const steps = [
   { icon: MessageSquare, title: 'Share your requirement', desc: 'Tell us the city and service you need.' },
-  { icon: FileUp, title: 'Upload documents', desc: 'Submit your KYC online — we verify everything upfront.' },
+  { icon: FileUp, title: 'Upload documents', desc: 'Submit your KYC online, we verify everything upfront.' },
   { icon: PartyPopper, title: 'Get activated', desc: 'Your address & documents are ready in 2–3 days.' },
 ]
 
@@ -92,7 +92,7 @@ export default function ServiceLanding() {
     openLeadModal({
       title: `${svc.name} in ${cityName}`,
       subtitle: 'Share your details and our team will call you back within one business day.',
-      service: `${svc.name} — ${where}`,
+      service: `${svc.name}, ${where}`,
       city: cityName,
     })
 
@@ -127,7 +127,7 @@ export default function ServiceLanding() {
 
   const schemas = [
     webPageSchema({
-      title: `${svc.name} in ${cityName} — EaseMyOffice`,
+      title: `${svc.name} in ${cityName}, EaseMyOffice`,
       description: svc.lead(cityName),
       url: spaceUrl(city, svc.slug),
       breadcrumbs: breadcrumbItems,
@@ -426,7 +426,7 @@ export default function ServiceLanding() {
               )
             })}
           </div>
-          {/* related resources — internal links for SEO crawlability (pillar + cluster) */}
+          {/* related resources, internal links for SEO crawlability (pillar + cluster) */}
           <div className="mx-auto mt-10 max-w-3xl rounded-2xl border border-primary-100 bg-surface-light p-6">
             <p className="text-xs font-bold uppercase tracking-wider text-slate-400">
               Related resources
@@ -457,12 +457,12 @@ export default function ServiceLanding() {
         </div>
       </section>
 
-      {/* Blog Article — deep-dive guide for the service */}
+      {/* Blog Article, deep-dive guide for the service */}
       <BlogArticleSection
-        title={dbArticle?.title || `${svc.name} in ${cityName} — Complete Guide`}
+        title={dbArticle?.title || `${svc.name} in ${cityName}: Complete Guide`}
         accent={cityName}
         eyebrow={dbArticle?.eyebrow || 'Guide'}
-        subtitle={dbArticle?.subtitle || `Everything you need to know about ${svc.name.toLowerCase()} in ${cityName} — process, documents, pricing, and compliance.`}
+        subtitle={dbArticle?.subtitle || `Everything you need to know about ${svc.name.toLowerCase()} in ${cityName}, process, documents, pricing, and compliance.`}
         blocks={serviceArticleBlocks}
         bg="bg-white"
       />
@@ -472,7 +472,7 @@ export default function ServiceLanding() {
         <div className="container-custom">
           <SectionHeading
             eyebrow="FAQ"
-            title={`${svc.name} in ${cityName} — FAQs`}
+            title={`${svc.name} in ${cityName}: FAQs`}
             accent={cityName}
           />
           <Reveal className="mx-auto mt-12 max-w-3xl">

@@ -63,11 +63,11 @@ export default function BookYourSpace() {
                 <span className="gold-text">Best Premium Virtual Office Address</span>
               </h2>
               <p className="mt-4 max-w-lg text-lg text-primary-100">
-                Share a few details and our experts will call you back — GST-compliant address ready
+                Share a few details and our experts will call you back with your GST-compliant address ready
                 in 2–3 days.
               </p>
 
-              {/* social proof — avatar cluster */}
+              {/* social proof, avatar cluster */}
               <div className="mt-6 flex items-center gap-3">
                 <div className="flex -space-x-3">
                   {[

@@ -94,7 +94,7 @@ const useCases = [
 
 const steps = [
   { icon: CalendarSearch, title: 'Pick a room & slot', desc: 'Choose your city, room type and preferred time.' },
-  { icon: Check, title: 'Confirm booking', desc: 'Reserve instantly — no membership required.' },
+  { icon: Check, title: 'Confirm booking', desc: 'Reserve instantly, no membership required.' },
   { icon: Presentation, title: 'Walk in & present', desc: 'Everything is set up and ready when you arrive.' },
 ]
 
@@ -142,7 +142,7 @@ export default function MeetingRooms() {
         eyebrow="Meeting Rooms"
         title="Book Professional Meeting Rooms by the Hour"
         accent="by the Hour"
-        subtitle="Fully-equipped meeting, conference and training rooms in prime locations. Pay only for the hours you need — no membership required."
+        subtitle="Fully-equipped meeting, conference and training rooms in prime locations. Pay only for the hours you need, no membership required."
         chips={['No membership', 'Hourly & daily rates', 'Premium AV included']}
         visual={
           <div className="relative">
@@ -170,9 +170,9 @@ export default function MeetingRooms() {
                 </span>
               </div>
 
-              {/* booking selectors — city / date (calendar) / time */}
+              {/* booking selectors, city / date (calendar) / time */}
               <div className="mt-5 grid grid-cols-3 gap-2">
-                {/* city — searchable dropdown */}
+                {/* city, searchable dropdown */}
                 <div className="relative">
                   <MapPin className="pointer-events-none absolute left-2.5 top-1/2 z-10 h-3.5 w-3.5 -translate-y-1/2 text-primary" />
                   <input
@@ -210,7 +210,7 @@ export default function MeetingRooms() {
                   )}
                 </div>
 
-                {/* date — opens calendar */}
+                {/* date, opens calendar */}
                 <div className="relative">
                   <CalendarDays className="pointer-events-none absolute left-2.5 top-1/2 z-10 h-3.5 w-3.5 -translate-y-1/2 text-primary" />
                   <input
@@ -291,7 +291,7 @@ export default function MeetingRooms() {
                 onClick={() => openLeadModal({
                   title: 'Check Room Availability',
                   subtitle: `${bCity} · ${prettyDate(bDate)} · ${bTime}`,
-                  service: `Meeting Room — ${bCity}`,
+                  service: `Meeting Room, ${bCity}`,
                   city: bCity,
                   message: `City: ${bCity}\nDate: ${prettyDate(bDate)}\nTime: ${bTime}\nNumber of People: \nHours Required: `,
                   source: 'meeting-room-availability',
@@ -317,7 +317,7 @@ export default function MeetingRooms() {
             eyebrow="Room Types"
             title="The Right Room for Every Occasion"
             accent="Every Occasion"
-            subtitle="From quick catch-ups to full-day workshops — hourly and daily rates available."
+            subtitle="From quick catch-ups to full-day workshops, hourly and daily rates available."
           />
           <div className="mt-16 grid gap-6 lg:grid-cols-3">
             {rooms.map((r, i) => (
@@ -363,7 +363,7 @@ export default function MeetingRooms() {
             ))}
           </div>
           <p className="mt-8 text-center text-sm text-slate-500">
-            Daily rates and full-day packages available — contact us for custom bookings and bulk
+            Daily rates and full-day packages available, contact us for custom bookings and bulk
             discounts.
           </p>
         </div>
@@ -381,7 +381,7 @@ export default function MeetingRooms() {
             {useCases.map((u, i) => (
               <Reveal key={u.title} delay={(i % 4) * 0.07}>
                 <div className="group relative h-full overflow-hidden rounded-2xl border-2 border-navy-dark/10 bg-gradient-to-b from-white via-white to-slate-50 p-8 shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/30 hover:shadow-card-hover">
-                  {/* Nameplate screws — four corners */}
+                  {/* Nameplate screws, four corners */}
                   <span className="absolute left-3 top-3 h-2.5 w-2.5 rounded-full bg-gradient-to-br from-slate-300 to-slate-400 shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)] ring-1 ring-slate-200" />
                   <span className="absolute right-3 top-3 h-2.5 w-2.5 rounded-full bg-gradient-to-br from-slate-300 to-slate-400 shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)] ring-1 ring-slate-200" />
                   <span className="absolute bottom-3 left-3 h-2.5 w-2.5 rounded-full bg-gradient-to-br from-slate-300 to-slate-400 shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)] ring-1 ring-slate-200" />

@@ -68,7 +68,7 @@ export default function StateTemplate() {
     openLeadModal({
       title: `Virtual Office in ${stateName}`,
       subtitle: 'Tell us your city preference and we\'ll share the best options.',
-      service: `Virtual Office — ${stateName}`,
+      service: `Virtual Office, ${stateName}`,
       city: stateName,
     })
 
@@ -90,8 +90,8 @@ export default function StateTemplate() {
     <>
       <SchemaScript schemas={[
         webPageSchema({
-          title: `Virtual Office in ${stateName} — EaseMyOffice`,
-          description: `${cities.length} cities available across ${stateName}. Get a premium business address for GST registration, company incorporation, and professional mail handling — starting at just ₹${basePrice}/mo.`,
+          title: `Virtual Office in ${stateName}, EaseMyOffice`,
+          description: `${cities.length} cities available across ${stateName}. Get a premium business address for GST registration, company incorporation, and professional mail handling, starting at just ₹${basePrice}/mo.`,
           url: `/virtual-office/${stateSlug}`,
           breadcrumbs: [
             { name: 'Home', url: '/' },
@@ -106,7 +106,7 @@ export default function StateTemplate() {
         ]),
         faqSchema(stateFaqs),
         articleSchema({
-          title: `Virtual Office in ${stateName} — Complete Guide`,
+          title: `Virtual Office in ${stateName}: Complete Guide`,
           description: `Everything you need to know about getting a virtual office in ${stateName} for GST registration, company incorporation, and business growth.`,
           url: `/virtual-office/${stateSlug}`,
         }),
@@ -138,7 +138,7 @@ export default function StateTemplate() {
               Virtual Office in <span className="gradient-text">{stateName}</span>
             </h1>
             <p className="mt-4 max-w-2xl text-lg text-slate-600">
-              {cities.length} cities available across {stateName}. Get a premium business address for GST registration, company incorporation, and professional mail handling — starting at just ₹{basePrice}/mo.
+              {cities.length} cities available across {stateName}. Get a premium business address for GST registration, company incorporation, and professional mail handling, starting at just ₹{basePrice}/mo.
             </p>
             <div className="mt-6 flex flex-wrap gap-4">
               <Button onClick={openLead} size="lg">
@@ -251,7 +251,7 @@ export default function StateTemplate() {
           <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {[
               { icon: Building2, title: 'Prestigious Address', desc: `A credible ${stateName} business address that impresses clients and authorities.` },
-              { icon: FileCheck2, title: 'GST & Company Ready', desc: 'Rent agreement, NOC and utility bill — the complete verification-ready kit.' },
+              { icon: FileCheck2, title: 'GST & Company Ready', desc: 'Rent agreement, NOC and utility bill, the complete verification-ready kit.' },
               { icon: Store, title: 'Marketplace Approved', desc: `Use it for Amazon, Flipkart & APOB registrations across ${stateName}.` },
               { icon: ShieldCheck, title: 'Fully Compliant', desc: 'Authority-accepted paperwork with a dedicated relationship manager.' },
             ].map((w, i) => (
@@ -299,7 +299,7 @@ export default function StateTemplate() {
               <p className="relative mt-5 max-w-2xl leading-relaxed text-slate-600">
                 Our {stateName} addresses are located in reputed commercial districts, fully verified
                 and accepted for GST and MCA filings. Exact address details are shared once you choose
-                a plan — you can even register in multiple {stateName} locations to expand your reach.
+                a plan, you can even register in multiple {stateName} locations to expand your reach.
               </p>
               <div className="relative mt-7 grid gap-3 sm:grid-cols-2">
                 {[
@@ -326,7 +326,7 @@ export default function StateTemplate() {
 
       {/* Blog Article */}
       <BlogArticleSection
-        title={dbArticle?.title || `Virtual Office in ${stateName} — Complete Guide`}
+        title={dbArticle?.title || `Virtual Office in ${stateName}: Complete Guide`}
         accent={stateName}
         eyebrow={dbArticle?.eyebrow || 'Guide'}
         subtitle={dbArticle?.subtitle || `Everything you need to know about getting a virtual office in ${stateName} for GST registration, company incorporation, and business growth.`}
@@ -337,7 +337,7 @@ export default function StateTemplate() {
       {/* FAQ */}
       <section className="section-padding bg-surface-light">
         <div className="container-custom">
-          <SectionHeading eyebrow="FAQ" title={`Virtual Office in ${stateName} — FAQs`} accent={stateName} />
+          <SectionHeading eyebrow="FAQ" title={`Virtual Office in ${stateName}: FAQs`} accent={stateName} />
           <Reveal className="mx-auto mt-12 max-w-3xl">
             <FaqAccordion items={stateFaqs} />
           </Reveal>

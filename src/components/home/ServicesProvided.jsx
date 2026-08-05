@@ -29,7 +29,7 @@ const services = [
   {
     icon: Building2,
     title: 'Virtual Office',
-    desc: 'A premium, GST-compliant business address in 250+ prime locations — ready in 2–3 days.',
+    desc: 'A premium, GST-compliant business address in 250+ prime locations, ready in 2–3 days.',
     meta: 'From ₹799/mo',
     to: '/virtual-office',
     chip: 'linear-gradient(135deg, #3c82c2 0%, #11417c 100%)',
@@ -39,7 +39,7 @@ const services = [
   {
     icon: Users,
     title: 'Coworking Spaces',
-    desc: 'Flexible desks, private cabins & hot seats across India — book by the day or month.',
+    desc: 'Flexible desks, private cabins & hot seats across India. Book by the day or month.',
     meta: 'Flexible plans',
     to: '/coworking',
     chip: 'linear-gradient(135deg, #22d3ee 0%, #0891b2 100%)',
@@ -52,7 +52,7 @@ const services = [
     meta: 'Hourly booking',
     to: '/meeting-rooms',
     chip: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)',
-    // Empty conference room with long table, chairs, glass walls — actual meeting room
+    // Empty conference room with long table, chairs, glass walls, actual meeting room
     image:
       'https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=800&q=80',
   },
@@ -63,7 +63,7 @@ const services = [
     meta: 'Expert-assisted',
     to: '/contact',
     chip: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-    // Person using calculator with financial documents/spreadsheets — tax/GST filing
+    // Person using calculator with financial documents/spreadsheets, tax/GST filing
     image:
       'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=800&q=80',
   },
@@ -74,7 +74,7 @@ const services = [
     meta: 'Pvt Ltd · LLP · OPC',
     to: '/contact',
     chip: 'linear-gradient(135deg, #fbbf24 0%, #d97706 100%)',
-    // Person signing official documents with pen — paperwork, registration, incorporation
+    // Person signing official documents with pen, paperwork, registration, incorporation
     image:
       'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=800&q=80',
   },
@@ -85,7 +85,7 @@ const services = [
     meta: 'Brand + Tax',
     to: '/contact',
     chip: 'linear-gradient(135deg, #38bdf8 0%, #2c679e 100%)',
-    // Gavel/judge hammer on legal books — law, trademark, compliance
+    // Gavel/judge hammer on legal books, law, trademark, compliance
     image:
       'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=800&q=80',
   },
@@ -97,7 +97,7 @@ export default function ServicesProvided() {
   const handleCardClick = (s) => {
     if (s.to === '/contact') {
       openLeadModal({
-        title: `Get Started — ${s.title}`,
+        title: `Get Started: ${s.title}`,
         subtitle: 'Share your details and our expert team will guide you through the process.',
         service: s.title,
       })
@@ -114,10 +114,10 @@ export default function ServicesProvided() {
           eyebrow="Services We Provide"
           title="Everything Your Business Needs, One Platform"
           accent="One Platform"
-          subtitle="From a compliant business address to full company setup — discover and book everything in one place."
+          subtitle="From a compliant business address to full company setup, discover and book everything in one place."
         />
 
-        {/* trust badges — one balanced row (2×2 on mobile) */}
+        {/* trust badges, one balanced row (2×2 on mobile) */}
         <div className="mx-auto mt-9 grid max-w-3xl grid-cols-2 gap-3 lg:flex lg:max-w-none lg:flex-wrap lg:justify-center lg:gap-3">
           {trustBadges.map((b) => (
             <span

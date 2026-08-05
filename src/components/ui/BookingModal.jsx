@@ -76,9 +76,9 @@ export default function BookingModal({ open, booking, onClose }) {
     'w-full rounded-xl border border-primary-100 bg-surface-light py-3 pl-11 pr-4 text-sm text-navy-dark placeholder:text-slate-400 transition-all focus:border-primary/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20'
 
   const summary = [
-    { icon: MapPin, label: 'Location', value: city || '—' },
+    { icon: MapPin, label: 'Location', value: city || '' },
     { icon: CalendarDays, label: 'Date', value: prettyDate(date) },
-    { icon: Clock, label: 'Time', value: time || '—' },
+    { icon: Clock, label: 'Time', value: time || '' },
   ]
 
   return createPortal(

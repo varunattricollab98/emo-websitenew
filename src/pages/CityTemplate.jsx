@@ -91,7 +91,7 @@ export default function CityTemplate() {
     const custom = toBlocks(getCityDescription(citySlug))
     if (custom.length) return custom
     return [
-      `${cityName} is a key business hub in ${region}. A virtual office in ${cityName} gives your company a prestigious, GST-ready address for company registration, mail handling and more — without the cost of a physical office, activated in just 2\u20133 business days.`,
+      `${cityName} is a key business hub in ${region}. A virtual office in ${cityName} gives your company a prestigious, GST-ready address for company registration, mail handling and more, without the cost of a physical office, activated in just 2\u20133 business days.`,
     ]
   })()
 
@@ -99,7 +99,7 @@ export default function CityTemplate() {
     openLeadModal({
       title: `Virtual Office in ${cityName}`,
       subtitle: 'Share your details and our team will call you back within one business day.',
-      service: svc ? `${svc} — ${cityName}` : `Virtual Office — ${cityName}`,
+      service: svc ? `${svc}, ${cityName}` : `Virtual Office, ${cityName}`,
     })
 
   const plans = [
@@ -139,7 +139,7 @@ export default function CityTemplate() {
 
   const benefits = [
     { icon: Building2, title: 'Prestigious Address', desc: `A credible ${cityName} business address that impresses clients and authorities.` },
-    { icon: FileCheck2, title: 'GST & Company Ready', desc: 'Rent agreement, NOC and utility bill — the complete verification-ready kit.' },
+    { icon: FileCheck2, title: 'GST & Company Ready', desc: 'Rent agreement, NOC and utility bill, the complete verification-ready kit.' },
     { icon: Store, title: 'Marketplace Approved', desc: `Use it for Amazon, Flipkart & APOB registrations in ${region}.` },
     { icon: ShieldCheck, title: 'Fully Compliant', desc: 'Authority-accepted paperwork with a dedicated relationship manager.' },
   ]
@@ -165,7 +165,7 @@ export default function CityTemplate() {
     <>
       <SchemaScript schemas={[
         webPageSchema({
-          title: `Virtual Office in ${cityName} — GST & Company Registration`,
+          title: `Virtual Office in ${cityName}, GST & Company Registration`,
           description: `Get a premium ${cityName} business address for GST and company registration. ${addresses}+ verified locations, activated in 2–3 days.`,
           url: `/virtual-office/${stateSlugVal}/${citySlug}`,
           breadcrumbs,
@@ -174,7 +174,7 @@ export default function CityTemplate() {
         localBusinessSchema(cityName, region),
         faqSchema(cityFaqs),
         articleSchema({
-          title: `Virtual Office in ${cityName} — Complete Guide`,
+          title: `Virtual Office in ${cityName}: Complete Guide`,
           description: `Everything about virtual offices in ${cityName} for GST registration and company incorporation.`,
           url: `/virtual-office/${stateSlugVal}/${citySlug}`,
         }),
@@ -197,7 +197,7 @@ export default function CityTemplate() {
         eyebrow={`Virtual Office · ${region}`}
         title={`Virtual Office in ${cityName}`}
         accent={cityName}
-        subtitle={`Get a premium, compliant ${cityName} business address for GST and company registration — ${addresses}+ verified locations, activated in just 2–3 days.`}
+        subtitle={`Get a premium, compliant ${cityName} business address for GST and company registration, ${addresses}+ verified locations, activated in just 2–3 days.`}
         chips={[`${addresses}+ addresses`, 'GST & company ready', '2–3 day setup']}
         visual={
           <div className="relative">
@@ -245,7 +245,7 @@ export default function CityTemplate() {
         </Button>
       </SubPageHero>
 
-      {/* Quick facts — premium floating band overlapping the hero */}
+      {/* Quick facts, premium floating band overlapping the hero */}
       <section className="relative z-10 bg-white pb-6">
         <div className="container-custom -mt-8 sm:-mt-10">
           <div className="grid grid-cols-2 overflow-hidden rounded-2xl border border-primary-100 bg-white shadow-card-hover ring-1 ring-primary-100/50 sm:grid-cols-4 sm:divide-x sm:divide-primary-100">
@@ -295,7 +295,7 @@ export default function CityTemplate() {
             eyebrow="Locations"
             title={`Virtual Office Locations in ${cityName}`}
             accent={cityName}
-            subtitle={`Verified addresses across ${cityName}'s top commercial districts — pick the one that fits your business.`}
+            subtitle={`Verified addresses across ${cityName}'s top commercial districts. Pick the one that fits your business.`}
           />
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {spaces.map((sp, i) => (
@@ -484,7 +484,7 @@ export default function CityTemplate() {
         </div>
       </section>
 
-      {/* Social proof — animated stats + real reviews */}
+      {/* Social proof, animated stats + real reviews */}
       <ClientsStrip />
       <GoogleReviews />
 
@@ -515,7 +515,7 @@ export default function CityTemplate() {
               <p className="relative mt-5 max-w-2xl leading-relaxed text-slate-600">
                 Our {cityName} addresses are located in reputed commercial districts, fully verified
                 and accepted for GST and MCA filings. Exact address details are shared once you choose
-                a plan — you can even register in multiple {cityName} locations to expand your reach.
+                a plan, you can even register in multiple {cityName} locations to expand your reach.
               </p>
 
               <div className="relative mt-7 grid gap-3 sm:grid-cols-2">
@@ -541,9 +541,9 @@ export default function CityTemplate() {
         </div>
       </section>
 
-      {/* Blog / Long-form article — dynamic content from data or Supabase */}
+      {/* Blog / Long-form article, dynamic content from data or Supabase */}
       <BlogArticleSection
-        title={dbArticle?.title || `Virtual Office in ${cityName} — Complete Guide`}
+        title={dbArticle?.title || `Virtual Office in ${cityName}: Complete Guide`}
         accent={cityName}
         eyebrow={dbArticle?.eyebrow || 'Guide'}
         subtitle={dbArticle?.subtitle || `Everything you need to know about getting a virtual office address in ${cityName} for GST registration, company incorporation, and business growth.`}
@@ -554,7 +554,7 @@ export default function CityTemplate() {
       {/* FAQ */}
       <section className="section-padding bg-surface-light">
         <div className="container-custom">
-          <SectionHeading eyebrow="FAQ" title={`Virtual Office in ${cityName} — FAQs`} accent={cityName} />
+          <SectionHeading eyebrow="FAQ" title={`Virtual Office in ${cityName}: FAQs`} accent={cityName} />
           <Reveal className="mx-auto mt-12 max-w-3xl">
             <FaqAccordion items={cityFaqs} />
           </Reveal>

@@ -68,7 +68,7 @@ export function localBusinessSchema(cityName, stateName, priceRange = '₹799 - 
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
     '@id': `${SITE_URL}/#localbusiness`,
-    name: `EaseMyOffice — ${cityName}`,
+    name: `EaseMyOffice, ${cityName}`,
     image: LOGO_URL,
     telephone: PHONE,
     email: EMAIL,

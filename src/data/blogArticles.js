@@ -19,7 +19,7 @@ export function cityArticle(cityName, region) {
   return [
     `The way businesses operate has changed dramatically over the last decade. Gone are the days when every company needed to lease expensive office space, invest in furniture, hire reception staff, and spend lakhs of rupees just to establish a professional presence.`,
 
-    `Today, businesses are becoming smarter, leaner, and more cost-effective. Whether you're a startup founder, freelancer, e-commerce seller, consultant, digital agency, or an established company expanding into new cities, a Virtual Office provides everything you need to establish your business presence — without the burden of maintaining a physical office.`,
+    `Today, businesses are becoming smarter, leaner, and more cost-effective. Whether you're a startup founder, freelancer, e-commerce seller, consultant, digital agency, or an established company expanding into new cities, a Virtual Office provides everything you need to establish your business presence, without the burden of maintaining a physical office.`,
 
     `In ${cityName}, virtual offices have become one of the fastest-growing business solutions because they allow companies to obtain a professional business address for GST registration, company incorporation, banking, mailing services, and legal compliance at a fraction of the cost of traditional office space.`,
 
@@ -33,7 +33,7 @@ export function cityArticle(cityName, region) {
       'Business Address in a premium commercial location',
       'GST Registration Address with complete documentation',
       'Company Registration Address (Pvt Ltd, LLP, OPC)',
-      'Registered Office Documentation — Rent Agreement, NOC, Utility Bill',
+      'Registered Office Documentation, Rent Agreement, NOC, Utility Bill',
       'Mail Handling & Courier Receiving',
       'Compliance Support & Renewal Assistance',
       'Access to Meeting Rooms (Optional)',
@@ -121,19 +121,19 @@ export function cityArticle(cityName, region) {
     `Here's how a virtual office compares with a traditional office setup:`,
 
     { list: [
-      'Initial Investment — Virtual: Very Low | Traditional: Very High',
-      'Monthly Cost — Virtual: ₹799–₹1,499/mo | Traditional: ₹30,000–₹2,00,000+/mo',
-      'Office Setup & Furniture — Virtual: Not Required | Traditional: Required',
-      'Electricity & Maintenance — Virtual: Included | Traditional: Separate bills',
-      'Remote Working — Virtual: Full flexibility | Traditional: Limited',
-      'Scalability — Virtual: Expand to new cities instantly | Traditional: Expensive & slow',
-      'Business Address — Both provide a professional address',
-      'Mail Handling — Both offer mail management',
+      'Initial Investment, Virtual: Very Low | Traditional: Very High',
+      'Monthly Cost, Virtual: ₹799–₹1,499/mo | Traditional: ₹30,000–₹2,00,000+/mo',
+      'Office Setup & Furniture, Virtual: Not Required | Traditional: Required',
+      'Electricity & Maintenance, Virtual: Included | Traditional: Separate bills',
+      'Remote Working, Virtual: Full flexibility | Traditional: Limited',
+      'Scalability, Virtual: Expand to new cities instantly | Traditional: Expensive & slow',
+      'Business Address, Both provide a professional address',
+      'Mail Handling, Both offer mail management',
     ]},
 
     { h: 'Can I Register GST Using a Virtual Office?' },
 
-    `Yes. Many businesses across ${region} use virtual office solutions to obtain the documentation needed for GST registration. Businesses expanding into ${cityName} or other states use virtual offices to establish the necessary address for registration — helping them operate in multiple markets without opening physical branches.`,
+    `Yes. Many businesses across ${region} use virtual office solutions to obtain the documentation needed for GST registration. Businesses expanding into ${cityName} or other states use virtual offices to establish the necessary address for registration, helping them operate in multiple markets without opening physical branches.`,
 
     { h: 'Can I Register My Company Using a Virtual Office?' },
 
@@ -173,7 +173,7 @@ export function cityArticle(cityName, region) {
     { h: 'Common Myths About Virtual Offices' },
 
     { sub: 'Myth 1: Virtual offices are only for startups.' },
-    `Reality: Businesses of all sizes — including established companies, enterprises, and MNCs — use virtual offices for expansion and operational efficiency.`,
+    `Reality: Businesses of all sizes, including established companies, enterprises, and MNCs, use virtual offices for expansion and operational efficiency.`,
 
     { sub: 'Myth 2: Virtual offices are not professional.' },
     `Reality: Many virtual offices are located in premium commercial buildings in prime business districts of ${cityName}, giving businesses a strong professional image.`,
@@ -192,11 +192,11 @@ export function cityArticle(cityName, region) {
 
     { h: 'Conclusion' },
 
-    `A virtual office is more than just a mailing address — it's a strategic business solution for organizations that want to reduce costs, improve flexibility, and establish a professional presence in ${cityName}.`,
+    `A virtual office is more than just a mailing address. It's a strategic business solution for organizations that want to reduce costs, improve flexibility, and establish a professional presence in ${cityName}.`,
 
-    `Whether you're launching a startup, expanding into ${region}, registering for GST, incorporating a company, or simply looking for a cost-effective commercial address — a virtual office can provide the infrastructure you need while allowing your team to work from anywhere.`,
+    `Whether you're launching a startup, expanding into ${region}, registering for GST, incorporating a company, or simply looking for a cost-effective commercial address, a virtual office can provide the infrastructure you need while allowing your team to work from anywhere.`,
 
-    { quote: `"If chosen carefully, a virtual office can become one of the smartest investments your business makes — combining professionalism, flexibility, and affordability in a single solution."` },
+    { quote: `"If chosen carefully, a virtual office can become one of the smartest investments your business makes, combining professionalism, flexibility, and affordability in a single solution."` },
   ]
 }
 
@@ -205,7 +205,7 @@ export function cityArticle(cityName, region) {
 
 export function spaceArticle(areaName, cityName, region, processingTime = '2–3 business days') {
   return [
-    `${areaName} in ${cityName}, ${region} is a prime commercial location trusted by businesses for GST registration, company incorporation, and establishing a professional presence. A virtual office here gives your business a verified address in one of ${cityName}'s most respected business districts — activated in just ${processingTime}.`,
+    `${areaName} in ${cityName}, ${region} is a prime commercial location trusted by businesses for GST registration, company incorporation, and establishing a professional presence. A virtual office here gives your business a verified address in one of ${cityName}'s most respected business districts, activated in just ${processingTime}.`,
 
     { h: `Why ${areaName} for Your Business?` },
 
@@ -221,13 +221,13 @@ export function spaceArticle(areaName, cityName, region, processingTime = '2–3
 
     { h: 'What You Get' },
 
-    `At our ${areaName} virtual office, you get a complete compliance-ready package. Whether you need an address for GST registration, company incorporation (Pvt Ltd, LLP, OPC), or simply a professional mailing address — we handle the documentation end-to-end so you can focus on growing your business.`,
+    `At our ${areaName} virtual office, you get a complete compliance-ready package. Whether you need an address for GST registration, company incorporation (Pvt Ltd, LLP, OPC), or simply a professional mailing address, we handle the documentation end-to-end so you can focus on growing your business.`,
 
     { bullets: [
-      'GST Registration — address proof + rent agreement + NOC',
-      'Business Registration — registered office with MCA-accepted documents',
-      'Mailing Address — professional address with mail handling',
-      'APOB Registration — additional place of business for e-commerce sellers',
+      'GST Registration, address proof + rent agreement + NOC',
+      'Business Registration, registered office with MCA-accepted documents',
+      'Mailing Address, professional address with mail handling',
+      'APOB Registration, additional place of business for e-commerce sellers',
     ]},
 
     { h: 'Who Uses This Address?' },
@@ -244,9 +244,9 @@ export function spaceArticle(areaName, cityName, region, processingTime = '2–3
 
     { h: 'Activation Process' },
 
-    `Getting started is simple. Choose your plan (GST, Business Registration, or Mailing Address), share your KYC documents, and our team prepares your rent agreement, NOC, and utility bill — delivered within ${processingTime}. Your address is immediately ready for GST filing, MCA registration, or bank account opening.`,
+    `Getting started is simple. Choose your plan (GST, Business Registration, or Mailing Address), share your KYC documents, and our team prepares your rent agreement, NOC, and utility bill, delivered within ${processingTime}. Your address is immediately ready for GST filing, MCA registration, or bank account opening.`,
 
-    { quote: `"Getting our GST registered at ${areaName} was seamless. EaseMyOffice delivered all documents within 2 days and the verification passed on the first attempt." — Verified Business Owner` },
+    { quote: `"Getting our GST registered at ${areaName} was seamless. EaseMyOffice delivered all documents within 2 days and the verification passed on the first attempt.", Verified Business Owner` },
   ]
 }
 
@@ -272,13 +272,13 @@ export function coworkingArticle(spaceName, locality, cityName, seats, dayPass, 
 
     { h: 'Plans & Flexibility' },
 
-    `${spaceName} offers multiple plans to match your needs — from daily drop-ins (₹${dayPass}/day) to dedicated desks (₹${Number(price).toLocaleString('en-IN')}/month) and private cabins for teams. All plans include core amenities like Wi-Fi, power backup, housekeeping, and access to common areas.`,
+    `${spaceName} offers multiple plans to match your needs from daily drop-ins (₹${dayPass}/day) to dedicated desks (₹${Number(price).toLocaleString('en-IN')}/month) and private cabins for teams. All plans include core amenities like Wi-Fi, power backup, housekeeping, and access to common areas.`,
 
     { bullets: [
-      'Hot Desk — flexible open seating, ideal for freelancers',
-      'Dedicated Desk — your own fixed spot with storage and 24x7 access',
-      'Private Cabin — lockable office for teams needing privacy',
-      'Day Pass — drop in for a day with full amenity access',
+      'Hot Desk, flexible open seating, ideal for freelancers',
+      'Dedicated Desk, your own fixed spot with storage and 24x7 access',
+      'Private Cabin, lockable office for teams needing privacy',
+      'Day Pass, drop in for a day with full amenity access',
     ]},
 
     { h: 'Ideal For' },
@@ -292,7 +292,7 @@ export function coworkingArticle(spaceName, locality, cityName, seats, dayPass, 
       'Businesses that also need a registered address for GST or company registration',
     ]},
 
-    { quote: `"${spaceName} in ${locality} has been our home for 6 months now. The community, facilities, and location are unbeatable for the price." — Coworking Member` },
+    { quote: `"${spaceName} in ${locality} has been our home for 6 months now. The community, facilities, and location are unbeatable for the price.", Coworking Member` },
   ]
 }
 
@@ -311,13 +311,13 @@ export function serviceArticle(serviceName, cityName, region) {
       `Verified commercial address in ${cityName} for ${serviceName.toLowerCase()}`,
       'Complete documentation: rent agreement, NOC, utility bill',
       'Dedicated compliance manager for end-to-end support',
-      '2–3 business day activation — fastest in the industry',
+      '2–3 business day activation, fastest in the industry',
       '98.7% first-attempt approval rate',
     ]},
 
     { h: 'Documents Required' },
 
-    `The ${serviceName.toLowerCase()} process in ${cityName} requires minimal documentation from your end. Our team handles the rest — from preparing the rent agreement to coordinating with authorities if needed.`,
+    `The ${serviceName.toLowerCase()} process in ${cityName} requires minimal documentation from your end. Our team handles the rest from preparing the rent agreement to coordinating with authorities if needed.`,
 
     { bullets: [
       'PAN card of the business / directors',
@@ -329,7 +329,7 @@ export function serviceArticle(serviceName, cityName, region) {
 
     { h: 'How EaseMyOffice Helps' },
 
-    `We don't just provide an address — we provide a complete compliance-ready package. From document preparation to post-registration support, our team ensures your ${serviceName.toLowerCase()} in ${cityName} is smooth, fast, and hassle-free.`,
+    `We don't just provide an address. We provide a complete compliance-ready package. From document preparation to post-registration support, our team ensures your ${serviceName.toLowerCase()} in ${cityName} is smooth, fast, and hassle-free.`,
 
     { list: [
       'Complete document preparation within 2–3 business days',
@@ -339,7 +339,7 @@ export function serviceArticle(serviceName, cityName, region) {
       'Renewal reminders and ongoing compliance assistance',
     ]},
 
-    { quote: `"The ${serviceName.toLowerCase()} process through EaseMyOffice was incredibly smooth. Documents were ready in 2 days and everything was accepted without any issues." — Verified Client, ${cityName}` },
+    { quote: `"The ${serviceName.toLowerCase()} process through EaseMyOffice was incredibly smooth. Documents were ready in 2 days and everything was accepted without any issues.", Verified Client, ${cityName}` },
   ]
 }
 
@@ -353,7 +353,7 @@ export const citySpecificArticles = {
   gurgaon: [
     `India's business landscape has undergone a significant transformation over the past decade. The rise of remote work, digital-first businesses, startups, and flexible work models has changed the way companies establish and manage their operations. Instead of investing heavily in expensive office spaces, businesses today are looking for smarter, more cost-effective alternatives that allow them to maintain a professional presence while keeping operational expenses under control.`,
 
-    `One solution that has rapidly gained popularity is the Virtual Office in Gurgaon. A virtual office provides businesses with a premium commercial address that can be used for GST registration, company incorporation, official correspondence, and brand building — without requiring them to rent or occupy a physical office full-time.`,
+    `One solution that has rapidly gained popularity is the Virtual Office in Gurgaon. A virtual office provides businesses with a premium commercial address that can be used for GST registration, company incorporation, official correspondence, and brand building, without requiring them to rent or occupy a physical office full-time.`,
 
     `Gurgaon, officially known as Gurugram, has emerged as one of India's most important corporate and commercial hubs. Home to numerous Fortune 500 companies, multinational corporations, IT firms, consulting organizations, and thriving startups, the city offers unparalleled opportunities for business growth.`,
 
@@ -362,7 +362,7 @@ export const citySpecificArticles = {
     `Choosing the right business location is one of the most important decisions for any entrepreneur. Your address influences how customers perceive your brand, where you can expand, and how easily you can connect with clients, investors, and partners.`,
 
     { sub: '1. Home to Global Businesses' },
-    `Gurgaon houses thousands of multinational corporations, Fortune 500 companies, and leading Indian enterprises. Companies across industries — including IT, finance, consulting, healthcare, manufacturing, logistics, and e-commerce — have established offices in the city. Having a Gurgaon business address immediately enhances your company's credibility.`,
+    `Gurgaon houses thousands of multinational corporations, Fortune 500 companies, and leading Indian enterprises. Companies across industries, including IT, finance, consulting, healthcare, manufacturing, logistics, and e-commerce, have established offices in the city. Having a Gurgaon business address immediately enhances your company's credibility.`,
 
     { sub: '2. Strategic Location' },
     `Situated within the National Capital Region (NCR), Gurgaon enjoys exceptional connectivity. Businesses benefit from:`,
@@ -402,12 +402,12 @@ export const citySpecificArticles = {
 
     `Setting up a virtual office is a straightforward process:`,
     { list: [
-      'Step 1 — Choose your preferred Gurgaon location',
-      'Step 2 — Submit KYC documents (Aadhaar, PAN, Photo)',
-      'Step 3 — Provider prepares Rent Agreement, NOC, Utility Bill',
-      'Step 4 — Receive your complete documentation',
-      'Step 5 — Register your business (GST/Company)',
-      'Step 6 — Start operating with your new Gurgaon address',
+      'Step 1, Choose your preferred Gurgaon location',
+      'Step 2, Submit KYC documents (Aadhaar, PAN, Photo)',
+      'Step 3, Provider prepares Rent Agreement, NOC, Utility Bill',
+      'Step 4, Receive your complete documentation',
+      'Step 5, Register your business (GST/Company)',
+      'Step 6, Start operating with your new Gurgaon address',
     ]},
 
     { h: 'Why Businesses are Switching to Virtual Offices' },
@@ -451,15 +451,15 @@ export const citySpecificArticles = {
     `One of the biggest advantages of a virtual office is its flexibility. Whether you're starting a new venture, expanding into a new state, or looking to reduce operational expenses, a virtual office offers a practical solution.`,
 
     { bullets: [
-      'Startups — Register company, save on office costs, focus on growth',
-      'Freelancers — Professional address separate from home',
-      'Consultants — Business credibility + meeting rooms when needed',
-      'E-commerce Sellers — GST registration for Amazon, Flipkart, Meesho',
-      'Digital Marketing Agencies — Remote teams, premium address',
-      'IT & SaaS Companies — Corporate identity without infrastructure costs',
-      'CA, CS & Law Firms — Prestigious address for client confidence',
-      'Manufacturers & Exporters — Representative office in North India',
-      'Overseas Companies — Enter Indian market without physical setup',
+      'Startups, Register company, save on office costs, focus on growth',
+      'Freelancers, Professional address separate from home',
+      'Consultants, Business credibility + meeting rooms when needed',
+      'E-commerce Sellers, GST registration for Amazon, Flipkart, Meesho',
+      'Digital Marketing Agencies, Remote teams, premium address',
+      'IT & SaaS Companies, Corporate identity without infrastructure costs',
+      'CA, CS & Law Firms, Prestigious address for client confidence',
+      'Manufacturers & Exporters, Representative office in North India',
+      'Overseas Companies, Enter Indian market without physical setup',
     ]},
 
     { h: 'Virtual Office for GST Registration in Gurgaon' },
@@ -512,13 +512,13 @@ export const citySpecificArticles = {
     { h: 'Comparison: Traditional Office vs Coworking vs Virtual Office' },
 
     { list: [
-      'Initial Investment — Traditional: Very High | Coworking: Medium | Virtual: Low',
-      'Monthly Cost — Traditional: High | Coworking: Moderate | Virtual: Affordable',
-      'GST Registration — Traditional: ✔ | Coworking: Depends | Virtual: ✔',
-      'Company Registration — Traditional: ✔ | Coworking: Depends | Virtual: ✔',
-      'Mail Handling — All three: ✔',
-      'Meeting Rooms — Traditional: ✔ | Coworking: ✔ | Virtual: On Demand',
-      'Best For — Traditional: Large Teams | Coworking: Hybrid | Virtual: Startups & Remote',
+      'Initial Investment, Traditional: Very High | Coworking: Medium | Virtual: Low',
+      'Monthly Cost, Traditional: High | Coworking: Moderate | Virtual: Affordable',
+      'GST Registration, Traditional: ✔ | Coworking: Depends | Virtual: ✔',
+      'Company Registration, Traditional: ✔ | Coworking: Depends | Virtual: ✔',
+      'Mail Handling, All three: ✔',
+      'Meeting Rooms, Traditional: ✔ | Coworking: ✔ | Virtual: On Demand',
+      'Best For, Traditional: Large Teams | Coworking: Hybrid | Virtual: Startups & Remote',
     ]},
 
     { h: 'How to Choose the Right Virtual Office Provider' },
@@ -529,15 +529,15 @@ export const citySpecificArticles = {
       'Check compliance support for GST and company registration',
       'Evaluate customer support responsiveness',
       'Review additional services (mail handling, meeting rooms, courier)',
-      'Understand pricing transparency — no hidden charges',
+      'Understand pricing transparency, no hidden charges',
       'Check Google reviews and client testimonials',
     ]},
 
     { h: 'Common Mistakes to Avoid' },
 
     { bullets: [
-      'Choosing based only on price — cheapest isn\'t always best',
-      'Ignoring location quality — address affects brand perception',
+      'Choosing based only on price, cheapest isn\'t always best',
+      'Ignoring location quality, address affects brand perception',
       'Not checking documentation completeness before purchase',
       'Overlooking hidden charges and renewal fees',
       'Selecting a provider without responsive support',
@@ -549,14 +549,14 @@ export const citySpecificArticles = {
       'Prime commercial locations across Gurgaon (Cyber City, Golf Course Road, Udyog Vihar, MG Road, Sohna Road, Sector 44)',
       'Complete GST & company registration documentation',
       'Transparent pricing with no hidden charges',
-      'Fast documentation — ready in 2–3 business days',
+      'Fast documentation, ready in 2–3 business days',
       'Dedicated customer assistance & relationship manager',
       'Flexible solutions for startups, consultants, and enterprises',
       '98.7% first-attempt approval rate',
       '4.9/5 Google rating from 5,000+ businesses',
     ]},
 
-    { quote: '"A Virtual Office in Gurgaon is more than just an affordable business address — it\'s a strategic solution for entrepreneurs and businesses that want to establish a strong presence in one of India\'s most influential commercial cities without the financial burden of a traditional office."' },
+    { quote: '"A Virtual Office in Gurgaon is more than just an affordable business address, it\'s a strategic solution for entrepreneurs and businesses that want to establish a strong presence in one of India\'s most influential commercial cities without the financial burden of a traditional office."' },
 
     { h: 'Ready to Establish Your Business in Gurgaon?' },
 

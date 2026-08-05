@@ -5,7 +5,7 @@ import { useEffect } from 'react'
  * Cleans up on unmount (SPA page transitions).
  *
  * Props:
- *   schemas — a single schema object OR an array of schema objects
+ *   schemas, a single schema object OR an array of schema objects
  *
  * Usage:
  *   <SchemaScript schemas={[orgSchema, webPageSchema]} />

@@ -10,13 +10,13 @@ import ArticleBlocks from './ArticleBlocks'
  * and the FAQ section on city, space, coworking, and service pages.
  *
  * Props:
- *   title    — main heading (required)
- *   accent   — word in title to highlight with gradient (optional)
- *   eyebrow  — pill label above heading (default: "Guide")
- *   subtitle — short description below heading (optional)
- *   blocks   — content array for ArticleBlocks (see ArticleBlocks.jsx for format)
- *   lead     — style first paragraph as editorial lead (default: true)
- *   bg       — background class (default: 'bg-white')
+ *   title   , main heading (required)
+ *   accent  , word in title to highlight with gradient (optional)
+ *   eyebrow , pill label above heading (default: "Guide")
+ *   subtitle, short description below heading (optional)
+ *   blocks  , content array for ArticleBlocks (see ArticleBlocks.jsx for format)
+ *   lead    , style first paragraph as editorial lead (default: true)
+ *   bg      , background class (default: 'bg-white')
  *
  * Content format (blocks array):
  *   - "string"            → paragraph

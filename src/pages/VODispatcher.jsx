@@ -94,7 +94,7 @@ export default function VODispatcher() {
     }
 
     // Pattern B: /virtual-office/{state}/{city} where city is unknown
-    // but first IS a state — might be a new city, show CityTemplate anyway
+    // but first IS a state, might be a new city, show CityTemplate anyway
     if (firstIsState) {
       const city = resolveToCity(second)
       if (city && city.slug !== second) {
@@ -112,7 +112,7 @@ export default function VODispatcher() {
       if (isService(second)) {
         return <Navigate to={`/virtual-office/${stateSlug}/${cityFromFirst.slug}/${second}`} replace />
       }
-      // It's a space — redirect to canonical 3-segment URL
+      // It's a space, redirect to canonical 3-segment URL
       return <Navigate to={`/virtual-office/${stateSlug}/${cityFromFirst.slug}/${second}`} replace />
     }
 
@@ -136,10 +136,10 @@ export default function VODispatcher() {
       return <Navigate to={`/virtual-office/${stateSlug}/${city.slug}`} replace />
     }
 
-    // Unknown slug — might be a state alias or typo, show not found
+    // Unknown slug, might be a state alias or typo, show not found
     return <StateTemplate />
   }
 
-  // No params — shouldn't reach here (handled by /virtual-office route)
+  // No params, shouldn't reach here (handled by /virtual-office route)
   return null
 }

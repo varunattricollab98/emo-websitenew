@@ -1,5 +1,5 @@
 // CA & Compliance service catalog for the CA Services page.
-// EaseMyOffice is a business-compliance facilitation platform — every filing is
+// EaseMyOffice is a business-compliance facilitation platform, every filing is
 // prepared and reviewed by qualified partner professionals (CA / CS / experts).
 // Names are client-facing and framed to be honest & compliant (no guarantees,
 // no exaggerated claims, no disparaging comparisons).
@@ -46,7 +46,7 @@ export const caServices = [
     turn: 'Monthly',
   },
   {
-    name: 'GST Filing — Composition Scheme',
+    name: 'GST Filing, Composition Scheme',
     cat: 'gst',
     desc: 'Simplified returns for eligible small businesses under the composition scheme.',
     turn: 'Quarterly',
@@ -64,13 +64,13 @@ export const caServices = [
     turn: '5–10 days',
   },
   {
-    name: 'Income Tax Return — Individual (ITR)',
+    name: 'Income Tax Return, Individual (ITR)',
     cat: 'gst',
     desc: 'ITR filing for salaried individuals and professionals, reviewed by experts.',
     turn: '1–3 days',
   },
   {
-    name: 'Income Tax Return — Business (ITR)',
+    name: 'Income Tax Return, Business (ITR)',
     cat: 'gst',
     desc: 'ITR for proprietors, firms and companies with balance-sheet support.',
     turn: '3–7 days',
@@ -86,7 +86,7 @@ export const caServices = [
   {
     name: 'Private Limited Company Registration',
     cat: 'registration',
-    desc: 'End-to-end incorporation — DSC, DIN, name approval, MOA/AOA, PAN & TAN.',
+    desc: 'End-to-end incorporation, DSC, DIN, name approval, MOA/AOA, PAN & TAN.',
     turn: '7–14 days',
     popular: true,
   },
@@ -103,7 +103,7 @@ export const caServices = [
     turn: '5–10 days',
   },
   {
-    name: 'Partnership Firm — PAN & TAN',
+    name: 'Partnership Firm, PAN & TAN',
     cat: 'registration',
     desc: 'Quick-start partnership with deed plus PAN & TAN application only.',
     turn: '3–7 days',
@@ -153,19 +153,19 @@ export const caServices = [
     turn: '5–15 days',
   },
   {
-    name: 'FSSAI Registration — Basic',
+    name: 'FSSAI Registration, Basic',
     cat: 'licenses',
     desc: 'Food license for small food businesses with limited turnover.',
     turn: '7–15 days',
   },
   {
-    name: 'FSSAI Registration — State',
+    name: 'FSSAI Registration, State',
     cat: 'licenses',
     desc: 'State FSSAI license for mid-sized food businesses and manufacturers.',
     turn: '15–30 days',
   },
   {
-    name: 'FSSAI Registration — Central',
+    name: 'FSSAI Registration, Central',
     cat: 'licenses',
     desc: 'Central FSSAI license for large or multi-state food operations.',
     turn: '30–60 days',
@@ -247,7 +247,7 @@ export const caPackages = [
 export const caFaqs = [
   {
     q: 'What CA and compliance services does EaseMyOffice offer?',
-    a: 'We cover the full compliance lifecycle — GST registration and return filing, income-tax filing, company, LLP and partnership registration, MSME/Udyam, Import Export Code, trademark, FSSAI, trade license, Shop & Establishment, professional tax and more. Every service is prepared and reviewed by qualified partner professionals.',
+    a: 'We cover the full compliance lifecycle, GST registration and return filing, income-tax filing, company, LLP and partnership registration, MSME/Udyam, Import Export Code, trademark, FSSAI, trade license, Shop & Establishment, professional tax and more. Every service is prepared and reviewed by qualified partner professionals.',
   },
   {
     q: 'Are the filings handled by qualified professionals?',
@@ -255,7 +255,7 @@ export const caFaqs = [
   },
   {
     q: 'How does the process work?',
-    a: 'It is simple and fully online: share your requirement, upload your documents, and your dedicated manager coordinates preparation, review and filing with the concerned department — keeping you updated at every step.',
+    a: 'It is simple and fully online: share your requirement, upload your documents, and your dedicated manager coordinates preparation, review and filing with the concerned department, keeping you updated at every step.',
   },
   {
     q: 'Do I need to visit an office in person?',
@@ -263,7 +263,7 @@ export const caFaqs = [
   },
   {
     q: 'How is pricing decided?',
-    a: 'Pricing depends on the service, your entity type and transaction volume. Our per-service and package pricing is transparent, with the exact quote confirmed after a quick review of your requirement — no hidden charges.',
+    a: 'Pricing depends on the service, your entity type and transaction volume. Our per-service and package pricing is transparent, with the exact quote confirmed after a quick review of your requirement, no hidden charges.',
   },
   {
     q: 'Can you manage ongoing monthly compliance for my business?',
