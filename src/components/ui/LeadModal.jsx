@@ -88,7 +88,10 @@ export default function LeadModal({ open, config = {}, onClose }) {
             aria-hidden="true"
           />
 
-          {/* card */}
+          {/* card. w-[min(32rem,100%)] rather than w-full + max-w-lg: `fixed`
+              resolves against the layout viewport, so if a page ever overflows
+              horizontally the card would otherwise render wider than the
+              screen and need sideways scrolling to reach. */}
           <motion.div
             role="dialog"
             aria-modal="true"
@@ -96,7 +99,7 @@ export default function LeadModal({ open, config = {}, onClose }) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.98 }}
             transition={{ duration: 0.25, ease: 'easeOut' }}
-            className="relative z-10 max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-3xl bg-white shadow-card-hover"
+            className="relative z-10 max-h-[92vh] w-[min(32rem,100%)] overflow-y-auto rounded-3xl bg-white shadow-card-hover"
           >
             <span className="pointer-events-none absolute inset-x-0 top-0 h-1.5 rounded-t-3xl bg-gradient-to-r from-gold via-gold-dark to-gold" />
 

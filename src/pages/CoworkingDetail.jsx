@@ -244,7 +244,10 @@ export default function CoworkingDetail() {
       <section className="bg-white pt-8 lg:pt-10">
         <div className="container-custom grid gap-8 lg:grid-cols-2">
           {/* gallery */}
+          {/* min-w-0: grid items default to a min-content width floor, which
+              lets the thumbnail strip widen the page on phones */}
           <motion.div
+            className="min-w-0"
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
@@ -286,6 +289,7 @@ export default function CoworkingDetail() {
 
           {/* info */}
           <motion.div
+            className="min-w-0"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
@@ -324,7 +328,7 @@ export default function CoworkingDetail() {
             </div>
 
             <div className="mt-5 flex flex-wrap items-end gap-x-6 gap-y-2">
-              <div className="flex items-end gap-1">
+              <div className="flex flex-wrap items-end gap-x-1 gap-y-1">
                 <span className="text-sm font-medium text-slate-400">Dedicated desk</span>
                 <span className="ml-1 text-3xl font-extrabold text-navy-dark">
                   ₹{sp.price.toLocaleString('en-IN')}
@@ -427,7 +431,8 @@ export default function CoworkingDetail() {
       <section className="section-padding bg-surface-light">
         <div className="container-custom">
           <SectionHeading eyebrow="Amenities" title="What's Available Here" accent="Available" />
-          <div className="mx-auto mt-12 grid max-w-4xl grid-cols-2 gap-3 sm:grid-cols-3">
+          {/* Amenity names come from the DB/CSV, so one column on phones */}
+          <div className="mx-auto mt-12 grid max-w-4xl grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
             {amenities.map((a) => (
               <div
                 key={a}
@@ -436,7 +441,7 @@ export default function CoworkingDetail() {
                 <span className="inline-flex h-7 w-7 flex-none items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 text-white">
                   <Check className="h-4 w-4" strokeWidth={3} />
                 </span>
-                <span className="text-sm font-semibold text-navy-dark">{a}</span>
+                <span className="min-w-0 break-words text-sm font-semibold text-navy-dark">{a}</span>
               </div>
             ))}
           </div>
@@ -519,7 +524,7 @@ export default function CoworkingDetail() {
                   </span>
                   <h3 className="mt-4 text-lg font-bold text-navy-dark">{p.name}</h3>
                   <p className="mt-1 flex-1 text-sm text-slate-500">{p.note}</p>
-                  <div className="mt-4 flex items-end gap-1">
+                  <div className="mt-4 flex flex-wrap items-end gap-x-1 gap-y-1">
                     <span className="mb-1 text-lg font-bold text-navy-dark">₹</span>
                     <span className="text-3xl font-extrabold leading-none text-navy-dark">
                       {Number(p.price).toLocaleString('en-IN')}

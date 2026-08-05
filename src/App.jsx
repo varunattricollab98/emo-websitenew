@@ -60,7 +60,10 @@ export default function App() {
           <AutoLeadPopup />
           <SchemaScript schemas={[organizationSchema(), webSiteSchema()]} />
           <Navbar />
-          <main className="flex-1 pt-16 lg:pt-20">
+          {/* min-w-0: as a column flex item, main's width would otherwise be
+              floored at its min-content size, so any non-wrapping row inside
+              a page pushes the document wider than the screen. */}
+          <main className="min-w-0 flex-1 pt-16 lg:pt-20">
             <ErrorBoundary>
             <Suspense fallback={<RouteFallback />}>
               <Routes>
