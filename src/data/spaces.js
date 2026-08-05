@@ -221,7 +221,8 @@ export function getSpaces(slug) {
     }
     return merged
   }
-  return GENERIC.map((area, i) => s(area, 799, 4.7, [T.gst, T.co, T.mail], i))
+  // No generic/fake listings — only show real data from Supabase
+  return []
 }
 
 

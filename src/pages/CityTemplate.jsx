@@ -82,8 +82,8 @@ export default function CityTemplate() {
   const basePrice = extra?.price || 899
   const { rows, loaded } = useSupabaseSpaces()
   const dbSpaces = useSpacesForCity(citySlug)
-  // While Supabase is loading, show a spinner; once loaded, show DB data (or GENERIC fallback)
-  const spaces = loaded ? (dbSpaces.length ? dbSpaces : getSpaces(citySlug)) : []
+  // While Supabase is loading, show a spinner; once loaded, show only real DB data
+  const spaces = loaded ? dbSpaces : []
   const addresses = extra?.addresses || Math.max(spaces.length, 6)
 
   // city description (custom from descriptions.js, else a sensible default)
