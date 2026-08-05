@@ -1,8 +1,7 @@
 import { useState, useRef, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { resolveCity, resolveState } from '../../utils/resolveCity'
-import { voCities, slugifySpace, cityUrl, spaceUrl, slugifyState } from '../../data/spaces'
+import { voCities, slugifySpace, cityUrl, spaceUrl } from '../../data/spaces'
 import { getSupabaseSpaces, onLoad } from '../../lib/spacesStore'
 import {
   MapPin,
@@ -189,33 +188,9 @@ export default function HeroSearch() {
     const loc = location.trim()
     if (!loc) return navigate(serviceRoutes[service] || '/virtual-office')
 
-    // Virtual Office + a recognised city → that city's page; a state → all its spaces
+    // Virtual Office → always navigate to the search results page
     if (service === 'virtual-office') {
-      const c = resolveCity(loc)
-      if (c) return navigate(cityUrl(c.slug))
-      const st = resolveState(loc)
-      if (st) return navigate(`/virtual-office/${slugifyState(st)}`)
-
-      // Try matching a space/area name (keyword search) → go to its detail page
-      const q = loc.toLowerCase()
-      const dbSpaces = getSupabaseSpaces()
-      const match = dbSpaces.find(
-        (s) =>
-          s.address_area?.toLowerCase().includes(q) ||
-          s.space_name?.toLowerCase().includes(q) ||
-          s.listing_address?.toLowerCase().includes(q)
-      )
-      if (match) {
-        const citySlug = slugifySpace(match.address_city)
-        const areaSlug = slugifySpace(match.address_area)
-        return navigate(spaceUrl(citySlug, areaSlug))
-      }
-
-      // Also check static city list for partial area matches in city names
-      const cityByArea = voCities.find((c) => c.name.toLowerCase().includes(q))
-      if (cityByArea) return navigate(cityUrl(cityByArea.slug))
-
-      return navigate(`/virtual-office?city=${encodeURIComponent(loc)}`)
+      return navigate(`/search?q=${encodeURIComponent(loc)}`)
     }
 
     // Coworking, try keyword match against space names
