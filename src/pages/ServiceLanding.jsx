@@ -466,9 +466,7 @@ export default function ServiceLanding() {
       {/* Blog Article, deep-dive guide for the service */}
       <BlogArticleSection
         title={dbArticle?.title || `${svc.name} in ${cityName}: Complete Guide`}
-        accent={cityName}
         eyebrow={dbArticle?.eyebrow || 'Guide'}
-        subtitle={dbArticle?.subtitle || `Everything you need to know about ${svc.name.toLowerCase()} in ${cityName}, process, documents, pricing, and compliance.`}
         blocks={serviceArticleBlocks}
         bg="bg-white"
       />

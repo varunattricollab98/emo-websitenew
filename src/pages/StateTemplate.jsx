@@ -333,9 +333,7 @@ export default function StateTemplate() {
       {/* Blog Article */}
       <BlogArticleSection
         title={dbArticle?.title || `Virtual Office in ${stateName}: Complete Guide`}
-        accent={stateName}
         eyebrow={dbArticle?.eyebrow || 'Guide'}
-        subtitle={dbArticle?.subtitle || `Everything you need to know about getting a virtual office in ${stateName} for GST registration, company incorporation, and business growth.`}
         blocks={articleBlocks}
         bg="bg-white"
       />

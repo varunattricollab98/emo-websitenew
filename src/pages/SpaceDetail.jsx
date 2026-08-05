@@ -809,9 +809,7 @@ export default function SpaceDetail() {
       {/* ===== Blog Article ===== */}
       <BlogArticleSection
         title={dbArticle?.title || `Virtual Office in ${areaName}, ${cityName}: Complete Guide`}
-        accent={areaName}
         eyebrow={dbArticle?.eyebrow || 'Guide'}
-        subtitle={dbArticle?.subtitle || `Everything you need to know about setting up a virtual office in ${areaName}, ${cityName} for GST, company registration, and business compliance.`}
         blocks={spaceArticleBlocks}
         bg="bg-white"
       />

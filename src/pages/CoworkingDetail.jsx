@@ -621,9 +621,7 @@ export default function CoworkingDetail() {
       {/* ===== Blog Article ===== */}
       <BlogArticleSection
         title={dbArticle?.title || `${sp.name}, ${cityName}: Coworking Guide`}
-        accent={sp.name}
         eyebrow={dbArticle?.eyebrow || 'Guide'}
-        subtitle={dbArticle?.subtitle || `A complete guide to coworking at ${sp.name} in ${sp.locality}, ${cityName}, plans, amenities, and everything you need to know.`}
         blocks={coworkingArticleBlocks}
         bg="bg-white"
       />

@@ -551,9 +551,7 @@ export default function CityTemplate() {
       {/* Blog / Long-form article, dynamic content from data or Supabase */}
       <BlogArticleSection
         title={dbArticle?.title || `Virtual Office in ${cityName}: Complete Guide`}
-        accent={cityName}
         eyebrow={dbArticle?.eyebrow || 'Guide'}
-        subtitle={dbArticle?.subtitle || `Everything you need to know about getting a virtual office address in ${cityName} for GST registration, company incorporation, and business growth.`}
         blocks={cityArticleBlocks}
         bg="bg-white"
       />

@@ -1,5 +1,4 @@
 import { FileText } from 'lucide-react'
-import SectionHeading from './SectionHeading'
 import Reveal from './Reveal'
 import ArticleBlocks from './ArticleBlocks'
 
@@ -9,11 +8,13 @@ import ArticleBlocks from './ArticleBlocks'
  * Designed to sit between the "Verified Addresses" (or similar trust section)
  * and the FAQ section on city, space, coworking, and service pages.
  *
+ * The heading lives inside the article card only. There used to be a second,
+ * larger SectionHeading above the card repeating the same title, which read as
+ * a duplicate on every page, so it was removed.
+ *
  * Props:
- *   title   , main heading (required)
- *   accent  , word in title to highlight with gradient (optional)
- *   eyebrow , pill label above heading (default: "Guide")
- *   subtitle, short description below heading (optional)
+ *   title   , heading shown in the card header (required)
+ *   eyebrow , small label above the heading (default: "Guide")
  *   blocks  , content array for ArticleBlocks (see ArticleBlocks.jsx for format)
  *   lead    , style first paragraph as editorial lead (default: true)
  *   bg      , background class (default: 'bg-white')
@@ -29,9 +30,7 @@ import ArticleBlocks from './ArticleBlocks'
  */
 export default function BlogArticleSection({
   title,
-  accent,
   eyebrow = 'Guide',
-  subtitle,
   blocks = [],
   lead = true,
   bg = 'bg-white',
@@ -42,14 +41,7 @@ export default function BlogArticleSection({
   return (
     <section className={`section-padding ${bg}`}>
       <div className="container-custom">
-        <SectionHeading
-          eyebrow={eyebrow}
-          title={title}
-          accent={accent}
-          subtitle={subtitle}
-        />
-
-        <Reveal className="mx-auto mt-12 max-w-4xl">
+        <Reveal className="mx-auto max-w-4xl">
           <article className="relative overflow-hidden rounded-3xl border border-primary-100/70 bg-white p-7 shadow-card sm:p-10">
             {/* top accent bar */}
             <span className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary via-primary-400 to-gold" />
