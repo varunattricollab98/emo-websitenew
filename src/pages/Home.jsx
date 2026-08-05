@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, lazy, Suspense } from 'react'
 import { useLocation } from 'react-router-dom'
 import HeroSearch from '../components/home/HeroSearch'
 import LovedLocations from '../components/home/LovedLocations'
@@ -6,15 +6,17 @@ import TrustBar from '../components/home/TrustBar'
 import WhyChooseHome from '../components/home/WhyChooseHome'
 import ServicesProvided from '../components/home/ServicesProvided'
 import TopCoworking from '../components/home/TopCoworking'
-import ThreeStepSetup from '../components/home/ThreeStepSetup'
-import ChooseByRequirement from '../components/home/ChooseByRequirement'
-import TransparentPricing from '../components/home/TransparentPricing'
-import WhyVirtualOffice from '../components/home/WhyVirtualOffice'
-import MarketplacesGST from '../components/home/MarketplacesGST'
-import HomeFAQ from '../components/home/HomeFAQ'
-import BookYourSpace from '../components/home/BookYourSpace'
 import SchemaScript from '../components/seo/SchemaScript'
 import { localBusinessSchema, webPageSchema } from '../components/seo/schemas'
+
+// Below-fold sections — lazy loaded for faster initial paint
+const ThreeStepSetup = lazy(() => import('../components/home/ThreeStepSetup'))
+const ChooseByRequirement = lazy(() => import('../components/home/ChooseByRequirement'))
+const TransparentPricing = lazy(() => import('../components/home/TransparentPricing'))
+const WhyVirtualOffice = lazy(() => import('../components/home/WhyVirtualOffice'))
+const MarketplacesGST = lazy(() => import('../components/home/MarketplacesGST'))
+const HomeFAQ = lazy(() => import('../components/home/HomeFAQ'))
+const BookYourSpace = lazy(() => import('../components/home/BookYourSpace'))
 
 export default function Home() {
   const { hash } = useLocation()
@@ -47,13 +49,15 @@ export default function Home() {
       <WhyChooseHome />
       <ServicesProvided />
       <TopCoworking />
-      <ThreeStepSetup />
-      <ChooseByRequirement />
-      <TransparentPricing />
-      <WhyVirtualOffice />
-      <MarketplacesGST />
-      <HomeFAQ />
-      <BookYourSpace />
+      <Suspense fallback={null}>
+        <ThreeStepSetup />
+        <ChooseByRequirement />
+        <TransparentPricing />
+        <WhyVirtualOffice />
+        <MarketplacesGST />
+        <HomeFAQ />
+        <BookYourSpace />
+      </Suspense>
     </>
   )
 }

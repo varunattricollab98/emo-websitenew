@@ -17,7 +17,7 @@ export function SpacesProvider({ children }) {
     console.log('[SpacesContext] Fetching spaces from Supabase...')
     supabase
       .from('spaces')
-      .select('*')
+      .select('address_area,address_city,address_state,pricing_monthly,pricing_gst,pricing_br,pricing_ma,rating,badge,featured_image,space_images,property_feature,description,overview,full_address,listing_address,processing_time,property_type,map_query,map_location,highlights,space_name,is_trending')
       .eq('is_active', true)
       .order('rating', { ascending: false })
       .limit(500)
