@@ -58,9 +58,13 @@ export default function CityTemplate() {
   const basePrice = extra?.price || 899
   const { rows, loaded } = useSupabaseSpaces()
   const dbSpaces = useSpacesForCity(citySlug)
-  // While Supabase is loading, show a spinner; once loaded, show DB data (or GENERIC fallback)
+  // While Supabase is loading show skeleton cards; once loaded, show DB data (or GENERIC fallback)
   const spaces = loaded ? (dbSpaces.length ? dbSpaces : getSpaces(citySlug)) : []
   const addresses = extra?.addresses || Math.max(spaces.length, 6)
+  // Hide the listings heading + grid entirely for cities with no spaces in the DB,
+  // so we never show an empty grid under a "Locations" heading. Still shown while
+  // loading, where skeleton cards stand in for the real cards.
+  const showListings = !loaded || spaces.length > 0
 
   // city description (custom from descriptions.js, else a sensible default)
   const cityDescBlocks = (() => {
@@ -205,12 +209,50 @@ export default function CityTemplate() {
         <div className="pointer-events-none absolute inset-0 tech-dots opacity-40 [mask-image:radial-gradient(ellipse_70%_55%_at_50%_20%,#000,transparent)]" />
         <div className="pointer-events-none absolute -right-24 top-24 h-72 w-72 rounded-full bg-primary-200/20 blur-3xl" />
         <div className="container-custom relative">
-          <SectionHeading
-            eyebrow="Locations"
-            title={`Virtual Office Locations in ${cityName}`}
-            accent={cityName}
-            subtitle={`Verified addresses across ${cityName}'s top commercial districts — pick the one that fits your business.`}
-          />
+          {showListings && (
+            <SectionHeading
+              eyebrow="Locations"
+              title={`Virtual Office Locations in ${cityName}`}
+              accent={cityName}
+              subtitle={`Verified addresses across ${cityName}'s top commercial districts — pick the one that fits your business.`}
+            />
+          )}
+
+          {/* Loading state: skeleton cards mirroring the real card shape */}
+          {!loaded && (
+            <div
+              className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
+              aria-busy="true"
+              aria-label={`Loading virtual office locations in ${cityName}`}
+            >
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div
+                  key={`skeleton-${i}`}
+                  aria-hidden="true"
+                  className="flex h-full flex-col overflow-hidden rounded-2xl border border-primary-100/60 bg-white shadow-card"
+                >
+                  <div className="h-40 animate-pulse bg-primary-100/70" />
+                  <div className="flex flex-1 flex-col p-5">
+                    <div className="h-4 w-3/4 animate-pulse rounded bg-slate-200" />
+                    <div className="mt-2 h-3 w-1/3 animate-pulse rounded bg-slate-100" />
+                    <div className="mt-3 flex gap-1.5">
+                      <div className="h-5 w-16 animate-pulse rounded-full bg-primary-50" />
+                      <div className="h-5 w-12 animate-pulse rounded-full bg-primary-50" />
+                    </div>
+                    <div className="mt-4 flex flex-1 items-end justify-between">
+                      <div>
+                        <div className="h-2.5 w-8 animate-pulse rounded bg-slate-100" />
+                        <div className="mt-1.5 h-5 w-20 animate-pulse rounded bg-slate-200" />
+                      </div>
+                      <div className="h-8 w-20 animate-pulse rounded-lg bg-primary-50" />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {spaces.length > 0 && (
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {spaces.map((sp, i) => (
               <Reveal key={`${sp.name}-${i}`} delay={(i % 4) * 0.05}>
@@ -278,6 +320,7 @@ export default function CityTemplate() {
               </Reveal>
             ))}
           </div>
+          )}
 
           {/* cluster links → service landing pages (pillar → cluster, SEO) */}
           <div className="mt-12">
