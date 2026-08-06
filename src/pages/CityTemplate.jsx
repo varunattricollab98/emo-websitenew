@@ -275,24 +275,6 @@ export default function CityTemplate() {
         </div>
       </section>
 
-      {/* About virtual offices in this city (editable description) */}
-      <section className="section-padding bg-white">
-        <div className="container-custom max-w-3xl">
-          <SectionHeading
-            align="left"
-            eyebrow={`About ${cityName}`}
-            title={`Virtual Office in ${cityName}`}
-            accent={cityName}
-          />
-          <div className="mt-6">
-            <ArticleBlocks blocks={cityDescBlocks} />
-          </div>
-        </div>
-      </section>
-
-      {/* Auto-rolling trusted-by brands */}
-      <TrustBar />
-
       {/* Localities / spaces in this city */}
       <section className="section-padding relative overflow-hidden bg-white">
         <div className="pointer-events-none absolute inset-0 tech-dots opacity-40 [mask-image:radial-gradient(ellipse_70%_55%_at_50%_20%,#000,transparent)]" />
@@ -392,6 +374,24 @@ export default function CityTemplate() {
           </div>
         </div>
       </section>
+
+      {/* About virtual offices in this city (editable description) */}
+      <section className="section-padding bg-surface-light">
+        <div className="container-custom max-w-3xl">
+          <SectionHeading
+            align="left"
+            eyebrow={`About ${cityName}`}
+            title={`Virtual Office in ${cityName}`}
+            accent={cityName}
+          />
+          <div className="mt-6">
+            <ArticleBlocks blocks={cityDescBlocks} />
+          </div>
+        </div>
+      </section>
+
+      {/* Auto-rolling trusted-by brands */}
+      <TrustBar />
 
       {/* Plans */}
       <section className="section-padding bg-surface-light">
