@@ -182,6 +182,19 @@ Your team works from anywhere. Your business is registered in Mumbai. These are 
 
 # Traditional Office vs Coworking vs Virtual Office
 
+| Feature | Traditional Office | Coworking Space | Virtual Office |
+|---|---|---|---|
+| Initial Investment | High | Medium | Low |
+| Monthly Rent | High | Moderate | Affordable |
+| Security Deposit | Required | Often Required | Usually Minimal |
+| Business Address | ✔ | ✔ | ✔ |
+| GST Registration | ✔ | Depends on Provider | ✔ |
+| Company Registration | ✔ | Depends on Provider | ✔ |
+| Mail Handling | ✔ | ✔ | ✔ |
+| Dedicated Workspace | ✔ | Shared | Optional |
+| Maintenance Costs | High | Included | None |
+| Flexibility | Low | Medium | High |
+
 **Traditional office in Mumbai**
 
 Highest cost by a wide margin. Long lock-in, typically three to five years. Large security deposit. You handle fit-out, maintenance, utilities, and staffing. Makes sense when you have a substantial team that genuinely needs to be co-located daily, or when client footfall is central to your business.
