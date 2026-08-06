@@ -288,13 +288,13 @@ Providers who cannot do these things are the ones whose clients face rejections.
 
 ## The GST Registration Process
 
-1. Select a virtual office plan that includes GST documentation
-2. Submit your KYC documents
-3. Receive the agreement, NOC, and utility bill
-4. Your CA files Form GST REG-01 on the GST portal with these documents attached
-5. An Application Reference Number (ARN) is generated
-6. The officer reviews the application and may raise queries or schedule verification
-7. GSTIN is issued, typically within seven to fifteen working days
+- **Step 1** Select a virtual office plan that includes GST documentation.
+- **Step 2** Submit your KYC documents.
+- **Step 3** Receive the agreement, NOC, and utility bill.
+- **Step 4** Your CA files Form GST REG-01 on the GST portal with these documents attached.
+- **Step 5** An Application Reference Number (ARN) is generated.
+- **Step 6** The officer reviews the application and may raise queries or schedule verification.
+- **Step 7** GSTIN is issued, typically within seven to fifteen working days.
 
 ## Advantages Over a Residential Address
 
