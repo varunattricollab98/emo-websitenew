@@ -38,7 +38,6 @@ const Terms = lazy(() => import('./pages/Terms'))
 const RefundPolicy = lazy(() => import('./pages/RefundPolicy'))
 const Disclaimer = lazy(() => import('./pages/Disclaimer'))
 const CookiePolicy = lazy(() => import('./pages/CookiePolicy'))
-const SearchResults = lazy(() => import('./pages/SearchResults'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 
 // Lightweight fallback while a route chunk loads (no layout shift).
@@ -92,7 +91,6 @@ export default function App() {
                 <Route path="/refund-policy" element={<RefundPolicy />} />
                 <Route path="/disclaimer" element={<Disclaimer />} />
                 <Route path="/cookie-policy" element={<CookiePolicy />} />
-                <Route path="/search" element={<SearchResults />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
