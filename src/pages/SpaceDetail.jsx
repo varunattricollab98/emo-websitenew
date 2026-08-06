@@ -23,12 +23,15 @@ import Button from '../components/ui/Button'
 import SmartImage from '../components/ui/SmartImage'
 import FaqAccordion from '../components/ui/FaqAccordion'
 import ArticleBlocks from '../components/ui/ArticleBlocks'
-import { voCities, getSpaceBySlug, spaceStats } from '../data/spaces'
+import BlogArticleSection from '../components/ui/BlogArticleSection'
+import { voCities, getSpaceBySlug, spaceStats, cityUrl } from '../data/spaces'
 import { getCityBySlug } from '../data/cities'
 import { getSpaceDetail } from '../data/spaceDetails'
 import { useSpaceDetailFromDb, useSupabaseSpaces } from '../context/SpacesContext'
 import { getLocalityDescription, toBlocks } from '../data/descriptions'
 import { spaceFaqs as buildSpaceFaqs } from '../data/pageFaqs'
+import { spaceArticle } from '../data/blogArticles'
+import { useBlogArticle } from '../hooks/useBlogArticle'
 import TalkToExpert from '../components/ui/TalkToExpert'
 import { useLeadModal } from '../context/LeadModalContext'
 
@@ -63,10 +66,12 @@ export default function SpaceDetail() {
   const { openLeadModal } = useLeadModal()
 
   // Handle multiple route patterns:
-  // /virtual-office/:city/:space via CityOrSpace (first=city, second=space)
+  // /virtual-office/:state/:city/:space (new structure — first=state, second=city, third=space)
+  // /virtual-office/:city/:space (legacy — first=city, second=space)
   // /space/:city/:space (legacy)
-  const city = params.city || params.first || ''
-  const space = params.space || params.second || ''
+  const city = params.third ? params.second : (params.city || params.first || '')
+  const space = params.third || params.space || params.second || ''
+  const stateSlug = params.third ? params.first : ''
 
   // ── All hooks MUST be called unconditionally, before any early return ──
   const [activeImg, setActiveImg] = useState(null)
@@ -76,6 +81,7 @@ export default function SpaceDetail() {
   const dbDetail = useSpaceDetailFromDb(city, space)
   const detail = dbDetail || getSpaceDetail(city, space)
   const { loaded } = useSupabaseSpaces()
+  const dbArticle = useBlogArticle({ pageType: 'space', citySlug: city, areaSlug: space })
   const cityName = voCities.find((c) => c.slug === city)?.name || detail?.city || toTitle(city)
   const region = voCities.find((c) => c.slug === city)?.state || detail?.state || 'India'
 
@@ -169,6 +175,11 @@ export default function SpaceDetail() {
 
   const faqs = detail?.faqs?.length ? detail.faqs : buildSpaceFaqs(areaName, cityName, processingTime)
 
+  // Blog / long-form article blocks for the space guide section
+  const spaceArticleBlocks = dbArticle?.blocks?.length
+    ? dbArticle.blocks
+    : (detail?.articleBlocks || spaceArticle(areaName, cityName, region, processingTime))
+
   return (
     <>
       {/* Breadcrumb */}
@@ -178,7 +189,7 @@ export default function SpaceDetail() {
             Virtual Office
           </Link>
           <span>/</span>
-          <Link to={`/virtual-office/${city}`} className="hover:text-primary">
+          <Link to={cityUrl(city)} className="hover:text-primary">
             {cityName}
           </Link>
           <span>/</span>
@@ -710,7 +721,7 @@ export default function SpaceDetail() {
                   Book This Space <ArrowRight className="h-5 w-5" />
                 </button>
                 <Link
-                  to={`/virtual-office/${city}`}
+                  to={cityUrl(city)}
                   className="btn-base border-2 border-white/40 px-8 py-4 text-base text-white hover:bg-white/10"
                 >
                   <ArrowLeft className="h-4 w-4" />
@@ -761,6 +772,16 @@ export default function SpaceDetail() {
           </div>
         </div>
       </section>
+
+      {/* ===== Blog Article ===== */}
+      <BlogArticleSection
+        title={dbArticle?.title || `Virtual Office in ${areaName}, ${cityName} — Complete Guide`}
+        accent={areaName}
+        eyebrow={dbArticle?.eyebrow || 'Guide'}
+        subtitle={dbArticle?.subtitle || `Everything you need to know about setting up a virtual office in ${areaName}, ${cityName} for GST, company registration, and business compliance.`}
+        blocks={spaceArticleBlocks}
+        bg="bg-white"
+      />
 
       {/* ===== FAQ ===== */}
       <section className="section-padding bg-surface-light">

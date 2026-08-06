@@ -1,4 +1,4 @@
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, Navigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
   MapPin,
@@ -25,14 +25,18 @@ import SmartImage from '../components/ui/SmartImage'
 import TrustBar from '../components/home/TrustBar'
 import GoogleReviews from '../components/virtual-office/GoogleReviews'
 import ClientsStrip from '../components/virtual-office/ClientsStrip'
-import { voCities, getSpaces, slugifySpace } from '../data/spaces'
+import { voCities, getSpaces, slugifySpace, cityUrl, spaceUrl, getStateSlugForCity } from '../data/spaces'
+import { resolveCity } from '../utils/resolveCity'
 import { useSpacesForCity, useSupabaseSpaces } from '../context/SpacesContext'
 import { getCityBySlug } from '../data/cities'
 import { serviceOrder, serviceLandings } from '../data/serviceLandings'
 import { getCityDescription, toBlocks } from '../data/descriptions'
 import { cityFaqs as buildCityFaqs } from '../data/pageFaqs'
 import ArticleBlocks from '../components/ui/ArticleBlocks'
+import BlogArticleSection from '../components/ui/BlogArticleSection'
 import { useLeadModal } from '../context/LeadModalContext'
+import { cityArticle, getCityArticle } from '../data/blogArticles'
+import { useBlogArticle } from '../hooks/useBlogArticle'
 import TalkToExpert from '../components/ui/TalkToExpert'
 
 function toTitle(str = '') {
@@ -46,12 +50,30 @@ export default function CityTemplate() {
   const params = useParams()
   const { openLeadModal } = useLeadModal()
 
-  // Handle multiple route patterns:
-  // /virtual-office/:city (city only)
-  // /virtual-office/:first/:second via CityOrSpace (state/city — second is the city)
-  // /virtual-office/:state/:city (direct route)
+  // Handle multiple route patterns (new structure):
+  // /virtual-office/:state/:city → params.first=state, params.second=city (via VODispatcher)
+  // Legacy patterns still work via redirect
   const citySlug = params.second || params.city || params.first || ''
+  const stateSlug = params.second ? params.first : ''
   const vo = voCities.find((c) => c.slug === citySlug)
+
+  // Fetch blog article from Supabase (hook must be called before any early return)
+  const dbArticle = useBlogArticle({ pageType: 'city', citySlug })
+
+  // If the slug isn't recognised directly but matches via alias (e.g. "gurugram" → "gurgaon"),
+  // redirect to the canonical URL so the page renders correctly.
+  if (!vo) {
+    const resolved = resolveCity(citySlug)
+    if (resolved && resolved.slug !== citySlug) {
+      // Build the redirect path preserving any state prefix
+      const state = params.first && params.second ? params.first : null
+      const redirectPath = state
+        ? `/virtual-office/${state}/${resolved.slug}`
+        : `/virtual-office/${resolved.slug}`
+      return <Navigate to={redirectPath} replace />
+    }
+  }
+
   const extra = getCityBySlug(citySlug)
   const cityName = vo?.name || extra?.name || toTitle(citySlug)
   const region = vo?.state || extra?.region || 'India'
@@ -126,6 +148,10 @@ export default function CityTemplate() {
 
   // City-specific FAQs (shared with the prerender/SEO schema generator)
   const cityFaqs = buildCityFaqs(cityName, region, basePrice)
+
+  // Blog / long-form article blocks for the city guide section
+  // Priority: Supabase DB → city-specific hardcoded → default template
+  const cityArticleBlocks = dbArticle?.blocks?.length ? dbArticle.blocks : getCityArticle(citySlug, cityName, region)
 
   return (
     <>
@@ -258,7 +284,7 @@ export default function CityTemplate() {
               <Reveal key={`${sp.name}-${i}`} delay={(i % 4) * 0.05}>
                 <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-primary-100/60 bg-white shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover">
                   <Link
-                    to={`/virtual-office/${citySlug}/${slugifySpace(sp.name)}`}
+                    to={spaceUrl(citySlug, slugifySpace(sp.name))}
                     className="relative block h-40 overflow-hidden bg-primary-gradient"
                   >
                     <SmartImage
@@ -279,7 +305,7 @@ export default function CityTemplate() {
                   </Link>
                   <div className="flex flex-1 flex-col p-5">
                     <Link
-                      to={`/virtual-office/${citySlug}/${slugifySpace(sp.name)}`}
+                      to={spaceUrl(citySlug, slugifySpace(sp.name))}
                       className="text-base font-bold text-navy-dark transition-colors hover:text-primary"
                     >
                       {sp.name}
@@ -331,7 +357,7 @@ export default function CityTemplate() {
               {serviceOrder.map((slug) => (
                 <Link
                   key={slug}
-                  to={`/virtual-office/${citySlug}/${slug}`}
+                  to={spaceUrl(citySlug, slug)}
                   className="inline-flex items-center gap-2 rounded-full border border-primary-200 bg-white px-5 py-2.5 text-sm font-semibold text-navy-dark shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary hover:text-primary hover:shadow-card"
                 >
                   {serviceLandings[slug].name} in {cityName}
@@ -516,8 +542,18 @@ export default function CityTemplate() {
         </div>
       </section>
 
+      {/* Blog / Long-form article — dynamic content from data or Supabase */}
+      <BlogArticleSection
+        title={dbArticle?.title || `Virtual Office in ${cityName} — Complete Guide`}
+        accent={cityName}
+        eyebrow={dbArticle?.eyebrow || 'Guide'}
+        subtitle={dbArticle?.subtitle || `Everything you need to know about getting a virtual office address in ${cityName} for GST registration, company incorporation, and business growth.`}
+        blocks={cityArticleBlocks}
+        bg="bg-white"
+      />
+
       {/* FAQ */}
-      <section className="section-padding bg-white">
+      <section className="section-padding bg-surface-light">
         <div className="container-custom">
           <SectionHeading eyebrow="FAQ" title={`Virtual Office in ${cityName} — FAQs`} accent={cityName} />
           <Reveal className="mx-auto mt-12 max-w-3xl">

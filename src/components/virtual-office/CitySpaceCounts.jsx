@@ -3,6 +3,7 @@ import { MapPin, ArrowUpRight, Building2 } from 'lucide-react'
 import SectionHeading from '../ui/SectionHeading'
 import Reveal from '../ui/Reveal'
 import SmartImage from '../ui/SmartImage'
+import { cityUrl } from '../../data/spaces'
 import { cities } from '../../data/cities'
 
 const cityImg = {
@@ -35,7 +36,7 @@ export default function CitySpaceCounts() {
           {cities.map((c, i) => (
             <Reveal key={c.slug} delay={(i % 4) * 0.05}>
               <Link
-                to={`/virtual-office/${c.slug}`}
+                to={cityUrl(c.slug)}
                 className="group relative flex h-56 flex-col justify-end overflow-hidden rounded-2xl shadow-card ring-1 ring-navy-dark/10 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover"
               >
                 <SmartImage

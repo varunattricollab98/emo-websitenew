@@ -1,4 +1,4 @@
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, Navigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
   FileCheck2,
@@ -22,7 +22,13 @@ import Reveal from '../components/ui/Reveal'
 import Button from '../components/ui/Button'
 import FaqAccordion from '../components/ui/FaqAccordion'
 import ArticleBlocks from '../components/ui/ArticleBlocks'
-import { voCities, getSpaces, slugifySpace } from '../data/spaces'
+import BlogArticleSection from '../components/ui/BlogArticleSection'
+import SchemaScript from '../components/seo/SchemaScript'
+import { webPageSchema, breadcrumbSchema, faqSchema, serviceSchema } from '../components/seo/schemas'
+import { voCities, getSpaces, slugifySpace, cityUrl, spaceUrl, getStateSlugForCity } from '../data/spaces'
+import { resolveCity } from '../utils/resolveCity'
+import { serviceArticle } from '../data/blogArticles'
+import { useBlogArticle } from '../hooks/useBlogArticle'
 import { getCityBySlug } from '../data/cities'
 import { getServiceLanding, serviceOrder, serviceLandings } from '../data/serviceLandings'
 import { useLeadModal } from '../context/LeadModalContext'
@@ -45,14 +51,12 @@ const steps = [
 export default function ServiceLanding() {
   const params = useParams()
   const { locality } = params
-  // city param across all route shapes:
-  //   /virtual-office/:state/:city/:service → params.city
-  //   /virtual-office/:first/:second (2-seg service) → params.first
-  //   /space/:city/:service → params.city
-  const city = params.city || params.first || ''
-  // service slug across all route shapes:
-  //   :service (3-seg), :second (2-seg via CityOrSpace), :space (legacy)
-  const rawService = (params.service || params.second || params.space || '').toLowerCase()
+  // New URL structure: /virtual-office/:state/:city/:service (first=state, second=city, third=service)
+  // Legacy: /virtual-office/:city/:service, /space/:city/:service
+  const city = params.third ? params.second : (params.city || params.first || '')
+  const stateSlug = params.third ? params.first : ''
+  // service slug:
+  const rawService = (params.third || params.service || params.second || params.space || '').toLowerCase()
   const serviceSlug = rawService
     .replace(/gstregistration/i, 'gst-registration')
     .replace(/businessregistration/i, 'business-registration')
@@ -65,19 +69,18 @@ export default function ServiceLanding() {
   const svc = getServiceLanding(serviceSlug)
   const cityName = voCities.find((c) => c.slug === city)?.name || toTitle(city)
   const region = voCities.find((c) => c.slug === city)?.state || 'India'
+  const dbArticle = useBlogArticle({ pageType: 'service', citySlug: city, serviceSlug })
   const localityName = locality ? toTitle(locality) : ''
 
   if (!svc) {
-    return (
-      <section className="section-padding bg-white">
-        <div className="container-custom max-w-lg text-center">
-          <h1 className="text-2xl font-bold text-navy-dark">Page not found</h1>
-          <Button to={`/virtual-office/${city}`} className="mt-6">
-            Explore {cityName} <ArrowRight className="h-4 w-4" />
-          </Button>
-        </div>
-      </section>
-    )
+    // The 3rd URL segment isn't a known service → it's likely a space/area slug.
+    // e.g. /virtual-office/haryana/gurugram/golf-course-extension
+    //      state='haryana', city='gurugram', service='golf-course-extension'
+    // Resolve the city alias and redirect to the space detail page.
+    const resolved = resolveCity(city)
+    const actualCity = resolved?.slug || city
+    const spaceSlug = serviceSlug // the "service" param is actually the space slug
+    return <Navigate to={spaceUrl(actualCity, spaceSlug)} replace />
   }
 
   const Icon = iconMap[svc.icon] || FileCheck2
@@ -95,6 +98,11 @@ export default function ServiceLanding() {
 
   const otherServices = serviceOrder.filter((s) => s !== svc.slug)
 
+  // Blog / long-form article blocks for the service guide section
+  const serviceArticleBlocks = dbArticle?.blocks?.length
+    ? dbArticle.blocks
+    : (svc.articleBlocks || serviceArticle(svc.name, cityName, region))
+
   // ≥5 related internal links (pillar page + cluster) for SEO crawlability
   const topLocalities = (getSpaces(city) || []).slice(0, 3)
   const relatedLinks = [
@@ -107,8 +115,37 @@ export default function ServiceLanding() {
     { label: `Coworking in ${cityName}`, to: '/coworking' },
   ]
 
+  const breadcrumbItems = [
+    { name: 'Home', url: '/' },
+    { name: 'Virtual Office', url: '/virtual-office' },
+    { name: cityName, url: cityUrl(city) },
+    ...(localityName ? [{ name: localityName }] : []),
+    { name: svc.name },
+  ]
+
+  const serviceFaqs = svc.faqs(cityName)
+
+  const schemas = [
+    webPageSchema({
+      title: `${svc.name} in ${cityName} — EaseMyOffice`,
+      description: svc.lead(cityName),
+      url: spaceUrl(city, svc.slug),
+      breadcrumbs: breadcrumbItems,
+    }),
+    breadcrumbSchema(breadcrumbItems),
+    faqSchema(serviceFaqs),
+    serviceSchema({
+      name: svc.name,
+      description: svc.lead(cityName),
+      cityName,
+      url: spaceUrl(city, svc.slug),
+      price,
+    }),
+  ].filter(Boolean)
+
   return (
     <>
+      <SchemaScript schemas={schemas} />
       {/* Hero */}
       <section className="relative overflow-hidden bg-hero-gradient">
         <div className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full bg-primary-200/40 blur-3xl" />
@@ -116,11 +153,15 @@ export default function ServiceLanding() {
         <div className="container-custom relative py-12 lg:py-16">
           {/* breadcrumb */}
           <div className="flex flex-wrap items-center gap-1.5 text-sm text-slate-500">
+            <Link to="/" className="hover:text-primary">
+              Home
+            </Link>
+            <span>/</span>
             <Link to="/virtual-office" className="hover:text-primary">
               Virtual Office
             </Link>
             <span>/</span>
-            <Link to={`/virtual-office/${city}`} className="hover:text-primary">
+            <Link to={cityUrl(city)} className="hover:text-primary">
               {cityName}
             </Link>
             {localityName && (
@@ -178,7 +219,7 @@ export default function ServiceLanding() {
                 <Button onClick={openLead} size="lg">
                   Book Now <ArrowRight className="h-5 w-5" />
                 </Button>
-                <Button to={`/virtual-office/${city}`} variant="outline" size="lg">
+                <Button to={cityUrl(city)} variant="outline" size="lg">
                   Explore Spaces
                 </Button>
               </div>
@@ -367,7 +408,7 @@ export default function ServiceLanding() {
               return (
                 <Link
                   key={slug}
-                  to={`/virtual-office/${city}/${slug}`}
+                  to={spaceUrl(city, slug)}
                   className="group flex items-center gap-4 rounded-2xl border border-primary-100/70 bg-white p-5 shadow-soft transition-all hover:-translate-y-1 hover:border-primary/40 hover:shadow-card"
                 >
                   <span
@@ -406,7 +447,7 @@ export default function ServiceLanding() {
 
           <div className="mt-8 text-center">
             <Link
-              to={`/virtual-office/${city}`}
+              to={cityUrl(city)}
               className="inline-flex items-center gap-1.5 text-sm font-bold text-primary hover:text-primary-700"
             >
               View the full {cityName} guide
@@ -415,6 +456,16 @@ export default function ServiceLanding() {
           </div>
         </div>
       </section>
+
+      {/* Blog Article — deep-dive guide for the service */}
+      <BlogArticleSection
+        title={dbArticle?.title || `${svc.name} in ${cityName} — Complete Guide`}
+        accent={cityName}
+        eyebrow={dbArticle?.eyebrow || 'Guide'}
+        subtitle={dbArticle?.subtitle || `Everything you need to know about ${svc.name.toLowerCase()} in ${cityName} — process, documents, pricing, and compliance.`}
+        blocks={serviceArticleBlocks}
+        bg="bg-white"
+      />
 
       {/* FAQ */}
       <section className="section-padding bg-surface-light">
@@ -425,7 +476,7 @@ export default function ServiceLanding() {
             accent={cityName}
           />
           <Reveal className="mx-auto mt-12 max-w-3xl">
-            <FaqAccordion items={svc.faqs(cityName)} />
+            <FaqAccordion items={serviceFaqs} />
           </Reveal>
         </div>
       </section>

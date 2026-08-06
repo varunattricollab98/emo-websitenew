@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom'
-import { voCities } from '../data/spaces'
+import { voCities, cityAliases } from '../data/spaces'
 import { useSupabaseSpaces } from '../context/SpacesContext'
 import CityTemplate from './CityTemplate'
 import SpaceOrService from './SpaceOrService'
@@ -12,15 +12,25 @@ import SpaceOrService from './SpaceOrService'
  *   OR
  *   /virtual-office/:city/:space   (e.g. /virtual-office/gurgaon/golf-course-road)
  *
- * Logic: if "second" param is a known city slug → it's state/city → show CityTemplate
+ * Logic: if "second" param is a known city slug OR resolves to one via alias
+ *        → it's state/city → show CityTemplate
  *        otherwise → it's city/space → show SpaceDetail
  */
+function isCitySlugOrAlias(slug) {
+  if (voCities.some((c) => c.slug === slug)) return true
+  // Check aliases: "gurugram" → gurgaon, "bengaluru" → bangalore, etc.
+  const q = (slug || '').toLowerCase()
+  return voCities.some((c) =>
+    (cityAliases[c.slug] || []).some((a) => a === q)
+  )
+}
+
 export default function CityOrSpace() {
   const { first, second } = useParams()
   const { loaded } = useSupabaseSpaces()
 
-  // Check if "second" is a known city slug → state/city URL
-  const secondIsCity = voCities.some((c) => c.slug === second)
+  // Check if "second" is a known city slug or alias → state/city URL
+  const secondIsCity = isCitySlugOrAlias(second)
 
   if (secondIsCity) {
     return <CityTemplate />

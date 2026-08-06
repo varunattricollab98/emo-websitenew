@@ -23,8 +23,13 @@ import Reveal from '../components/ui/Reveal'
 import Button from '../components/ui/Button'
 import SmartImage from '../components/ui/SmartImage'
 import FaqAccordion from '../components/ui/FaqAccordion'
+import BlogArticleSection from '../components/ui/BlogArticleSection'
+import SchemaScript from '../components/seo/SchemaScript'
+import { webPageSchema, breadcrumbSchema, faqSchema } from '../components/seo/schemas'
 import { getCoworkingSpaceBySlug, slugifyCoworking } from '../data/coworkingSpaces'
 import { voCities, spaceStats } from '../data/spaces'
+import { coworkingArticle } from '../data/blogArticles'
+import { useBlogArticle } from '../hooks/useBlogArticle'
 import { useLeadModal } from '../context/LeadModalContext'
 
 const DEFAULT_GALLERY = [
@@ -65,6 +70,7 @@ export default function CoworkingDetail() {
   const sp = getCoworkingSpaceBySlug(city, space)
   const cityName = voCities.find((c) => c.slug === city)?.name || toTitle(city)
   const region = voCities.find((c) => c.slug === city)?.state || 'India'
+  const dbArticle = useBlogArticle({ pageType: 'coworking', citySlug: city, areaSlug: space })
 
   if (!sp) {
     return (
@@ -177,11 +183,40 @@ export default function CoworkingDetail() {
     },
   ]
 
+  // Blog / long-form article blocks for the coworking guide section
+  const coworkingArticleBlocks = dbArticle?.blocks?.length
+    ? dbArticle.blocks
+    : coworkingArticle(sp.name, sp.locality, cityName, sp.seats, sp.dayPass, sp.price)
+
+  const breadcrumbItems = [
+    { name: 'Home', url: '/' },
+    { name: 'Coworking', url: '/coworking' },
+    { name: cityName, url: `/coworking?city=${city}` },
+    { name: sp.name },
+  ]
+
+  const schemas = [
+    webPageSchema({
+      title: `${sp.name} — Coworking Space in ${sp.locality}, ${cityName}`,
+      description: `${sp.name} is a move-in-ready coworking space in ${sp.locality}, ${cityName} with flexible plans starting at ₹${sp.price}/mo.`,
+      url: `/coworking/${city}/${space}`,
+      breadcrumbs: breadcrumbItems,
+    }),
+    breadcrumbSchema(breadcrumbItems),
+    faqSchema(faqs),
+  ].filter(Boolean)
+
   return (
     <>
+      <SchemaScript schemas={schemas} />
+
       {/* Breadcrumb */}
       <div className="border-b border-primary-100 bg-white">
         <div className="container-custom flex flex-wrap items-center gap-1.5 py-4 text-sm text-slate-500">
+          <Link to="/" className="hover:text-primary">
+            Home
+          </Link>
+          <span>/</span>
           <Link to="/coworking" className="hover:text-primary">
             Coworking
           </Link>
@@ -571,6 +606,16 @@ export default function CoworkingDetail() {
           </div>
         </div>
       </section>
+
+      {/* ===== Blog Article ===== */}
+      <BlogArticleSection
+        title={dbArticle?.title || `${sp.name}, ${cityName} — Coworking Guide`}
+        accent={sp.name}
+        eyebrow={dbArticle?.eyebrow || 'Guide'}
+        subtitle={dbArticle?.subtitle || `A complete guide to coworking at ${sp.name} in ${sp.locality}, ${cityName} — plans, amenities, and everything you need to know.`}
+        blocks={coworkingArticleBlocks}
+        bg="bg-white"
+      />
 
       {/* ===== FAQ ===== */}
       <section className="section-padding bg-surface-light">

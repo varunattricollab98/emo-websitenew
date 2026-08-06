@@ -27,6 +27,8 @@ const SpaceDetail = lazy(() => import('./pages/SpaceDetail'))
 const SpaceOrService = lazy(() => import('./pages/SpaceOrService'))
 const CityOrSpace = lazy(() => import('./pages/CityOrSpace'))
 const ServiceLanding = lazy(() => import('./pages/ServiceLanding'))
+const StateTemplate = lazy(() => import('./pages/StateTemplate'))
+const VODispatcher = lazy(() => import('./pages/VODispatcher'))
 const Faq = lazy(() => import('./pages/Faq'))
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'))
 const Terms = lazy(() => import('./pages/Terms'))
@@ -58,10 +60,10 @@ export default function App() {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/virtual-office" element={<VirtualOffice />} />
-                <Route path="/virtual-office/:state/:city/:service" element={<ServiceLanding />} />
-                <Route path="/virtual-office/:city/:locality/:service" element={<ServiceLanding />} />
-                <Route path="/virtual-office/:first/:second" element={<CityOrSpace />} />
-                <Route path="/virtual-office/:city" element={<CityTemplate />} />
+                {/* New consistent URL structure: /virtual-office/{state}/{city}/{space|service} */}
+                <Route path="/virtual-office/:first/:second/:third" element={<VODispatcher />} />
+                <Route path="/virtual-office/:first/:second" element={<VODispatcher />} />
+                <Route path="/virtual-office/:first" element={<VODispatcher />} />
                 {/* Legacy /space/ URLs still work (backward compatible) */}
                 <Route path="/space/:city/:space" element={<SpaceOrService />} />
                 <Route path="/space/:state/:city/:space" element={<SpaceOrService />} />

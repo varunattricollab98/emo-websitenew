@@ -3,6 +3,7 @@ import { Star, Building2, ArrowRight } from 'lucide-react'
 import SectionHeading from '../ui/SectionHeading'
 import Reveal from '../ui/Reveal'
 import SmartImage from '../ui/SmartImage'
+import { cityUrl } from '../../data/spaces'
 
 const locations = [
   {
@@ -94,7 +95,7 @@ export default function LovedLocations() {
           {locations.map((c, i) => (
             <Reveal key={c.slug} delay={i * 0.05}>
               <Link
-                to={`/virtual-office/${c.slug}`}
+                to={cityUrl(c.slug)}
                 className="group relative block h-64 overflow-hidden rounded-2xl bg-primary-gradient shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover"
               >
                 <SmartImage
