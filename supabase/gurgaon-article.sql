@@ -335,12 +335,12 @@ These documents are commonly used to support GST registration applications, subj
 
 ## Benefits of Using a Virtual Office for GST Registration
 
-- ✔ Lower setup costs
-- ✔ Faster business expansion
-- ✔ Commercial address in Gurgaon
-- ✔ Professional business identity
-- ✔ Documentation support
-- ✔ No long-term lease commitment
+- Lower setup costs
+- Faster business expansion
+- Commercial address in Gurgaon
+- Professional business identity
+- Documentation support
+- No long-term lease commitment
 
 ## GST Registration Process with a Virtual Office
 
