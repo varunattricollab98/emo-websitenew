@@ -137,6 +137,7 @@ export const serviceLandings = {
     // All-India hub page content (/virtual-office/business-registration).
     national: {
       metaTitle: 'Virtual Office for Company Registration in India | EaseMyOffice',
+      nationalPrice: 999,
       metaDescription:
         'Use a verified commercial address as your registered office for Pvt Ltd, LLP or OPC incorporation anywhere in India. Full MCA document kit, ready in 2–3 days.',
       heading: 'Virtual Office for Company Registration in India',
@@ -580,6 +581,7 @@ export function getServiceNational(slug) {
     chips: n.chips || svc.chips || [],
     intro: n.intro || (svc.intro ? svc.intro('India', 'India') : []),
     faqs: n.faqs || (svc.faqs ? svc.faqs('India') : []),
+    nationalPrice: n.nationalPrice || null,
   }
 }
 

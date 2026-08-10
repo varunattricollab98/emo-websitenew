@@ -210,7 +210,10 @@ export default function ServiceHub() {
   const Icon = iconMap[svc.icon] || FileCheck2
 
   // National "from" price shown in the hero card.
-  const price = svc.fixedPrice || 999
+  // Each service can declare a fixed nationalPrice in its `national` block;
+  // otherwise it computes from the cheapest city + service offset.
+  const baseMin = cityList.length ? Math.min(...cityList.map((c) => c.min)) : 899
+  const price = svc.fixedPrice || nat.nationalPrice || Math.max(499, baseMin + (svc.priceOffset || 0))
   const totalAddresses = cityList.reduce((sum, c) => sum + (c.count || 0), 0)
 
   const openLead = () =>
