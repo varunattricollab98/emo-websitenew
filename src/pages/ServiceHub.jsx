@@ -19,6 +19,7 @@ import {
   Star,
   Phone,
 } from 'lucide-react'
+import SmartImage from '../components/ui/SmartImage'
 import SectionHeading from '../components/ui/SectionHeading'
 import Reveal from '../components/ui/Reveal'
 import Button from '../components/ui/Button'
@@ -58,6 +59,21 @@ import {
   isServiceAlias,
 } from '../data/serviceLandings'
 import { useLeadModal } from '../context/LeadModalContext'
+
+const CITY_IMAGES = {
+  delhi: 'https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format&fit=crop&w=600&q=80',
+  mumbai: 'https://images.unsplash.com/photo-1570168007204-dfb528c6958f?auto=format&fit=crop&w=600&q=80',
+  bangalore: 'https://images.unsplash.com/photo-1596176530529-78163a4f7af2?auto=format&fit=crop&w=600&q=80',
+  gurgaon: 'https://images.unsplash.com/photo-1622467827417-bbe6794e5ac0?auto=format&fit=crop&w=600&q=80',
+  hyderabad: 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=600&q=80',
+  chennai: 'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=600&q=80',
+  pune: 'https://images.unsplash.com/photo-1625643301159-7fbfc06c7615?auto=format&fit=crop&w=600&q=80',
+  noida: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=600&q=80',
+  kolkata: 'https://images.unsplash.com/photo-1558431382-27e303142255?auto=format&fit=crop&w=600&q=80',
+  ahmedabad: 'https://images.unsplash.com/photo-1627894006066-b45960f68dc0?auto=format&fit=crop&w=600&q=80',
+}
+
+const DEFAULT_CITY_IMAGE = 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=600&q=80'
 
 const iconMap = { FileCheck2, Landmark, Mailbox, Armchair }
 
@@ -410,56 +426,45 @@ export default function ServiceHub() {
             accent="City by City"
             subtitle={`Pricing, addresses and documentation differ slightly by city. Pick yours to see local ${svc.name.toLowerCase()} details.`}
           />
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {cityList.map((c, i) => {
               const cityPrice =
                 svc.fixedPrice ||
                 Math.max(499, (getCityBySlug(c.slug)?.price || c.min) + (svc.priceOffset || 0))
+              const cityImage = CITY_IMAGES[c.slug] || DEFAULT_CITY_IMAGE
               return (
                 <Reveal key={c.slug} delay={(i % 4) * 0.06}>
                   <Link
                     to={spaceUrl(c.slug, svc.slug)}
-                    className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-primary-100/60 bg-white shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/30 hover:shadow-card-hover"
+                    className="group flex h-full flex-col overflow-hidden rounded-2xl border border-primary-100/60 bg-white shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover"
                   >
-                    <div className="flex flex-1 flex-col p-6">
-                      {/* Number watermark */}
-                      <span className="pointer-events-none absolute right-4 top-3 text-4xl font-black text-primary-50 transition-colors duration-300 group-hover:text-primary-100">
-                        {String(i + 1).padStart(2, '0')}
+                    {/* Image header */}
+                    <div className="relative block h-32 overflow-hidden">
+                      <SmartImage
+                        src={cityImage}
+                        alt={`${c.name} city skyline`}
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                      {/* Spots badge */}
+                      <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-white px-2.5 py-1 text-[11px] font-semibold text-primary shadow-sm">
+                        <MapPin className="h-2.5 w-2.5" />
+                        {c.count}+ spots
                       </span>
-                      {/* Icon + City badge row */}
-                      <div className="flex items-center justify-between">
-                        <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-gradient text-white shadow-card ring-1 ring-white/30 transition-transform duration-300 group-hover:scale-105">
-                          <Icon className="h-6 w-6" />
-                        </span>
-                        <span className="inline-flex items-center gap-1 rounded-full bg-primary-50 px-2.5 py-1 text-xs font-semibold text-primary">
-                          <MapPin className="h-3 w-3" />
-                          {c.count}+ spots
-                        </span>
+                    </div>
+                    {/* Content */}
+                    <div className="flex flex-1 flex-col p-5">
+                      <h3 className="text-base font-bold text-navy-dark">{c.name}</h3>
+                      <p className="mt-0.5 text-xs text-slate-500">{c.state}</p>
+                      {/* Divider + price row */}
+                      <div className="mt-3 flex items-center justify-between border-t border-primary-100/40 pt-3">
+                        <p className="text-lg font-bold text-primary">
+                          ₹{cityPrice.toLocaleString('en-IN')}
+                          <span className="ml-0.5 text-[11px] font-medium text-slate-400">
+                            {svc.period}
+                          </span>
+                        </p>
+                        <ArrowRight className="h-4 w-4 text-primary/60 transition-transform group-hover:translate-x-1 group-hover:text-primary" />
                       </div>
-                      {/* City name + state */}
-                      <h3 className="mt-4 text-lg font-bold leading-tight text-navy-dark">
-                        {c.name}
-                      </h3>
-                      <p className="mt-1 text-xs font-medium text-slate-500">
-                        {c.state}
-                      </p>
-                      {/* Divider */}
-                      <div className="my-4 border-t border-primary-100/50" />
-                      {/* Price + CTA */}
-                      <div className="mt-auto flex items-end justify-between">
-                        <div>
-                          <p className="text-xs font-medium text-slate-400">Starting at</p>
-                          <p className="text-xl font-bold text-primary">
-                            ₹{cityPrice.toLocaleString('en-IN')}
-                            <span className="ml-0.5 text-xs font-medium text-slate-400">
-                              {svc.period}
-                            </span>
-                          </p>
-                        </div>
-                        <ArrowRight className="h-5 w-5 text-primary transition-transform group-hover:translate-x-1" />
-                      </div>
-                      {/* Gold accent bar */}
-                      <span className="mt-4 h-1 w-8 rounded-full bg-gradient-to-r from-gold to-gold-dark transition-all duration-300 group-hover:w-14" />
                     </div>
                   </Link>
                 </Reveal>
