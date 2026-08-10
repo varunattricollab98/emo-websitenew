@@ -12,10 +12,9 @@ const stats = [
     suffix: '/5',
     decimals: 1,
     label: 'Average rating',
-    sub: '1,200+ reviews',
+    sub: 'Highest Rated 4.9 on Google',
     rating: true,
   },
-]
 
 const container = { hidden: {}, show: { transition: { staggerChildren: 0.1 } } }
 const item = {

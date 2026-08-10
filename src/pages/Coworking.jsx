@@ -95,7 +95,7 @@ const stats = [
   { icon: Building2, to: 200, suffix: '+', label: 'Workspaces', sub: 'Move-in ready' },
   { icon: MapPin, to: 100, suffix: '+', label: 'Cities', sub: 'Across India' },
   { icon: Users, to: 5000, suffix: '+', label: 'Members', sub: 'Founders & teams' },
-  { icon: Star, to: 4.9, suffix: '/5', label: 'Member rating', decimals: 1, sub: '1,200+ reviews', rating: true },
+  { icon: Star, to: 4.9, suffix: '/5', label: 'Member rating', decimals: 1, sub: 'Highest Rated 4.9 on Google', rating: true },
 ]
 
 const faqs = [

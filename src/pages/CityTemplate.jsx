@@ -722,7 +722,7 @@ export default function CityTemplate() {
                 <div className="absolute -bottom-4 -left-4 flex items-center gap-2 rounded-xl border border-white/15 bg-navy-dark/80 px-3 py-2 shadow-card-hover backdrop-blur">
                   <Star className="h-4 w-4 fill-gold text-gold" />
                   <span className="text-xs font-bold text-white">4.9/5</span>
-                  <span className="text-[11px] text-primary-100/70">1,200+ reviews</span>
+                  <span className="text-[11px] text-primary-100/70">Highest Rated on Google</span>
                 </div>
               </div>
             </div>
