@@ -147,7 +147,7 @@ export default function ServiceFinder() {
           eyebrow="Find Your Service"
           title="Choose Your Own Virtual Office Plan"
           accent="Virtual Office Plan"
-          subtitle="Not sure which one you need? Pick your requirement below and find the exact service that fits — from GST to company registration, mailing or a desk plan."
+          subtitle="Not sure which one you need? Pick your requirement below and find the exact service that fits from GST to company registration, mailing or a desk plan."
         />
 
         {/* category filter */}

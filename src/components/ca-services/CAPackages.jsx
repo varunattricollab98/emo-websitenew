@@ -27,7 +27,7 @@ export default function CAPackages() {
           eyebrow="Compliance Packages"
           title="Ongoing Compliance, Handled for You"
           accent="Handled for You"
-          subtitle="Bundle your bookkeeping, GST, income-tax, TDS, payroll and MCA filings into one simple monthly plan — so every due date is met, all year round."
+          subtitle="Bundle your bookkeeping, GST, income-tax, TDS, payroll and MCA filings into one simple monthly plan, so every due date is met, all year round."
         />
 
         <div className="mt-16 grid items-start gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -37,7 +37,7 @@ export default function CAPackages() {
                 plan={plan}
                 onCta={() =>
                   openLeadModal({
-                    title: `Get started — ${plan.name}`,
+                    title: `Get started: ${plan.name}`,
                     subtitle: 'Share your details and our compliance team will call you back.',
                     service: `${plan.name} (Compliance Package)`,
                   })
@@ -48,7 +48,7 @@ export default function CAPackages() {
         </div>
 
         <p className="mx-auto mt-8 max-w-2xl text-center text-xs text-slate-400">
-          Indicative monthly pricing — your exact quote is confirmed after a quick review of your
+          Indicative monthly pricing. Your exact quote is confirmed after a quick review of your
           entity type and transaction volume. All services are prepared and reviewed by qualified
           partner professionals.
         </p>

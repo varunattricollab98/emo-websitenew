@@ -23,8 +23,14 @@ import Reveal from '../components/ui/Reveal'
 import Button from '../components/ui/Button'
 import SmartImage from '../components/ui/SmartImage'
 import FaqAccordion from '../components/ui/FaqAccordion'
+import BlogArticleSection from '../components/ui/BlogArticleSection'
+import SchemaScript from '../components/seo/SchemaScript'
+import { webPageSchema, breadcrumbSchema, faqSchema } from '../components/seo/schemas'
 import { getCoworkingSpaceBySlug, slugifyCoworking } from '../data/coworkingSpaces'
 import { voCities, spaceStats } from '../data/spaces'
+import { coworkingArticle } from '../data/blogArticles'
+import { useBlogArticle } from '../hooks/useBlogArticle'
+import { useMeta } from '../hooks/useMeta'
 import { useLeadModal } from '../context/LeadModalContext'
 
 const DEFAULT_GALLERY = [
@@ -65,6 +71,17 @@ export default function CoworkingDetail() {
   const sp = getCoworkingSpaceBySlug(city, space)
   const cityName = voCities.find((c) => c.slug === city)?.name || toTitle(city)
   const region = voCities.find((c) => c.slug === city)?.state || 'India'
+  const dbArticle = useBlogArticle({ pageType: 'coworking', citySlug: city, areaSlug: space })
+  useMeta({
+    title: sp
+      ? `${sp.name}, Coworking in ${sp.locality}, ${cityName} | EaseMyOffice`
+      : 'Coworking Spaces | EaseMyOffice',
+    description: sp
+      ? `${sp.name} in ${sp.locality}, ${cityName}. ${sp.seats}, day passes from ₹${sp.dayPass}.`
+      : undefined,
+    path: `/coworking/${city}/${space}`,
+    image: sp?.image,
+  })
 
   if (!sp) {
     return (
@@ -87,7 +104,7 @@ export default function CoworkingDetail() {
   // amenities = curated tags + base set (deduped)
   const amenities = [...new Set([...(sp.tags || []), ...BASE_AMENITIES])]
 
-  // map location — uses the locality + city address
+  // map location, uses the locality + city address
   const fullAddress = `${sp.locality}, ${cityName}, ${region}`
   const mapQuery = sp.mapQuery || fullAddress
   const mapEmbedUrl = `https://www.google.com/maps?q=${encodeURIComponent(mapQuery)}&hl=en&z=15&output=embed`
@@ -95,9 +112,9 @@ export default function CoworkingDetail() {
 
   const book = (plan) =>
     openLeadModal({
-      title: `Book a tour — ${sp.name}, ${cityName}`,
+      title: `Book a tour, ${sp.name}, ${cityName}`,
       subtitle: 'Share your details and our team will schedule a visit and confirm availability.',
-      service: `${plan ? plan + ' — ' : ''}${sp.name}, ${sp.locality}, ${cityName}`,
+      service: `${plan ? plan + ', ' : ''}${sp.name}, ${sp.locality}, ${cityName}`,
       city: cityName,
     })
 
@@ -107,7 +124,7 @@ export default function CoworkingDetail() {
       price: round100(sp.price * 0.55),
       unit: '/seat/mo',
       icon: Armchair,
-      note: 'Flexible open-desk access — sit anywhere, any day.',
+      note: 'Flexible open-desk access, sit anywhere, any day.',
     },
     {
       name: 'Dedicated Desk',
@@ -138,7 +155,7 @@ export default function CoworkingDetail() {
       name: 'Karan Mehta',
       role: 'Founder, SaaS Startup',
       rating: 5,
-      text: `Great vibe at ${sp.name}. Fast Wi-Fi, clean meeting rooms and a helpful front desk — our team loves it.`,
+      text: `Great vibe at ${sp.name}. Fast Wi-Fi, clean meeting rooms and a helpful front desk. Our team loves it.`,
     },
     {
       name: 'Priya Nair',
@@ -177,11 +194,40 @@ export default function CoworkingDetail() {
     },
   ]
 
+  // Blog / long-form article blocks for the coworking guide section
+  const coworkingArticleBlocks = dbArticle?.blocks?.length
+    ? dbArticle.blocks
+    : coworkingArticle(sp.name, sp.locality, cityName, sp.seats, sp.dayPass, sp.price)
+
+  const breadcrumbItems = [
+    { name: 'Home', url: '/' },
+    { name: 'Coworking', url: '/coworking' },
+    { name: cityName, url: `/coworking?city=${city}` },
+    { name: sp.name },
+  ]
+
+  const schemas = [
+    webPageSchema({
+      title: `${sp.name}, Coworking Space in ${sp.locality}, ${cityName}`,
+      description: `${sp.name} is a move-in-ready coworking space in ${sp.locality}, ${cityName} with flexible plans starting at ₹${sp.price}/mo.`,
+      url: `/coworking/${city}/${space}`,
+      breadcrumbs: breadcrumbItems,
+    }),
+    breadcrumbSchema(breadcrumbItems),
+    faqSchema(faqs),
+  ].filter(Boolean)
+
   return (
     <>
+      <SchemaScript schemas={schemas} />
+
       {/* Breadcrumb */}
       <div className="border-b border-primary-100 bg-white">
         <div className="container-custom flex flex-wrap items-center gap-1.5 py-4 text-sm text-slate-500">
+          <Link to="/" className="hover:text-primary">
+            Home
+          </Link>
+          <span>/</span>
           <Link to="/coworking" className="hover:text-primary">
             Coworking
           </Link>
@@ -198,7 +244,10 @@ export default function CoworkingDetail() {
       <section className="bg-white pt-8 lg:pt-10">
         <div className="container-custom grid gap-8 lg:grid-cols-2">
           {/* gallery */}
+          {/* min-w-0: grid items default to a min-content width floor, which
+              lets the thumbnail strip widen the page on phones */}
           <motion.div
+            className="min-w-0"
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
@@ -240,6 +289,7 @@ export default function CoworkingDetail() {
 
           {/* info */}
           <motion.div
+            className="min-w-0"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
@@ -278,7 +328,7 @@ export default function CoworkingDetail() {
             </div>
 
             <div className="mt-5 flex flex-wrap items-end gap-x-6 gap-y-2">
-              <div className="flex items-end gap-1">
+              <div className="flex flex-wrap items-end gap-x-1 gap-y-1">
                 <span className="text-sm font-medium text-slate-400">Dedicated desk</span>
                 <span className="ml-1 text-3xl font-extrabold text-navy-dark">
                   ₹{sp.price.toLocaleString('en-IN')}
@@ -292,7 +342,7 @@ export default function CoworkingDetail() {
             </div>
 
             <p className="mt-4 leading-relaxed text-slate-600">
-              {sp.name} is a move-in-ready coworking space in {sp.locality}, {cityName} — designed for
+              {sp.name} is a move-in-ready coworking space in {sp.locality}, {cityName}, designed for
               focused work with premium amenities, flexible plans and a vibrant community. No lock-in,
               no brokerage.
             </p>
@@ -350,7 +400,7 @@ export default function CoworkingDetail() {
             eyebrow="About the space"
             title={sp.name}
             accent={sp.locality}
-            subtitle={`A flexible coworking space in ${sp.locality}, ${cityName} — built for productivity with premium amenities and a thriving community.`}
+            subtitle={`A flexible coworking space in ${sp.locality}, ${cityName}, built for productivity with premium amenities and a thriving community.`}
           />
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {[
@@ -381,7 +431,8 @@ export default function CoworkingDetail() {
       <section className="section-padding bg-surface-light">
         <div className="container-custom">
           <SectionHeading eyebrow="Amenities" title="What's Available Here" accent="Available" />
-          <div className="mx-auto mt-12 grid max-w-4xl grid-cols-2 gap-3 sm:grid-cols-3">
+          {/* Amenity names come from the DB/CSV, so one column on phones */}
+          <div className="mx-auto mt-12 grid max-w-4xl grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
             {amenities.map((a) => (
               <div
                 key={a}
@@ -390,14 +441,14 @@ export default function CoworkingDetail() {
                 <span className="inline-flex h-7 w-7 flex-none items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 text-white">
                   <Check className="h-4 w-4" strokeWidth={3} />
                 </span>
-                <span className="text-sm font-semibold text-navy-dark">{a}</span>
+                <span className="min-w-0 break-words text-sm font-semibold text-navy-dark">{a}</span>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ===== Location (area-level only — exact address hidden) ===== */}
+      {/* ===== Location (area-level only, exact address hidden) ===== */}
       <section className="section-padding bg-white">
         <div className="container-custom">
           <SectionHeading eyebrow="Location" title="Where You'll Be" accent="Be" />
@@ -451,7 +502,7 @@ export default function CoworkingDetail() {
             eyebrow="Plans & Pricing"
             title={`Plans at ${sp.name}`}
             accent={sp.name}
-            subtitle="Transparent, brokerage-free pricing — pick the plan that fits your team."
+            subtitle="Transparent, brokerage-free pricing. Pick the plan that fits your team."
           />
           <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {plans.map((p) => (
@@ -473,7 +524,7 @@ export default function CoworkingDetail() {
                   </span>
                   <h3 className="mt-4 text-lg font-bold text-navy-dark">{p.name}</h3>
                   <p className="mt-1 flex-1 text-sm text-slate-500">{p.note}</p>
-                  <div className="mt-4 flex items-end gap-1">
+                  <div className="mt-4 flex flex-wrap items-end gap-x-1 gap-y-1">
                     <span className="mb-1 text-lg font-bold text-navy-dark">₹</span>
                     <span className="text-3xl font-extrabold leading-none text-navy-dark">
                       {Number(p.price).toLocaleString('en-IN')}
@@ -572,12 +623,20 @@ export default function CoworkingDetail() {
         </div>
       </section>
 
+      {/* ===== Blog Article ===== */}
+      <BlogArticleSection
+        title={dbArticle?.title || `${sp.name}, ${cityName}: Coworking Guide`}
+        eyebrow={dbArticle?.eyebrow || 'Guide'}
+        blocks={coworkingArticleBlocks}
+        bg="bg-white"
+      />
+
       {/* ===== FAQ ===== */}
       <section className="section-padding bg-surface-light">
         <div className="container-custom">
           <SectionHeading
             eyebrow="FAQ"
-            title={`${sp.name} — Questions Answered`}
+            title={`${sp.name}: Questions Answered`}
             accent="Questions Answered"
           />
           <Reveal className="mx-auto mt-12 max-w-3xl">

@@ -14,9 +14,11 @@ const services = [
   { label: 'Virtual Office', to: '/virtual-office' },
   { label: 'Coworking', to: '/coworking' },
   { label: 'Meeting Rooms', to: '/meeting-rooms' },
-  { label: 'GST Registration', to: '/ca-services' },
-  { label: 'Company Registration', to: '/ca-services' },
-  { label: 'Trademark', to: '/ca-services' },
+  // National service hub pages (all-India, not city-specific)
+  { label: 'GST Registration', to: '/virtual-office/gst-registration' },
+  { label: 'Company Registration', to: '/virtual-office/business-registration' },
+  { label: 'Mailing Address', to: '/virtual-office/mailing-address' },
+  { label: 'CA Services', to: '/ca-services' },
 ]
 
 const legal = [

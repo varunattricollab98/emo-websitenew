@@ -1,6 +1,26 @@
 import { Check } from 'lucide-react'
 
 /**
+ * Renders inline Markdown emphasis inside a plain string.
+ * Only **bold** is supported, which is all the blog copy uses. Anything else is
+ * left untouched so unexpected syntax never breaks the page.
+ */
+function inline(text) {
+  if (typeof text !== 'string' || !text.includes('**')) return text
+  // Split on **...** and re-wrap the captured groups in <strong>.
+  return text.split(/(\*\*[^*]+\*\*)/g).map((part, i) => {
+    const m = part.match(/^\*\*([^*]+)\*\*$/)
+    return m ? (
+      <strong key={i} className="font-bold text-navy-dark">
+        {m[1]}
+      </strong>
+    ) : (
+      part
+    )
+  })
+}
+
+/**
  * Renders long-form / blog content from a flexible blocks array.
  * Each block can be:
  *   - a plain string            -> paragraph
@@ -38,7 +58,7 @@ export default function ArticleBlocks({ blocks = [], lead = false }) {
                   : PARA
               }
             >
-              {b}
+              {inline(b)}
             </p>
           )
         }
@@ -68,7 +88,7 @@ export default function ArticleBlocks({ blocks = [], lead = false }) {
                   <span className="mt-0.5 inline-flex h-5 w-5 flex-none items-center justify-center rounded-full bg-accent-green/10 text-accent-emerald">
                     <Check className="h-3 w-3" strokeWidth={3} />
                   </span>
-                  <span className="leading-relaxed">{item}</span>
+                  <span className="leading-relaxed">{inline(item)}</span>
                 </li>
               ))}
             </ul>
@@ -79,7 +99,7 @@ export default function ArticleBlocks({ blocks = [], lead = false }) {
             <ul key={i} className="list-disc space-y-2 pl-5 text-slate-600">
               {b.bullets.map((item) => (
                 <li key={item} className="leading-relaxed">
-                  {item}
+                  {inline(item)}
                 </li>
               ))}
             </ul>
@@ -91,8 +111,49 @@ export default function ArticleBlocks({ blocks = [], lead = false }) {
               key={i}
               className="rounded-2xl border-l-4 border-gold bg-surface-light px-5 py-4 text-navy-dark"
             >
-              {b.quote}
+              {inline(b.quote)}
             </blockquote>
+          )
+        }
+        if (b.table) {
+          const { headers = [], rows = [] } = b.table
+          return (
+            // Tables are the one block that can exceed the prose width on
+            // mobile, so it scrolls horizontally instead of squashing cells.
+            <div key={i} className="my-2 overflow-x-auto rounded-2xl border border-slate-200">
+              <table className="w-full min-w-[520px] border-collapse text-left text-sm">
+                {headers.length > 0 && (
+                  <thead>
+                    <tr className="bg-surface-light">
+                      {headers.map((th, hi) => (
+                        <th
+                          key={hi}
+                          className="border-b border-slate-200 px-4 py-3 font-bold text-navy-dark"
+                        >
+                          {inline(th)}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                )}
+                <tbody>
+                  {rows.map((row, ri) => (
+                    <tr key={ri} className={ri % 2 ? 'bg-surface-light/40' : 'bg-white'}>
+                      {row.map((td, ci) => (
+                        <td
+                          key={ci}
+                          className={`border-b border-slate-100 px-4 py-3 align-top ${
+                            ci === 0 ? 'font-semibold text-navy-dark' : 'text-slate-600'
+                          }`}
+                        >
+                          {inline(td)}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )
         }
         return (
@@ -104,7 +165,7 @@ export default function ArticleBlocks({ blocks = [], lead = false }) {
                 : PARA
             }
           >
-            {b.p || ''}
+            {inline(b.p || '')}
           </p>
         )
       })}

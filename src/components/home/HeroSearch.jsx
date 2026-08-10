@@ -1,9 +1,9 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { resolveCity, resolveState } from '../../utils/resolveCity'
-import { voCities, slugifySpace } from '../../data/spaces'
-import { getSupabaseSpaces } from '../../lib/spacesStore'
+import { voCities, slugifySpace, cityUrl, spaceUrl, slugifyState } from '../../data/spaces'
+import { getSupabaseSpaces, onLoad } from '../../lib/spacesStore'
 import {
   MapPin,
   Search,
@@ -41,6 +41,148 @@ export default function HeroSearch() {
   const navigate = useNavigate()
   const [location, setLocation] = useState('')
   const [service, setService] = useState('virtual-office')
+  const [showSuggestions, setShowSuggestions] = useState(false)
+  const [activeIdx, setActiveIdx] = useState(-1)
+  const [spacesReady, setSpacesReady] = useState(false)
+  const inputRef = useRef(null)
+  const listRef = useRef(null)
+
+  // Re-build suggestions once Supabase spaces have loaded (they fetch async)
+  useEffect(() => {
+    onLoad(() => setSpacesReady(true))
+  }, [])
+
+  // ── Build a searchable suggestions list from all available sources ─────
+  const allSuggestions = useMemo(() => {
+    const items = []
+    // 1. Cities
+    voCities.forEach((c) => {
+      items.push({ type: 'city', label: c.name, sub: c.state, slug: c.slug })
+    })
+    // 2. Spaces / areas from Supabase
+    const dbSpaces = getSupabaseSpaces()
+    dbSpaces.forEach((s) => {
+      if (s.address_area) {
+        items.push({
+          type: 'space',
+          label: s.address_area,
+          sub: s.address_city || '',
+          slug: slugifySpace(s.address_area),
+          citySlug: slugifySpace(s.address_city || ''),
+        })
+      }
+      if (s.space_name && s.space_name !== s.address_area) {
+        items.push({
+          type: 'space',
+          label: s.space_name,
+          sub: s.address_city || '',
+          slug: slugifySpace(s.address_area || s.space_name),
+          citySlug: slugifySpace(s.address_city || ''),
+        })
+      }
+    })
+    return items
+  }, [spacesReady])
+
+  // ── Fuzzy matching: Levenshtein distance for typo tolerance ────────────
+  function fuzzyMatch(query, target) {
+    const q = query.toLowerCase()
+    const t = target.toLowerCase()
+    // Starts with → strong match
+    if (t.startsWith(q)) return 0
+    // Contains → good match
+    if (t.includes(q)) return 1
+    // Levenshtein edit distance (for typos like "jayanagr" → "jayanagar")
+    if (q.length >= 3 && t.length >= 3) {
+      const maxDist = q.length <= 4 ? 1 : 2
+      const dist = editDistance(q, t.slice(0, q.length + maxDist))
+      if (dist <= maxDist) return 2 + dist
+    }
+    return -1 // no match
+  }
+
+  function editDistance(a, b) {
+    const m = a.length
+    const n = b.length
+    const dp = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0))
+    for (let i = 0; i <= m; i++) dp[i][0] = i
+    for (let j = 0; j <= n; j++) dp[0][j] = j
+    for (let i = 1; i <= m; i++) {
+      for (let j = 1; j <= n; j++) {
+        dp[i][j] = a[i - 1] === b[j - 1]
+          ? dp[i - 1][j - 1]
+          : 1 + Math.min(dp[i - 1][j - 1], dp[i - 1][j], dp[i][j - 1])
+      }
+    }
+    return dp[m][n]
+  }
+
+  // ── Filtered & ranked suggestions based on current input ──────────────
+  const suggestions = useMemo(() => {
+    const q = location.trim()
+    if (q.length < 2) return []
+
+    const scored = []
+    const seen = new Set()
+
+    for (const item of allSuggestions) {
+      const score = fuzzyMatch(q, item.label)
+      if (score >= 0) {
+        const key = `${item.type}-${item.label.toLowerCase()}`
+        if (!seen.has(key)) {
+          seen.add(key)
+          scored.push({ ...item, score })
+        }
+      }
+    }
+
+    // Sort: starts-with first, then contains, then fuzzy
+    scored.sort((a, b) => a.score - b.score)
+    return scored.slice(0, 8)
+  }, [location, allSuggestions])
+
+  // ── Keyboard navigation ───────────────────────────────────────────────
+  const handleKeyDown = (e) => {
+    if (!showSuggestions || suggestions.length === 0) return
+    if (e.key === 'ArrowDown') {
+      e.preventDefault()
+      setActiveIdx((i) => (i + 1) % suggestions.length)
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault()
+      setActiveIdx((i) => (i <= 0 ? suggestions.length - 1 : i - 1))
+    } else if (e.key === 'Enter' && activeIdx >= 0) {
+      e.preventDefault()
+      selectSuggestion(suggestions[activeIdx])
+    } else if (e.key === 'Escape') {
+      setShowSuggestions(false)
+    }
+  }
+
+  const selectSuggestion = (item) => {
+    setLocation(item.label)
+    setShowSuggestions(false)
+    setActiveIdx(-1)
+    // Auto-navigate for convenience
+    if (item.type === 'city') {
+      navigate(cityUrl(item.slug))
+    } else if (item.type === 'space' && item.citySlug) {
+      navigate(spaceUrl(item.citySlug, item.slug))
+    }
+  }
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handler = (e) => {
+      if (
+        inputRef.current && !inputRef.current.contains(e.target) &&
+        listRef.current && !listRef.current.contains(e.target)
+      ) {
+        setShowSuggestions(false)
+      }
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [])
 
   const handleSearch = (e) => {
     e.preventDefault()
@@ -50,9 +192,9 @@ export default function HeroSearch() {
     // Virtual Office + a recognised city → that city's page; a state → all its spaces
     if (service === 'virtual-office') {
       const c = resolveCity(loc)
-      if (c) return navigate(`/virtual-office/${c.slug}`)
+      if (c) return navigate(cityUrl(c.slug))
       const st = resolveState(loc)
-      if (st) return navigate(`/virtual-office?state=${encodeURIComponent(st)}`)
+      if (st) return navigate(`/virtual-office/${slugifyState(st)}`)
 
       // Try matching a space/area name (keyword search) → go to its detail page
       const q = loc.toLowerCase()
@@ -66,17 +208,17 @@ export default function HeroSearch() {
       if (match) {
         const citySlug = slugifySpace(match.address_city)
         const areaSlug = slugifySpace(match.address_area)
-        return navigate(`/space/${citySlug}/${areaSlug}`)
+        return navigate(spaceUrl(citySlug, areaSlug))
       }
 
       // Also check static city list for partial area matches in city names
       const cityByArea = voCities.find((c) => c.name.toLowerCase().includes(q))
-      if (cityByArea) return navigate(`/virtual-office/${cityByArea.slug}`)
+      if (cityByArea) return navigate(cityUrl(cityByArea.slug))
 
       return navigate(`/virtual-office?city=${encodeURIComponent(loc)}`)
     }
 
-    // Coworking — try keyword match against space names
+    // Coworking, try keyword match against space names
     if (service === 'coworking') {
       const q = loc.toLowerCase()
       const dbSpaces = getSupabaseSpaces()
@@ -124,7 +266,7 @@ export default function HeroSearch() {
 
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-slate-600">
             Premium business addresses for GST &amp; company registration, coworking spaces, and
-            meeting rooms — in 250+ locations across 28 states.
+            meeting rooms in 250+ locations across 28 states.
           </p>
         </motion.div>
 
@@ -137,16 +279,59 @@ export default function HeroSearch() {
           className="mx-auto mt-10 max-w-4xl rounded-2xl border border-primary-100/70 bg-white p-4 shadow-card-hover sm:p-5"
         >
           <div className="grid gap-3 md:grid-cols-[1.5fr_1fr_auto]">
-            {/* location input */}
-            <div className="flex items-center gap-2 rounded-xl border border-primary-100 bg-surface-light px-4 py-3 focus-within:border-primary/60 focus-within:ring-2 focus-within:ring-primary/20">
-              <MapPin className="h-5 w-5 flex-none text-primary" />
-              <input
-                type="text"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                placeholder="Search city, area, space name or pincode…"
-                className="w-full bg-transparent text-sm font-medium text-navy-dark placeholder:text-slate-400 focus:outline-none"
-              />
+            {/* location input with suggestions */}
+            <div className="relative" ref={inputRef}>
+              <div className="flex items-center gap-2 rounded-xl border border-primary-100 bg-surface-light px-4 py-3 focus-within:border-primary/60 focus-within:ring-2 focus-within:ring-primary/20">
+                <MapPin className="h-5 w-5 flex-none text-primary" />
+                <input
+                  type="text"
+                  value={location}
+                  onChange={(e) => {
+                    setLocation(e.target.value)
+                    setShowSuggestions(true)
+                    setActiveIdx(-1)
+                  }}
+                  onFocus={() => location.trim().length >= 2 && setShowSuggestions(true)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Search city, area, space name or pincode…"
+                  autoComplete="off"
+                  className="w-full bg-transparent text-sm font-medium text-navy-dark placeholder:text-slate-400 focus:outline-none"
+                />
+              </div>
+
+              {/* Suggestion dropdown */}
+              {showSuggestions && suggestions.length > 0 && (
+                <div
+                  ref={listRef}
+                  className="absolute left-0 right-0 top-full z-50 mt-1 max-h-64 overflow-y-auto rounded-xl border border-primary-100 bg-white shadow-card-hover"
+                >
+                  {suggestions.map((item, idx) => (
+                    <button
+                      key={`${item.type}-${item.label}-${idx}`}
+                      type="button"
+                      onClick={() => selectSuggestion(item)}
+                      className={`flex w-full items-center gap-3 px-4 py-3 text-left text-sm transition-colors ${
+                        idx === activeIdx
+                          ? 'bg-primary-50 text-primary'
+                          : 'text-navy-dark hover:bg-surface-light'
+                      }`}
+                    >
+                      <MapPin className="h-4 w-4 flex-none text-primary/60" />
+                      <div className="min-w-0">
+                        <span className="font-semibold">{item.label}</span>
+                        {item.sub && (
+                          <span className="ml-2 text-xs text-slate-400">
+                            {item.type === 'city' ? item.sub : `in ${item.sub}`}
+                          </span>
+                        )}
+                      </div>
+                      <span className="ml-auto flex-none rounded-full bg-primary-50 px-2 py-0.5 text-[10px] font-bold uppercase text-primary/70">
+                        {item.type === 'city' ? 'City' : 'Area'}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* service dropdown */}

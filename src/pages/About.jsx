@@ -36,7 +36,7 @@ const values = [
   {
     icon: Eye,
     title: 'Our Vision',
-    desc: 'A future where location never limits ambition — anyone can build from anywhere.',
+    desc: 'A future where location never limits ambition, anyone can build from anywhere.',
     grad: 'linear-gradient(135deg, #fbbf24 0%, #d97706 100%)',
   },
   {
@@ -125,7 +125,7 @@ export default function About() {
             <div className="mt-6 space-y-4 text-slate-600">
               <p>
                 Starting a business in India means juggling addresses, registrations, filings and
-                deadlines — often before you have even made your first sale. We saw founders lose
+                deadlines, often before you have even made your first sale. We saw founders lose
                 weeks to paperwork that should have taken days.
               </p>
               <p>
@@ -135,7 +135,7 @@ export default function About() {
               </p>
               <p>
                 Today, thousands of founders, freelancers and fast-growing teams trust us to keep
-                them compliant, credible and free to focus on what they do best — building.
+                them compliant, credible and free to focus on what they do best, building.
               </p>
             </div>
           </Reveal>

@@ -96,7 +96,7 @@ export default function VOPricing() {
           eyebrow="Plans & Pricing"
           title="Simple, Transparent Pricing"
           accent="Transparent Pricing"
-          subtitle="Choose the plan that fits your goal — from a mailing address to a dedicated desk. No hidden fees."
+          subtitle="Choose the plan that fits your goal from a mailing address to a dedicated desk. No hidden fees."
         />
 
         <div className="mt-16 grid items-start gap-6 md:grid-cols-2 lg:grid-cols-4">

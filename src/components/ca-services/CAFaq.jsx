@@ -40,7 +40,7 @@ export default function CAFaq() {
                   </span>
                   <h3 className="mt-4 text-xl font-bold">Still have questions?</h3>
                   <p className="mt-2 text-sm leading-relaxed text-blue-100/80">
-                    Talk to a compliance expert — get a clear, honest answer and the right plan for
+                    Talk to a compliance expert for a clear, honest answer and the right plan for
                     your business.
                   </p>
                   <Button to="/contact" variant="white" className="mt-5">

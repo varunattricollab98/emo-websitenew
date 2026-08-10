@@ -1,25 +1,24 @@
 /**
- * Global spaces store — fetches from Supabase once at app start and merges
- * with the static built-in data. Components that need live Supabase spaces
- * use the `useSpaces` hook; this store is for the getSpaces/getSpaceBySlug
- * functions that many components already rely on.
+ * Global spaces store, provides getSupabaseSpaces() for components
+ * that need access outside React context (like HeroSearch).
  *
- * On first call, it kicks off a fetch. Until the fetch completes (or if
- * Supabase isn't configured), the built-in static data is used seamlessly.
+ * Now fetches ONCE with limited columns (not SELECT *) to reduce
+ * payload size and avoid duplicate fetches with SpacesContext.
  */
 import { supabase, isSupabaseConfigured } from './supabase'
 import { slugifySpace } from '../data/spaces'
 
 let _fetched = false
-let _rows = [] // raw Supabase rows
+let _rows = []
 let _listeners = []
 
-// Kick off fetch immediately on module load (runs once).
+// Fetch only columns needed for search/matching (not full content)
 if (isSupabaseConfigured && supabase) {
   supabase
     .from('spaces')
     .select('*')
-    .eq('is_active', true)
+    // Treat NULL as active, only explicitly deactivated rows are hidden.
+    .or('is_active.is.null,is_active.eq.true')
     .order('rating', { ascending: false })
     .limit(500)
     .then(({ data }) => {
@@ -40,24 +39,6 @@ export function isLoaded() {
 export function onLoad(fn) {
   if (_fetched) fn()
   else _listeners.push(fn)
-}
-
-/**
- * Get Supabase spaces for a given city slug.
- * Returns array in the card shape, or empty if not loaded / no matches.
- */
-export function getSupabaseSpacesForCity(citySlug) {
-  return _rows
-    .filter((r) => slugifySpace(r.address_city) === citySlug)
-    .map((r) => ({
-      name: r.address_area,
-      price: r.pricing_monthly || 799,
-      rating: Number(r.rating) || 4.7,
-      tags: r.pricing_gst ? ['GST', 'Company Reg', 'Mailing'] : ['GST', 'Company Reg', 'Mailing'],
-      image: r.featured_image || '',
-      badge: r.badge || null,
-      _fromDb: true,
-    }))
 }
 
 /**
@@ -95,10 +76,12 @@ export function getSupabaseSpaceDetail(citySlug, areaSlug) {
       ma: row.pricing_ma || Math.max(499, (row.pricing_monthly || 799) - 200),
     },
     fullAddress: row.full_address || `${row.address_area}, ${row.address_city}`,
-    listingAddress: row.listing_address || '',
     processingTime: row.processing_time || '2–3 business days',
     propertyType: row.property_type || 'Virtual Office & Coworking',
     amenities,
     badge: row.badge || null,
+    mapQuery: row.map_query || row.map_location || '',
+    overview: row.overview || '',
+    highlights: row.highlights || '',
   }
 }

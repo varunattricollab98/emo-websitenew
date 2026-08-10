@@ -21,7 +21,7 @@ export default function CAServiceFinder() {
           eyebrow="Find Your Service"
           title="Pick Your Requirement, Find the Right Service"
           accent="Find the Right Service"
-          subtitle="Not sure where to start? Choose a category and explore the exact registration, filing or license your business needs — each one handled by qualified professionals."
+          subtitle="Not sure where to start? Choose a category and explore the exact registration, filing or license your business needs, each one handled by qualified professionals."
         />
 
         {/* category filter */}

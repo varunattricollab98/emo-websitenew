@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react'
 import { supabase, isSupabaseConfigured } from '../lib/supabase'
-import { slugifySpace } from '../data/spaces'
+import { slugifySpace, cityAliases, voCities } from '../data/spaces'
 
 const SpacesContext = createContext({ rows: [], loaded: false })
 
@@ -18,7 +18,8 @@ export function SpacesProvider({ children }) {
     supabase
       .from('spaces')
       .select('*')
-      .eq('is_active', true)
+      // Treat NULL as active, only explicitly deactivated rows are hidden.
+      .or('is_active.is.null,is_active.eq.true')
       .order('rating', { ascending: false })
       .limit(500)
       .then(({ data, error }) => {
@@ -50,8 +51,15 @@ export function useSupabaseSpaces() {
 export function useSpacesForCity(citySlug) {
   const { rows } = useContext(SpacesContext)
   if (!citySlug) return rows.map(transformToCard)
+  // Match by slug OR by alias (e.g. citySlug='gurgaon' should match address_city='Gurugram' which slugifies to 'gurugram')
+  const aliases = cityAliases[citySlug] || []
+  const cityEntry = voCities.find((c) => c.slug === citySlug)
+  const nameSlug = cityEntry ? slugifySpace(cityEntry.name) : ''
   return rows
-    .filter((r) => slugifySpace(r.address_city) === citySlug)
+    .filter((r) => {
+      const rowSlug = slugifySpace(r.address_city)
+      return rowSlug === citySlug || rowSlug === nameSlug || aliases.includes(rowSlug)
+    })
     .map(transformToCard)
 }
 
@@ -60,8 +68,16 @@ export function useSpacesForCity(citySlug) {
  */
 export function useSpaceDetailFromDb(citySlug, areaSlug) {
   const { rows } = useContext(SpacesContext)
+  // Match city by slug OR by display name slug (handles gurgaon vs gurugram)
+  const cityEntry = voCities.find((c) => c.slug === citySlug)
+  const nameSlug = cityEntry ? slugifySpace(cityEntry.name) : ''
+  const aliases = cityAliases[citySlug] || []
   const row = rows.find(
-    (r) => slugifySpace(r.address_city) === citySlug && slugifySpace(r.address_area) === areaSlug
+    (r) => {
+      const rowCitySlug = slugifySpace(r.address_city)
+      const cityMatch = rowCitySlug === citySlug || rowCitySlug === nameSlug || aliases.includes(rowCitySlug)
+      return cityMatch && slugifySpace(r.address_area) === areaSlug
+    }
   )
   return row ? transformToDetail(row) : null
 }

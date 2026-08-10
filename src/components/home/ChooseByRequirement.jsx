@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
   FileCheck2,
@@ -10,15 +9,16 @@ import {
   ArrowRight,
 } from 'lucide-react'
 import SectionHeading from '../ui/SectionHeading'
+import { useLeadModal } from '../../context/LeadModalContext'
 
 const needs = [
   {
     icon: FileCheck2,
     title: 'For GST Registration',
-    desc: 'Secure your GSTIN with a fully verified address — notarised rent agreement, NOC and utility bill accepted the first time.',
+    desc: 'Secure your GSTIN with a fully verified address, notarised rent agreement, NOC and utility bill accepted the first time.',
     tag: 'Proprietors · Firms · GSTIN',
     cta: 'Get My GST Address',
-    to: '/ca-services',
+    service: 'GST Registration',
     grad: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
     glow: 'rgba(16,185,129,0.30)',
     accent: '#059669',
@@ -26,10 +26,10 @@ const needs = [
   {
     icon: Landmark,
     title: 'For New Company Registration',
-    desc: 'Incorporate your Pvt Ltd, LLP or OPC with an MCA-accepted registered office — no need to rent a physical office.',
+    desc: 'Incorporate your Pvt Ltd, LLP or OPC with an MCA-accepted registered office, no need to rent a physical office.',
     tag: 'Pvt Ltd · LLP · OPC',
     cta: 'Register My Business',
-    to: '/ca-services',
+    service: 'Company Registration (Pvt Ltd / LLP / OPC)',
     grad: 'linear-gradient(135deg, #3c82c2 0%, #11417c 100%)',
     glow: 'rgba(44,103,158,0.32)',
     accent: '#2c679e',
@@ -40,7 +40,7 @@ const needs = [
     desc: 'Amazon, Flipkart & Meesho need a valid GST address in every state. Get APOB addresses so your seller account stays compliant.',
     tag: 'APOB · Multi-state GST',
     cta: 'Get My Seller Address',
-    to: '/virtual-office',
+    service: 'APOB / E-commerce GST Registration',
     grad: 'linear-gradient(135deg, #fbbf24 0%, #d97706 100%)',
     glow: 'rgba(245,158,11,0.32)',
     accent: '#d97706',
@@ -51,7 +51,7 @@ const needs = [
     desc: 'Entering a new state? Get a local GST address without a lease, deposit or any long-term commitment.',
     tag: 'Multi-state · No lease',
     cta: 'Register in New State',
-    to: '/virtual-office',
+    service: 'Multi-state GST Registration',
     grad: 'linear-gradient(135deg, #22d3ee 0%, #0891b2 100%)',
     glow: 'rgba(34,211,238,0.30)',
     accent: '#0891b2',
@@ -62,7 +62,7 @@ const needs = [
     desc: 'Keep your home address private with a commercial-area business address that clients and banks instantly trust.',
     tag: 'Privacy · Professional image',
     cta: 'Get My Business Address',
-    to: '/virtual-office',
+    service: 'Mailing Address / Professional Business Address',
     grad: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)',
     glow: 'rgba(139,92,246,0.30)',
     accent: '#6d28d9',
@@ -70,10 +70,10 @@ const needs = [
   {
     icon: Rocket,
     title: 'For Startups & Founders',
-    desc: 'Need an address before opening a bank account or filing GST? Get one in the right city — without an expensive lease.',
+    desc: 'Need an address before opening a bank account or filing GST? Get one in the right city, without an expensive lease.',
     tag: 'Investor-ready credibility',
     cta: 'Register My Business',
-    to: '/virtual-office',
+    service: 'Business Registration (Startup)',
     grad: 'linear-gradient(135deg, #38bdf8 0%, #2c679e 100%)',
     glow: 'rgba(56,189,248,0.30)',
     accent: '#2c679e',
@@ -81,6 +81,8 @@ const needs = [
 ]
 
 export default function ChooseByRequirement() {
+  const { openLeadModal } = useLeadModal()
+
   return (
     <section className="section-padding relative overflow-hidden bg-surface-light">
       {/* subtle tech backdrop + glows */}
@@ -93,7 +95,7 @@ export default function ChooseByRequirement() {
           eyebrow="Choose by Requirement"
           title="Not Sure Which Plan? Choose by Your Need"
           accent="Choose by Your Need"
-          subtitle="Tell us what you're setting up — we'll match you with the right virtual office plan."
+          subtitle="Tell us what you're setting up and we'll match you with the right virtual office plan."
         />
 
         <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -105,9 +107,15 @@ export default function ChooseByRequirement() {
               viewport={{ once: true, margin: '-60px' }}
               transition={{ duration: 0.45, delay: (i % 3) * 0.06 }}
             >
-              <Link
-                to={n.to}
-                className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-primary-100/70 bg-white p-7 shadow-soft ring-1 ring-navy-dark/5 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover"
+              <button
+                type="button"
+                onClick={() => openLeadModal({
+                  title: n.title,
+                  subtitle: n.desc,
+                  service: n.service,
+                  source: 'choose-by-requirement',
+                })}
+                className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-primary-100/70 bg-white p-7 shadow-soft ring-1 ring-navy-dark/5 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover text-left"
               >
                 {/* colour glow blob */}
                 <div
@@ -146,7 +154,7 @@ export default function ChooseByRequirement() {
                   {n.cta}
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </span>
-              </Link>
+              </button>
             </motion.div>
           ))}
         </div>

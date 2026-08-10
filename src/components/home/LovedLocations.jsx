@@ -3,6 +3,7 @@ import { Star, Building2, ArrowRight } from 'lucide-react'
 import SectionHeading from '../ui/SectionHeading'
 import Reveal from '../ui/Reveal'
 import SmartImage from '../ui/SmartImage'
+import { cityUrl } from '../../data/spaces'
 
 const locations = [
   {
@@ -48,7 +49,7 @@ const locations = [
     businesses: '2,100+',
     price: '999',
     image:
-      'https://images.unsplash.com/photo-1587135941948-670b381f08ce?auto=format&fit=crop&w=800&q=80',
+      'https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=400,height=265,dpr=2/tour_img/1cbf46d0ff04a1b01cbf0b13b7020c5d02cc8021e67532a124824e06f32d214e.png',
   },
   {
     name: 'Chennai',
@@ -87,14 +88,14 @@ export default function LovedLocations() {
           eyebrow="Locations"
           title="Explore Our Most-Loved Locations by Clients"
           accent="Most-Loved Locations"
-          subtitle="Highest-rated business addresses across India — loved by founders and sellers alike."
+          subtitle="Highest-rated business addresses across India, loved by founders and sellers alike."
         />
 
         <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {locations.map((c, i) => (
             <Reveal key={c.slug} delay={i * 0.05}>
               <Link
-                to={`/virtual-office/${c.slug}`}
+                to={cityUrl(c.slug)}
                 className="group relative block h-64 overflow-hidden rounded-2xl bg-primary-gradient shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover"
               >
                 <SmartImage

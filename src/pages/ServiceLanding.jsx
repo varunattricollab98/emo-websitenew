@@ -1,4 +1,4 @@
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, Navigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
   FileCheck2,
@@ -11,9 +11,9 @@ import {
   ShieldCheck,
   Clock,
   BadgeCheck,
-  MessageSquare,
-  FileUp,
-  PartyPopper,
+  MapPinned,
+  FileText,
+  KeyRound,
   Sparkles,
   Phone,
 } from 'lucide-react'
@@ -22,9 +22,23 @@ import Reveal from '../components/ui/Reveal'
 import Button from '../components/ui/Button'
 import FaqAccordion from '../components/ui/FaqAccordion'
 import ArticleBlocks from '../components/ui/ArticleBlocks'
-import { voCities, getSpaces, slugifySpace } from '../data/spaces'
+import BlogArticleSection from '../components/ui/BlogArticleSection'
+import StepsFlow from '../components/ui/StepsFlow'
+import SchemaScript from '../components/seo/SchemaScript'
+import { webPageSchema, breadcrumbSchema, faqSchema, serviceSchema } from '../components/seo/schemas'
+import { voCities, getSpaces, slugifySpace, cityUrl, spaceUrl, getStateSlugForCity } from '../data/spaces'
+import { resolveCity } from '../utils/resolveCity'
+import { serviceArticle } from '../data/blogArticles'
+import { useBlogArticle } from '../hooks/useBlogArticle'
+import { useMeta } from '../hooks/useMeta'
 import { getCityBySlug } from '../data/cities'
-import { getServiceLanding, serviceOrder, serviceLandings } from '../data/serviceLandings'
+import {
+  getServiceLanding,
+  serviceOrder,
+  serviceLandings,
+  resolveServiceSlug,
+  isServiceAlias,
+} from '../data/serviceLandings'
 import { useLeadModal } from '../context/LeadModalContext'
 
 const iconMap = { FileCheck2, Landmark, Mailbox, Armchair }
@@ -37,47 +51,74 @@ function toTitle(str = '') {
 }
 
 const steps = [
-  { icon: MessageSquare, title: 'Share your requirement', desc: 'Tell us the city and service you need.' },
-  { icon: FileUp, title: 'Upload documents', desc: 'Submit your KYC online — we verify everything upfront.' },
-  { icon: PartyPopper, title: 'Get activated', desc: 'Your address & documents are ready in 2–3 days.' },
+  {
+    icon: MapPinned,
+    title: 'Share your requirement',
+    desc: 'Tell us the city and service you need.',
+    chip: 'Free consultation',
+  },
+  {
+    icon: FileText,
+    title: 'Upload documents',
+    desc: 'Submit your KYC online, we verify everything upfront.',
+    chip: '100% online',
+  },
+  {
+    icon: KeyRound,
+    title: 'Get activated',
+    desc: 'Your address & documents are ready in 2–3 days.',
+    chip: 'Ready in 2–3 days',
+  },
 ]
 
 export default function ServiceLanding() {
   const params = useParams()
   const { locality } = params
-  // city param across all route shapes:
-  //   /virtual-office/:state/:city/:service → params.city
-  //   /virtual-office/:first/:second (2-seg service) → params.first
-  //   /space/:city/:service → params.city
-  const city = params.city || params.first || ''
-  // service slug across all route shapes:
-  //   :service (3-seg), :second (2-seg via CityOrSpace), :space (legacy)
-  const rawService = (params.service || params.second || params.space || '').toLowerCase()
-  const serviceSlug = rawService
+  // New URL structure: /virtual-office/:state/:city/:service (first=state, second=city, third=service)
+  // Legacy: /virtual-office/:city/:service, /space/:city/:service
+  const city = params.third ? params.second : (params.city || params.first || '')
+  const stateSlug = params.third ? params.first : ''
+  // service slug:
+  const rawService = (params.third || params.service || params.second || params.space || '').toLowerCase()
+  const urlSlug = rawService
     .replace(/gstregistration/i, 'gst-registration')
     .replace(/businessregistration/i, 'business-registration')
+    .replace(/companyregistration/i, 'company-registration')
     .replace(/mailingaddress/i, 'mailing-address')
     .replace(/deskplan/i, 'desk-plan')
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '')
+  // Aliases (e.g. company-registration) resolve onto the canonical service so
+  // both URLs render the same page; the alias URL redirects below.
+  const serviceSlug = resolveServiceSlug(urlSlug)
   const { openLeadModal } = useLeadModal()
 
   const svc = getServiceLanding(serviceSlug)
   const cityName = voCities.find((c) => c.slug === city)?.name || toTitle(city)
   const region = voCities.find((c) => c.slug === city)?.state || 'India'
+  const dbArticle = useBlogArticle({ pageType: 'service', citySlug: city, serviceSlug })
+  useMeta({
+    title: svc ? `${svc.name} in ${cityName} | EaseMyOffice` : 'EaseMyOffice',
+    description: svc?.lead ? svc.lead(cityName) : undefined,
+    path: `/virtual-office/${getStateSlugForCity(city)}/${city}/${serviceSlug}`,
+  })
   const localityName = locality ? toTitle(locality) : ''
 
   if (!svc) {
-    return (
-      <section className="section-padding bg-white">
-        <div className="container-custom max-w-lg text-center">
-          <h1 className="text-2xl font-bold text-navy-dark">Page not found</h1>
-          <Button to={`/virtual-office/${city}`} className="mt-6">
-            Explore {cityName} <ArrowRight className="h-4 w-4" />
-          </Button>
-        </div>
-      </section>
-    )
+    // The 3rd URL segment isn't a known service → it's likely a space/area slug.
+    // e.g. /virtual-office/haryana/gurugram/golf-course-extension
+    //      state='haryana', city='gurugram', service='golf-course-extension'
+    // Resolve the city alias and redirect to the space detail page.
+    const resolved = resolveCity(city)
+    const actualCity = resolved?.slug || city
+    const spaceSlug = serviceSlug // the "service" param is actually the space slug
+    return <Navigate to={spaceUrl(actualCity, spaceSlug)} replace />
+  }
+
+  // Alias URL (e.g. .../company-registration), redirect to the canonical
+  // service URL so only one page per city/service is indexable.
+  if (isServiceAlias(urlSlug)) {
+    return <Navigate to={spaceUrl(city, serviceSlug)} replace />
   }
 
   const Icon = iconMap[svc.icon] || FileCheck2
@@ -89,11 +130,16 @@ export default function ServiceLanding() {
     openLeadModal({
       title: `${svc.name} in ${cityName}`,
       subtitle: 'Share your details and our team will call you back within one business day.',
-      service: `${svc.name} — ${where}`,
+      service: `${svc.name}, ${where}`,
       city: cityName,
     })
 
   const otherServices = serviceOrder.filter((s) => s !== svc.slug)
+
+  // Blog / long-form article blocks for the service guide section
+  const serviceArticleBlocks = dbArticle?.blocks?.length
+    ? dbArticle.blocks
+    : (svc.articleBlocks || serviceArticle(svc.name, cityName, region))
 
   // ≥5 related internal links (pillar page + cluster) for SEO crawlability
   const topLocalities = (getSpaces(city) || []).slice(0, 3)
@@ -107,8 +153,37 @@ export default function ServiceLanding() {
     { label: `Coworking in ${cityName}`, to: '/coworking' },
   ]
 
+  const breadcrumbItems = [
+    { name: 'Home', url: '/' },
+    { name: 'Virtual Office', url: '/virtual-office' },
+    { name: cityName, url: cityUrl(city) },
+    ...(localityName ? [{ name: localityName }] : []),
+    { name: svc.name },
+  ]
+
+  const serviceFaqs = svc.faqs(cityName)
+
+  const schemas = [
+    webPageSchema({
+      title: `${svc.name} in ${cityName}, EaseMyOffice`,
+      description: svc.lead(cityName),
+      url: spaceUrl(city, svc.slug),
+      breadcrumbs: breadcrumbItems,
+    }),
+    breadcrumbSchema(breadcrumbItems),
+    faqSchema(serviceFaqs),
+    serviceSchema({
+      name: svc.name,
+      description: svc.lead(cityName),
+      cityName,
+      url: spaceUrl(city, svc.slug),
+      price,
+    }),
+  ].filter(Boolean)
+
   return (
     <>
+      <SchemaScript schemas={schemas} />
       {/* Hero */}
       <section className="relative overflow-hidden bg-hero-gradient">
         <div className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full bg-primary-200/40 blur-3xl" />
@@ -116,11 +191,15 @@ export default function ServiceLanding() {
         <div className="container-custom relative py-12 lg:py-16">
           {/* breadcrumb */}
           <div className="flex flex-wrap items-center gap-1.5 text-sm text-slate-500">
+            <Link to="/" className="hover:text-primary">
+              Home
+            </Link>
+            <span>/</span>
             <Link to="/virtual-office" className="hover:text-primary">
               Virtual Office
             </Link>
             <span>/</span>
-            <Link to={`/virtual-office/${city}`} className="hover:text-primary">
+            <Link to={cityUrl(city)} className="hover:text-primary">
               {cityName}
             </Link>
             {localityName && (
@@ -178,7 +257,7 @@ export default function ServiceLanding() {
                 <Button onClick={openLead} size="lg">
                   Book Now <ArrowRight className="h-5 w-5" />
                 </Button>
-                <Button to={`/virtual-office/${city}`} variant="outline" size="lg">
+                <Button to={cityUrl(city)} variant="outline" size="lg">
                   Explore Spaces
                 </Button>
               </div>
@@ -328,29 +407,14 @@ export default function ServiceLanding() {
         </div>
       </section>
 
-      {/* How it works */}
-      <section className="section-padding bg-surface-light">
-        <div className="container-custom">
-          <SectionHeading eyebrow="How It Works" title="Get Started in 3 Simple Steps" accent="3 Simple Steps" />
-          <div className="relative mt-16 grid gap-8 lg:grid-cols-3">
-            <div className="pointer-events-none absolute left-0 right-0 top-7 hidden h-px bg-gradient-to-r from-transparent via-primary-200 to-transparent lg:block" />
-            {steps.map((s, i) => (
-              <Reveal key={s.title} delay={i * 0.1}>
-                <div className="relative text-center">
-                  <span className="relative mx-auto inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-gradient text-white shadow-card ring-4 ring-white">
-                    <s.icon className="h-6 w-6" />
-                    <span className="absolute -right-1 -top-1 inline-flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-r from-gold to-gold-dark text-[11px] font-bold text-white shadow-gold-glow">
-                      {i + 1}
-                    </span>
-                  </span>
-                  <h3 className="mt-4 font-bold text-navy-dark">{s.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-500">{s.desc}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* How it works, same treatment as the homepage */}
+      <StepsFlow
+        title="Get Started in 3 Simple Steps"
+        accent="3 Simple Steps"
+        subtitle={`From your first message to a ready-to-use business address in ${cityName}, fully online.`}
+        steps={steps}
+        cta={{ label: 'Get Started Today', onClick: openLead }}
+      />
 
       {/* Explore other services in this city */}
       <section className="section-padding bg-white">
@@ -367,7 +431,7 @@ export default function ServiceLanding() {
               return (
                 <Link
                   key={slug}
-                  to={`/virtual-office/${city}/${slug}`}
+                  to={spaceUrl(city, slug)}
                   className="group flex items-center gap-4 rounded-2xl border border-primary-100/70 bg-white p-5 shadow-soft transition-all hover:-translate-y-1 hover:border-primary/40 hover:shadow-card"
                 >
                   <span
@@ -385,7 +449,7 @@ export default function ServiceLanding() {
               )
             })}
           </div>
-          {/* related resources — internal links for SEO crawlability (pillar + cluster) */}
+          {/* related resources, internal links for SEO crawlability (pillar + cluster) */}
           <div className="mx-auto mt-10 max-w-3xl rounded-2xl border border-primary-100 bg-surface-light p-6">
             <p className="text-xs font-bold uppercase tracking-wider text-slate-400">
               Related resources
@@ -406,7 +470,7 @@ export default function ServiceLanding() {
 
           <div className="mt-8 text-center">
             <Link
-              to={`/virtual-office/${city}`}
+              to={cityUrl(city)}
               className="inline-flex items-center gap-1.5 text-sm font-bold text-primary hover:text-primary-700"
             >
               View the full {cityName} guide
@@ -416,16 +480,24 @@ export default function ServiceLanding() {
         </div>
       </section>
 
+      {/* Blog Article, deep-dive guide for the service */}
+      <BlogArticleSection
+        title={dbArticle?.title || `${svc.name} in ${cityName}: Complete Guide`}
+        eyebrow={dbArticle?.eyebrow || 'Guide'}
+        blocks={serviceArticleBlocks}
+        bg="bg-white"
+      />
+
       {/* FAQ */}
       <section className="section-padding bg-surface-light">
         <div className="container-custom">
           <SectionHeading
             eyebrow="FAQ"
-            title={`${svc.name} in ${cityName} — FAQs`}
+            title={`${svc.name} in ${cityName}: FAQs`}
             accent={cityName}
           />
           <Reveal className="mx-auto mt-12 max-w-3xl">
-            <FaqAccordion items={svc.faqs(cityName)} />
+            <FaqAccordion items={serviceFaqs} />
           </Reveal>
         </div>
       </section>

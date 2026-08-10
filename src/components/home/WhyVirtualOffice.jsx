@@ -16,7 +16,7 @@ import {
 } from 'lucide-react'
 import SmartImage from '../ui/SmartImage'
 
-// comparison table (from landing page) — value can be true (✓), false (✗) or a string
+// comparison table (from landing page), value can be true (✓), false (✗) or a string
 const comparison = [
   { label: 'Monthly cost', emo: 'From ₹799', coworking: '₹8,000 – 15,000', traditional: '₹40,000+' },
   { label: 'Setup time', emo: '2–3 days', coworking: '1–2 weeks', traditional: '30–60 days' },
@@ -50,12 +50,12 @@ const benefits = [
   {
     icon: Wallet,
     title: 'Significant Cost Savings',
-    desc: 'No rent, no security deposit and nothing to maintain — you simply pay for the plan you pick, with zero extra overheads.',
+    desc: 'No rent, no security deposit and nothing to maintain, you simply pay for the plan you pick, with zero extra overheads.',
   },
   {
     icon: Building2,
     title: 'Prime Business Address',
-    desc: 'Get listed with a genuine commercial city address instead of a home one — it instantly adds weight when clients or banks look you up.',
+    desc: 'Get listed with a genuine commercial city address instead of a home one, it instantly adds weight when clients or banks look you up.',
   },
   {
     icon: Mail,
@@ -65,22 +65,22 @@ const benefits = [
   {
     icon: Globe,
     title: 'Work From Anywhere',
-    desc: 'Your business address stays fixed while you work from wherever suits you — home, a cafe or a completely different city.',
+    desc: 'Your business address stays fixed while you work from wherever suits you, home, a cafe or a completely different city.',
   },
   {
     icon: ShieldCheck,
     title: 'GST & Registration Ready',
-    desc: 'Fully usable for GST registration, MCA incorporation and state-level filings — with a 98.7% first-attempt approval rate across India.',
+    desc: 'Fully usable for GST registration, MCA incorporation and state-level filings, with a 98.7% first-attempt approval rate across India.',
   },
   {
     icon: Award,
     title: 'Stronger Business Image',
-    desc: 'A credible commercial address builds instant trust with clients, banks and partners — even before the first conversation begins.',
+    desc: 'A credible commercial address builds instant trust with clients, banks and partners, even before the first conversation begins.',
   },
   {
     icon: Wrench,
     title: 'Zero Maintenance',
-    desc: 'Housekeeping, upkeep and repairs at the location are all the centre’s job — you carry no operational duties at the address.',
+    desc: 'Housekeeping, upkeep and repairs at the location are all the centre’s job, you carry no operational duties at the address.',
   },
   {
     icon: CalendarClock,
@@ -90,12 +90,12 @@ const benefits = [
   {
     icon: Car,
     title: 'No Daily Commute',
-    desc: 'No office means no daily travel — those saved hours go straight back into growing your business and time with family.',
+    desc: 'No office means no daily travel, those saved hours go straight back into growing your business and time with family.',
   },
   {
     icon: MapPinned,
     title: 'Expand Across India Instantly',
-    desc: 'Registering in a new state? Just pick a location and activate it — no lease, no deposit and no weeks of setup.',
+    desc: 'Registering in a new state? Just pick a location and activate it, no lease, no deposit and no weeks of setup.',
   },
 ]
 
@@ -136,12 +136,12 @@ export default function WhyVirtualOffice() {
             Why Choose a Virtual Office?
           </h2>
           <p className="mt-4 text-base leading-relaxed text-blue-100/80">
-            Everything you need to run a professional, compliant business — without the cost of a
+            Everything you need to run a professional, compliant business, without the cost of a
             physical office. Here&apos;s what you get with EaseMyOffice.
           </p>
         </motion.div>
 
-        {/* benefits grid — compact 5-up */}
+        {/* benefits grid, compact 5-up */}
         <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {benefits.map((b, i) => (
             <motion.div

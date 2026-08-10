@@ -7,7 +7,10 @@ import Navbar from './components/layout/Navbar'
 import Footer from './components/layout/Footer'
 import WhatsAppButton from './components/layout/WhatsAppButton'
 import ScrollToTop from './components/layout/ScrollToTop'
+import AutoLeadPopup from './components/layout/AutoLeadPopup'
 import ErrorBoundary from './components/layout/ErrorBoundary'
+import SchemaScript from './components/seo/SchemaScript'
+import { organizationSchema, webSiteSchema } from './components/seo/schemas'
 
 // Home is eager so the landing page paints instantly (no chunk round-trip).
 import Home from './pages/Home'
@@ -27,6 +30,8 @@ const SpaceDetail = lazy(() => import('./pages/SpaceDetail'))
 const SpaceOrService = lazy(() => import('./pages/SpaceOrService'))
 const CityOrSpace = lazy(() => import('./pages/CityOrSpace'))
 const ServiceLanding = lazy(() => import('./pages/ServiceLanding'))
+const StateTemplate = lazy(() => import('./pages/StateTemplate'))
+const VODispatcher = lazy(() => import('./pages/VODispatcher'))
 const Faq = lazy(() => import('./pages/Faq'))
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'))
 const Terms = lazy(() => import('./pages/Terms'))
@@ -51,17 +56,23 @@ export default function App() {
       <BookingModalProvider>
         <div className="flex min-h-screen flex-col">
           <ScrollToTop />
+          {/* Opens the lead modal at 25% scroll depth or on exit intent */}
+          <AutoLeadPopup />
+          <SchemaScript schemas={[organizationSchema(), webSiteSchema()]} />
           <Navbar />
-          <main className="flex-1 pt-16 lg:pt-20">
+          {/* min-w-0: as a column flex item, main's width would otherwise be
+              floored at its min-content size, so any non-wrapping row inside
+              a page pushes the document wider than the screen. */}
+          <main className="min-w-0 flex-1 pt-16 lg:pt-20">
             <ErrorBoundary>
             <Suspense fallback={<RouteFallback />}>
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/virtual-office" element={<VirtualOffice />} />
-                <Route path="/virtual-office/:state/:city/:service" element={<ServiceLanding />} />
-                <Route path="/virtual-office/:city/:locality/:service" element={<ServiceLanding />} />
-                <Route path="/virtual-office/:first/:second" element={<CityOrSpace />} />
-                <Route path="/virtual-office/:city" element={<CityTemplate />} />
+                {/* New consistent URL structure: /virtual-office/{state}/{city}/{space|service} */}
+                <Route path="/virtual-office/:first/:second/:third" element={<VODispatcher />} />
+                <Route path="/virtual-office/:first/:second" element={<VODispatcher />} />
+                <Route path="/virtual-office/:first" element={<VODispatcher />} />
                 {/* Legacy /space/ URLs still work (backward compatible) */}
                 <Route path="/space/:city/:space" element={<SpaceOrService />} />
                 <Route path="/space/:state/:city/:space" element={<SpaceOrService />} />

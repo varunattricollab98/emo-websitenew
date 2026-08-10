@@ -23,13 +23,19 @@ import Button from '../components/ui/Button'
 import SmartImage from '../components/ui/SmartImage'
 import FaqAccordion from '../components/ui/FaqAccordion'
 import ArticleBlocks from '../components/ui/ArticleBlocks'
-import { voCities, getSpaceBySlug, spaceStats } from '../data/spaces'
+import BlogArticleSection from '../components/ui/BlogArticleSection'
+import { voCities, getSpaceBySlug, spaceStats, cityUrl, getStateSlugForCity, slugifySpace } from '../data/spaces'
 import { getCityBySlug } from '../data/cities'
 import { getSpaceDetail } from '../data/spaceDetails'
 import { useSpaceDetailFromDb, useSupabaseSpaces } from '../context/SpacesContext'
 import { getLocalityDescription, toBlocks } from '../data/descriptions'
 import { spaceFaqs as buildSpaceFaqs } from '../data/pageFaqs'
+import { spaceArticle } from '../data/blogArticles'
+import { useBlogArticle } from '../hooks/useBlogArticle'
+import { useMeta } from '../hooks/useMeta'
 import TalkToExpert from '../components/ui/TalkToExpert'
+import SchemaScript from '../components/seo/SchemaScript'
+import { webPageSchema, breadcrumbSchema, faqSchema, articleSchema, reviewSchema } from '../components/seo/schemas'
 import { useLeadModal } from '../context/LeadModalContext'
 
 const DEFAULT_IMG =
@@ -63,10 +69,12 @@ export default function SpaceDetail() {
   const { openLeadModal } = useLeadModal()
 
   // Handle multiple route patterns:
-  // /virtual-office/:city/:space via CityOrSpace (first=city, second=space)
+  // /virtual-office/:state/:city/:space (new structure, first=state, second=city, third=space)
+  // /virtual-office/:city/:space (legacy, first=city, second=space)
   // /space/:city/:space (legacy)
-  const city = params.city || params.first || ''
-  const space = params.space || params.second || ''
+  const city = params.third ? params.second : (params.city || params.first || '')
+  const space = params.third || params.space || params.second || ''
+  const stateSlug = params.third ? params.first : ''
 
   // ── All hooks MUST be called unconditionally, before any early return ──
   const [activeImg, setActiveImg] = useState(null)
@@ -76,8 +84,17 @@ export default function SpaceDetail() {
   const dbDetail = useSpaceDetailFromDb(city, space)
   const detail = dbDetail || getSpaceDetail(city, space)
   const { loaded } = useSupabaseSpaces()
+  const dbArticle = useBlogArticle({ pageType: 'space', citySlug: city, areaSlug: space })
   const cityName = voCities.find((c) => c.slug === city)?.name || detail?.city || toTitle(city)
   const region = voCities.find((c) => c.slug === city)?.state || detail?.state || 'India'
+  useMeta({
+    title: `Virtual Office in ${detail?.area || toTitle(space)}, ${cityName} | EaseMyOffice`,
+    description:
+      detail?.description ||
+      `A verified virtual office address in ${detail?.area || toTitle(space)}, ${cityName}. Accepted for GST and company registration.`,
+    path: `/virtual-office/${getStateSlugForCity(city)}/${city}/${space}`,
+    image: detail?.featuredImage || basic?.image,
+  })
 
   // Show loading spinner while Supabase is fetching (prevents empty flash on first load)
   if (!loaded && !basic && !detail) {
@@ -117,18 +134,18 @@ export default function SpaceDetail() {
   const propertyType = detail?.propertyType || 'Virtual Office & Coworking'
   const processingTime = detail?.processingTime || '2\u20133 business days'
   const fullAddress = detail?.fullAddress || `${areaName}, ${cityName}, ${region}`
-  // Map location — use an explicit map query/coords if provided, else the full address.
+  // Map location, use an explicit map query/coords if provided, else the full address.
   // Supports: detail.mapQuery (e.g. "28.6139,77.2090" or a Plus Code) OR falls back to the address.
   const mapQuery = detail?.mapQuery || detail?.map_query || fullAddress
   const mapEmbedUrl = `https://www.google.com/maps?q=${encodeURIComponent(mapQuery)}&hl=en&z=15&output=embed`
   const mapLinkUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`
   const description =
     detail?.overview || detail?.description ||
-    `${areaName} is a sought-after business location in ${cityName}, ${region}. A virtual office here gives your company a credible address for GST and company registration, along with optional coworking desks and professional mail handling — activated in just 2\u20133 business days.`
+    `${areaName} is a sought-after business location in ${cityName}, ${region}. A virtual office here gives your company a credible address for GST and company registration, along with optional coworking desks and professional mail handling, activated in just 2\u20133 business days.`
   const reviews = detail?.reviews?.length
     ? detail.reviews
     : [
-        { name: 'Rahul Sharma', role: 'Founder', rating: 5, text: `Smooth GST registration on the ${areaName} address — documents were ready in days.` },
+        { name: 'Rahul Sharma', role: 'Founder', rating: 5, text: `Smooth GST registration on the ${areaName} address, documents were ready in days.` },
         { name: 'Ananya Kapoor', role: 'Chartered Accountant', rating: 5, text: 'Verification-ready paperwork and a helpful, responsive team. Highly recommend.' },
         { name: 'Mohit Verma', role: 'Startup Co-founder', rating: 4, text: `Premium ${cityName} address at a fair price. Great value for a growing business.` },
       ]
@@ -140,15 +157,15 @@ export default function SpaceDetail() {
       ? description.split('\n\n').filter(Boolean)
       : [String(description)]
 
-  // optional locality (area) description — separate from the space description
+  // optional locality (area) description, separate from the space description
   const localityBlocks = toBlocks(getLocalityDescription(city, space))
 
   // active image falls back to the featured image until the user picks a thumb
   const shownImg = activeImg || featuredImage
-  // all photos — no cap, so any number from the CSV renders
+  // all photos, no cap, so any number from the CSV renders
   const thumbs = [...new Set([featuredImage, ...gallery].filter(Boolean))]
 
-  // "live" activity numbers — auto-generated & stable per space, but any field
+  // "live" activity numbers, auto-generated & stable per space, but any field
   // can be overridden per space via `stats` in spaceDetails.js (or a backend later).
   const stats = { ...spaceStats(`${city}-${space}`), ...(detail?.stats || {}) }
   const reviewCount = detail?.reviewCount || 40 + (stats.monthly % 120)
@@ -157,7 +174,7 @@ export default function SpaceDetail() {
     openLeadModal({
       title: `Book ${spaceName}, ${cityName}`,
       subtitle: 'Share your details and our team will confirm this space with you shortly.',
-      service: `${areaName} — ${cityName}`,
+      service: `${areaName}, ${cityName}`,
       city: cityName,
     })
 
@@ -169,18 +186,45 @@ export default function SpaceDetail() {
 
   const faqs = detail?.faqs?.length ? detail.faqs : buildSpaceFaqs(areaName, cityName, processingTime)
 
+  // Blog / long-form article blocks for the space guide section
+  const spaceArticleBlocks = dbArticle?.blocks?.length
+    ? dbArticle.blocks
+    : (detail?.articleBlocks || spaceArticle(areaName, cityName, region, processingTime))
+
   return (
     <>
+      <SchemaScript schemas={[
+        webPageSchema({
+          title: `${areaName} Virtual Office, ${cityName}`,
+          description: `Virtual office in ${areaName}, ${cityName}. GST & company registration ready, activated in ${processingTime}.`,
+          url: `/virtual-office/${getStateSlugForCity(city)}/${city}/${slugifySpace(space)}`,
+        }),
+        breadcrumbSchema([
+          { name: 'Home', url: '/' },
+          { name: 'Virtual Office', url: '/virtual-office' },
+          { name: region, url: `/virtual-office/${getStateSlugForCity(city)}` },
+          { name: cityName, url: cityUrl(city) },
+          { name: areaName },
+        ]),
+        faqSchema(faqs),
+        articleSchema({
+          title: `Virtual Office in ${areaName}, ${cityName}: Complete Guide`,
+          description: `Everything about virtual offices in ${areaName}, ${cityName}.`,
+          url: `/virtual-office/${getStateSlugForCity(city)}/${city}/${slugifySpace(space)}`,
+        }),
+        reviewSchema(reviews, `${areaName} Virtual Office`, `/virtual-office/${getStateSlugForCity(city)}/${city}/${slugifySpace(space)}`),
+      ].filter(Boolean)} />
+
       {/* Breadcrumb */}
       <div className="border-b border-primary-100 bg-white">
         <div className="container-custom flex flex-wrap items-center gap-1.5 py-4 text-sm text-slate-500">
-          <Link to="/virtual-office" className="hover:text-primary">
-            Virtual Office
-          </Link>
+          <Link to="/" className="hover:text-primary">Home</Link>
           <span>/</span>
-          <Link to={`/virtual-office/${city}`} className="hover:text-primary">
-            {cityName}
-          </Link>
+          <Link to="/virtual-office" className="hover:text-primary">Virtual Office</Link>
+          <span>/</span>
+          <Link to={`/virtual-office/${getStateSlugForCity(city)}`} className="hover:text-primary">{region}</Link>
+          <span>/</span>
+          <Link to={cityUrl(city)} className="hover:text-primary">{cityName}</Link>
           <span>/</span>
           <span className="font-semibold text-navy-dark">{areaName}</span>
         </div>
@@ -190,7 +234,10 @@ export default function SpaceDetail() {
       <section className="bg-white pt-8 lg:pt-10">
         <div className="container-custom grid gap-8 lg:grid-cols-2">
           {/* gallery */}
+          {/* min-w-0: grid items default to a min-content width floor, which
+              lets the thumbnail strip and chips widen the page on phones */}
           <motion.div
+            className="min-w-0"
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
@@ -236,9 +283,9 @@ export default function SpaceDetail() {
                 <button
                   type="button"
                   onClick={() => openLeadModal({
-                    title: `View more images — ${areaName}, ${cityName}`,
+                    title: `View more images, ${areaName}, ${cityName}`,
                     subtitle: 'Share your details and we\'ll send you the full photo gallery and a virtual tour link.',
-                    service: `Gallery request — ${areaName}, ${cityName}`,
+                    service: `Gallery request, ${areaName}, ${cityName}`,
                     city: cityName,
                   })}
                   className="inline-flex items-center gap-1.5 rounded-full border border-primary-200 bg-white px-3 py-1.5 text-xs font-bold text-primary shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary hover:shadow-card"
@@ -252,6 +299,7 @@ export default function SpaceDetail() {
 
           {/* info + explanation */}
           <motion.div
+            className="min-w-0"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
@@ -283,7 +331,7 @@ export default function SpaceDetail() {
               </span>
             </div>
 
-            {/* live activity strip — makes the listing feel alive */}
+            {/* live activity strip, makes the listing feel alive */}
             <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 rounded-2xl border border-emerald-100 bg-emerald-50/60 px-4 py-3">
               <span className="inline-flex items-center gap-2 text-sm font-semibold text-emerald-700">
                 <span className="relative flex h-2.5 w-2.5">
@@ -302,7 +350,7 @@ export default function SpaceDetail() {
             </div>
 
             <div className="mt-5 flex flex-wrap items-end gap-x-4 gap-y-3">
-              {/* Plan switcher — hover/click to see plan-specific price */}
+              {/* Plan switcher, hover/click to see plan-specific price */}
               {(() => {
                 const planOpts = [
                   { key: 'ma', label: 'Mailing', price: pricing.ma },
@@ -330,7 +378,9 @@ export default function SpaceDetail() {
                         </button>
                       ))}
                     </div>
-                    <div className="flex items-end gap-1">
+                    {/* flex-wrap: "From ₹XX,XXX /mo" plus the data-driven
+                        "Ready in …" pill overflows a phone width on one line */}
+                    <div className="flex flex-wrap items-end gap-x-1 gap-y-2">
                       <span className="text-sm font-medium text-slate-400">From</span>
                       <span className="ml-1 text-3xl font-extrabold text-navy-dark">
                         ₹{Number(planOpts.find((p) => p.key === activePlan)?.price || pricing.monthly).toLocaleString('en-IN')}
@@ -348,14 +398,16 @@ export default function SpaceDetail() {
               })()}
             </div>
 
-            {/* short lead — full description lives in the About section below */}
+            {/* short lead, full description lives in the About section below */}
             <p className="mt-4 leading-relaxed text-slate-600">
-              A premium, verified business address in {areaName}, {cityName} — ready for GST and
+              A premium, verified business address in {areaName}, {cityName}, ready for GST and
               company registration, activated in {processingTime}.
             </p>
 
-            {/* what's included — highlight chips (from Supabase highlights column or defaults) */}
-            <div className="mt-5 grid grid-cols-2 gap-2.5">
+            {/* what's included, highlight chips (from Supabase highlights column or defaults) */}
+            {/* Single column on phones: labels come from Supabase so their
+                length is arbitrary, and a 2-col track is ~123px of text. */}
+            <div className="mt-5 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
               {(() => {
                 const defaultChips = [
                   { icon: FileCheck2, label: 'GST & MCA ready docs' },
@@ -376,16 +428,16 @@ export default function SpaceDetail() {
                 return chips.map((it) => (
                   <span
                     key={it.label}
-                    className="inline-flex items-center gap-2 rounded-xl border border-primary-100/70 bg-white px-3 py-2 text-xs font-semibold text-navy-dark shadow-soft"
+                    className="inline-flex min-w-0 items-center gap-2 rounded-xl border border-primary-100/70 bg-white px-3 py-2 text-xs font-semibold text-navy-dark shadow-soft"
                   >
                     <it.icon className="h-4 w-4 flex-none text-primary" />
-                    {it.label}
+                    <span className="min-w-0 break-words">{it.label}</span>
                   </span>
                 ))
               })()}
             </div>
 
-            {/* Book — top */}
+            {/* Book: top */}
             <div className="mt-6 flex flex-wrap gap-3">
               <Button onClick={book} size="lg">
                 Book This Space <ArrowRight className="h-5 w-5" />
@@ -426,7 +478,7 @@ export default function SpaceDetail() {
             eyebrow="About the space"
             title={spaceName}
             accent={areaName}
-            subtitle={`A verified virtual office & coworking address in ${cityName}, ${region} — accepted for GST and company registration, activated in ${processingTime}.`}
+            subtitle={`A verified virtual office & coworking address in ${cityName}, ${region}, accepted for GST and company registration, activated in ${processingTime}.`}
           />
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {[
@@ -475,7 +527,7 @@ export default function SpaceDetail() {
             </button>
           </div>
 
-          {/* full space description / blog + area guide — premium reading cards */}
+          {/* full space description / blog + area guide, premium reading cards */}
           <div className="mt-10 grid gap-6 lg:grid-cols-3">
             {/* main article */}
             <div className="lg:col-span-2">
@@ -551,7 +603,7 @@ export default function SpaceDetail() {
                   ))}
                 </div>
                 <div className="mt-6 border-t border-primary-100/70 pt-5">
-                  <div className="flex items-end gap-1">
+                  <div className="flex flex-wrap items-end gap-x-1 gap-y-1">
                     <span className="text-sm font-medium text-slate-400">From</span>
                     <span className="ml-1 text-2xl font-extrabold text-navy-dark">
                       ₹{Number(pricing.monthly).toLocaleString('en-IN')}
@@ -572,7 +624,8 @@ export default function SpaceDetail() {
       <section className="section-padding bg-surface-light">
         <div className="container-custom">
           <SectionHeading eyebrow="Amenities" title={`What's Available Here`} accent="Available" />
-          <div className="mx-auto mt-12 grid max-w-4xl grid-cols-2 gap-3 sm:grid-cols-3">
+          {/* Amenity names come from the DB/CSV, so one column on phones */}
+          <div className="mx-auto mt-12 grid max-w-4xl grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
             {amenities.map((a) => (
               <div
                 key={a}
@@ -581,14 +634,14 @@ export default function SpaceDetail() {
                 <span className="inline-flex h-7 w-7 flex-none items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 text-white">
                   <Check className="h-4 w-4" strokeWidth={3} />
                 </span>
-                <span className="text-sm font-semibold text-navy-dark">{a}</span>
+                <span className="min-w-0 break-words text-sm font-semibold text-navy-dark">{a}</span>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ===== Location (area-level only — exact address hidden) ===== */}
+      {/* ===== Location (area-level only, exact address hidden) ===== */}
       <section className="section-padding bg-white">
         <div className="container-custom">
           <SectionHeading eyebrow="Location" title="Where You'll Be" accent="Be" />
@@ -642,7 +695,7 @@ export default function SpaceDetail() {
             eyebrow="Plans & Pricing"
             title={`Plans at ${areaName}`}
             accent={areaName}
-            subtitle="Transparent pricing with no hidden charges — pick what fits your business."
+            subtitle="Transparent pricing with no hidden charges. Pick what fits your business."
           />
           <div className="mt-14 grid gap-6 lg:grid-cols-3">
             {plans.map((p) => (
@@ -664,7 +717,7 @@ export default function SpaceDetail() {
                   </span>
                   <h3 className="mt-4 text-lg font-bold text-navy-dark">{p.name}</h3>
                   <p className="mt-1 text-sm text-slate-500">{p.note}</p>
-                  <div className="mt-4 flex items-end gap-1">
+                  <div className="mt-4 flex flex-wrap items-end gap-x-1 gap-y-1">
                     <span className="mb-1 text-xl font-bold text-navy-dark">₹</span>
                     <span className="text-4xl font-extrabold leading-none text-navy-dark">
                       {Number(p.price).toLocaleString('en-IN')}
@@ -685,7 +738,7 @@ export default function SpaceDetail() {
         </div>
       </section>
 
-      {/* ===== Book this space — bottom band ===== */}
+      {/* ===== Book this space, bottom band ===== */}
       <section className="section-padding bg-surface-light">
         <div className="container-custom">
           <div
@@ -710,7 +763,7 @@ export default function SpaceDetail() {
                   Book This Space <ArrowRight className="h-5 w-5" />
                 </button>
                 <Link
-                  to={`/virtual-office/${city}`}
+                  to={cityUrl(city)}
                   className="btn-base border-2 border-white/40 px-8 py-4 text-base text-white hover:bg-white/10"
                 >
                   <ArrowLeft className="h-4 w-4" />
@@ -762,10 +815,18 @@ export default function SpaceDetail() {
         </div>
       </section>
 
+      {/* ===== Blog Article ===== */}
+      <BlogArticleSection
+        title={dbArticle?.title || `Virtual Office in ${areaName}, ${cityName}: Complete Guide`}
+        eyebrow={dbArticle?.eyebrow || 'Guide'}
+        blocks={spaceArticleBlocks}
+        bg="bg-white"
+      />
+
       {/* ===== FAQ ===== */}
       <section className="section-padding bg-surface-light">
         <div className="container-custom">
-          <SectionHeading eyebrow="FAQ" title={`${areaName} — Questions Answered`} accent="Questions Answered" />
+          <SectionHeading eyebrow="FAQ" title={`${areaName}: Questions Answered`} accent="Questions Answered" />
           <Reveal className="mx-auto mt-12 max-w-3xl">
             <FaqAccordion items={faqs} />
           </Reveal>

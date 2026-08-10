@@ -37,7 +37,7 @@ export default function SolutionsGrid() {
         <SectionHeading
           eyebrow="Our Solutions"
           title="Everything your business needs, in one place"
-          subtitle="From a prestigious address to complete compliance — pick a solution built for modern Indian businesses."
+          subtitle="From a prestigious address to complete compliance, pick a solution built for modern Indian businesses."
         />
         <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {solutions.map((s, i) => (

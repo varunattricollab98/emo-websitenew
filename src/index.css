@@ -9,6 +9,16 @@
   body {
     @apply font-sans text-navy-dark antialiased bg-white;
   }
+  /* Stops one wide child from widening the whole document on phones, which
+     also made position:fixed modals render past the screen edge (fixed
+     resolves against the layout viewport, not the visual one).
+     `clip` rather than `hidden`: `hidden` turns this into a scroll container
+     and would break every `position: sticky` element on the site. */
+  html,
+  body {
+    overflow-x: clip;
+    max-width: 100%;
+  }
   * {
     -webkit-tap-highlight-color: transparent;
   }

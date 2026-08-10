@@ -6,7 +6,7 @@ import { useState } from 'react'
  * background shows through, ensuring nothing ever looks broken.
  *
  * Enhancement: applies a subtle CSS filter to boost brightness, contrast,
- * and saturation — making space photos look more vivid and professional
+ * and saturation, making space photos look more vivid and professional
  * without altering the source files.
  *
  * Pass `enhance={false}` to disable the filter for decorative/bg images.

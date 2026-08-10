@@ -6,7 +6,7 @@ import { resolvePincode, lookupPincode } from '../../data/pincodes'
 /**
  * Editable location combobox used across the site.
  * - Search by city name, state, or PINCODE.
- * - Paste/type any custom location (free-text) — the "Use …" option.
+ * - Paste/type any custom location (free-text), the "Use …" option.
  * - `onChange(value)` receives the chosen text (city name or custom string).
  */
 export default function LocationSelect({
@@ -143,7 +143,7 @@ export default function LocationSelect({
 
               {!loading && suggestions.length === 0 && !apiResult && (
                 <li className="px-3 py-2.5 text-sm text-slate-400">
-                  {isNumeric ? 'No city for this pincode yet — type your city below.' : 'No match found.'}
+                  {isNumeric ? 'No city for this pincode yet, type your city below.' : 'No match found.'}
                 </li>
               )}
             </ul>

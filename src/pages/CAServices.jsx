@@ -21,7 +21,7 @@ export default function CAServices() {
       {/* Hero: 1,200+ accounts highlight + searchable service finder */}
       <CAServiceHero query={query} setQuery={setQuery} cat={cat} setCat={setCat} />
 
-      {/* Flagship CA services — "Get started" opens the contact popup (no routing) */}
+      {/* Flagship CA services, "Get started" opens the contact popup (no routing) */}
       <ComplianceServices />
 
       {/* Tabbed service finder by category (moved up) */}

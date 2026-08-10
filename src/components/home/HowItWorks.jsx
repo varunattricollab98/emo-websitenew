@@ -6,7 +6,7 @@ const steps = [
   {
     icon: ClipboardList,
     title: 'Choose Your Plan',
-    desc: 'Select the city and plan that fits your compliance needs — mailing, GST or company registration.',
+    desc: 'Select the city and plan that fits your compliance needs, mailing, GST or company registration.',
   },
   {
     icon: FileText,
@@ -32,7 +32,7 @@ export default function HowItWorks() {
         <SectionHeading
           eyebrow="How It Works"
           title="From sign-up to business address in 4 simple steps"
-          subtitle="A completely online, guided process — no office visits, no paperwork headaches."
+          subtitle="A completely online, guided process with no office visits and no paperwork headaches."
         />
         <div className="relative mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {/* connector line */}
