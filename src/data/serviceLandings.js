@@ -527,8 +527,38 @@ export const serviceOrder = [
   'desk-plan',
 ]
 
+/**
+ * Alternate slugs that mean the same service.
+ *
+ * "Company registration" and "business registration" are the same product, so
+ * both URLs must land on one page rather than splitting traffic and ranking
+ * across two near-identical pages. Alias slugs resolve to the canonical
+ * service, and the pages redirect to the canonical URL:
+ *
+ *   /virtual-office/company-registration
+ *     -> /virtual-office/business-registration
+ *   /virtual-office/haryana/gurgaon/company-registration
+ *     -> /virtual-office/haryana/gurgaon/business-registration
+ */
+export const serviceAliases = {
+  'company-registration': 'business-registration',
+  'company-incorporation': 'business-registration',
+}
+
+/** Map an alias slug to its canonical service slug (pass-through if not an alias). */
+export function resolveServiceSlug(slug) {
+  const s = String(slug || '').toLowerCase()
+  return serviceAliases[s] || s
+}
+
+/** True when the slug is an alias, i.e. it should redirect to a different URL. */
+export function isServiceAlias(slug) {
+  const s = String(slug || '').toLowerCase()
+  return Boolean(serviceAliases[s]) && serviceAliases[s] !== s
+}
+
 export function getServiceLanding(slug) {
-  return serviceLandings[String(slug || '').toLowerCase()] || null
+  return serviceLandings[resolveServiceSlug(slug)] || null
 }
 
 /**

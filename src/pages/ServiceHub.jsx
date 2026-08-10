@@ -1,4 +1,4 @@
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, Navigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
   FileCheck2,
@@ -53,6 +53,8 @@ import {
   getServiceLanding,
   getServiceNational,
   serviceHubUrl,
+  resolveServiceSlug,
+  isServiceAlias,
 } from '../data/serviceLandings'
 import { useLeadModal } from '../context/LeadModalContext'
 
@@ -103,13 +105,17 @@ function canonicalCitySlug(raw) {
 export default function ServiceHub() {
   const params = useParams()
   const rawService = (params.first || params.service || '').toLowerCase()
-  const serviceSlug = rawService
+  const urlSlug = rawService
     .replace(/gstregistration/i, 'gst-registration')
     .replace(/businessregistration/i, 'business-registration')
+    .replace(/companyregistration/i, 'company-registration')
     .replace(/mailingaddress/i, 'mailing-address')
     .replace(/deskplan/i, 'desk-plan')
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '')
+  // Aliases (e.g. company-registration) collapse onto the canonical service so
+  // both URLs render the same page, and the alias URL redirects below.
+  const serviceSlug = resolveServiceSlug(urlSlug)
 
   const svc = getServiceLanding(serviceSlug)
   const nat = getServiceNational(serviceSlug)
@@ -172,6 +178,13 @@ export default function ServiceHub() {
     .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
 
   if (!svc || !nat) return null
+
+  // Alias URL, send the visitor to the canonical one so there is a single
+  // indexable page per service. Placed after the hooks above so hook order
+  // stays stable across renders.
+  if (isServiceAlias(urlSlug)) {
+    return <Navigate to={serviceHubUrl(serviceSlug)} replace />
+  }
 
   const Icon = iconMap[svc.icon] || FileCheck2
 
