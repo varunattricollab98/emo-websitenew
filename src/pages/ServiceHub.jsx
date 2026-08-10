@@ -530,7 +530,7 @@ export default function ServiceHub() {
             {svc.included.map((item) => (
               <div
                 key={item}
-                className="flex items-center gap-3 rounded-2xl border border-primary-100/70 bg-white px-4 py-3 shadow-soft"
+                className="flex items-center gap-3 rounded-2xl border border-primary-100/70 bg-white px-4 py-3 shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/30 hover:bg-primary-50/30 hover:shadow-card"
               >
                 <span className="inline-flex h-7 w-7 flex-none items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 text-white">
                   <Check className="h-4 w-4" strokeWidth={3} />
