@@ -295,7 +295,7 @@ Virtual office plans can often be upgraded as business requirements evolve, maki
 | Dedicated Workspace | ✔ | Shared | Optional |
 | Maintenance Costs | High | Included | None |
 | Flexibility | Low | Medium | High |
-| Suitable for Remote Businesses | ✗ | Limited | ✔ |
+| Suitable for Remote Businesses | ✖ | Limited | ✔ |
 
 # Why More Businesses Are Choosing Virtual Offices
 
@@ -510,12 +510,39 @@ Receive the documents commonly required during the GST registration process, hel
 
 ## Step-by-Step GST Registration Process
 
-- **Step 1** Choose your preferred virtual office location in Pune.
-- **Step 2** Complete KYC verification with your provider.
-- **Step 3** Receive the required commercial address documentation.
-- **Step 4** Submit your GST registration application using the applicable documents.
-- **Step 5** Respond to any verification requests from the GST authorities, if required.
-- **Step 6** Receive your GST registration certificate upon approval.
+Step 1
+
+Choose your preferred virtual office location in Pune.
+
+⬇️
+
+Step 2
+
+Complete KYC verification with your provider.
+
+⬇️
+
+Step 3
+
+Receive the required commercial address documentation.
+
+⬇️
+
+Step 4
+
+Submit your GST registration application using the applicable documents.
+
+⬇️
+
+Step 5
+
+Respond to any verification requests from the GST authorities, if required.
+
+⬇️
+
+Step 6
+
+Receive your GST registration certificate upon approval.
 
 # Virtual Office for Company Registration in Pune
 
@@ -1040,8 +1067,8 @@ While an independent consultant may only need a registered office address, large
 | Mail Handling | Limited | ✔ | ✔ |
 | Courier Forwarding | Optional | ✔ | ✔ |
 | Meeting Room Access | Pay Per Use | Limited Hours | Extended Hours |
-| Reception Services | ✗ | ✔ | ✔ |
-| Dedicated Customer Support | ✗ | ✔ | ✔ |
+| Reception Services | ✖ | ✔ | ✔ |
+| Dedicated Customer Support | ✖ | ✔ | ✔ |
 
 > Tip: Choose a provider based on the overall value they offer—not just the lowest price. Reliable documentation, premium locations, and responsive support can save significant time and reduce operational challenges.
 
@@ -1240,13 +1267,13 @@ Displaying these trust signals on your website can improve conversion rates and 
 
 Before making your decision, ask the following questions:
 
-- Is the office located in a genuine commercial building?
-- Are GST and company registration documents provided?
-- Is the pricing transparent?
-- Does the provider offer mail handling?
-- Are meeting rooms available when required?
-- Is customer support responsive?
-- Can the plan be upgraded as my business grows?
+- ✅ Is the office located in a genuine commercial building?
+- ✅ Are GST and company registration documents provided?
+- ✅ Is the pricing transparent?
+- ✅ Does the provider offer mail handling?
+- ✅ Are meeting rooms available when required?
+- ✅ Is customer support responsive?
+- ✅ Can the plan be upgraded as my business grows?
 
 Choosing a provider that answers "Yes" to these questions will help ensure a reliable and hassle-free experience.
 
