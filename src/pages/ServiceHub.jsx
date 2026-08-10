@@ -410,7 +410,7 @@ export default function ServiceHub() {
             accent="City by City"
             subtitle={`Pricing, addresses and documentation differ slightly by city. Pick yours to see local ${svc.name.toLowerCase()} details.`}
           />
-          <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {cityList.map((c, i) => {
               const cityPrice =
                 svc.fixedPrice ||
@@ -419,32 +419,55 @@ export default function ServiceHub() {
                 <Reveal key={c.slug} delay={(i % 4) * 0.06}>
                   <Link
                     to={spaceUrl(c.slug, svc.slug)}
-                    className="group flex h-full flex-col overflow-hidden rounded-2xl border border-primary-100/70 bg-white shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover"
+                    className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-primary-100/60 bg-white/95 shadow-card ring-1 ring-primary-50/50 backdrop-blur-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-card-hover hover:ring-primary-200/70"
                   >
-                    <div className="flex flex-1 flex-col p-6">
-                      <span
-                        className="inline-flex h-10 w-10 items-center justify-center rounded-xl text-white shadow-card"
-                        style={{ background: svc.grad }}
-                      >
-                        <Icon className="h-5 w-5" />
-                      </span>
-                      <h3 className="mt-4 text-lg font-bold text-navy-dark transition-colors group-hover:text-primary">
-                        {svc.name} in {c.name}
+                    {/* Gradient accent top bar */}
+                    <span
+                      className="pointer-events-none absolute inset-x-0 top-0 h-1 opacity-80 transition-opacity duration-300 group-hover:opacity-100"
+                      style={{ background: svc.grad }}
+                    />
+                    {/* Hover glow effect */}
+                    <span
+                      className="pointer-events-none absolute -top-12 right-0 h-24 w-24 rounded-full opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-20"
+                      style={{ background: svc.grad }}
+                    />
+                    <div className="relative flex flex-1 flex-col p-6">
+                      {/* Icon + City badge row */}
+                      <div className="flex items-center justify-between">
+                        <span
+                          className="inline-flex h-11 w-11 items-center justify-center rounded-xl text-white shadow-card ring-1 ring-white/30 transition-transform duration-300 group-hover:scale-110"
+                          style={{ background: svc.grad }}
+                        >
+                          <Icon className="h-5 w-5" />
+                        </span>
+                        <span className="inline-flex items-center gap-1 rounded-full bg-primary-50/80 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-primary">
+                          <MapPin className="h-3 w-3" />
+                          {c.count}+ spots
+                        </span>
+                      </div>
+                      {/* City name + state */}
+                      <h3 className="mt-4 text-lg font-extrabold leading-tight text-navy-dark transition-colors duration-300 group-hover:text-primary">
+                        {c.name}
                       </h3>
-                      <p className="mt-1 text-xs text-slate-500">
-                        {c.state} · {c.count}+ addresses
+                      <p className="mt-1 text-xs font-medium text-slate-500">
+                        {c.state}
                       </p>
-                      <div className="mt-4 flex items-end justify-between">
+                      {/* Divider */}
+                      <div className="my-4 h-px w-full bg-gradient-to-r from-transparent via-primary-100 to-transparent" />
+                      {/* Price + CTA */}
+                      <div className="mt-auto flex items-end justify-between">
                         <div>
-                          <p className="text-xs text-slate-400">Starting at</p>
-                          <p className="text-lg font-extrabold text-primary">
+                          <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">Starting at</p>
+                          <p className="text-xl font-extrabold text-navy-dark">
                             ₹{cityPrice.toLocaleString('en-IN')}
-                            <span className="text-xs font-medium text-slate-400">
+                            <span className="ml-0.5 text-xs font-medium text-slate-400">
                               {svc.period}
                             </span>
                           </p>
                         </div>
-                        <ArrowRight className="h-5 w-5 text-primary transition-transform group-hover:translate-x-1" />
+                        <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary-50 text-primary transition-all duration-300 group-hover:bg-primary group-hover:text-white group-hover:shadow-glow">
+                          <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
+                        </span>
                       </div>
                     </div>
                   </Link>
