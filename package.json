@@ -8,7 +8,9 @@
     "prebuild": "node scripts/make-og-image.mjs",
     "build": "vite build && node scripts/prerender.mjs",
     "preview": "vite preview",
-    "import:spaces": "node scripts/import-spaces.mjs"
+    "import:spaces": "node scripts/import-spaces.mjs",
+    "articles:status": "node scripts/push-articles.mjs --status",
+    "articles:push": "node scripts/push-articles.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.110.8",
