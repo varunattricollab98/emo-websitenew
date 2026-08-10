@@ -11,9 +11,9 @@ import {
   ShieldCheck,
   Clock,
   BadgeCheck,
-  MessageSquare,
-  FileUp,
-  PartyPopper,
+  MapPinned,
+  FileText,
+  KeyRound,
   Sparkles,
   Phone,
 } from 'lucide-react'
@@ -23,6 +23,7 @@ import Button from '../components/ui/Button'
 import FaqAccordion from '../components/ui/FaqAccordion'
 import ArticleBlocks from '../components/ui/ArticleBlocks'
 import BlogArticleSection from '../components/ui/BlogArticleSection'
+import StepsFlow from '../components/ui/StepsFlow'
 import SchemaScript from '../components/seo/SchemaScript'
 import { webPageSchema, breadcrumbSchema, faqSchema, serviceSchema } from '../components/seo/schemas'
 import { voCities, getSpaces, slugifySpace, cityUrl, spaceUrl, getStateSlugForCity } from '../data/spaces'
@@ -50,9 +51,24 @@ function toTitle(str = '') {
 }
 
 const steps = [
-  { icon: MessageSquare, title: 'Share your requirement', desc: 'Tell us the city and service you need.' },
-  { icon: FileUp, title: 'Upload documents', desc: 'Submit your KYC online, we verify everything upfront.' },
-  { icon: PartyPopper, title: 'Get activated', desc: 'Your address & documents are ready in 2–3 days.' },
+  {
+    icon: MapPinned,
+    title: 'Share your requirement',
+    desc: 'Tell us the city and service you need.',
+    chip: 'Free consultation',
+  },
+  {
+    icon: FileText,
+    title: 'Upload documents',
+    desc: 'Submit your KYC online, we verify everything upfront.',
+    chip: '100% online',
+  },
+  {
+    icon: KeyRound,
+    title: 'Get activated',
+    desc: 'Your address & documents are ready in 2–3 days.',
+    chip: 'Ready in 2–3 days',
+  },
 ]
 
 export default function ServiceLanding() {
@@ -391,29 +407,14 @@ export default function ServiceLanding() {
         </div>
       </section>
 
-      {/* How it works */}
-      <section className="section-padding bg-surface-light">
-        <div className="container-custom">
-          <SectionHeading eyebrow="How It Works" title="Get Started in 3 Simple Steps" accent="3 Simple Steps" />
-          <div className="relative mt-16 grid gap-8 lg:grid-cols-3">
-            <div className="pointer-events-none absolute left-0 right-0 top-7 hidden h-px bg-gradient-to-r from-transparent via-primary-200 to-transparent lg:block" />
-            {steps.map((s, i) => (
-              <Reveal key={s.title} delay={i * 0.1}>
-                <div className="relative text-center">
-                  <span className="relative mx-auto inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-gradient text-white shadow-card ring-4 ring-white">
-                    <s.icon className="h-6 w-6" />
-                    <span className="absolute -right-1 -top-1 inline-flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-r from-gold to-gold-dark text-[11px] font-bold text-white shadow-gold-glow">
-                      {i + 1}
-                    </span>
-                  </span>
-                  <h3 className="mt-4 font-bold text-navy-dark">{s.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-500">{s.desc}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* How it works, same treatment as the homepage */}
+      <StepsFlow
+        title="Get Started in 3 Simple Steps"
+        accent="3 Simple Steps"
+        subtitle={`From your first message to a ready-to-use business address in ${cityName}, fully online.`}
+        steps={steps}
+        cta={{ label: 'Get Started Today', onClick: openLead }}
+      />
 
       {/* Explore other services in this city */}
       <section className="section-padding bg-white">
