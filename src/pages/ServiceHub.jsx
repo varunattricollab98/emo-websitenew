@@ -60,7 +60,45 @@ import {
 } from '../data/serviceLandings'
 import { useLeadModal } from '../context/LeadModalContext'
 
-const DEFAULT_CITY_IMAGE = 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=600&q=80'
+// City landmark/skyline images for the grid cards. These are iconic
+// representations of each city (not the interior office photos from Supabase).
+// Supabase featured_images are office interiors which don't represent the CITY.
+const CITY_LANDMARK_IMAGES = {
+  delhi: 'https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format&fit=crop&w=600&q=80', // India Gate
+  mumbai: 'https://images.unsplash.com/photo-1570168007204-dfb528c6958f?auto=format&fit=crop&w=600&q=80', // Gateway of India
+  bangalore: 'https://images.unsplash.com/photo-1596176530529-78163a4f7af2?auto=format&fit=crop&w=600&q=80', // Bangalore skyline
+  gurgaon: 'https://images.unsplash.com/photo-1605810230434-7631ac76ec81?auto=format&fit=crop&w=600&q=80', // Cyber City towers
+  hyderabad: 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=600&q=80', // Charminar area
+  chennai: 'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=600&q=80', // Chennai skyline
+  pune: 'https://images.unsplash.com/photo-1572782252655-9c8771392601?auto=format&fit=crop&w=600&q=80', // Pune cityscape
+  noida: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=600&q=80', // Noida expressway towers
+  kolkata: 'https://images.unsplash.com/photo-1558431382-27e303142255?auto=format&fit=crop&w=600&q=80', // Howrah Bridge
+  ahmedabad: 'https://images.unsplash.com/photo-1627894006066-b45960f68dc0?auto=format&fit=crop&w=600&q=80', // Ahmedabad heritage
+  jaipur: 'https://images.unsplash.com/photo-1477587458883-47145ed94245?auto=format&fit=crop&w=600&q=80', // Hawa Mahal
+  lucknow: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?auto=format&fit=crop&w=600&q=80', // Bara Imambara
+  chandigarh: 'https://images.unsplash.com/photo-1588416936097-41850ab3d86d?auto=format&fit=crop&w=600&q=80', // Rock Garden / Capitol
+  kochi: 'https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?auto=format&fit=crop&w=600&q=80', // Chinese fishing nets
+  indore: 'https://images.unsplash.com/photo-1623070573928-6dc24b111073?auto=format&fit=crop&w=600&q=80', // Rajwada palace
+  bhopal: 'https://images.unsplash.com/photo-1609766418204-94aae0eceb68?auto=format&fit=crop&w=600&q=80', // Upper Lake
+  coimbatore: 'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=600&q=80', // city temple
+  patna: 'https://images.unsplash.com/photo-1590766940554-634826f0635e?auto=format&fit=crop&w=600&q=80', // Golghar
+  vadodara: 'https://images.unsplash.com/photo-1609766418204-94aae0eceb68?auto=format&fit=crop&w=600&q=80', // Laxmi Vilas palace
+  guwahati: 'https://images.unsplash.com/photo-1574356225002-cf03c5aea1b0?auto=format&fit=crop&w=600&q=80', // Brahmaputra river
+  jodhpur: 'https://images.unsplash.com/photo-1534751516642-a1af1ef26a56?auto=format&fit=crop&w=600&q=80', // Blue city / Mehrangarh
+  udaipur: 'https://images.unsplash.com/photo-1602301312001-e0e3d3f6e4e3?auto=format&fit=crop&w=600&q=80', // Lake Palace
+  vizag: 'https://images.unsplash.com/photo-1583330632802-c29797e4b592?auto=format&fit=crop&w=600&q=80', // Vizag beach
+  ranchi: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=600&q=80', // Dassam Falls area
+  jammu: 'https://images.unsplash.com/photo-1566837945700-30057527ade0?auto=format&fit=crop&w=600&q=80', // Vaishno Devi hills
+  gangtok: 'https://images.unsplash.com/photo-1622308644420-b20142dc993c?auto=format&fit=crop&w=600&q=80', // Kanchenjunga view
+  dharamshala: 'https://images.unsplash.com/photo-1587391723581-1a51b4c17dbb?auto=format&fit=crop&w=600&q=80', // Himalayan town
+  aizawl: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=600&q=80', // Hill city
+  agartala: 'https://images.unsplash.com/photo-1590766940554-634826f0635e?auto=format&fit=crop&w=600&q=80', // Ujjayanta Palace
+  bhubaneswar: 'https://images.unsplash.com/photo-1590766940554-634826f0635e?auto=format&fit=crop&w=600&q=80', // Lingaraj Temple area
+  panaji: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=600&q=80', // Goa beaches
+  puducherry: 'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=600&q=80', // French quarter
+}
+
+const DEFAULT_CITY_IMAGE = 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=600&q=80' // modern skyline
 
 const iconMap = { FileCheck2, Landmark, Mailbox, Armchair }
 
@@ -420,7 +458,7 @@ export default function ServiceHub() {
               const cityPrice =
                 svc.fixedPrice ||
                 Math.max(499, (getCityBySlug(c.slug)?.price || c.min) + (svc.priceOffset || 0))
-              const cityImage = c.image || DEFAULT_CITY_IMAGE
+              const cityImage = CITY_LANDMARK_IMAGES[c.slug] || DEFAULT_CITY_IMAGE
               return (
                 <Reveal key={c.slug} delay={(i % 4) * 0.06}>
                   <Link
