@@ -543,9 +543,15 @@ export default function ServiceHub() {
       </section>
 
       {/* Why choose */}
-      <section className="section-padding bg-surface-light">
-        <div className="container-custom">
+      <section className="relative overflow-hidden py-20 lg:py-28" style={{ background: 'linear-gradient(135deg, #0a1a30 0%, #11417c 60%, #16508f 120%)' }}>
+        {/* Background effects */}
+        <div className="pointer-events-none absolute inset-0 tech-dots opacity-30 [mask-image:radial-gradient(ellipse_80%_70%_at_50%_50%,#000,transparent)]" />
+        <div className="pointer-events-none absolute -left-40 top-1/4 h-80 w-80 rounded-full bg-primary-400/20 blur-[100px]" />
+        <div className="pointer-events-none absolute -right-32 bottom-1/4 h-72 w-72 rounded-full bg-gold/10 blur-[80px]" />
+
+        <div className="container-custom relative">
           <SectionHeading
+            light
             eyebrow="Why EaseMyOffice"
             title={`Why Businesses Across India Choose Us for ${svc.name}`}
             accent={svc.name}
@@ -553,23 +559,24 @@ export default function ServiceHub() {
           <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {svc.why.map((w, i) => (
               <Reveal key={w.title} delay={(i % 4) * 0.07}>
-                <div className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-primary-100/70 bg-white p-7 shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/30 hover:shadow-card-hover">
+                <div className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-white/[0.12] bg-white/[0.07] p-7 backdrop-blur-xl transition-all duration-300 hover:-translate-y-2 hover:border-white/[0.25] hover:bg-white/[0.12] hover:shadow-[0_8px_40px_-10px_rgba(44,103,158,0.4)]">
+                  {/* Tech grid texture */}
+                  <div className="pointer-events-none absolute inset-0 tech-grid opacity-40 rounded-2xl" />
                   {/* Number watermark */}
-                  <span className="pointer-events-none absolute right-5 top-4 text-5xl font-black text-primary-50 transition-colors duration-300 group-hover:text-primary-100">
+                  <span className="pointer-events-none absolute right-5 top-4 text-5xl font-black bg-gradient-to-br from-gold to-gold-dark bg-clip-text text-transparent opacity-40 transition-opacity duration-300 group-hover:opacity-70">
                     {String(i + 1).padStart(2, '0')}
                   </span>
-                  <span
-                    className="relative inline-flex h-14 w-14 items-center justify-center rounded-2xl text-white shadow-card ring-1 ring-white/30 transition-transform duration-300 group-hover:scale-105"
-                    style={{ background: svc.grad }}
-                  >
-                    <Sparkles className="h-7 w-7" />
+                  {/* Icon with glow */}
+                  <span className="relative inline-flex h-16 w-16 items-center justify-center rounded-2xl text-white shadow-glow ring-1 ring-white/30 transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_0_50px_-5px_rgba(44,103,158,0.6)]" style={{ background: svc.grad }}>
+                    <Sparkles className="h-8 w-8" />
+                    <span className="absolute inset-0 rounded-2xl bg-white/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                   </span>
-                  <h3 className="relative mt-5 text-base font-bold text-navy-dark">{w.title}</h3>
-                  <p className="relative mt-2 flex-1 text-sm leading-relaxed text-slate-600">
+                  <h3 className="relative mt-5 text-base font-bold text-white">{w.title}</h3>
+                  <p className="relative mt-2 flex-1 text-sm leading-relaxed text-primary-100/80">
                     {w.desc.replace('{city}', 'India')}
                   </p>
-                  {/* Gold accent bar */}
-                  <span className="relative mt-5 h-1 w-8 rounded-full bg-gradient-to-r from-gold to-gold-dark transition-all duration-300 group-hover:w-16" />
+                  {/* Gold accent bar with glow on hover */}
+                  <span className="relative mt-5 h-1 w-8 rounded-full bg-gradient-to-r from-gold to-gold-dark shadow-none transition-all duration-300 group-hover:w-16 group-hover:shadow-gold-glow" />
                 </div>
               </Reveal>
             ))}
