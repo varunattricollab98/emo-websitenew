@@ -48,6 +48,7 @@ import {
 import { cities as pricedCities, getCityBySlug } from '../data/cities'
 import { useSupabaseSpaces } from '../context/SpacesContext'
 import { useBlogArticle } from '../hooks/useBlogArticle'
+import { useRelatedResources } from '../hooks/useRelatedResources'
 import { useMeta } from '../hooks/useMeta'
 import {
   serviceLandings,
@@ -174,6 +175,12 @@ export default function ServiceHub() {
     pageType: 'service',
     serviceSlug,
     cityIsNull: true,
+  })
+
+  // Fetch related resource links from Supabase (falls back to hardcoded if empty)
+  const dbRelatedLinks = useRelatedResources({
+    pageType: 'service-hub',
+    serviceSlug,
   })
 
   useMeta({
@@ -618,18 +625,18 @@ export default function ServiceHub() {
               Related resources
             </p>
             <div className="mt-3 flex flex-wrap gap-2.5">
-              {[
-                { label: 'All Virtual Office Locations', to: '/virtual-office' },
+              {(dbRelatedLinks || [
+                { label: 'All Virtual Office Locations', url: '/virtual-office' },
                 ...cityList.slice(0, 4).map((c) => ({
                   label: `Virtual Office in ${c.name}`,
-                  to: cityUrl(c.slug),
+                  url: cityUrl(c.slug),
                 })),
-                { label: 'Pricing & Plans', to: '/pricing' },
-                { label: 'CA & Compliance Services', to: '/ca-services' },
-              ].map((r) => (
+                { label: 'Pricing & Plans', url: '/pricing' },
+                { label: 'CA & Compliance Services', url: '/ca-services' },
+              ]).map((r) => (
                 <Link
-                  key={r.to + r.label}
-                  to={r.to}
+                  key={r.url + r.label}
+                  to={r.url}
                   className="inline-flex items-center gap-1.5 rounded-full border border-primary-100 bg-white px-4 py-2 text-sm font-semibold text-navy-dark shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:text-primary hover:shadow-card"
                 >
                   {r.label}
