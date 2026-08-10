@@ -60,19 +60,6 @@ import {
 } from '../data/serviceLandings'
 import { useLeadModal } from '../context/LeadModalContext'
 
-const CITY_IMAGES = {
-  delhi: 'https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format&fit=crop&w=600&q=80',
-  mumbai: 'https://images.unsplash.com/photo-1570168007204-dfb528c6958f?auto=format&fit=crop&w=600&q=80',
-  bangalore: 'https://images.unsplash.com/photo-1596176530529-78163a4f7af2?auto=format&fit=crop&w=600&q=80',
-  gurgaon: 'https://images.unsplash.com/photo-1622467827417-bbe6794e5ac0?auto=format&fit=crop&w=600&q=80',
-  hyderabad: 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=600&q=80',
-  chennai: 'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=600&q=80',
-  pune: 'https://images.unsplash.com/photo-1625643301159-7fbfc06c7615?auto=format&fit=crop&w=600&q=80',
-  noida: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=600&q=80',
-  kolkata: 'https://images.unsplash.com/photo-1558431382-27e303142255?auto=format&fit=crop&w=600&q=80',
-  ahmedabad: 'https://images.unsplash.com/photo-1627894006066-b45960f68dc0?auto=format&fit=crop&w=600&q=80',
-}
-
 const DEFAULT_CITY_IMAGE = 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=600&q=80'
 
 const iconMap = { FileCheck2, Landmark, Mailbox, Armchair }
@@ -173,10 +160,12 @@ export default function ServiceHub() {
           state: entry?.state || r.address_state || 'India',
           count: 1,
           min: price,
+          image: r.featured_image || '',
         }
       } else {
         agg[slug].count++
         agg[slug].min = Math.min(agg[slug].min, price)
+        if (!agg[slug].image && r.featured_image) agg[slug].image = r.featured_image
       }
     }
     return Object.values(agg)
@@ -431,7 +420,7 @@ export default function ServiceHub() {
               const cityPrice =
                 svc.fixedPrice ||
                 Math.max(499, (getCityBySlug(c.slug)?.price || c.min) + (svc.priceOffset || 0))
-              const cityImage = CITY_IMAGES[c.slug] || DEFAULT_CITY_IMAGE
+              const cityImage = c.image || DEFAULT_CITY_IMAGE
               return (
                 <Reveal key={c.slug} delay={(i % 4) * 0.06}>
                   <Link
