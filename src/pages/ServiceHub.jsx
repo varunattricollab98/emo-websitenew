@@ -419,13 +419,17 @@ export default function ServiceHub() {
                 <Reveal key={c.slug} delay={(i % 4) * 0.06}>
                   <Link
                     to={spaceUrl(c.slug, svc.slug)}
-                    className="group flex h-full flex-col rounded-2xl border border-primary-100/60 bg-white shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover"
+                    className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-primary-100/60 bg-white shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/30 hover:shadow-card-hover"
                   >
                     <div className="flex flex-1 flex-col p-6">
+                      {/* Number watermark */}
+                      <span className="pointer-events-none absolute right-4 top-3 text-4xl font-black text-primary-50 transition-colors duration-300 group-hover:text-primary-100">
+                        {String(i + 1).padStart(2, '0')}
+                      </span>
                       {/* Icon + City badge row */}
                       <div className="flex items-center justify-between">
-                        <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-primary-gradient text-white shadow-card">
-                          <Icon className="h-5 w-5" />
+                        <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-gradient text-white shadow-card ring-1 ring-white/30 transition-transform duration-300 group-hover:scale-105">
+                          <Icon className="h-6 w-6" />
                         </span>
                         <span className="inline-flex items-center gap-1 rounded-full bg-primary-50 px-2.5 py-1 text-xs font-semibold text-primary">
                           <MapPin className="h-3 w-3" />
@@ -454,6 +458,8 @@ export default function ServiceHub() {
                         </div>
                         <ArrowRight className="h-5 w-5 text-primary transition-transform group-hover:translate-x-1" />
                       </div>
+                      {/* Gold accent bar */}
+                      <span className="mt-4 h-1 w-8 rounded-full bg-gradient-to-r from-gold to-gold-dark transition-all duration-300 group-hover:w-14" />
                     </div>
                   </Link>
                 </Reveal>
@@ -508,17 +514,23 @@ export default function ServiceHub() {
           <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {svc.why.map((w, i) => (
               <Reveal key={w.title} delay={(i % 4) * 0.07}>
-                <div className="premium-card h-full p-7">
+                <div className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-primary-100/70 bg-white p-7 shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/30 hover:shadow-card-hover">
+                  {/* Number watermark */}
+                  <span className="pointer-events-none absolute right-5 top-4 text-5xl font-black text-primary-50 transition-colors duration-300 group-hover:text-primary-100">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
                   <span
-                    className="inline-flex h-12 w-12 items-center justify-center rounded-xl text-white shadow-card"
+                    className="relative inline-flex h-14 w-14 items-center justify-center rounded-2xl text-white shadow-card ring-1 ring-white/30 transition-transform duration-300 group-hover:scale-105"
                     style={{ background: svc.grad }}
                   >
-                    <Sparkles className="h-6 w-6" />
+                    <Sparkles className="h-7 w-7" />
                   </span>
-                  <h3 className="mt-4 font-bold text-navy-dark">{w.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                  <h3 className="relative mt-5 text-base font-bold text-navy-dark">{w.title}</h3>
+                  <p className="relative mt-2 flex-1 text-sm leading-relaxed text-slate-600">
                     {w.desc.replace('{city}', 'India')}
                   </p>
+                  {/* Gold accent bar */}
+                  <span className="relative mt-5 h-1 w-8 rounded-full bg-gradient-to-r from-gold to-gold-dark transition-all duration-300 group-hover:w-16" />
                 </div>
               </Reveal>
             ))}
