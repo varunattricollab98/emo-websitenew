@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 
 // ── Supabase connection ──────────────────────────────────────
-// The anon key is SAFE to expose in the browser — your data is protected by
+// The anon key is SAFE to expose in the browser, your data is protected by
 // Row Level Security (RLS) policies (see supabase/schema.sql).
 // These values are your Supabase project credentials (anon = public-safe).
 

@@ -1,7 +1,7 @@
 // Virtual office / workspace listings per city (drives the Explore section + counts).
 import { generatedSpaceDetails } from './spaceDetails.generated.js'
 
-// getSupabaseSpacesForCity is no longer used here — React components
+// getSupabaseSpacesForCity is no longer used here, React components
 // use the SpacesContext directly for live Supabase data.
 
 const img = [
@@ -221,7 +221,8 @@ export function getSpaces(slug) {
     }
     return merged
   }
-  return GENERIC.map((area, i) => s(area, 799, 4.7, [T.gst, T.co, T.mail], i))
+  // No generic/fake listings, only show real data from Supabase
+  return []
 }
 
 
@@ -297,6 +298,75 @@ export function slugifySpace(name) {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '')
+}
+
+// Slugify a state name for URLs (e.g. "Uttar Pradesh" → "uttar-pradesh")
+export function slugifyState(state) {
+  return String(state || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+}
+
+// Get the state slug for a given city slug (e.g. "gurgaon" → "haryana")
+// Also handles name-based slugs (e.g. "gurugram" → "haryana")
+export function getStateSlugForCity(citySlug) {
+  // Direct match
+  const city = voCities.find((c) => c.slug === citySlug)
+  if (city) return slugifyState(city.state)
+  // Match by display name slug (e.g. "gurugram" → Gurugram → Haryana)
+  const byName = voCities.find((c) => slugifySpace(c.name) === citySlug)
+  if (byName) return slugifyState(byName.state)
+  // Match by alias
+  const byAlias = voCities.find((c) =>
+    (cityAliases[c.slug] || []).includes(citySlug)
+  )
+  if (byAlias) return slugifyState(byAlias.state)
+  return ''
+}
+
+// Get the state name from a state slug (e.g. "haryana" → "Haryana")
+export function getStateNameFromSlug(stateSlug) {
+  const slug = (stateSlug || '').toLowerCase()
+  const city = voCities.find((c) => slugifyState(c.state) === slug)
+  return city ? city.state : ''
+}
+
+// Get all unique states as { slug, name } pairs
+export function getAllStates() {
+  const seen = new Set()
+  return voCities
+    .filter((c) => {
+      const key = (c.state || '').toLowerCase()
+      if (!key || seen.has(key)) return false
+      seen.add(key)
+      return true
+    })
+    .map((c) => ({ slug: slugifyState(c.state), name: c.state }))
+}
+
+// Build the canonical URL for a city page: /virtual-office/{stateSlug}/{citySlug}
+export function cityUrl(citySlug) {
+  // Resolve to canonical slug (e.g. "gurugram" → "gurgaon")
+  const canonical = voCities.find((c) => c.slug === citySlug)?.slug
+    || voCities.find((c) => slugifySpace(c.name) === citySlug)?.slug
+    || voCities.find((c) => (cityAliases[c.slug] || []).includes(citySlug))?.slug
+    || citySlug
+  const stateSlug = getStateSlugForCity(canonical)
+  return stateSlug ? `/virtual-office/${stateSlug}/${canonical}` : `/virtual-office/${canonical}`
+}
+
+// Build the canonical URL for a space page: /virtual-office/{stateSlug}/{citySlug}/{spaceSlug}
+export function spaceUrl(citySlug, spaceSlug) {
+  // Resolve to canonical slug
+  const canonical = voCities.find((c) => c.slug === citySlug)?.slug
+    || voCities.find((c) => slugifySpace(c.name) === citySlug)?.slug
+    || voCities.find((c) => (cityAliases[c.slug] || []).includes(citySlug))?.slug
+    || citySlug
+  const stateSlug = getStateSlugForCity(canonical)
+  return stateSlug
+    ? `/virtual-office/${stateSlug}/${canonical}/${spaceSlug}`
+    : `/virtual-office/${canonical}/${spaceSlug}`
 }
 
 // Find a single space (locality) within a city by its slug.

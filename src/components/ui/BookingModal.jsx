@@ -76,9 +76,9 @@ export default function BookingModal({ open, booking, onClose }) {
     'w-full rounded-xl border border-primary-100 bg-surface-light py-3 pl-11 pr-4 text-sm text-navy-dark placeholder:text-slate-400 transition-all focus:border-primary/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/20'
 
   const summary = [
-    { icon: MapPin, label: 'Location', value: city || '—' },
+    { icon: MapPin, label: 'Location', value: city || '' },
     { icon: CalendarDays, label: 'Date', value: prettyDate(date) },
-    { icon: Clock, label: 'Time', value: time || '—' },
+    { icon: Clock, label: 'Time', value: time || '' },
   ]
 
   return createPortal(
@@ -92,6 +92,10 @@ export default function BookingModal({ open, booking, onClose }) {
         >
           <div className="absolute inset-0 bg-navy-dark/60 backdrop-blur-sm" onClick={onClose} />
 
+          {/* w-[min(32rem,100%)] rather than w-full + max-w-lg. `fixed`
+              resolves against the layout viewport, so if a page ever
+              overflows horizontally the card would otherwise render wider
+              than the screen and need sideways scrolling to reach. */}
           <motion.div
             role="dialog"
             aria-modal="true"
@@ -99,7 +103,7 @@ export default function BookingModal({ open, booking, onClose }) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.98 }}
             transition={{ duration: 0.25, ease: 'easeOut' }}
-            className="relative z-10 max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-3xl bg-white shadow-card-hover"
+            className="relative z-10 max-h-[92vh] w-[min(32rem,100%)] overflow-y-auto rounded-3xl bg-white shadow-card-hover"
           >
             <span className="pointer-events-none absolute inset-x-0 top-0 h-1.5 rounded-t-3xl bg-gradient-to-r from-gold via-gold-dark to-gold" />
             <button

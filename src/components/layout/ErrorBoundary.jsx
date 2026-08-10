@@ -3,6 +3,8 @@ import { Component } from 'react'
 /**
  * Catches any runtime error in the React tree and shows a friendly fallback
  * instead of a blank white page. Critical for production robustness.
+ *
+ * Also handles chunk loading failures (stale deploy) by auto-reloading once.
  */
 export default class ErrorBoundary extends Component {
   constructor(props) {
@@ -15,8 +17,24 @@ export default class ErrorBoundary extends Component {
   }
 
   componentDidCatch(error, info) {
-    // Log so we can debug from the browser console / monitoring later
     console.error('[ErrorBoundary] Caught error:', error, info)
+
+    // Auto-reload on chunk loading failure (happens after a new deploy
+    // when old cached HTML references chunks that no longer exist)
+    if (
+      error?.message?.includes('Failed to fetch dynamically imported module') ||
+      error?.message?.includes('Loading chunk') ||
+      error?.message?.includes('Loading CSS chunk') ||
+      error?.name === 'ChunkLoadError'
+    ) {
+      // Only reload once to avoid infinite loops
+      const lastReload = sessionStorage.getItem('chunk-reload')
+      if (!lastReload || Date.now() - Number(lastReload) > 10000) {
+        sessionStorage.setItem('chunk-reload', String(Date.now()))
+        window.location.reload()
+        return
+      }
+    }
   }
 
   handleReset = () => {
@@ -39,7 +57,7 @@ export default class ErrorBoundary extends Component {
             Something went wrong
           </h1>
           <p className="mt-3 max-w-md text-slate-500">
-            Sorry, this page ran into an unexpected error. Please try again — our team has been
+            Sorry, this page ran into an unexpected error. Please try again. Our team has been
             notified.
           </p>
           <div className="mt-7 flex flex-wrap justify-center gap-3">

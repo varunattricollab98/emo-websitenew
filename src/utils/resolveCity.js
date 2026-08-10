@@ -5,7 +5,7 @@ const STATES = [...new Set(voCities.map((c) => c.state).filter(Boolean))]
 
 /**
  * Resolve a query to a CITY only (name, old/alias name, or pincode).
- * Deliberately does NOT match on state — a state name should not collapse
+ * Deliberately does NOT match on state, a state name should not collapse
  * to a single arbitrary city. Returns { slug, name } or null.
  */
 export function resolveCity(query) {

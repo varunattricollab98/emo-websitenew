@@ -24,7 +24,7 @@ export default function VirtualOffice() {
       {/* Client reviews */}
       <GoogleReviews />
 
-      {/* Service finder — choose your own plan by requirement */}
+      {/* Service finder, choose your own plan by requirement */}
       <ServiceFinder />
 
       {/* Plans & pricing (Business Reg · GST · Mailing · Dedicated Desk) */}

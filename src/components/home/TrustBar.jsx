@@ -6,6 +6,7 @@ const logos = [
   { name: 'Verizon', src: '/logos/verizon.png' },
   { name: 'HomeLane', src: '/logos/homelane.svg' },
   { name: 'Third Wave Coffee', src: '/logos/thirdwavecoffee.png' },
+  { name: 'Rosier Foods', src: 'https://www.rosierfoods.com/cdn/shop/files/black-logo-01_1.png?v=1750171672&width=300' },
   { name: 'Fitelo', src: '/logos/fitelo.svg' },
   { name: 'EarthtronEV', src: '/logos/earthtronev.webp' },
   { name: 'Omnicuris', src: '/logos/omnicuris.png' },
@@ -26,14 +27,14 @@ const marqueeLogos = [...logos, ...logos]
 function LogoChip({ logo }) {
   const [failed, setFailed] = useState(false)
   return (
-    <div className="flex h-24 w-52 flex-none items-center justify-center rounded-xl border border-primary-100/60 bg-white px-6 shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-card">
+    <div className="flex h-24 w-56 flex-none items-center justify-center rounded-xl border border-primary-100/60 bg-white px-6 shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-card">
       {logo.src && !failed ? (
         <img
           src={logo.src}
           alt={`${logo.name} logo`}
           loading="lazy"
           onError={() => setFailed(true)}
-          className="max-h-14 w-auto max-w-full object-contain opacity-90 transition-opacity duration-300 hover:opacity-100"
+          className="max-h-16 w-auto max-w-full object-contain opacity-90 transition-opacity duration-300 hover:opacity-100"
         />
       ) : (
         <span className="whitespace-nowrap text-lg font-extrabold tracking-tight text-slate-400">

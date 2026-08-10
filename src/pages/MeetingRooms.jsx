@@ -94,7 +94,7 @@ const useCases = [
 
 const steps = [
   { icon: CalendarSearch, title: 'Pick a room & slot', desc: 'Choose your city, room type and preferred time.' },
-  { icon: Check, title: 'Confirm booking', desc: 'Reserve instantly — no membership required.' },
+  { icon: Check, title: 'Confirm booking', desc: 'Reserve instantly, no membership required.' },
   { icon: Presentation, title: 'Walk in & present', desc: 'Everything is set up and ready when you arrive.' },
 ]
 
@@ -106,6 +106,8 @@ export default function MeetingRooms() {
   const [bCity, setBCity] = useState('Bengaluru')
   const [bDate, setBDate] = useState(today)
   const [bTime, setBTime] = useState('10:00 AM')
+  const [citySearch, setCitySearch] = useState('')
+  const [cityDropOpen, setCityDropOpen] = useState(false)
 
   const prettyDate = (d) => {
     if (!d) return 'your date'
@@ -140,7 +142,7 @@ export default function MeetingRooms() {
         eyebrow="Meeting Rooms"
         title="Book Professional Meeting Rooms by the Hour"
         accent="by the Hour"
-        subtitle="Fully-equipped meeting, conference and training rooms in prime locations. Pay only for the hours you need — no membership required."
+        subtitle="Fully-equipped meeting, conference and training rooms in prime locations. Pay only for the hours you need, no membership required."
         chips={['No membership', 'Hourly & daily rates', 'Premium AV included']}
         visual={
           <div className="relative">
@@ -168,27 +170,47 @@ export default function MeetingRooms() {
                 </span>
               </div>
 
-              {/* booking selectors — city / date (calendar) / time */}
+              {/* booking selectors, city / date (calendar) / time */}
               <div className="mt-5 grid grid-cols-3 gap-2">
-                {/* city */}
+                {/* city, searchable dropdown */}
                 <div className="relative">
                   <MapPin className="pointer-events-none absolute left-2.5 top-1/2 z-10 h-3.5 w-3.5 -translate-y-1/2 text-primary" />
-                  <select
+                  <input
+                    type="text"
                     aria-label="City"
-                    value={bCity}
-                    onChange={(e) => setBCity(e.target.value)}
-                    className="w-full appearance-none rounded-xl border border-primary-100 bg-surface-light py-2.5 pl-8 pr-6 text-xs font-bold text-navy-dark focus:border-primary/60 focus:outline-none"
-                  >
-                    {voCities.map((c) => (
-                      <option key={c.slug} value={c.name}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </select>
+                    value={cityDropOpen ? citySearch : bCity}
+                    onChange={(e) => { setCitySearch(e.target.value); setCityDropOpen(true) }}
+                    onFocus={() => { setCityDropOpen(true); setCitySearch('') }}
+                    placeholder="Search city..."
+                    className="w-full rounded-xl border border-primary-100 bg-surface-light py-2.5 pl-8 pr-6 text-xs font-bold text-navy-dark placeholder:font-normal placeholder:text-slate-400 focus:border-primary/60 focus:outline-none"
+                  />
                   <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
+                  {cityDropOpen && (
+                    <>
+                      <div className="fixed inset-0 z-30" onClick={() => { setCityDropOpen(false); setCitySearch('') }} />
+                      <div className="absolute left-0 right-0 top-full z-40 mt-1 max-h-48 overflow-y-auto rounded-xl border border-primary-100 bg-white p-1 shadow-card-hover">
+                        {voCities
+                          .filter((c) => !citySearch || c.name.toLowerCase().includes(citySearch.toLowerCase()))
+                          .slice(0, 20)
+                          .map((c) => (
+                            <button
+                              key={c.slug}
+                              type="button"
+                              onClick={() => { setBCity(c.name); setCityDropOpen(false); setCitySearch('') }}
+                              className={`block w-full rounded-lg px-3 py-2 text-left text-xs font-semibold transition-colors ${bCity === c.name ? 'bg-primary-50 text-primary' : 'text-navy-dark hover:bg-surface-light'}`}
+                            >
+                              {c.name}
+                            </button>
+                          ))}
+                        {voCities.filter((c) => !citySearch || c.name.toLowerCase().includes(citySearch.toLowerCase())).length === 0 && (
+                          <p className="px-3 py-2 text-xs text-slate-400">No city found</p>
+                        )}
+                      </div>
+                    </>
+                  )}
                 </div>
 
-                {/* date — opens calendar */}
+                {/* date, opens calendar */}
                 <div className="relative">
                   <CalendarDays className="pointer-events-none absolute left-2.5 top-1/2 z-10 h-3.5 w-3.5 -translate-y-1/2 text-primary" />
                   <input
@@ -262,6 +284,23 @@ export default function MeetingRooms() {
                 <Star className="h-4 w-4 fill-gold text-gold" />
                 <p className="text-xs font-semibold text-navy">Rated 4.9/5 by 5,000+ professionals</p>
               </div>
+
+              {/* Check Availability button */}
+              <button
+                type="button"
+                onClick={() => openLeadModal({
+                  title: 'Check Room Availability',
+                  subtitle: `${bCity} · ${prettyDate(bDate)} · ${bTime}`,
+                  service: `Meeting Room, ${bCity}`,
+                  city: bCity,
+                  message: `City: ${bCity}\nDate: ${prettyDate(bDate)}\nTime: ${bTime}\nNumber of People: \nHours Required: `,
+                  source: 'meeting-room-availability',
+                })}
+                className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl bg-primary-gradient px-5 py-3.5 text-sm font-bold text-white shadow-card transition-all hover:shadow-glow hover:brightness-110"
+              >
+                Check Availability
+                <ArrowRight className="h-4 w-4" />
+              </button>
             </div>
           </div>
         }
@@ -278,7 +317,7 @@ export default function MeetingRooms() {
             eyebrow="Room Types"
             title="The Right Room for Every Occasion"
             accent="Every Occasion"
-            subtitle="From quick catch-ups to full-day workshops — hourly and daily rates available."
+            subtitle="From quick catch-ups to full-day workshops, hourly and daily rates available."
           />
           <div className="mt-16 grid gap-6 lg:grid-cols-3">
             {rooms.map((r, i) => (
@@ -324,7 +363,7 @@ export default function MeetingRooms() {
             ))}
           </div>
           <p className="mt-8 text-center text-sm text-slate-500">
-            Daily rates and full-day packages available — contact us for custom bookings and bulk
+            Daily rates and full-day packages available, contact us for custom bookings and bulk
             discounts.
           </p>
         </div>
@@ -341,12 +380,22 @@ export default function MeetingRooms() {
           <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {useCases.map((u, i) => (
               <Reveal key={u.title} delay={(i % 4) * 0.07}>
-                <div className="premium-card h-full p-7">
-                  <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary-gradient text-white shadow-card">
-                    <u.icon className="h-6 w-6" />
+                <div className="group relative h-full overflow-hidden rounded-2xl border-2 border-navy-dark/10 bg-gradient-to-b from-white via-white to-slate-50 p-8 shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/30 hover:shadow-card-hover">
+                  {/* Nameplate screws, four corners */}
+                  <span className="absolute left-3 top-3 h-2.5 w-2.5 rounded-full bg-gradient-to-br from-slate-300 to-slate-400 shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)] ring-1 ring-slate-200" />
+                  <span className="absolute right-3 top-3 h-2.5 w-2.5 rounded-full bg-gradient-to-br from-slate-300 to-slate-400 shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)] ring-1 ring-slate-200" />
+                  <span className="absolute bottom-3 left-3 h-2.5 w-2.5 rounded-full bg-gradient-to-br from-slate-300 to-slate-400 shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)] ring-1 ring-slate-200" />
+                  <span className="absolute bottom-3 right-3 h-2.5 w-2.5 rounded-full bg-gradient-to-br from-slate-300 to-slate-400 shadow-[inset_0_1px_2px_rgba(0,0,0,0.3)] ring-1 ring-slate-200" />
+                  {/* Top accent line */}
+                  <span className="pointer-events-none absolute inset-x-6 top-0 h-[2px] bg-gradient-to-r from-transparent via-primary/40 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+
+                  <span className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-gradient text-white shadow-card ring-2 ring-white/50">
+                    <u.icon className="h-7 w-7" />
                   </span>
-                  <h3 className="mt-4 font-bold text-navy-dark">{u.title}</h3>
+                  <h3 className="mt-5 text-lg font-bold text-navy-dark">{u.title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-slate-600">{u.desc}</p>
+                  {/* Bottom accent bar */}
+                  <span className="mt-5 block h-1 w-10 rounded-full bg-gradient-to-r from-gold to-gold-dark transition-all duration-300 group-hover:w-16" />
                 </div>
               </Reveal>
             ))}

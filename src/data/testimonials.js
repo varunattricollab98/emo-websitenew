@@ -21,6 +21,6 @@ export const testimonials = [
     initials: 'KS',
     rating: 5,
     quote:
-      'We expanded to four cities using EaseMyOffice virtual addresses. Company registration, GST, mail handling — everything under one roof. It saved us lakhs in rent and months of effort.',
+      'We expanded to four cities using EaseMyOffice virtual addresses. Company registration, GST, mail handling, everything under one roof. It saved us lakhs in rent and months of effort.',
   },
 ]

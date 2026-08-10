@@ -13,7 +13,7 @@ const services = [
   {
     icon: Landmark,
     title: 'Company Registration',
-    desc: 'Private Limited, LLP or OPC incorporation — DIN, DSC, MOA/AOA and PAN included.',
+    desc: 'Private Limited, LLP or OPC incorporation, DIN, DSC, MOA/AOA and PAN included.',
     price: '6,999',
     popular: true,
   },

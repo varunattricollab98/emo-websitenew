@@ -24,14 +24,14 @@ const reasons = [
   {
     icon: IndianRupee,
     title: 'Lowest Price, Zero Hidden Costs',
-    desc: 'Transparent, all-inclusive pricing from ₹699/mo. The price you see is the price you pay — no surprise add-ons at checkout.',
+    desc: 'Transparent, all-inclusive pricing from ₹699/mo. The price you see is the price you pay, no surprise add-ons at checkout.',
     chip: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
     glow: 'rgba(16,185,129,0.35)',
   },
   {
     icon: BadgeCheck,
     title: '98.7% Document Approval Rate',
-    desc: 'GST & company registration papers cleared the first time — one of the highest first-attempt approval rates in the industry.',
+    desc: 'GST & company registration papers cleared the first time, one of the highest first-attempt approval rates in the industry.',
     chip: 'linear-gradient(135deg, #3c82c2 0%, #11417c 100%)',
     glow: 'rgba(44,103,158,0.38)',
   },
@@ -45,21 +45,21 @@ const reasons = [
   {
     icon: MapPin,
     title: 'Real, Verified Premium Addresses',
-    desc: 'Every address is a genuine, physically verified commercial premise — purpose-built for virtual office & GST use.',
+    desc: 'Every address is a genuine, physically verified commercial premise, purpose-built for virtual office & GST use.',
     chip: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)',
     glow: 'rgba(139,92,246,0.34)',
   },
   {
     icon: Headset,
     title: 'Dedicated After-Sales Support',
-    desc: 'A real relationship manager stays with you well beyond setup — for renewals, KYC and any authority query.',
+    desc: 'A real relationship manager stays with you well beyond setup, for renewals, KYC and any authority query.',
     chip: 'linear-gradient(135deg, #22d3ee 0%, #0891b2 100%)',
     glow: 'rgba(34,211,238,0.34)',
   },
   {
     icon: ShieldCheck,
     title: 'Refund Assurance',
-    desc: '100% refund if your GST gets rejected — so you can get started with complete confidence and zero risk.',
+    desc: '100% refund if your GST gets rejected, so you can get started with complete confidence and zero risk.',
     chip: 'linear-gradient(135deg, #38bdf8 0%, #2c679e 100%)',
     glow: 'rgba(56,189,248,0.34)',
   },
@@ -157,7 +157,7 @@ export default function WhyChooseHome() {
           </div>
           <p className="max-w-md text-base leading-relaxed text-slate-500 lg:pb-2">
             Trusted by founders, sellers and enterprises for compliant addresses and hassle-free
-            setup — built on transparency, speed and genuine after-sales care.
+            setup, built on transparency, speed and genuine after-sales care.
           </p>
         </div>
 
@@ -245,7 +245,7 @@ export default function WhyChooseHome() {
                 ))}
               </div>
 
-              {/* what's included — glassy checklist fills the panel */}
+              {/* what's included, glassy checklist fills the panel */}
               <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur">
                 <p className="text-[11px] font-bold uppercase tracking-wider text-primary-100/80">
                   Every plan includes

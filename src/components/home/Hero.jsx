@@ -42,7 +42,7 @@ export default function Hero() {
 
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-slate-600">
             Get a premium business address for GST and company registration, coworking spaces and
-            end-to-end compliance — set up in as little as 2–3 days, fully online.
+            end-to-end compliance, set up in as little as 2–3 days, fully online.
           </p>
 
           <div className="mt-8 flex flex-wrap gap-4">

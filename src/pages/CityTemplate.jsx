@@ -1,4 +1,4 @@
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, Navigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
   MapPin,
@@ -25,15 +25,22 @@ import SmartImage from '../components/ui/SmartImage'
 import TrustBar from '../components/home/TrustBar'
 import GoogleReviews from '../components/virtual-office/GoogleReviews'
 import ClientsStrip from '../components/virtual-office/ClientsStrip'
-import { voCities, getSpaces, slugifySpace } from '../data/spaces'
+import { voCities, getSpaces, slugifySpace, cityUrl, spaceUrl, getStateSlugForCity } from '../data/spaces'
+import { resolveCity } from '../utils/resolveCity'
 import { useSpacesForCity, useSupabaseSpaces } from '../context/SpacesContext'
 import { getCityBySlug } from '../data/cities'
 import { serviceOrder, serviceLandings } from '../data/serviceLandings'
 import { getCityDescription, toBlocks } from '../data/descriptions'
 import { cityFaqs as buildCityFaqs } from '../data/pageFaqs'
 import ArticleBlocks from '../components/ui/ArticleBlocks'
+import BlogArticleSection from '../components/ui/BlogArticleSection'
 import { useLeadModal } from '../context/LeadModalContext'
+import { cityArticle, getCityArticle } from '../data/blogArticles'
+import { useBlogArticle } from '../hooks/useBlogArticle'
+import { useMeta } from '../hooks/useMeta'
 import TalkToExpert from '../components/ui/TalkToExpert'
+import SchemaScript from '../components/seo/SchemaScript'
+import { webPageSchema, breadcrumbSchema, faqSchema, articleSchema, localBusinessSchema } from '../components/seo/schemas'
 
 function toTitle(str = '') {
   return str
@@ -46,20 +53,44 @@ export default function CityTemplate() {
   const params = useParams()
   const { openLeadModal } = useLeadModal()
 
-  // Handle multiple route patterns:
-  // /virtual-office/:city (city only)
-  // /virtual-office/:first/:second via CityOrSpace (state/city — second is the city)
-  // /virtual-office/:state/:city (direct route)
+  // Handle multiple route patterns (new structure):
+  // /virtual-office/:state/:city → params.first=state, params.second=city (via VODispatcher)
+  // Legacy patterns still work via redirect
   const citySlug = params.second || params.city || params.first || ''
+  const stateSlug = params.second ? params.first : ''
   const vo = voCities.find((c) => c.slug === citySlug)
+
   const extra = getCityBySlug(citySlug)
   const cityName = vo?.name || extra?.name || toTitle(citySlug)
   const region = vo?.state || extra?.region || 'India'
   const basePrice = extra?.price || 899
+
+  // ── ALL hooks must run unconditionally, before any early return ──────────
+  const dbArticle = useBlogArticle({ pageType: 'city', citySlug })
   const { rows, loaded } = useSupabaseSpaces()
   const dbSpaces = useSpacesForCity(citySlug)
-  // While Supabase is loading show skeleton cards; once loaded, show DB data (or GENERIC fallback)
-  const spaces = loaded ? (dbSpaces.length ? dbSpaces : getSpaces(citySlug)) : []
+  useMeta({
+    title: `Virtual Office in ${cityName} for GST & Company Registration | EaseMyOffice`,
+    description: `Verified virtual office addresses in ${cityName}, ${region}. GST and MCA ready documentation, activated in 2\u20133 days. Plans from ₹${basePrice}/mo.`,
+    path: `/virtual-office/${stateSlug || getStateSlugForCity(citySlug)}/${citySlug}`,
+  })
+
+  // If the slug isn't recognised directly but matches via alias (e.g. "gurugram" → "gurgaon"),
+  // redirect to the canonical URL so the page renders correctly.
+  if (!vo) {
+    const resolved = resolveCity(citySlug)
+    if (resolved && resolved.slug !== citySlug) {
+      // Build the redirect path preserving any state prefix
+      const state = params.first && params.second ? params.first : null
+      const redirectPath = state
+        ? `/virtual-office/${state}/${resolved.slug}`
+        : `/virtual-office/${resolved.slug}`
+      return <Navigate to={redirectPath} replace />
+    }
+  }
+
+  // While Supabase is loading show skeleton cards; once loaded, show only real DB data
+  const spaces = loaded ? dbSpaces : []
   const addresses = extra?.addresses || Math.max(spaces.length, 6)
   // Hide the listings heading + grid entirely for cities with no spaces in the DB,
   // so we never show an empty grid under a "Locations" heading. Still shown while
@@ -71,7 +102,7 @@ export default function CityTemplate() {
     const custom = toBlocks(getCityDescription(citySlug))
     if (custom.length) return custom
     return [
-      `${cityName} is a key business hub in ${region}. A virtual office in ${cityName} gives your company a prestigious, GST-ready address for company registration, mail handling and more — without the cost of a physical office, activated in just 2\u20133 business days.`,
+      `${cityName} is a key business hub in ${region}. A virtual office in ${cityName} gives your company a prestigious, GST-ready address for company registration, mail handling and more, without the cost of a physical office, activated in just 2\u20133 business days.`,
     ]
   })()
 
@@ -79,7 +110,7 @@ export default function CityTemplate() {
     openLeadModal({
       title: `Virtual Office in ${cityName}`,
       subtitle: 'Share your details and our team will call you back within one business day.',
-      service: svc ? `${svc} — ${cityName}` : `Virtual Office — ${cityName}`,
+      service: svc ? `${svc}, ${cityName}` : `Virtual Office, ${cityName}`,
     })
 
   const plans = [
@@ -119,7 +150,7 @@ export default function CityTemplate() {
 
   const benefits = [
     { icon: Building2, title: 'Prestigious Address', desc: `A credible ${cityName} business address that impresses clients and authorities.` },
-    { icon: FileCheck2, title: 'GST & Company Ready', desc: 'Rent agreement, NOC and utility bill — the complete verification-ready kit.' },
+    { icon: FileCheck2, title: 'GST & Company Ready', desc: 'Rent agreement, NOC and utility bill, the complete verification-ready kit.' },
     { icon: Store, title: 'Marketplace Approved', desc: `Use it for Amazon, Flipkart & APOB registrations in ${region}.` },
     { icon: ShieldCheck, title: 'Fully Compliant', desc: 'Authority-accepted paperwork with a dedicated relationship manager.' },
   ]
@@ -127,13 +158,57 @@ export default function CityTemplate() {
   // City-specific FAQs (shared with the prerender/SEO schema generator)
   const cityFaqs = buildCityFaqs(cityName, region, basePrice)
 
+  // Blog / long-form article blocks for the city guide section
+  // Priority: Supabase DB → city-specific hardcoded → default template
+  const cityArticleBlocks = dbArticle?.blocks?.length ? dbArticle.blocks : getCityArticle(citySlug, cityName, region)
+
+  const stateSlugVal = stateSlug || getStateSlugForCity(citySlug)
+
+  // Breadcrumb items for schema + visible breadcrumb
+  const breadcrumbs = [
+    { name: 'Home', url: '/' },
+    { name: 'Virtual Office', url: '/virtual-office' },
+    { name: region, url: `/virtual-office/${stateSlugVal}` },
+    { name: cityName },
+  ]
+
   return (
     <>
+      <SchemaScript schemas={[
+        webPageSchema({
+          title: `Virtual Office in ${cityName}, GST & Company Registration`,
+          description: `Get a premium ${cityName} business address for GST and company registration. ${addresses}+ verified locations, activated in 2–3 days.`,
+          url: `/virtual-office/${stateSlugVal}/${citySlug}`,
+          breadcrumbs,
+        }),
+        breadcrumbSchema(breadcrumbs),
+        localBusinessSchema(cityName, region),
+        faqSchema(cityFaqs),
+        articleSchema({
+          title: `Virtual Office in ${cityName}: Complete Guide`,
+          description: `Everything about virtual offices in ${cityName} for GST registration and company incorporation.`,
+          url: `/virtual-office/${stateSlugVal}/${citySlug}`,
+        }),
+      ]} />
+
+      {/* Breadcrumb */}
+      <div className="border-b border-primary-100 bg-white">
+        <div className="container-custom flex flex-wrap items-center gap-1.5 py-4 text-sm text-slate-500">
+          <Link to="/" className="hover:text-primary">Home</Link>
+          <span>/</span>
+          <Link to="/virtual-office" className="hover:text-primary">Virtual Office</Link>
+          <span>/</span>
+          <Link to={`/virtual-office/${stateSlugVal}`} className="hover:text-primary">{region}</Link>
+          <span>/</span>
+          <span className="font-semibold text-navy-dark">{cityName}</span>
+        </div>
+      </div>
+
       <SubPageHero
         eyebrow={`Virtual Office · ${region}`}
         title={`Virtual Office in ${cityName}`}
         accent={cityName}
-        subtitle={`Get a premium, compliant ${cityName} business address for GST and company registration — ${addresses}+ verified locations, activated in just 2–3 days.`}
+        subtitle={`Get a premium, compliant ${cityName} business address for GST and company registration, ${addresses}+ verified locations, activated in just 2–3 days.`}
         chips={[`${addresses}+ addresses`, 'GST & company ready', '2–3 day setup']}
         visual={
           <div className="relative">
@@ -181,7 +256,7 @@ export default function CityTemplate() {
         </Button>
       </SubPageHero>
 
-      {/* Quick facts — premium floating band overlapping the hero */}
+      {/* Quick facts, premium floating band overlapping the hero */}
       <section className="relative z-10 bg-white pb-6">
         <div className="container-custom -mt-8 sm:-mt-10">
           <div className="grid grid-cols-2 overflow-hidden rounded-2xl border border-primary-100 bg-white shadow-card-hover ring-1 ring-primary-100/50 sm:grid-cols-4 sm:divide-x sm:divide-primary-100">
@@ -214,7 +289,7 @@ export default function CityTemplate() {
               eyebrow="Locations"
               title={`Virtual Office Locations in ${cityName}`}
               accent={cityName}
-              subtitle={`Verified addresses across ${cityName}'s top commercial districts — pick the one that fits your business.`}
+              subtitle={`Verified addresses across ${cityName}'s top commercial districts. Pick the one that fits your business.`}
             />
           )}
 
@@ -258,7 +333,7 @@ export default function CityTemplate() {
               <Reveal key={`${sp.name}-${i}`} delay={(i % 4) * 0.05}>
                 <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-primary-100/60 bg-white shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover">
                   <Link
-                    to={`/virtual-office/${citySlug}/${slugifySpace(sp.name)}`}
+                    to={spaceUrl(citySlug, slugifySpace(sp.name))}
                     className="relative block h-40 overflow-hidden bg-primary-gradient"
                   >
                     <SmartImage
@@ -279,7 +354,7 @@ export default function CityTemplate() {
                   </Link>
                   <div className="flex flex-1 flex-col p-5">
                     <Link
-                      to={`/virtual-office/${citySlug}/${slugifySpace(sp.name)}`}
+                      to={spaceUrl(citySlug, slugifySpace(sp.name))}
                       className="text-base font-bold text-navy-dark transition-colors hover:text-primary"
                     >
                       {sp.name}
@@ -331,7 +406,7 @@ export default function CityTemplate() {
               {serviceOrder.map((slug) => (
                 <Link
                   key={slug}
-                  to={`/virtual-office/${citySlug}/${slug}`}
+                  to={spaceUrl(citySlug, slug)}
                   className="inline-flex items-center gap-2 rounded-full border border-primary-200 bg-white px-5 py-2.5 text-sm font-semibold text-navy-dark shadow-soft transition-all hover:-translate-y-0.5 hover:border-primary hover:text-primary hover:shadow-card"
                 >
                   {serviceLandings[slug].name} in {cityName}
@@ -459,7 +534,7 @@ export default function CityTemplate() {
         </div>
       </section>
 
-      {/* Social proof — animated stats + real reviews */}
+      {/* Social proof, animated stats + real reviews */}
       <ClientsStrip />
       <GoogleReviews />
 
@@ -490,7 +565,7 @@ export default function CityTemplate() {
               <p className="relative mt-5 max-w-2xl leading-relaxed text-slate-600">
                 Our {cityName} addresses are located in reputed commercial districts, fully verified
                 and accepted for GST and MCA filings. Exact address details are shared once you choose
-                a plan — you can even register in multiple {cityName} locations to expand your reach.
+                a plan, you can even register in multiple {cityName} locations to expand your reach.
               </p>
 
               <div className="relative mt-7 grid gap-3 sm:grid-cols-2">
@@ -516,10 +591,18 @@ export default function CityTemplate() {
         </div>
       </section>
 
+      {/* Blog / Long-form article, dynamic content from data or Supabase */}
+      <BlogArticleSection
+        title={dbArticle?.title || `Virtual Office in ${cityName}: Complete Guide`}
+        eyebrow={dbArticle?.eyebrow || 'Guide'}
+        blocks={cityArticleBlocks}
+        bg="bg-white"
+      />
+
       {/* FAQ */}
-      <section className="section-padding bg-white">
+      <section className="section-padding bg-surface-light">
         <div className="container-custom">
-          <SectionHeading eyebrow="FAQ" title={`Virtual Office in ${cityName} — FAQs`} accent={cityName} />
+          <SectionHeading eyebrow="FAQ" title={`Virtual Office in ${cityName}: FAQs`} accent={cityName} />
           <Reveal className="mx-auto mt-12 max-w-3xl">
             <FaqAccordion items={cityFaqs} />
           </Reveal>

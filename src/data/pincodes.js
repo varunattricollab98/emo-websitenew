@@ -159,7 +159,7 @@ export async function lookupPincode(pin) {
     const po = data?.[0]?.PostOffice?.[0]
     if (po) return { name: po.District, state: po.State }
   } catch {
-    /* network/API unavailable — caller falls back to manual entry */
+    /* network/API unavailable, caller falls back to manual entry */
   }
   return null
 }

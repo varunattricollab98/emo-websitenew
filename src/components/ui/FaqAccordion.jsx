@@ -7,7 +7,7 @@ const stripHtml = (s = '') => String(s).replace(/<[^>]*>/g, '').trim()
 
 /**
  * Injects Google FAQPage structured data (JSON-LD) into <head> as a real DOM
- * <script> node. This is more reliable than rendering <script> in JSX — search
+ * <script> node. This is more reliable than rendering <script> in JSX, search
  * engines read it from the rendered <head>, and it updates/cleans up per page.
  */
 function useFaqSchema(items) {

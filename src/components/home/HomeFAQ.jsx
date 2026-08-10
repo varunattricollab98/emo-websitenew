@@ -39,7 +39,7 @@ export default function HomeFAQ() {
                   </span>
                   <h3 className="mt-4 text-xl font-bold">Still have questions?</h3>
                   <p className="mt-2 text-sm leading-relaxed text-blue-100/80">
-                    Our virtual-office experts are here to help — get a clear, honest answer within
+                    Our virtual-office experts are here to help. Get a clear, honest answer within
                     one business day.
                   </p>
                   <Button to="/contact" variant="white" className="mt-5">

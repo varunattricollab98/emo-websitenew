@@ -6,7 +6,7 @@
 //
 // Each value can be EITHER:
 //   • a plain string (blank lines "\n\n" split into paragraphs), OR
-//   • a blocks array for rich blogs — e.g.
+//   • a blocks array for rich blogs, e.g.
 //       [ 'intro para', { h: 'Heading' }, { list: ['a','b'] }, { quote: 'tip' } ]
 // (see components/ui/ArticleBlocks.jsx for all block types)
 

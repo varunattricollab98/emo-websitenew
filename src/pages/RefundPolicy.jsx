@@ -4,16 +4,16 @@ const sections = [
   {
     h: 'Our commitment to you',
     body: [
-      'At EaseMyOffice, your trust matters. We are committed to transparency, fairness and dependable service at every step of your virtual office and compliance journey. This refund policy is written in plain language so you always know exactly where you stand — with no hidden charges and no surprise deductions.',
+      'At EaseMyOffice, your trust matters. We are committed to transparency, fairness and dependable service at every step of your virtual office and compliance journey. This refund policy is written in plain language so you always know exactly where you stand, with no hidden charges and no surprise deductions.',
     ],
   },
   {
     h: 'What makes our refund policy customer-first',
     list: [
-      'Full-refund protection when a registration is rejected due to documents or premises provided by us — after a fair set of guided attempts.',
-      'Transparent processing — most eligible refunds are completed within 7–10 business days of approval, with clear updates along the way.',
+      'Full-refund protection when a registration is rejected due to documents or premises provided by us, after a fair set of guided attempts.',
+      'Transparent processing, most eligible refunds are completed within 7–10 business days of approval, with clear updates along the way.',
       'Expert document cross-verification upfront to minimise the chance of rejection in the first place.',
-      'A fair administrative approach — reasonable fees only where genuinely justified.',
+      'A fair administrative approach, reasonable fees only where genuinely justified.',
     ],
   },
   {
@@ -24,10 +24,10 @@ const sections = [
     ],
   },
   {
-    h: 'Full refund — when the shortfall is ours',
+    h: 'Full refund, when the shortfall is ours',
     body: [
       'If your GST or business registration is rejected three (3) times or more solely because of documentation or premises issues attributable to the virtual office address provided by EaseMyOffice, you are entitled to a 100% refund.',
-      'We deliberately provide up to three guided attempts — correcting and re-submitting documentation each time — to give your application a fair chance of success before any refund is considered. Full-refund claims should be accompanied by the official rejection letter or communication from the concerned government portal.',
+      'We deliberately provide up to three guided attempts, correcting and re-submitting documentation each time, to give your application a fair chance of success before any refund is considered. Full-refund claims should be accompanied by the official rejection letter or communication from the concerned government portal.',
     ],
   },
   {
@@ -42,8 +42,8 @@ const sections = [
   {
     h: 'Additional services & modifications',
     list: [
-      'Business name change due to an MCA rejection — a fresh NOC and agreement are issued at ₹1,500 + GST.',
-      'Post-approval changes to client name, address or typographical corrections — ₹1,500 + GST, after evaluation.',
+      'Business name change due to an MCA rejection, a fresh NOC and agreement are issued at ₹1,500 + GST.',
+      'Post-approval changes to client name, address or typographical corrections, ₹1,500 + GST, after evaluation.',
     ],
   },
   {
@@ -59,7 +59,7 @@ const sections = [
     h: 'When refunds do not apply',
     body: ['To keep things fair and transparent, refunds are not processed in the following cases:'],
     list: [
-      'Once the address documents (NOC, Leave & License agreement, utility bill) have been generated and shared, or once you have given final approval — the service is considered delivered.',
+      'Once the address documents (NOC, Leave & License agreement, utility bill) have been generated and shared, or once you have given final approval, the service is considered delivered.',
       'Applicant-side issues: incomplete or incorrect KYC, wrong business details, or APOB documentation issues from your end.',
       'Failure of biometric or physical verification, or non-compliance with GST/MCA requirements.',
       'Independent government or regulatory decisions, department backlogs, downtime, changes in law, or new regulatory norms (e.g. biometric requirements).',
@@ -104,7 +104,7 @@ const sections = [
   {
     h: 'Force majeure',
     body: [
-      'EaseMyOffice shall not be held responsible for service delays or failures caused by circumstances beyond our reasonable control — including natural disasters, pandemics, government restrictions or policy changes, internet or telecommunication failures, cyber-attacks, labour disputes or system failures. In such cases, refunds are evaluated based on the specific impact on service delivery.',
+      'EaseMyOffice shall not be held responsible for service delays or failures caused by circumstances beyond our reasonable control, including natural disasters, pandemics, government restrictions or policy changes, internet or telecommunication failures, cyber-attacks, labour disputes or system failures. In such cases, refunds are evaluated based on the specific impact on service delivery.',
     ],
   },
   {

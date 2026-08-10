@@ -50,7 +50,7 @@ export default function ClientsStrip() {
             </p>
           </motion.div>
 
-          {/* stats — numbers are the hero */}
+          {/* stats, numbers are the hero */}
           <div className="relative mt-12 grid grid-cols-2 gap-x-4 gap-y-12 sm:gap-y-10 lg:grid-cols-4 lg:divide-x lg:divide-white/[0.08]">
             {stats.map((s) => (
               <motion.div key={s.label} variants={item} className="px-1 text-center lg:px-8">
