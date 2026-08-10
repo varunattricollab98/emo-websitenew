@@ -12,9 +12,9 @@ import {
   ShieldCheck,
   Clock,
   BadgeCheck,
-  MessageSquare,
-  FileUp,
-  PartyPopper,
+  MapPinned,
+  FileText,
+  KeyRound,
   Sparkles,
   Star,
   Phone,
@@ -25,6 +25,7 @@ import Button from '../components/ui/Button'
 import FaqAccordion from '../components/ui/FaqAccordion'
 import ArticleBlocks from '../components/ui/ArticleBlocks'
 import BlogArticleSection from '../components/ui/BlogArticleSection'
+import StepsFlow from '../components/ui/StepsFlow'
 import TrustBar from '../components/home/TrustBar'
 import ClientsStrip from '../components/virtual-office/ClientsStrip'
 import GoogleReviews from '../components/virtual-office/GoogleReviews'
@@ -62,19 +63,22 @@ const iconMap = { FileCheck2, Landmark, Mailbox, Armchair }
 
 const steps = [
   {
-    icon: MessageSquare,
+    icon: MapPinned,
     title: 'Pick your city',
     desc: 'Tell us which city or state you need the address in.',
+    chip: 'Every major city',
   },
   {
-    icon: FileUp,
+    icon: FileText,
     title: 'Upload documents',
     desc: 'Submit your KYC online, we verify everything upfront.',
+    chip: '100% online',
   },
   {
-    icon: PartyPopper,
+    icon: KeyRound,
     title: 'Get activated',
     desc: 'Your address and documents are ready in 2–3 days.',
+    chip: 'Ready in 2–3 days',
   },
 ]
 
@@ -514,33 +518,14 @@ export default function ServiceHub() {
         </div>
       </section>
 
-      {/* How it works */}
-      <section className="section-padding bg-white">
-        <div className="container-custom">
-          <SectionHeading
-            eyebrow="How It Works"
-            title="Get Started in 3 Simple Steps"
-            accent="3 Simple Steps"
-          />
-          <div className="relative mt-16 grid gap-8 lg:grid-cols-3">
-            <div className="pointer-events-none absolute left-0 right-0 top-7 hidden h-px bg-gradient-to-r from-transparent via-primary-200 to-transparent lg:block" />
-            {steps.map((s, i) => (
-              <Reveal key={s.title} delay={i * 0.1}>
-                <div className="relative text-center">
-                  <span className="relative mx-auto inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-gradient text-white shadow-card ring-4 ring-white">
-                    <s.icon className="h-6 w-6" />
-                    <span className="absolute -right-1 -top-1 inline-flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-r from-gold to-gold-dark text-[11px] font-bold text-white shadow-gold-glow">
-                      {i + 1}
-                    </span>
-                  </span>
-                  <h3 className="mt-4 font-bold text-navy-dark">{s.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-500">{s.desc}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* How it works, same treatment as the homepage */}
+      <StepsFlow
+        title="Get Started in 3 Simple Steps"
+        accent="3 Simple Steps"
+        subtitle="From choosing your city to a ready-to-use business address, fully online."
+        steps={steps}
+        cta={{ label: 'Get Started Today', onClick: openLead }}
+      />
 
       <ClientsStrip />
       <GoogleReviews />
