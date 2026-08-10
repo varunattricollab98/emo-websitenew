@@ -116,9 +116,14 @@ export default function ServiceHub() {
   const { openLeadModal } = useLeadModal()
   const { rows } = useSupabaseSpaces()
 
-  // Shared (city-agnostic) article: no citySlug is passed, so a single row
-  // with city_slug NULL is matched for every visitor.
-  const dbArticle = useBlogArticle({ pageType: 'service', serviceSlug })
+  // Shared (city-agnostic) article: cityIsNull pins the lookup to the single
+  // city_slug IS NULL row, so adding per-city service articles later can never
+  // leak one of those onto this national page.
+  const dbArticle = useBlogArticle({
+    pageType: 'service',
+    serviceSlug,
+    cityIsNull: true,
+  })
 
   useMeta({
     title: nat?.metaTitle || 'EaseMyOffice',
