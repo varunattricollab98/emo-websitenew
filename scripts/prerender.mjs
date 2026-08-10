@@ -133,7 +133,9 @@ async function main() {
     getStateSlugForCity,
     getStateNameFromSlug,
   } = await import('../src/data/spaces.js')
-  const { serviceLandings, serviceOrder } = await import('../src/data/serviceLandings.js')
+  const { serviceLandings, serviceOrder, getServiceNational } = await import(
+    '../src/data/serviceLandings.js'
+  )
   const { cityFaqs, spaceFaqs } = await import('../src/data/pageFaqs.js')
   const { coworkingCities, getCoworkingSpaces, slugifyCoworking } = await import(
     '../src/data/coworkingSpaces.js'
@@ -291,6 +293,22 @@ async function main() {
     },
   ]
   staticPages.forEach(emit)
+
+  // ── 1b. National service hub pages ────────────────────────────────────────
+  // The city-agnostic version of each service, e.g. /virtual-office/gst-registration.
+  // These target the national keyword and funnel down to the per-city pages
+  // emitted in section 3.
+  for (const svcSlug of serviceOrder) {
+    const nat = getServiceNational(svcSlug)
+    if (!nat) continue
+    emit({
+      path: `virtual-office/${svcSlug}`,
+      title: nat.metaTitle,
+      description: nat.metaDescription,
+      imageAlt: `${serviceLandings[svcSlug]?.name || svcSlug} across India`,
+      schema: nat.faqs?.length ? faqSchema(nat.faqs) : null,
+    })
+  }
 
   // ── 2. Live spaces from Supabase ──────────────────────────────────────────
   // Imported inside the try so a Supabase/SDK failure still lets every other

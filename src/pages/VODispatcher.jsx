@@ -9,11 +9,13 @@ const CityTemplate = lazy(() => import('./CityTemplate'))
 const StateTemplate = lazy(() => import('./StateTemplate'))
 const SpaceDetail = lazy(() => import('./SpaceDetail'))
 const ServiceLanding = lazy(() => import('./ServiceLanding'))
+const ServiceHub = lazy(() => import('./ServiceHub'))
 
 /**
  * Smart URL dispatcher for all /virtual-office/* routes.
  *
  * Handles the consistent URL structure:
+ *   /virtual-office/:service                   → National service hub (all-India)
  *   /virtual-office/:state                     → State page (all cities in state)
  *   /virtual-office/:state/:city               → City page (all spaces in city)
  *   /virtual-office/:state/:city/:space        → Space detail page
@@ -22,6 +24,7 @@ const ServiceLanding = lazy(() => import('./ServiceLanding'))
  * Also handles legacy/old URLs with redirects:
  *   /virtual-office/:city                      → redirect to /virtual-office/:state/:city
  *   /virtual-office/:city/:space               → redirect to /virtual-office/:state/:city/:space
+ *   /virtual-office/:service/:city             → redirect to /virtual-office/:state/:city/:service
  *
  * Alias resolution:
  *   /virtual-office/haryana/gurugram           → resolves "gurugram" → "gurgaon" slug
@@ -83,6 +86,14 @@ export default function VODispatcher() {
     const firstIsState = isState(first)
     const secondIsCity = !!resolveToCity(second)
 
+    // Pattern 0: /virtual-office/{service}/{city} (reversed order)
+    // → redirect to the canonical /virtual-office/{state}/{city}/{service}
+    if (isService(first) && secondIsCity) {
+      const c = resolveToCity(second)
+      const stateSlug = getStateSlugForCity(c.slug)
+      return <Navigate to={`/virtual-office/${stateSlug}/${c.slug}/${first}`} replace />
+    }
+
     // Pattern A: /virtual-office/{state}/{city} → City page
     if (firstIsState && secondIsCity) {
       const city = resolveToCity(second)
@@ -124,6 +135,14 @@ export default function VODispatcher() {
   // 1-segment: /virtual-office/:first
   // ════════════════════════════════════════════════════════════
   if (first) {
+    // Check if it's a service → dedicated all-India service hub page.
+    // e.g. /virtual-office/gst-registration
+    // Checked before the state lookup so a service slug is never mistaken
+    // for a state and rendered as "State not found".
+    if (isService(first)) {
+      return <ServiceHub />
+    }
+
     // Check if it's a state → State page
     if (isState(first)) {
       return <StateTemplate />
