@@ -16,8 +16,12 @@ import { markdownToBlocks } from '../utils/markdownToBlocks'
  * Usage:
  *   const article = useBlogArticle({ pageType: 'city', citySlug: 'gurgaon' })
  *   // article = { title, eyebrow, subtitle, blocks } or null
+ *
+ * Pass `cityIsNull: true` (with no citySlug) to fetch the shared, city-agnostic
+ * row for a page like the national service hubs. Without it the query would
+ * simply leave city_slug unfiltered and could pick up a per-city row instead.
  */
-export function useBlogArticle({ pageType, citySlug, areaSlug, serviceSlug }) {
+export function useBlogArticle({ pageType, citySlug, areaSlug, serviceSlug, cityIsNull = false }) {
   const [article, setArticle] = useState(null)
 
   useEffect(() => {
@@ -34,6 +38,7 @@ export function useBlogArticle({ pageType, citySlug, areaSlug, serviceSlug }) {
 
     // Add filters based on page type
     if (citySlug) query = query.eq('city_slug', citySlug)
+    else if (cityIsNull) query = query.is('city_slug', null)
     if (areaSlug) query = query.eq('area_slug', areaSlug)
     if (serviceSlug) query = query.eq('service_slug', serviceSlug)
 
@@ -68,7 +73,7 @@ export function useBlogArticle({ pageType, citySlug, areaSlug, serviceSlug }) {
         })
       }
     })
-  }, [pageType, citySlug, areaSlug, serviceSlug])
+  }, [pageType, citySlug, areaSlug, serviceSlug, cityIsNull])
 
   return article
 }
