@@ -133,7 +133,7 @@ async function main() {
     getStateSlugForCity,
     getStateNameFromSlug,
   } = await import('../src/data/spaces.js')
-  const { serviceLandings, serviceOrder, getServiceNational } = await import(
+  const { serviceLandings, serviceOrder, getServiceNational, serviceAliases } = await import(
     '../src/data/serviceLandings.js'
   )
   const { cityFaqs, spaceFaqs } = await import('../src/data/pageFaqs.js')
@@ -175,8 +175,13 @@ async function main() {
    * Build a full HTML document for one route.
    * `path` is the route without a leading slash, e.g. 'virtual-office/haryana/gurgaon'
    */
-  function buildPage({ path, title, description, image, imageAlt, schema }) {
+  function buildPage({ path, title, description, image, imageAlt, schema, canonicalPath }) {
     const url = `${SITE}/${path}`.replace(/\/+$/, '') || SITE
+    // Alias routes (e.g. company-registration) point their canonical at the
+    // real page so search engines consolidate on one URL.
+    const canonical = canonicalPath
+      ? `${SITE}/${canonicalPath}`.replace(/\/+$/, '') || SITE
+      : url
     const desc = clamp(description)
     const img = widenForSocial(image) || SITE + DEFAULT_IMAGE
     const absImg = /^https?:\/\//.test(img) ? img : SITE + img
@@ -184,12 +189,12 @@ async function main() {
     let html = template
     html = setTitle(html, title)
     html = setMeta(html, 'name', 'description', desc)
-    html = setCanonical(html, url)
+    html = setCanonical(html, canonical)
 
     // Open Graph
     html = setMeta(html, 'property', 'og:title', title)
     html = setMeta(html, 'property', 'og:description', desc)
-    html = setMeta(html, 'property', 'og:url', url)
+    html = setMeta(html, 'property', 'og:url', canonical)
     html = setMeta(html, 'property', 'og:image', absImg)
     html = setMeta(html, 'property', 'og:image:secure_url', absImg)
     if (imageAlt) html = setMeta(html, 'property', 'og:image:alt', imageAlt)
@@ -310,6 +315,24 @@ async function main() {
     })
   }
 
+  // ── 1c. Service alias hub pages ───────────────────────────────────────────
+  // e.g. /virtual-office/company-registration is the same product as
+  // business-registration. The app redirects to the canonical URL, and these
+  // files exist so the alias URL still serves real metadata (with the canonical
+  // pointing at the real page) instead of the generic SPA fallback.
+  for (const [alias, canonicalSlug] of Object.entries(serviceAliases)) {
+    const nat = getServiceNational(canonicalSlug)
+    if (!nat) continue
+    emit({
+      path: `virtual-office/${alias}`,
+      canonicalPath: `virtual-office/${canonicalSlug}`,
+      title: nat.metaTitle,
+      description: nat.metaDescription,
+      imageAlt: `${serviceLandings[canonicalSlug]?.name || canonicalSlug} across India`,
+      schema: nat.faqs?.length ? faqSchema(nat.faqs) : null,
+    })
+  }
+
   // ── 2. Live spaces from Supabase ──────────────────────────────────────────
   // Imported inside the try so a Supabase/SDK failure still lets every other
   // page (static routes, coworking) get its metadata.
@@ -394,6 +417,23 @@ async function main() {
       if (!landing) continue
       emit({
         path: spaceUrl(citySlug, svc).replace(/^\//, ''),
+        title: `${landing.name} in ${info.name} | EaseMyOffice`,
+        description:
+          (landing.lead && clamp(landing.lead(info.name))) ||
+          `${landing.name} in ${info.name} with a verified commercial address and complete documentation support.`,
+        image: info.image,
+        imageAlt: `${landing.name} in ${info.name}`,
+        schema: landing.faqs ? faqSchema(landing.faqs(info.name)) : null,
+      })
+    }
+
+    // Per-city alias URLs, canonical points at the real city service page.
+    for (const [alias, canonicalSlug] of Object.entries(serviceAliases)) {
+      const landing = serviceLandings[canonicalSlug]
+      if (!landing) continue
+      emit({
+        path: spaceUrl(citySlug, alias).replace(/^\//, ''),
+        canonicalPath: spaceUrl(citySlug, canonicalSlug).replace(/^\//, ''),
         title: `${landing.name} in ${info.name} | EaseMyOffice`,
         description:
           (landing.lead && clamp(landing.lead(info.name))) ||

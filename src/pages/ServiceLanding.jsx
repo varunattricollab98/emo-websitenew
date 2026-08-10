@@ -31,7 +31,13 @@ import { serviceArticle } from '../data/blogArticles'
 import { useBlogArticle } from '../hooks/useBlogArticle'
 import { useMeta } from '../hooks/useMeta'
 import { getCityBySlug } from '../data/cities'
-import { getServiceLanding, serviceOrder, serviceLandings } from '../data/serviceLandings'
+import {
+  getServiceLanding,
+  serviceOrder,
+  serviceLandings,
+  resolveServiceSlug,
+  isServiceAlias,
+} from '../data/serviceLandings'
 import { useLeadModal } from '../context/LeadModalContext'
 
 const iconMap = { FileCheck2, Landmark, Mailbox, Armchair }
@@ -58,13 +64,17 @@ export default function ServiceLanding() {
   const stateSlug = params.third ? params.first : ''
   // service slug:
   const rawService = (params.third || params.service || params.second || params.space || '').toLowerCase()
-  const serviceSlug = rawService
+  const urlSlug = rawService
     .replace(/gstregistration/i, 'gst-registration')
     .replace(/businessregistration/i, 'business-registration')
+    .replace(/companyregistration/i, 'company-registration')
     .replace(/mailingaddress/i, 'mailing-address')
     .replace(/deskplan/i, 'desk-plan')
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '')
+  // Aliases (e.g. company-registration) resolve onto the canonical service so
+  // both URLs render the same page; the alias URL redirects below.
+  const serviceSlug = resolveServiceSlug(urlSlug)
   const { openLeadModal } = useLeadModal()
 
   const svc = getServiceLanding(serviceSlug)
@@ -87,6 +97,12 @@ export default function ServiceLanding() {
     const actualCity = resolved?.slug || city
     const spaceSlug = serviceSlug // the "service" param is actually the space slug
     return <Navigate to={spaceUrl(actualCity, spaceSlug)} replace />
+  }
+
+  // Alias URL (e.g. .../company-registration), redirect to the canonical
+  // service URL so only one page per city/service is indexable.
+  if (isServiceAlias(urlSlug)) {
+    return <Navigate to={spaceUrl(city, serviceSlug)} replace />
   }
 
   const Icon = iconMap[svc.icon] || FileCheck2
