@@ -296,6 +296,18 @@ async function main() {
       description:
         'Answers about virtual offices, GST registration, company incorporation, documentation, pricing and activation timelines.',
     },
+    {
+      path: 'blog',
+      title: 'Blog, Virtual Office, GST & Compliance Insights | EaseMyOffice',
+      description:
+        'Practical guides on virtual offices, GST registration, company incorporation and business compliance in India, written by the EaseMyOffice team.',
+    },
+    {
+      path: 'careers',
+      title: 'Careers at EaseMyOffice, Join Our Team',
+      description:
+        'Build the future of flexible workspaces in India. See open roles in sales, operations, engineering and marketing at EaseMyOffice.',
+    },
   ]
   staticPages.forEach(emit)
 

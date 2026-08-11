@@ -33,6 +33,9 @@ const ServiceLanding = lazy(() => import('./pages/ServiceLanding'))
 const StateTemplate = lazy(() => import('./pages/StateTemplate'))
 const VODispatcher = lazy(() => import('./pages/VODispatcher'))
 const Faq = lazy(() => import('./pages/Faq'))
+const Blog = lazy(() => import('./pages/Blog'))
+const BlogPost = lazy(() => import('./pages/BlogPost'))
+const Careers = lazy(() => import('./pages/Careers'))
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'))
 const Terms = lazy(() => import('./pages/Terms'))
 const RefundPolicy = lazy(() => import('./pages/RefundPolicy'))
@@ -85,6 +88,10 @@ export default function App() {
                 <Route path="/about" element={<About />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/list-your-space" element={<ListYourSpace />} />
+                <Route path="/careers" element={<Careers />} />
+                {/* Blog listing must come before the :slug route */}
+                <Route path="/blog" element={<Blog />} />
+                <Route path="/blog/:slug" element={<BlogPost />} />
                 <Route path="/faq" element={<Faq />} />
                 <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                 <Route path="/terms" element={<Terms />} />
