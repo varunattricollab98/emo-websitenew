@@ -5,8 +5,8 @@ import { footerCities } from '../../data/cities'
 const company = [
   { label: 'About Us', to: '/about' },
   { label: 'Contact', to: '/contact' },
-  { label: 'Careers', to: '/about' },
-  { label: 'Blog', to: '/about' },
+  { label: 'Careers', to: '/careers' },
+  { label: 'Blog', to: '/blog' },
   { label: 'List Your Space', to: '/list-your-space' },
 ]
 
