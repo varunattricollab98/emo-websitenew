@@ -55,11 +55,6 @@ const perks = [
     desc: 'Hybrid by default. We care about the work you ship, not the hours you sit at a desk.',
   },
   {
-    icon: HeartPulse,
-    title: 'Health cover',
-    desc: 'Medical insurance for you and your family, because peace of mind is not a perk.',
-  },
-  {
     icon: Users,
     title: 'A team you will like',
     desc: 'Low ego, high trust, and offsites that people actually look forward to.',
