@@ -2,13 +2,10 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { getAdminClient } from '../../lib/supabaseAdmin'
 
-const PAGE_TYPES = ['All', 'city', 'coworking', 'service']
-
-export default function AdminArticles() {
-  const [articles, setArticles] = useState([])
+export default function AdminJobs() {
+  const [jobs, setJobs] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [filter, setFilter] = useState('All')
   const navigate = useNavigate()
 
   const adminClient = getAdminClient()
@@ -18,20 +15,20 @@ export default function AdminArticles() {
       navigate('/admin')
       return
     }
-    fetchArticles()
+    fetchJobs()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  async function fetchArticles() {
+  async function fetchJobs() {
     setLoading(true)
     const { data, error: err } = await adminClient
-      .from('blog_articles')
-      .select('id, title, page_type, city_slug, service_slug, content, is_active, sort_order')
+      .from('job_openings')
+      .select('id, title, department, location, employment_type, is_active, sort_order, created_at')
       .order('sort_order', { ascending: true })
 
     if (err) {
       setError(err.message)
     } else {
-      setArticles(data || [])
+      setJobs(data || [])
     }
     setLoading(false)
   }
@@ -40,14 +37,14 @@ export default function AdminArticles() {
     if (!window.confirm(`Delete "${title}"? This cannot be undone.`)) return
 
     const { error: err } = await adminClient
-      .from('blog_articles')
+      .from('job_openings')
       .delete()
       .eq('id', id)
 
     if (err) {
       alert('Delete failed: ' + err.message)
     } else {
-      setArticles((prev) => prev.filter((a) => a.id !== id))
+      setJobs((prev) => prev.filter((j) => j.id !== id))
     }
   }
 
@@ -56,15 +53,12 @@ export default function AdminArticles() {
     navigate('/admin')
   }
 
-  const filteredArticles =
-    filter === 'All' ? articles : articles.filter((a) => a.page_type === filter)
-
   return (
     <div className="min-h-screen bg-slate-50">
       <div className="mx-auto max-w-6xl px-4 py-8">
         {/* Header */}
         <div className="mb-6 flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-slate-900">Articles</h1>
+          <h1 className="text-2xl font-bold text-slate-900">Jobs</h1>
           <div className="flex items-center gap-3">
             <Link
               to="/admin/blog"
@@ -73,16 +67,16 @@ export default function AdminArticles() {
               Blog Posts
             </Link>
             <Link
-              to="/admin/jobs"
+              to="/admin/articles"
               className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100"
             >
-              Jobs
+              Articles
             </Link>
             <Link
-              to="/admin/articles/new"
+              to="/admin/jobs/new"
               className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
             >
-              + New Article
+              + New Job
             </Link>
             <button
               onClick={handleLogout}
@@ -91,47 +85,6 @@ export default function AdminArticles() {
               Logout
             </button>
           </div>
-        </div>
-
-        {/* Quick-Action Buttons */}
-        <div className="mb-4 flex flex-wrap items-center gap-2">
-          <span className="text-sm font-medium text-slate-600">Quick Add:</span>
-          <Link
-            to="/admin/articles/new?type=city"
-            className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-sm font-medium text-emerald-700 transition hover:bg-emerald-100"
-          >
-            + City Article
-          </Link>
-          <Link
-            to="/admin/articles/new?type=coworking"
-            className="rounded-lg border border-purple-200 bg-purple-50 px-3 py-1.5 text-sm font-medium text-purple-700 transition hover:bg-purple-100"
-          >
-            + Coworking Article
-          </Link>
-          <Link
-            to="/admin/articles/new?type=service"
-            className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-1.5 text-sm font-medium text-amber-700 transition hover:bg-amber-100"
-          >
-            + Service Article
-          </Link>
-        </div>
-
-        {/* Filter */}
-        <div className="mb-4 flex items-center gap-2">
-          <span className="text-sm font-medium text-slate-600">Filter:</span>
-          {PAGE_TYPES.map((type) => (
-            <button
-              key={type}
-              onClick={() => setFilter(type)}
-              className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${
-                filter === type
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-white text-slate-600 border border-slate-300 hover:bg-slate-100'
-              }`}
-            >
-              {type === 'All' ? 'All' : type.charAt(0).toUpperCase() + type.slice(1)}
-            </button>
-          ))}
         </div>
 
         {/* Error */}
@@ -143,75 +96,69 @@ export default function AdminArticles() {
 
         {/* Loading */}
         {loading && (
-          <div className="py-12 text-center text-slate-500">Loading articles...</div>
+          <div className="py-12 text-center text-slate-500">Loading jobs...</div>
         )}
 
         {/* Empty state */}
-        {!loading && filteredArticles.length === 0 && (
+        {!loading && jobs.length === 0 && (
           <div className="py-12 text-center text-slate-500">
-            No articles found.{' '}
-            <Link to="/admin/articles/new" className="text-blue-600 underline">
-              Create your first article
+            No jobs yet.{' '}
+            <Link to="/admin/jobs/new" className="text-blue-600 underline">
+              Create your first job
             </Link>
           </div>
         )}
 
-        {/* Articles Table */}
-        {!loading && filteredArticles.length > 0 && (
+        {/* Jobs Table */}
+        {!loading && jobs.length > 0 && (
           <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
             <table className="w-full text-left text-sm">
               <thead className="border-b border-slate-200 bg-slate-50">
                 <tr>
                   <th className="px-4 py-3 font-medium text-slate-600">Title</th>
-                  <th className="px-4 py-3 font-medium text-slate-600">Page Type</th>
-                  <th className="px-4 py-3 font-medium text-slate-600">City Slug</th>
-                  <th className="px-4 py-3 font-medium text-slate-600">Service Slug</th>
-                  <th className="px-4 py-3 font-medium text-slate-600">Content</th>
+                  <th className="px-4 py-3 font-medium text-slate-600">Department</th>
+                  <th className="px-4 py-3 font-medium text-slate-600">Location</th>
+                  <th className="px-4 py-3 font-medium text-slate-600">Type</th>
                   <th className="px-4 py-3 font-medium text-slate-600">Status</th>
                   <th className="px-4 py-3 font-medium text-slate-600">Order</th>
                   <th className="px-4 py-3 font-medium text-slate-600">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {filteredArticles.map((article) => (
-                  <tr key={article.id} className="hover:bg-slate-50/50">
+                {jobs.map((job) => (
+                  <tr key={job.id} className="hover:bg-slate-50/50">
                     <td className="px-4 py-3">
-                      <span className="font-medium text-slate-900">
-                        {article.title || '(untitled)'}
-                      </span>
+                      <span className="font-medium text-slate-900">{job.title}</span>
                     </td>
+                    <td className="px-4 py-3 text-slate-600">{job.department || '-'}</td>
+                    <td className="px-4 py-3 text-slate-600">{job.location || '-'}</td>
                     <td className="px-4 py-3">
                       <span className="inline-flex rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600">
-                        {article.page_type}
+                        {job.employment_type || '-'}
                       </span>
-                    </td>
-                    <td className="px-4 py-3 text-slate-600">{article.city_slug || '-'}</td>
-                    <td className="px-4 py-3 text-slate-600">{article.service_slug || '-'}</td>
-                    <td className="px-4 py-3 text-slate-600">
-                      {article.content ? `${article.content.length} chars` : '0 chars'}
                     </td>
                     <td className="px-4 py-3">
                       <span
                         className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${
-                          article.is_active
+                          job.is_active
                             ? 'bg-green-100 text-green-700'
                             : 'bg-slate-100 text-slate-500'
                         }`}
                       >
-                        {article.is_active ? 'Active' : 'Draft'}
+                        {job.is_active ? 'Active' : 'Draft'}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-slate-600">{article.sort_order ?? '-'}</td>
+                    <td className="px-4 py-3 text-slate-600">{job.sort_order ?? '-'}</td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
                         <Link
-                          to={`/admin/articles/edit/${article.id}`}
+                          to={`/admin/jobs/edit/${job.id}`}
                           className="rounded bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700 transition hover:bg-slate-200"
                         >
                           Edit
                         </Link>
                         <button
-                          onClick={() => handleDelete(article.id, article.title)}
+                          onClick={() => handleDelete(job.id, job.title)}
                           className="rounded bg-red-50 px-2.5 py-1 text-xs font-medium text-red-600 transition hover:bg-red-100"
                         >
                           Delete

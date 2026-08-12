@@ -49,6 +49,8 @@ const AdminBlog = lazy(() => import('./pages/admin/AdminBlog'))
 const AdminBlogEditor = lazy(() => import('./pages/admin/AdminBlogEditor'))
 const AdminArticles = lazy(() => import('./pages/admin/AdminArticles'))
 const AdminArticleEditor = lazy(() => import('./pages/admin/AdminArticleEditor'))
+const AdminJobs = lazy(() => import('./pages/admin/AdminJobs'))
+const AdminJobEditor = lazy(() => import('./pages/admin/AdminJobEditor'))
 
 // Lightweight fallback while a route chunk loads (no layout shift).
 function RouteFallback() {
@@ -76,6 +78,9 @@ export default function App() {
             <Route path="/admin/articles" element={<AdminArticles />} />
             <Route path="/admin/articles/new" element={<AdminArticleEditor />} />
             <Route path="/admin/articles/edit/:id" element={<AdminArticleEditor />} />
+            <Route path="/admin/jobs" element={<AdminJobs />} />
+            <Route path="/admin/jobs/new" element={<AdminJobEditor />} />
+            <Route path="/admin/jobs/edit/:id" element={<AdminJobEditor />} />
 
             {/* Public site routes with full layout */}
             <Route path="*" element={<SiteLayout />} />
