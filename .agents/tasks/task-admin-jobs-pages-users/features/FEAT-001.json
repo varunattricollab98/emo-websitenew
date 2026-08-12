@@ -1,0 +1,28 @@
+{
+  "id": "FEAT-001",
+  "type": "feat",
+  "description": "Insert 5 job vacancies into the job_openings Supabase table and add /admin/jobs CRUD page to the admin panel",
+  "status": "completed",
+  "steps": [
+    "Use the Supabase service key to INSERT 5 rows into the job_openings table via the REST API: 2 Sales roles ('Sales Executive - North India', 'Business Development Manager'), 2 Internships ('Marketing Intern', 'Operations Intern'), and 1 Accounts role ('Accounts Executive'). Each should have proper markdown JDs with description, responsibilities, and requirements. Company is EaseMyOffice, a virtual office company based in Gurugram, Haryana serving businesses across India. Use apply_email='careers@easemyoffice.in', set is_active=true, assign sort_order 1-5.",
+    "Create src/pages/admin/AdminJobs.jsx - a listing page showing all job_openings (active + inactive). Follow the exact pattern of AdminBlog.jsx and AdminArticles.jsx: table with title, department, location, employment_type, status (active/draft badge), sort_order, and Edit/Delete action buttons. Include nav links in header to Blog Posts, Articles, and a + New Job button. Include logout button.",
+    "Create src/pages/admin/AdminJobEditor.jsx - a create/edit form following the pattern of AdminBlogEditor.jsx. Fields: title (text), department (text), location (text), employment_type (select: Full-time, Part-time, Internship, Contract), experience (text), description (RichMarkdownEditor), responsibilities (RichMarkdownEditor), requirements (RichMarkdownEditor), apply_email (text, default 'careers@easemyoffice.in'), is_active (checkbox), sort_order (number). Include live preview using markdownToBlocks + ArticleBlocks like the blog editor does.",
+    "Register routes in src/App.jsx: lazy-import AdminJobs and AdminJobEditor, add routes /admin/jobs, /admin/jobs/new, /admin/jobs/edit/:id",
+    "Add navigation link to 'Jobs' in the header of AdminBlog.jsx and AdminArticles.jsx (alongside existing cross-nav links)"
+  ],
+  "acceptance_criteria": [
+    "5 job openings are visible on the /careers page as expandable cards with full JDs",
+    "GET /admin/jobs shows all 5 jobs in a table with edit/delete actions",
+    "/admin/jobs/new allows creating a new job with markdown editor fields",
+    "/admin/jobs/edit/:id loads existing job data and allows updates",
+    "Delete removes a job from the table",
+    "Build passes with 398 pages and exit code 0"
+  ],
+  "verification": [
+    "Run: export PATH=\"/root/.nvm/versions/node/v22.23.2/bin:$PATH\" && cd /projects/sandbox/emo-websitenew && rm -rf dist && npm run build",
+    "Confirm build exits 0 and produces 398 pages",
+    "Use curl to verify job_openings table has 5 active rows via Supabase REST API"
+  ],
+  "blocked_reason": null,
+  "findings": "All 5 job openings inserted successfully into Supabase. Build passes with 398 pages. Admin pages follow the exact pattern of AdminBlog/AdminArticles. The AdminJobEditor uses RichMarkdownEditor for description, responsibilities, and requirements fields with live preview combining all three. Routes registered at /admin/jobs, /admin/jobs/new, /admin/jobs/edit/:id."
+}
