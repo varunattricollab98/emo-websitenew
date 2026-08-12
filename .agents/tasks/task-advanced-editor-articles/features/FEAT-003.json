@@ -2,7 +2,7 @@
   "id": "FEAT-003",
   "type": "feat",
   "description": "Replace the raw service key login with a username/password form and add quick-action buttons for creating new city/coworking/service articles in the admin panel.",
-  "status": "in_progress",
+  "status": "completed",
   "steps": [
     "Rewrite AdminLogin.jsx with username + password form that validates against env vars (VITE_ADMIN_USERNAME / VITE_ADMIN_PASSWORD) with defaults admin / emo@2026. On success, check VITE_ADMIN_SERVICE_KEY env var; if set store in sessionStorage and redirect, otherwise show secondary service key input.",
     "Update .env.example to include VITE_ADMIN_USERNAME, VITE_ADMIN_PASSWORD, and VITE_ADMIN_SERVICE_KEY with explanatory comments.",
@@ -21,5 +21,5 @@
     "Run: export PATH=/root/.nvm/versions/node/v22.23.2/bin:$PATH && cd /projects/sandbox/emo-websitenew && npm run build"
   ],
   "blocked_reason": null,
-  "findings": null
+  "findings": "Build passes with 398 prerendered pages. AdminLogin now has a two-step flow: (1) username/password, (2) optional service key if VITE_ADMIN_SERVICE_KEY env var is not set. Quick-action buttons added with color-coded styles (emerald for city, purple for coworking, amber for service). AdminArticleEditor reads useSearchParams for ?type pre-fill."
 }
