@@ -63,10 +63,12 @@ export default function ArticleBlocks({ blocks = [], lead = false }) {
           )
         }
         if (b.h) {
+          const headingId = b.h.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
           return (
             <h2
               key={i}
-              className="flex items-center gap-3 pt-4 text-2xl font-extrabold tracking-tight text-navy-dark"
+              id={headingId}
+              className="flex items-center gap-3 pt-4 text-2xl font-extrabold tracking-tight text-navy-dark scroll-mt-24"
             >
               <span className="inline-block h-6 w-1.5 flex-none rounded-full bg-gradient-to-b from-gold to-gold-dark" />
               {b.h}

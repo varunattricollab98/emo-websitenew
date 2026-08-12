@@ -1,6 +1,7 @@
+import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import { ArrowLeft, ArrowRight, Clock, User, Calendar, FileText } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { ArrowLeft, ArrowRight, Clock, User, Calendar, FileText, ChevronDown } from 'lucide-react'
 import Reveal from '../components/ui/Reveal'
 import Button from '../components/ui/Button'
 import SmartImage from '../components/ui/SmartImage'
@@ -11,6 +12,62 @@ import SchemaScript from '../components/seo/SchemaScript'
 import { articleSchema, breadcrumbSchema } from '../components/seo/schemas'
 import { useBlogPost, useBlogPosts, formatPostDate } from '../hooks/useBlogPosts'
 import { useMeta } from '../hooks/useMeta'
+
+/**
+ * Collapsible Table of Contents component.
+ * Auto-generated from article H2 headings. Only renders when there are 3+ headings.
+ */
+function TableOfContents({ headings }) {
+  const [open, setOpen] = useState(() => window.innerWidth >= 1024)
+
+  if (!headings || headings.length < 3) return null
+
+  return (
+    <div className="rounded-2xl border border-primary-100/70 bg-white shadow-soft">
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex w-full items-center justify-between px-5 py-4"
+      >
+        <span className="text-sm font-bold text-navy-dark">Table of Contents</span>
+        <ChevronDown
+          className={`h-4 w-4 text-slate-400 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
+        />
+      </button>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="overflow-hidden"
+          >
+            <ol className="border-t border-primary-100/50 px-5 py-4 space-y-2">
+              {headings.map((heading, idx) => {
+                const id = heading.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+                return (
+                  <li key={id + idx}>
+                    <a
+                      href={`#${id}`}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+                      }}
+                      className="flex items-start gap-2 text-sm text-slate-600 transition-colors hover:text-primary"
+                    >
+                      <span className="flex-none font-semibold text-primary/60">{idx + 1}.</span>
+                      <span className="leading-snug">{heading}</span>
+                    </a>
+                  </li>
+                )
+              })}
+            </ol>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  )
+}
 
 export default function BlogPost() {
   const { slug } = useParams()
@@ -172,6 +229,17 @@ export default function BlogPost() {
                 />
               </div>
             </Reveal>
+          </div>
+        </section>
+      )}
+
+      {/* Table of Contents */}
+      {post.blocks?.length > 0 && (
+        <section className="bg-white pt-8">
+          <div className="container-custom max-w-3xl">
+            <TableOfContents
+              headings={post.blocks.filter((b) => b && b.h).map((b) => b.h)}
+            />
           </div>
         </section>
       )}
