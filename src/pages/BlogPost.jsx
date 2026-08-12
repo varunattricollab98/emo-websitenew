@@ -238,7 +238,10 @@ export default function BlogPost() {
         <section className="bg-white pt-8">
           <div className="container-custom max-w-3xl">
             <TableOfContents
-              headings={post.blocks.filter((b) => b && b.h).map((b) => b.h)}
+              headings={post.blocks
+                .filter((b) => b && b.h)
+                .map((b) => b.h)
+                .slice(0, 30)}
             />
           </div>
         </section>
