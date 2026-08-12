@@ -646,9 +646,12 @@ export default function Careers() {
                   <Mail className="h-5 w-5" />
                   {DEFAULT_APPLY_EMAIL}
                 </a>
-                <Button to="/about" variant="outline" size="lg" className="border-white/40 bg-transparent !text-white hover:!bg-white/10">
+                <a
+                  href="/about"
+                  className="btn-base border-2 border-white/40 bg-transparent px-8 py-4 text-base text-white transition-colors hover:bg-white/10"
+                >
                   About EaseMyOffice
-                </Button>
+                </a>
               </div>
             </div>
           </motion.div>
