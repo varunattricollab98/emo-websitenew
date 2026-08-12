@@ -5,50 +5,33 @@ import { markdownToBlocks } from '../../utils/markdownToBlocks'
 import ArticleBlocks from '../../components/ui/ArticleBlocks'
 import RichMarkdownEditor from '../../components/admin/RichMarkdownEditor'
 
-const CATEGORIES = [
-  'Virtual Office',
-  'Coworking',
-  'Business Registration',
-  'GST',
-  'Compliance',
-  'Startup',
-  'General',
-]
+const PAGE_TYPES = ['city', 'coworking', 'service']
 
-function slugify(text) {
-  return text
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/[\s_]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-}
-
-const EMPTY_POST = {
+const EMPTY_ARTICLE = {
+  page_type: 'city',
+  city_slug: '',
+  area_slug: '',
+  service_slug: '',
   title: '',
-  slug: '',
-  excerpt: '',
-  category: '',
-  cover_image: '',
+  eyebrow: '',
+  subtitle: '',
   content: '',
   content_format: 'markdown',
-  read_minutes: 5,
-  is_featured: false,
-  is_active: false,
   meta_title: '',
   meta_description: '',
-  author: 'EMO Team',
+  is_active: false,
+  sort_order: 0,
 }
 
-export default function AdminBlogEditor() {
-  const { slug } = useParams()
-  const isEditing = Boolean(slug)
+export default function AdminArticleEditor() {
+  const { id } = useParams()
+  const isEditing = Boolean(id)
   const navigate = useNavigate()
 
-  const [form, setForm] = useState({ ...EMPTY_POST })
+  const [form, setForm] = useState({ ...EMPTY_ARTICLE })
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
-  const [slugManual, setSlugManual] = useState(false)
 
   const adminClient = getAdminClient()
 
@@ -58,55 +41,57 @@ export default function AdminBlogEditor() {
       return
     }
     if (isEditing) {
-      fetchPost()
+      fetchArticle()
     }
-  }, [slug]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [id]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  async function fetchPost() {
+  async function fetchArticle() {
     setLoading(true)
     const { data, error: err } = await adminClient
-      .from('blog_posts')
+      .from('blog_articles')
       .select('*')
-      .eq('slug', slug)
+      .eq('id', id)
       .single()
 
     if (err) {
-      setError('Post not found: ' + err.message)
+      setError('Article not found: ' + err.message)
     } else if (data) {
       setForm({
+        page_type: data.page_type || 'city',
+        city_slug: data.city_slug || '',
+        area_slug: data.area_slug || '',
+        service_slug: data.service_slug || '',
         title: data.title || '',
-        slug: data.slug || '',
-        excerpt: data.excerpt || '',
-        category: data.category || '',
-        cover_image: data.cover_image || '',
+        eyebrow: data.eyebrow || '',
+        subtitle: data.subtitle || '',
         content: data.content || '',
         content_format: data.content_format || 'markdown',
-        read_minutes: data.read_minutes || 5,
-        is_featured: data.is_featured || false,
-        is_active: data.is_active || false,
         meta_title: data.meta_title || '',
         meta_description: data.meta_description || '',
-        author: data.author || 'EMO Team',
+        is_active: data.is_active || false,
+        sort_order: data.sort_order || 0,
       })
-      setSlugManual(true) // Don't auto-generate slug for existing posts
     }
     setLoading(false)
   }
 
   function updateField(field, value) {
-    setForm((prev) => {
-      const next = { ...prev, [field]: value }
-      // Auto-generate slug from title unless manually edited
-      if (field === 'title' && !slugManual) {
-        next.slug = slugify(value)
-      }
-      return next
-    })
+    setForm((prev) => ({ ...prev, [field]: value }))
   }
 
   async function handleSave(publish = false) {
-    if (!form.title.trim() || !form.slug.trim()) {
-      setError('Title and slug are required.')
+    if (!form.title.trim()) {
+      setError('Title is required.')
+      return
+    }
+
+    // Validate slug fields based on page_type
+    if ((form.page_type === 'city' || form.page_type === 'coworking') && !form.city_slug.trim()) {
+      setError('City Slug is required for city/coworking page types.')
+      return
+    }
+    if (form.page_type === 'service' && !form.service_slug.trim()) {
+      setError('Service Slug is required for service page type.')
       return
     }
 
@@ -116,48 +101,38 @@ export default function AdminBlogEditor() {
     const payload = {
       ...form,
       is_active: publish ? true : form.is_active,
-      published_at: publish ? new Date().toISOString() : (form.is_active ? new Date().toISOString() : null),
-      updated_at: new Date().toISOString(),
+      content_format: 'markdown',
     }
 
     let result
     if (isEditing) {
       result = await adminClient
-        .from('blog_posts')
+        .from('blog_articles')
         .update(payload)
-        .eq('slug', slug)
+        .eq('id', id)
     } else {
-      payload.created_at = new Date().toISOString()
       result = await adminClient
-        .from('blog_posts')
+        .from('blog_articles')
         .insert(payload)
     }
 
     if (result.error) {
       setError('Save failed: ' + result.error.message)
     } else {
-      navigate('/admin/blog')
+      navigate('/admin/articles')
     }
     setSaving(false)
   }
 
   // Live preview of markdown content
   const previewBlocks = useMemo(() => {
-    if (form.content_format === 'markdown') {
-      return markdownToBlocks(form.content)
-    }
-    // If JSON format, try to parse
-    try {
-      return JSON.parse(form.content)
-    } catch {
-      return []
-    }
-  }, [form.content, form.content_format])
+    return markdownToBlocks(form.content)
+  }, [form.content])
 
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-50">
-        <span className="text-slate-500">Loading post...</span>
+        <span className="text-slate-500">Loading article...</span>
       </div>
     )
   }
@@ -169,13 +144,13 @@ export default function AdminBlogEditor() {
         <div className="mb-6 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <button
-              onClick={() => navigate('/admin/blog')}
+              onClick={() => navigate('/admin/articles')}
               className="text-sm text-slate-500 transition hover:text-slate-700"
             >
-              &larr; Back to Posts
+              &larr; Back to Articles
             </button>
             <h1 className="text-xl font-bold text-slate-900">
-              {isEditing ? 'Edit Post' : 'New Post'}
+              {isEditing ? 'Edit Article' : 'New Article'}
             </h1>
           </div>
           <div className="flex items-center gap-2">
@@ -207,6 +182,56 @@ export default function AdminBlogEditor() {
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           {/* Left: Form */}
           <div className="space-y-4">
+            {/* Page Type */}
+            <div>
+              <label className="mb-1 block text-sm font-medium text-slate-700">Page Type</label>
+              <select
+                value={form.page_type}
+                onChange={(e) => updateField('page_type', e.target.value)}
+                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              >
+                {PAGE_TYPES.map((type) => (
+                  <option key={type} value={type}>
+                    {type.charAt(0).toUpperCase() + type.slice(1)}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Slug Fields */}
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <label className="mb-1 block text-sm font-medium text-slate-700">City Slug</label>
+                <input
+                  type="text"
+                  value={form.city_slug}
+                  onChange={(e) => updateField('city_slug', e.target.value)}
+                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  placeholder="e.g. mumbai"
+                />
+              </div>
+              <div>
+                <label className="mb-1 block text-sm font-medium text-slate-700">Area Slug</label>
+                <input
+                  type="text"
+                  value={form.area_slug}
+                  onChange={(e) => updateField('area_slug', e.target.value)}
+                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  placeholder="e.g. andheri"
+                />
+              </div>
+              <div>
+                <label className="mb-1 block text-sm font-medium text-slate-700">Service Slug</label>
+                <input
+                  type="text"
+                  value={form.service_slug}
+                  onChange={(e) => updateField('service_slug', e.target.value)}
+                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  placeholder="e.g. gst-registration"
+                />
+              </div>
+            </div>
+
             {/* Title */}
             <div>
               <label className="mb-1 block text-sm font-medium text-slate-700">Title</label>
@@ -215,128 +240,57 @@ export default function AdminBlogEditor() {
                 value={form.title}
                 onChange={(e) => updateField('title', e.target.value)}
                 className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                placeholder="Post title"
+                placeholder="Article title"
               />
             </div>
 
-            {/* Slug */}
+            {/* Eyebrow */}
             <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">
-                Slug
-                {!slugManual && (
-                  <span className="ml-2 text-xs text-slate-400">(auto-generated)</span>
-                )}
-              </label>
+              <label className="mb-1 block text-sm font-medium text-slate-700">Eyebrow</label>
               <input
                 type="text"
-                value={form.slug}
-                onChange={(e) => {
-                  setSlugManual(true)
-                  updateField('slug', e.target.value)
-                }}
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-mono focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                placeholder="post-url-slug"
+                value={form.eyebrow}
+                onChange={(e) => updateField('eyebrow', e.target.value)}
+                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                placeholder="Small text above title (e.g. CITY GUIDE)"
               />
             </div>
 
-            {/* Excerpt */}
+            {/* Subtitle */}
             <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">Excerpt</label>
+              <label className="mb-1 block text-sm font-medium text-slate-700">Subtitle</label>
               <textarea
-                value={form.excerpt}
-                onChange={(e) => updateField('excerpt', e.target.value)}
+                value={form.subtitle}
+                onChange={(e) => updateField('subtitle', e.target.value)}
                 rows={2}
                 className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                placeholder="Short description for listing pages"
+                placeholder="Brief description or subtitle"
               />
             </div>
 
-            {/* Category + Read Minutes */}
+            {/* Sort Order + Active */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="mb-1 block text-sm font-medium text-slate-700">Category</label>
-                <select
-                  value={form.category}
-                  onChange={(e) => updateField('category', e.target.value)}
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                >
-                  <option value="">Select category</option>
-                  {CATEGORIES.map((cat) => (
-                    <option key={cat} value={cat}>
-                      {cat}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="mb-1 block text-sm font-medium text-slate-700">
-                  Read Minutes
-                </label>
+                <label className="mb-1 block text-sm font-medium text-slate-700">Sort Order</label>
                 <input
                   type="number"
-                  min={1}
-                  max={60}
-                  value={form.read_minutes}
-                  onChange={(e) => updateField('read_minutes', parseInt(e.target.value) || 5)}
+                  min={0}
+                  value={form.sort_order}
+                  onChange={(e) => updateField('sort_order', parseInt(e.target.value) || 0)}
                   className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 />
               </div>
-            </div>
-
-            {/* Cover Image URL */}
-            <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">
-                Cover Image URL
-              </label>
-              <input
-                type="url"
-                value={form.cover_image}
-                onChange={(e) => updateField('cover_image', e.target.value)}
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                placeholder="https://images.unsplash.com/..."
-              />
-              {form.cover_image && (
-                <img
-                  src={form.cover_image}
-                  alt="Cover preview"
-                  className="mt-2 h-32 w-full rounded-lg object-cover"
-                  onError={(e) => (e.target.style.display = 'none')}
-                />
-              )}
-            </div>
-
-            {/* Author */}
-            <div>
-              <label className="mb-1 block text-sm font-medium text-slate-700">Author</label>
-              <input
-                type="text"
-                value={form.author}
-                onChange={(e) => updateField('author', e.target.value)}
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                placeholder="Author name"
-              />
-            </div>
-
-            {/* Toggles */}
-            <div className="flex items-center gap-6">
-              <label className="flex items-center gap-2 text-sm text-slate-700">
-                <input
-                  type="checkbox"
-                  checked={form.is_featured}
-                  onChange={(e) => updateField('is_featured', e.target.checked)}
-                  className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
-                />
-                Featured
-              </label>
-              <label className="flex items-center gap-2 text-sm text-slate-700">
-                <input
-                  type="checkbox"
-                  checked={form.is_active}
-                  onChange={(e) => updateField('is_active', e.target.checked)}
-                  className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
-                />
-                Active (Published)
-              </label>
+              <div className="flex items-end pb-2">
+                <label className="flex items-center gap-2 text-sm text-slate-700">
+                  <input
+                    type="checkbox"
+                    checked={form.is_active}
+                    onChange={(e) => updateField('is_active', e.target.checked)}
+                    className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                  />
+                  Active (Published)
+                </label>
+              </div>
             </div>
 
             {/* SEO Fields */}
@@ -354,7 +308,7 @@ export default function AdminBlogEditor() {
                     value={form.meta_title}
                     onChange={(e) => updateField('meta_title', e.target.value)}
                     className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                    placeholder="SEO title (defaults to post title)"
+                    placeholder="SEO title (defaults to article title)"
                   />
                 </div>
                 <div>
@@ -366,7 +320,7 @@ export default function AdminBlogEditor() {
                     onChange={(e) => updateField('meta_description', e.target.value)}
                     rows={2}
                     className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                    placeholder="SEO description (defaults to excerpt)"
+                    placeholder="SEO description"
                   />
                 </div>
               </div>
@@ -380,7 +334,7 @@ export default function AdminBlogEditor() {
               <RichMarkdownEditor
                 value={form.content}
                 onChange={(md) => updateField('content', md)}
-                placeholder="Start writing your content... Use the toolbar above for formatting."
+                placeholder="Start writing your article content... Use the toolbar above for formatting."
               />
             </div>
           </div>
@@ -391,19 +345,16 @@ export default function AdminBlogEditor() {
               <h2 className="mb-4 border-b border-slate-100 pb-3 text-sm font-semibold uppercase tracking-wide text-slate-400">
                 Live Preview
               </h2>
-              {form.cover_image && (
-                <img
-                  src={form.cover_image}
-                  alt="Cover"
-                  className="mb-4 h-40 w-full rounded-lg object-cover"
-                  onError={(e) => (e.target.style.display = 'none')}
-                />
+              {form.eyebrow && (
+                <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-blue-600">
+                  {form.eyebrow}
+                </p>
               )}
               {form.title && (
                 <h1 className="mb-2 text-2xl font-bold text-slate-900">{form.title}</h1>
               )}
-              {form.excerpt && (
-                <p className="mb-4 text-sm text-slate-500">{form.excerpt}</p>
+              {form.subtitle && (
+                <p className="mb-4 text-sm text-slate-500">{form.subtitle}</p>
               )}
               <div className="max-h-[60vh] overflow-y-auto">
                 {previewBlocks.length > 0 ? (

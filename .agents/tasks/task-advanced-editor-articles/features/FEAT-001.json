@@ -1,0 +1,24 @@
+{
+  "id": "FEAT-001",
+  "type": "feat",
+  "description": "Install TipTap rich-text editor and create a reusable RichMarkdownEditor component that provides a full WYSIWYG toolbar (bold, italic, headings H2/H3, bullet lists, ordered lists, blockquotes, tables, links, horizontal rules) and outputs markdown text compatible with the markdownToBlocks pipeline. Replace the plain textarea in AdminBlogEditor.jsx with this new component. The live preview on the right side stays as-is since it reads the same markdown string.",
+  "status": "completed",
+  "steps": [
+    "Install TipTap packages: npm install @tiptap/react @tiptap/starter-kit @tiptap/pm @tiptap/extension-placeholder @tiptap/extension-link @tiptap/extension-table @tiptap/extension-table-row @tiptap/extension-table-cell @tiptap/extension-table-header tiptap-markdown",
+    "Create src/components/admin/RichMarkdownEditor.jsx - a reusable WYSIWYG editor component with: (1) TipTap EditorContent with StarterKit (bold, italic, headings, bullet/ordered lists, blockquotes, horizontal rule, code blocks), (2) Link extension, (3) Table extensions (table, row, cell, header), (4) Markdown extension from tiptap-markdown for markdown input/output, (5) A toolbar with buttons for: Bold, Italic, H2, H3, Bullet List, Ordered List, Blockquote, Table (insert 3x3), Link, Horizontal Rule, (6) Styling with Tailwind to match the admin UI (slate/blue theme), (7) Props: value (markdown string), onChange (callback with markdown string), placeholder text, (8) The editor should parse incoming markdown value on mount and emit markdown on every change",
+    "Update src/pages/admin/AdminBlogEditor.jsx: replace the <textarea> for content with <RichMarkdownEditor value={form.content} onChange={(md) => updateField('content', md)} />. Keep all other form fields and the live preview panel unchanged.",
+    "Ensure the toolbar is visually polished: icon buttons with tooltips, active state highlighting for formatting that is currently applied, a border/separator between button groups"
+  ],
+  "acceptance_criteria": [
+    "npm run build completes successfully with exit code 0",
+    "The AdminBlogEditor page renders a TipTap WYSIWYG editor instead of a plain textarea",
+    "The editor toolbar has buttons for Bold, Italic, H2, H3, Bullet List, Ordered List, Blockquote, Table, Link, and Horizontal Rule",
+    "The editor outputs markdown text that is stored in form.content and fed to the existing markdownToBlocks -> ArticleBlocks preview",
+    "Editing content in the WYSIWYG editor updates the live preview panel on the right in real-time"
+  ],
+  "verification": [
+    "Run: export PATH=/root/.nvm/versions/node/v22.23.2/bin:$PATH && cd /projects/sandbox/emo-websitenew && npm run build"
+  ],
+  "blocked_reason": null,
+  "findings": "TipTap v3.30.0 table extension uses named exports (not default), so import must be { Table } from '@tiptap/extension-table'. tiptap-markdown also uses named export { Markdown }. Build passes successfully with 398 prerendered pages. The vendor chunk (569KB) includes ProseMirror/TipTap code but is acceptable for admin-only usage."
+}
