@@ -1,0 +1,25 @@
+{
+  "id": "FEAT-002",
+  "type": "feat",
+  "description": "Add admin pages for managing the blog_articles table (city/state/service page articles). Create an AdminArticles listing page and AdminArticleEditor page, both using the same rich editor + preview pattern. Add routes in App.jsx.",
+  "status": "completed",
+  "steps": [
+    "Create src/pages/admin/AdminArticles.jsx - listing page showing all blog_articles rows from Supabase. Table columns: title, page_type (city/coworking/service), city_slug, service_slug, content character count, is_active status, sort_order. Add filter buttons/dropdown to filter by page_type. Include 'New Article' button linking to /admin/articles/new. Include Edit/Delete actions per row. Follow same patterns as AdminBlog.jsx (auth check via getAdminClient, redirect to /admin if no key).",
+    "Create src/pages/admin/AdminArticleEditor.jsx - editor page for blog_articles. Form fields: page_type (dropdown: city, coworking, service), city_slug (text input), area_slug (text input), service_slug (text input), title, eyebrow, subtitle, content (using RichMarkdownEditor), content_format (always 'markdown'), meta_title, meta_description, is_active toggle, sort_order (number). Right side: live preview using markdownToBlocks + ArticleBlocks (same pattern as blog editor). Save/Publish buttons that upsert to blog_articles table. For edit mode, load by id param.",
+    "Update src/App.jsx: add lazy imports for AdminArticles and AdminArticleEditor. Add routes: /admin/articles -> AdminArticles, /admin/articles/new -> AdminArticleEditor, /admin/articles/edit/:id -> AdminArticleEditor. Place them alongside existing admin routes (before the public site catch-all).",
+    "Add navigation links between admin sections: in AdminBlog.jsx add a link to /admin/articles, in AdminArticles.jsx add a link to /admin/blog. This creates a simple nav between the two admin sections."
+  ],
+  "acceptance_criteria": [
+    "npm run build completes successfully with exit code 0",
+    "Routes /admin/articles, /admin/articles/new, /admin/articles/edit/:id are defined and render without errors",
+    "AdminArticles page fetches from blog_articles table and displays results in a table with page_type filter",
+    "AdminArticleEditor has fields for page_type, city_slug, area_slug, service_slug, title, eyebrow, subtitle, content (rich editor), meta fields, is_active, sort_order",
+    "AdminArticleEditor has live preview on the right using ArticleBlocks",
+    "Admin pages are NOT added to the prerender staticPages array in scripts/prerender.mjs"
+  ],
+  "verification": [
+    "Run: export PATH=/root/.nvm/versions/node/v22.23.2/bin:$PATH && cd /projects/sandbox/emo-websitenew && npm run build"
+  ],
+  "blocked_reason": null,
+  "findings": "Build passes with 398 prerendered pages. Admin routes not added to prerender. AdminArticles and AdminArticleEditor follow same patterns as AdminBlog and AdminBlogEditor. v2 fix pass: added @tiptap/extension-underline with toolbar button, added Link validate option to reject non-http(s) protocols. Color/highlight extensions NOT added because markdown storage cannot represent them (architectural constraint). No test framework configured so no tests added."
+}

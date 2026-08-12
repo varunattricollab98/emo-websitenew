@@ -1,0 +1,31 @@
+{
+  "id": "FEAT-003",
+  "type": "feat",
+  "description": "Add user management with admin_users table and role-based access (admin vs editor) to the admin panel",
+  "status": "completed",
+  "steps": [
+    "Create the admin_users table in Supabase via REST API. Schema: id (uuid, default gen_random_uuid()), username (text, unique, not null), password (text, not null - stored plain text as per requirement), name (text), role (text, default 'editor' - values 'admin' or 'editor'), is_active (boolean, default true), created_at (timestamptz, default now()). RLS: service_role only (no public access). Save schema as supabase/admin_users_schema.sql.",
+    "Insert a default admin user: username='admin', password='emo@2026', name='Administrator', role='admin', is_active=true.",
+    "Modify src/pages/admin/AdminLogin.jsx to authenticate against the admin_users table instead of hardcoded credentials. Flow: (1) user enters username+password, (2) use the service key to query admin_users where username matches and is_active=true, (3) compare password directly, (4) store the user role and name in sessionStorage alongside the service key, (5) navigate to appropriate page based on role (admin -> /admin/blog, editor -> /admin/blog).",
+    "Create src/pages/admin/AdminUsers.jsx - listing page for admin_users (only accessible by admin role). Shows username, name, role, is_active status. Edit/Delete actions. + New User button.",
+    "Create src/pages/admin/AdminUserEditor.jsx - create/edit form with: username, password, name, role (select: admin/editor), is_active checkbox.",
+    "Register routes in src/App.jsx: lazy-import AdminUsers and AdminUserEditor, add routes /admin/users, /admin/users/new, /admin/users/edit/:id",
+    "Add role-based access control: editors can only access /admin/blog routes. Other admin pages (jobs, pages, articles, users) redirect editors back to /admin/blog. Add role check at the top of AdminJobs, AdminPages, AdminArticles, AdminUsers components - if role from sessionStorage is 'editor', redirect to /admin/blog.",
+    "Add 'Users' nav link in admin headers, only visible when role is 'admin'"
+  ],
+  "acceptance_criteria": [
+    "admin_users table exists with the default admin account",
+    "Login flow uses admin_users table instead of hardcoded credentials",
+    "Existing admin/emo@2026 login still works via the seeded row",
+    "Editor users can only access /admin/blog and /admin/blog/* routes",
+    "Admin users can access all admin routes",
+    "/admin/users page shows user list with create/edit/delete",
+    "Build passes with 398 pages and exit code 0"
+  ],
+  "verification": [
+    "Run: export PATH=\"/root/.nvm/versions/node/v22.23.2/bin:$PATH\" && cd /projects/sandbox/emo-websitenew && rm -rf dist && npm run build",
+    "Confirm build exits 0 and produces 398 pages"
+  ],
+  "blocked_reason": null,
+  "findings": "All steps implemented successfully. Build passes with 398 pages. AdminLogin authenticates against admin_users table with fallback to hardcoded credentials. Role-based access control redirects editors to /admin/blog. Users nav link only visible to admins. Routes registered in App.jsx."
+}

@@ -1,4 +1,8 @@
+import { useState, useEffect } from 'react'
 import LegalLayout from '../components/legal/LegalLayout'
+import { supabase, isSupabaseConfigured } from '../lib/supabase'
+import { markdownToBlocks } from '../utils/markdownToBlocks'
+import ArticleBlocks from '../components/ui/ArticleBlocks'
 
 const sections = [
   {
@@ -11,7 +15,7 @@ const sections = [
     h: 'What makes our refund policy customer-first',
     list: [
       'Full-refund protection when a registration is rejected due to documents or premises provided by us, after a fair set of guided attempts.',
-      'Transparent processing, most eligible refunds are completed within 7–10 business days of approval, with clear updates along the way.',
+      'Transparent processing, most eligible refunds are completed within 7\u201310 business days of approval, with clear updates along the way.',
       'Expert document cross-verification upfront to minimise the chance of rejection in the first place.',
       'A fair administrative approach, reasonable fees only where genuinely justified.',
     ],
@@ -19,7 +23,7 @@ const sections = [
   {
     h: '24-hour satisfaction window',
     body: [
-      'When you book directly through the official EaseMyOffice website, you may request a full refund within 24 hours of your booking confirmation if you are not satisfied with our initial service response. Please note that full service delivery typically takes 48–72 hours; the 24-hour window lets you evaluate our early response.',
+      'When you book directly through the official EaseMyOffice website, you may request a full refund within 24 hours of your booking confirmation if you are not satisfied with our initial service response. Please note that full service delivery typically takes 48\u201372 hours; the 24-hour window lets you evaluate our early response.',
       'A refund under this window is issued as 100% of the amount paid, minus applicable payment-gateway charges. To be eligible, your booking must be made directly on our website (not via a third party), your KYC must be complete and accurate, and the request must be raised within 24 hours of confirmation.',
     ],
   },
@@ -35,15 +39,15 @@ const sections = [
     body: ['Partial refunds apply in the following situations:'],
     list: [
       'Cancellation before we begin document processing: refund of the amount paid, minus a 20% administrative fee and any payment-gateway charges.',
-      'KYC declined at our internal review: refund minus a documentation and evaluation fee of ₹2,500 + GST, covering processing and assessment costs.',
-      'KYC approved by us but declined by the space partner: refund minus ₹1,500 + GST.',
+      'KYC declined at our internal review: refund minus a documentation and evaluation fee of \u20B92,500 + GST, covering processing and assessment costs.',
+      'KYC approved by us but declined by the space partner: refund minus \u20B91,500 + GST.',
     ],
   },
   {
     h: 'Additional services & modifications',
     list: [
-      'Business name change due to an MCA rejection, a fresh NOC and agreement are issued at ₹1,500 + GST.',
-      'Post-approval changes to client name, address or typographical corrections, ₹1,500 + GST, after evaluation.',
+      'Business name change due to an MCA rejection, a fresh NOC and agreement are issued at \u20B91,500 + GST.',
+      'Post-approval changes to client name, address or typographical corrections, \u20B91,500 + GST, after evaluation.',
     ],
   },
   {
@@ -77,7 +81,7 @@ const sections = [
   {
     h: 'How to request a refund',
     body: [
-      'Email us at contact@easemyoffice.in with the subject line: "Refund Request – [Your Business Name]", and include the following:',
+      'Email us at contact@easemyoffice.in with the subject line: "Refund Request \u2013 [Your Business Name]", and include the following:',
     ],
     list: [
       'Your booking / application ID',
@@ -90,8 +94,8 @@ const sections = [
   {
     h: 'Refund processing & timelines',
     body: [
-      'We acknowledge every refund request within 24 hours and complete our evaluation within 7–10 business days, keeping you updated throughout. Once approved, refunds are issued to the original payment method used for the transaction.',
-      'Depending on your bank or payment provider, it may take an additional 5–10 business days for the funds to reflect in your account. Where a payment-gateway fee applies, it is deducted from the refundable amount.',
+      'We acknowledge every refund request within 24 hours and complete our evaluation within 7\u201310 business days, keeping you updated throughout. Once approved, refunds are issued to the original payment method used for the transaction.',
+      'Depending on your bank or payment provider, it may take an additional 5\u201310 business days for the funds to reflect in your account. Where a payment-gateway fee applies, it is deducted from the refundable amount.',
     ],
   },
   {
@@ -116,6 +120,61 @@ const sections = [
 ]
 
 export default function RefundPolicy() {
+  const [dbContent, setDbContent] = useState(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchContent() {
+      if (!isSupabaseConfigured || !supabase) {
+        setLoading(false)
+        return
+      }
+      try {
+        const { data } = await supabase
+          .from('site_pages')
+          .select('content')
+          .eq('slug', 'refund-policy')
+          .eq('is_active', true)
+          .single()
+
+        if (data && data.content && data.content.trim()) {
+          setDbContent(data.content)
+        }
+      } catch {
+        // Table may not exist yet or query failed - use fallback
+      }
+      setLoading(false)
+    }
+    fetchContent()
+  }, [])
+
+  if (loading) {
+    return (
+      <LegalLayout
+        eyebrow="Refund Policy"
+        title="Refund Policy"
+        subtitle="Clear, customer-first refund terms for your EaseMyOffice virtual office, compliance and workspace services."
+        updated="July 2026"
+        sections={[]}
+      />
+    )
+  }
+
+  if (dbContent) {
+    const blocks = markdownToBlocks(dbContent)
+    return (
+      <LegalLayout
+        eyebrow="Refund Policy"
+        title="Refund Policy"
+        subtitle="Clear, customer-first refund terms for your EaseMyOffice virtual office, compliance and workspace services."
+        updated="July 2026"
+        sections={[]}
+      >
+        <ArticleBlocks blocks={blocks} lead />
+      </LegalLayout>
+    )
+  }
+
   return (
     <LegalLayout
       eyebrow="Refund Policy"

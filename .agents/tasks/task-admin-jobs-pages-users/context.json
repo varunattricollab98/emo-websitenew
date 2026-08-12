@@ -1,0 +1,42 @@
+{
+  "project_type": "React 18 SPA with Vite 5, Tailwind CSS, Framer Motion, Supabase backend",
+  "language": "JavaScript (JSX)",
+  "build_system": "Vite 5 with prerender script (vite build && node scripts/prerender.mjs)",
+  "test_framework": "No test framework installed - verification via build only",
+  "build_command": "export PATH=\"/root/.nvm/versions/node/v22.23.2/bin:$PATH\" && cd /projects/sandbox/emo-websitenew && rm -rf dist && npm run build",
+  "test_command": "N/A - no test suite, build is the gate (must produce 398 pages and exit 0)",
+  "verification_instructions": "Run build command, confirm exit code 0 and 398 pages rendered",
+  "snapshot_or_generated_files": "dist/ directory is generated during build but not checked in (.gitignore). No snapshot files.",
+  "setup_instructions": "Node 22 at /root/.nvm/versions/node/v22.23.2/bin, npm deps already installed in node_modules",
+  "environment_constraints": "OPEN_INTERNET network. Do NOT install @tiptap/* packages (breaks site with blank page). Use existing RichMarkdownEditor (textarea + toolbar).",
+  "contribution_requirements": "Build must produce 398 pages. No TipTap. Admin pages are lazy-loaded and not prerendered.",
+  "key_patterns": {
+    "admin_pages": "Each admin page is in src/pages/admin/, lazy-imported in App.jsx, routes under /admin/*. Uses getAdminClient() for Supabase writes. Header has nav links to other admin sections + logout button.",
+    "admin_auth": "AdminLogin.jsx checks hardcoded username/password (admin/emo@2026), then validates Supabase service key stored in sessionStorage.",
+    "markdown_editor": "RichMarkdownEditor component at src/components/admin/RichMarkdownEditor.jsx - textarea with toolbar buttons for bold, H2, H3, bullets, quotes, links, tables, HR.",
+    "legal_pages": "PrivacyPolicy.jsx etc. use LegalLayout component with sections=[{h, body[], list[]}] structure. Pure data passed as props.",
+    "supabase_client": "src/lib/supabase.js (anon key, read-only) and src/lib/supabaseAdmin.js (service key from sessionStorage, full access).",
+    "careers_page": "Uses useJobOpenings() hook to fetch from job_openings table. Renders expandable JobCard components with markdown content via markdownToBlocks + ArticleBlocks."
+  },
+  "relevant_files": [
+    "src/App.jsx",
+    "src/pages/admin/AdminLogin.jsx",
+    "src/pages/admin/AdminBlog.jsx",
+    "src/pages/admin/AdminBlogEditor.jsx",
+    "src/pages/admin/AdminArticles.jsx",
+    "src/pages/admin/AdminArticleEditor.jsx",
+    "src/components/admin/RichMarkdownEditor.jsx",
+    "src/lib/supabaseAdmin.js",
+    "src/lib/supabase.js",
+    "src/hooks/useJobOpenings.js",
+    "src/pages/Careers.jsx",
+    "src/pages/PrivacyPolicy.jsx",
+    "src/pages/Terms.jsx",
+    "src/pages/RefundPolicy.jsx",
+    "src/pages/Disclaimer.jsx",
+    "src/pages/CookiePolicy.jsx",
+    "src/components/legal/LegalLayout.jsx",
+    "supabase/job_openings_schema.sql"
+  ],
+  "directory_structure": "src/pages/admin/ - admin panel pages; src/pages/ - public pages; src/components/ - shared components; src/hooks/ - data fetching hooks; src/lib/ - supabase clients; src/utils/ - utility functions; supabase/ - SQL schema files"
+}

@@ -1,4 +1,8 @@
+import { useState, useEffect } from 'react'
 import LegalLayout from '../components/legal/LegalLayout'
+import { supabase, isSupabaseConfigured } from '../lib/supabase'
+import { markdownToBlocks } from '../utils/markdownToBlocks'
+import ArticleBlocks from '../components/ui/ArticleBlocks'
 
 const sections = [
   {
@@ -41,6 +45,61 @@ const sections = [
 ]
 
 export default function Disclaimer() {
+  const [dbContent, setDbContent] = useState(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchContent() {
+      if (!isSupabaseConfigured || !supabase) {
+        setLoading(false)
+        return
+      }
+      try {
+        const { data } = await supabase
+          .from('site_pages')
+          .select('content')
+          .eq('slug', 'disclaimer')
+          .eq('is_active', true)
+          .single()
+
+        if (data && data.content && data.content.trim()) {
+          setDbContent(data.content)
+        }
+      } catch {
+        // Table may not exist yet or query failed - use fallback
+      }
+      setLoading(false)
+    }
+    fetchContent()
+  }, [])
+
+  if (loading) {
+    return (
+      <LegalLayout
+        eyebrow="Disclaimer"
+        title="Disclaimer"
+        subtitle="Important information about the use of the EaseMyOffice website and services."
+        updated="July 19, 2024"
+        sections={[]}
+      />
+    )
+  }
+
+  if (dbContent) {
+    const blocks = markdownToBlocks(dbContent)
+    return (
+      <LegalLayout
+        eyebrow="Disclaimer"
+        title="Disclaimer"
+        subtitle="Important information about the use of the EaseMyOffice website and services."
+        updated="July 19, 2024"
+        sections={[]}
+      >
+        <ArticleBlocks blocks={blocks} lead />
+      </LegalLayout>
+    )
+  }
+
   return (
     <LegalLayout
       eyebrow="Disclaimer"

@@ -1,0 +1,24 @@
+{
+  "id": "FEAT-004",
+  "type": "chore",
+  "description": "Unify admin panel navigation across all admin pages with a consistent header/nav bar showing all sections",
+  "status": "completed",
+  "steps": [
+    "Create src/components/admin/AdminNav.jsx - a shared navigation header component used by all admin pages. Shows links to: Blog Posts, Articles, Jobs, Pages, Users (users link only if role is admin). Shows current user name, and a Logout button. Highlights the current active section.",
+    "Replace the inline header/nav in AdminBlog.jsx, AdminArticles.jsx, AdminJobs.jsx, AdminPages.jsx, AdminUsers.jsx with the shared AdminNav component.",
+    "Verify all admin pages still navigate correctly between sections"
+  ],
+  "acceptance_criteria": [
+    "All admin pages share the same consistent navigation header",
+    "Users link only appears for admin role",
+    "Active section is visually highlighted",
+    "Logout works from any admin page",
+    "Build passes with 398 pages and exit code 0"
+  ],
+  "verification": [
+    "Run: export PATH=\"/root/.nvm/versions/node/v22.23.2/bin:$PATH\" && cd /projects/sandbox/emo-websitenew && rm -rf dist && npm run build",
+    "Confirm build exits 0 and produces 398 pages"
+  ],
+  "blocked_reason": null,
+  "findings": "Created src/components/admin/AdminNav.jsx with role-based link filtering and active-section highlighting via useLocation. Removed ~246 lines of duplicated nav code across all 5 admin pages. Build produces 398 pages, exit 0."
+}
