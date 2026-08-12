@@ -18,6 +18,7 @@ export default function AdminNav() {
     sessionStorage.removeItem('admin_service_key')
     sessionStorage.removeItem('admin_role')
     sessionStorage.removeItem('admin_name')
+    sessionStorage.removeItem('admin_username')
     navigate('/admin')
   }
 

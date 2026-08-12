@@ -41,6 +41,21 @@ export default function AdminUsers() {
   }
 
   async function handleDelete(id, username) {
+    // Prevent self-deletion: compare against logged-in username
+    const currentUsername = sessionStorage.getItem('admin_username')
+    if (currentUsername && username === currentUsername) {
+      alert('You cannot delete your own account.')
+      return
+    }
+
+    // Prevent deletion if only 1 admin user remains
+    const adminUsers = users.filter((u) => u.role === 'admin')
+    const targetUser = users.find((u) => u.id === id)
+    if (targetUser?.role === 'admin' && adminUsers.length <= 1) {
+      alert('Cannot delete the last admin user. At least one admin must remain.')
+      return
+    }
+
     if (!window.confirm(`Delete user "${username}"? This cannot be undone.`)) return
 
     const { error: err } = await adminClient

@@ -51,9 +51,14 @@ export default function AdminLogin() {
       }
 
       return { success: true, role: user.role, name: user.name }
-    } catch {
-      // Network error or table doesn't exist - fall back
-      return fallbackAuth()
+    } catch (catchErr) {
+      // Only fall back if the error indicates the table doesn't exist
+      const msg = catchErr?.message || String(catchErr)
+      if (msg.includes('relation') || msg.includes('does not exist') || msg.includes('42P01')) {
+        return fallbackAuth()
+      }
+      // For network errors or other issues, fail closed
+      return { success: false, error: 'Authentication failed. Please check your connection and try again.' }
     }
   }
 
@@ -83,6 +88,7 @@ export default function AdminLogin() {
           sessionStorage.setItem('admin_service_key', ENV_SERVICE_KEY)
           sessionStorage.setItem('admin_role', result.role)
           sessionStorage.setItem('admin_name', result.name || '')
+          sessionStorage.setItem('admin_username', username.trim())
           navigate('/admin/blog')
         } else {
           setError(result.error)
@@ -116,12 +122,12 @@ export default function AdminLogin() {
 
     const valid = await validateServiceKey(serviceKey.trim())
     if (valid) {
-      // Now authenticate the user against admin_users table
       const result = await authenticateUser(serviceKey.trim())
       if (result.success) {
         sessionStorage.setItem('admin_service_key', serviceKey.trim())
         sessionStorage.setItem('admin_role', result.role)
         sessionStorage.setItem('admin_name', result.name || '')
+        sessionStorage.setItem('admin_username', username.trim())
         navigate('/admin/blog')
       } else {
         setError(result.error)

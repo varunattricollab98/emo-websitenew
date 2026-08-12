@@ -112,6 +112,7 @@ export default function AdminUserEditor() {
     sessionStorage.removeItem('admin_service_key')
     sessionStorage.removeItem('admin_role')
     sessionStorage.removeItem('admin_name')
+    sessionStorage.removeItem('admin_username')
     navigate('/admin')
   }
 
@@ -177,11 +178,12 @@ export default function AdminUserEditor() {
             </label>
             <input
               id="user-password"
-              type="text"
+              type="password"
               value={form.password}
               onChange={(e) => setForm({ ...form, password: e.target.value })}
               placeholder={isEdit ? 'Leave blank to keep current password' : 'Enter password'}
               className="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              autoComplete={isEdit ? 'new-password' : 'new-password'}
               required={!isEdit}
             />
           </div>
