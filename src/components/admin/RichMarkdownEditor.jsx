@@ -2,6 +2,7 @@ import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Placeholder from '@tiptap/extension-placeholder'
 import Link from '@tiptap/extension-link'
+import Underline from '@tiptap/extension-underline'
 import { Table } from '@tiptap/extension-table'
 import TableRow from '@tiptap/extension-table-row'
 import TableCell from '@tiptap/extension-table-cell'
@@ -74,6 +75,13 @@ function Toolbar({ editor }) {
         title="Strikethrough"
       >
         <s>S</s>
+      </ToolbarBtn>
+      <ToolbarBtn
+        onClick={() => editor.chain().focus().toggleUnderline().run()}
+        active={editor.isActive('underline')}
+        title="Underline"
+      >
+        <u>U</u>
       </ToolbarBtn>
       <ToolbarBtn
         onClick={() => editor.chain().focus().toggleCode().run()}
@@ -172,8 +180,10 @@ export default function RichMarkdownEditor({ value, onChange, placeholder }) {
       }),
       Link.configure({
         openOnClick: false,
+        validate: href => /^https?:\/\//.test(href),
         HTMLAttributes: { class: 'text-blue-600 underline' },
       }),
+      Underline,
       Table.configure({ resizable: false }),
       TableRow,
       TableCell,
