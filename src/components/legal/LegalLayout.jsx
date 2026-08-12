@@ -6,7 +6,7 @@ import { ScrollText, Mail, Phone, MapPin, ArrowRight, Check } from 'lucide-react
  * Shared premium layout for legal pages (Privacy, Terms, Refund).
  * `sections` = [{ h, body?: string[], list?: string[] }]
  */
-export default function LegalLayout({ eyebrow = 'Legal', title, subtitle, updated, sections = [] }) {
+export default function LegalLayout({ eyebrow = 'Legal', title, subtitle, updated, sections = [], children }) {
   return (
     <>
       {/* hero */}
@@ -74,6 +74,8 @@ export default function LegalLayout({ eyebrow = 'Legal', title, subtitle, update
               </div>
             </motion.div>
           ))}
+
+          {children}
 
           {/* contact card */}
           <div className="mt-12 overflow-hidden rounded-2xl border border-primary-100 bg-surface-light p-7 shadow-soft">

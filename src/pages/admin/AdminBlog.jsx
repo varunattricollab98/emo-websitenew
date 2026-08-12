@@ -73,6 +73,12 @@ export default function AdminBlog() {
               Jobs
             </Link>
             <Link
+              to="/admin/pages"
+              className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100"
+            >
+              Pages
+            </Link>
+            <Link
               to="/admin/blog/new"
               className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
             >

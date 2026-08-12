@@ -1,4 +1,8 @@
+import { useState, useEffect } from 'react'
 import LegalLayout from '../components/legal/LegalLayout'
+import { supabase, isSupabaseConfigured } from '../lib/supabase'
+import { markdownToBlocks } from '../utils/markdownToBlocks'
+import ArticleBlocks from '../components/ui/ArticleBlocks'
 
 const sections = [
   {
@@ -17,19 +21,19 @@ const sections = [
   {
     h: 'Necessary / essential cookies',
     body: [
-      'Type: Session cookies · Administered by: Us. These cookies are essential to provide you with services available through the website and to enable you to use some of its features. They help authenticate users and prevent fraudulent use. Without them, the services you have asked for cannot be provided.',
+      'Type: Session cookies \u00B7 Administered by: Us. These cookies are essential to provide you with services available through the website and to enable you to use some of its features. They help authenticate users and prevent fraudulent use. Without them, the services you have asked for cannot be provided.',
     ],
   },
   {
     h: 'Acceptance cookies',
     body: [
-      'Type: Persistent cookies · Administered by: Us. These cookies identify whether users have accepted the use of cookies on the website.',
+      'Type: Persistent cookies \u00B7 Administered by: Us. These cookies identify whether users have accepted the use of cookies on the website.',
     ],
   },
   {
     h: 'Functionality cookies',
     body: [
-      'Type: Persistent cookies · Administered by: Us. These cookies allow us to remember choices you make when you use the website, such as your login details or language preference, so you have a more personal experience and do not have to re-enter your preferences each time.',
+      'Type: Persistent cookies \u00B7 Administered by: Us. These cookies allow us to remember choices you make when you use the website, such as your login details or language preference, so you have a more personal experience and do not have to re-enter your preferences each time.',
     ],
   },
   {
@@ -47,6 +51,61 @@ const sections = [
 ]
 
 export default function CookiePolicy() {
+  const [dbContent, setDbContent] = useState(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchContent() {
+      if (!isSupabaseConfigured || !supabase) {
+        setLoading(false)
+        return
+      }
+      try {
+        const { data } = await supabase
+          .from('site_pages')
+          .select('content')
+          .eq('slug', 'cookie-policy')
+          .eq('is_active', true)
+          .single()
+
+        if (data && data.content && data.content.trim()) {
+          setDbContent(data.content)
+        }
+      } catch {
+        // Table may not exist yet or query failed - use fallback
+      }
+      setLoading(false)
+    }
+    fetchContent()
+  }, [])
+
+  if (loading) {
+    return (
+      <LegalLayout
+        eyebrow="Cookie Policy"
+        title="Cookie Policy"
+        subtitle="How and why EaseMyOffice uses cookies and similar technologies on this website."
+        updated="July 19, 2024"
+        sections={[]}
+      />
+    )
+  }
+
+  if (dbContent) {
+    const blocks = markdownToBlocks(dbContent)
+    return (
+      <LegalLayout
+        eyebrow="Cookie Policy"
+        title="Cookie Policy"
+        subtitle="How and why EaseMyOffice uses cookies and similar technologies on this website."
+        updated="July 19, 2024"
+        sections={[]}
+      >
+        <ArticleBlocks blocks={blocks} lead />
+      </LegalLayout>
+    )
+  }
+
   return (
     <LegalLayout
       eyebrow="Cookie Policy"
