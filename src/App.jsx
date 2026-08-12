@@ -43,6 +43,11 @@ const Disclaimer = lazy(() => import('./pages/Disclaimer'))
 const CookiePolicy = lazy(() => import('./pages/CookiePolicy'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 
+// Admin pages (internal-only, not in sitemap or prerender)
+const AdminLogin = lazy(() => import('./pages/admin/AdminLogin'))
+const AdminBlog = lazy(() => import('./pages/admin/AdminBlog'))
+const AdminBlogEditor = lazy(() => import('./pages/admin/AdminBlogEditor'))
+
 // Lightweight fallback while a route chunk loads (no layout shift).
 function RouteFallback() {
   return (
@@ -57,57 +62,73 @@ export default function App() {
     <SpacesProvider>
     <LeadModalProvider>
       <BookingModalProvider>
-        <div className="flex min-h-screen flex-col">
-          <ScrollToTop />
-          {/* Opens the lead modal at 25% scroll depth or on exit intent */}
-          <AutoLeadPopup />
-          <SchemaScript schemas={[organizationSchema(), webSiteSchema()]} />
-          <Navbar />
-          {/* min-w-0: as a column flex item, main's width would otherwise be
-              floored at its min-content size, so any non-wrapping row inside
-              a page pushes the document wider than the screen. */}
-          <main className="min-w-0 flex-1 pt-16 lg:pt-20">
-            <ErrorBoundary>
-            <Suspense fallback={<RouteFallback />}>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/virtual-office" element={<VirtualOffice />} />
-                {/* New consistent URL structure: /virtual-office/{state}/{city}/{space|service} */}
-                <Route path="/virtual-office/:first/:second/:third" element={<VODispatcher />} />
-                <Route path="/virtual-office/:first/:second" element={<VODispatcher />} />
-                <Route path="/virtual-office/:first" element={<VODispatcher />} />
-                {/* Legacy /space/ URLs still work (backward compatible) */}
-                <Route path="/space/:city/:space" element={<SpaceOrService />} />
-                <Route path="/space/:state/:city/:space" element={<SpaceOrService />} />
-                <Route path="/space/:city/:locality/:service" element={<ServiceLanding />} />
-                <Route path="/coworking" element={<Coworking />} />
-                <Route path="/coworking/:city/:space" element={<CoworkingDetail />} />
-                <Route path="/meeting-rooms" element={<MeetingRooms />} />
-                <Route path="/ca-services" element={<CAServices />} />
-                <Route path="/pricing" element={<Pricing />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/list-your-space" element={<ListYourSpace />} />
-                <Route path="/careers" element={<Careers />} />
-                {/* Blog listing must come before the :slug route */}
-                <Route path="/blog" element={<Blog />} />
-                <Route path="/blog/:slug" element={<BlogPost />} />
-                <Route path="/faq" element={<Faq />} />
-                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-                <Route path="/terms" element={<Terms />} />
-                <Route path="/refund-policy" element={<RefundPolicy />} />
-                <Route path="/disclaimer" element={<Disclaimer />} />
-                <Route path="/cookie-policy" element={<CookiePolicy />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </Suspense>
-            </ErrorBoundary>
-          </main>
-          <Footer />
-          <WhatsAppButton />
-        </div>
+        <ScrollToTop />
+        <ErrorBoundary>
+        <Suspense fallback={<RouteFallback />}>
+          <Routes>
+            {/* Admin routes (no navbar/footer, internal-only) */}
+            <Route path="/admin" element={<AdminLogin />} />
+            <Route path="/admin/blog" element={<AdminBlog />} />
+            <Route path="/admin/blog/new" element={<AdminBlogEditor />} />
+            <Route path="/admin/blog/edit/:slug" element={<AdminBlogEditor />} />
+
+            {/* Public site routes with full layout */}
+            <Route path="*" element={<SiteLayout />} />
+          </Routes>
+        </Suspense>
+        </ErrorBoundary>
       </BookingModalProvider>
     </LeadModalProvider>
     </SpacesProvider>
+  )
+}
+
+/** Main site layout with Navbar, Footer, and all public routes */
+function SiteLayout() {
+  return (
+    <div className="flex min-h-screen flex-col">
+      {/* Opens the lead modal at 25% scroll depth or on exit intent */}
+      <AutoLeadPopup />
+      <SchemaScript schemas={[organizationSchema(), webSiteSchema()]} />
+      <Navbar />
+      {/* min-w-0: as a column flex item, main's width would otherwise be
+          floored at its min-content size, so any non-wrapping row inside
+          a page pushes the document wider than the screen. */}
+      <main className="min-w-0 flex-1 pt-16 lg:pt-20">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/virtual-office" element={<VirtualOffice />} />
+          {/* New consistent URL structure: /virtual-office/{state}/{city}/{space|service} */}
+          <Route path="/virtual-office/:first/:second/:third" element={<VODispatcher />} />
+          <Route path="/virtual-office/:first/:second" element={<VODispatcher />} />
+          <Route path="/virtual-office/:first" element={<VODispatcher />} />
+          {/* Legacy /space/ URLs still work (backward compatible) */}
+          <Route path="/space/:city/:space" element={<SpaceOrService />} />
+          <Route path="/space/:state/:city/:space" element={<SpaceOrService />} />
+          <Route path="/space/:city/:locality/:service" element={<ServiceLanding />} />
+          <Route path="/coworking" element={<Coworking />} />
+          <Route path="/coworking/:city/:space" element={<CoworkingDetail />} />
+          <Route path="/meeting-rooms" element={<MeetingRooms />} />
+          <Route path="/ca-services" element={<CAServices />} />
+          <Route path="/pricing" element={<Pricing />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/list-your-space" element={<ListYourSpace />} />
+          <Route path="/careers" element={<Careers />} />
+          {/* Blog listing must come before the :slug route */}
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="/faq" element={<Faq />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/refund-policy" element={<RefundPolicy />} />
+          <Route path="/disclaimer" element={<Disclaimer />} />
+          <Route path="/cookie-policy" element={<CookiePolicy />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </main>
+      <Footer />
+      <WhatsAppButton />
+    </div>
   )
 }
