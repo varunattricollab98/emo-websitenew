@@ -2,18 +2,18 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { getAdminClient } from '../../lib/supabaseAdmin'
 
-export default function AdminJobs() {
-  const [jobs, setJobs] = useState([])
+export default function AdminUsers() {
+  const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const navigate = useNavigate()
 
   const adminClient = getAdminClient()
-  const adminRole = sessionStorage.getItem('admin_role')
+  const role = sessionStorage.getItem('admin_role')
 
   useEffect(() => {
-    // Role-based access: editors cannot access jobs
-    if (adminRole === 'editor') {
+    // Role-based access: only admins can view users
+    if (role !== 'admin') {
       navigate('/admin/blog')
       return
     }
@@ -21,36 +21,36 @@ export default function AdminJobs() {
       navigate('/admin')
       return
     }
-    fetchJobs()
+    fetchUsers()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  async function fetchJobs() {
+  async function fetchUsers() {
     setLoading(true)
     const { data, error: err } = await adminClient
-      .from('job_openings')
-      .select('id, title, department, location, employment_type, is_active, sort_order, created_at')
-      .order('sort_order', { ascending: true })
+      .from('admin_users')
+      .select('id, username, name, role, is_active, created_at')
+      .order('created_at', { ascending: true })
 
     if (err) {
       setError(err.message)
     } else {
-      setJobs(data || [])
+      setUsers(data || [])
     }
     setLoading(false)
   }
 
-  async function handleDelete(id, title) {
-    if (!window.confirm(`Delete "${title}"? This cannot be undone.`)) return
+  async function handleDelete(id, username) {
+    if (!window.confirm(`Delete user "${username}"? This cannot be undone.`)) return
 
     const { error: err } = await adminClient
-      .from('job_openings')
+      .from('admin_users')
       .delete()
       .eq('id', id)
 
     if (err) {
       alert('Delete failed: ' + err.message)
     } else {
-      setJobs((prev) => prev.filter((j) => j.id !== id))
+      setUsers((prev) => prev.filter((u) => u.id !== id))
     }
   }
 
@@ -66,7 +66,7 @@ export default function AdminJobs() {
       <div className="mx-auto max-w-6xl px-4 py-8">
         {/* Header */}
         <div className="mb-6 flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-slate-900">Jobs</h1>
+          <h1 className="text-2xl font-bold text-slate-900">Users</h1>
           <div className="flex items-center gap-3">
             <Link
               to="/admin/blog"
@@ -81,24 +81,22 @@ export default function AdminJobs() {
               Articles
             </Link>
             <Link
+              to="/admin/jobs"
+              className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100"
+            >
+              Jobs
+            </Link>
+            <Link
               to="/admin/pages"
               className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100"
             >
               Pages
             </Link>
-            {adminRole === 'admin' && (
-              <Link
-                to="/admin/users"
-                className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100"
-              >
-                Users
-              </Link>
-            )}
             <Link
-              to="/admin/jobs/new"
+              to="/admin/users/new"
               className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
             >
-              + New Job
+              + New User
             </Link>
             <button
               onClick={handleLogout}
@@ -118,69 +116,71 @@ export default function AdminJobs() {
 
         {/* Loading */}
         {loading && (
-          <div className="py-12 text-center text-slate-500">Loading jobs...</div>
+          <div className="py-12 text-center text-slate-500">Loading users...</div>
         )}
 
         {/* Empty state */}
-        {!loading && jobs.length === 0 && (
+        {!loading && users.length === 0 && (
           <div className="py-12 text-center text-slate-500">
-            No jobs yet.{' '}
-            <Link to="/admin/jobs/new" className="text-blue-600 underline">
-              Create your first job
+            No users found.{' '}
+            <Link to="/admin/users/new" className="text-blue-600 underline">
+              Create your first user
             </Link>
           </div>
         )}
 
-        {/* Jobs Table */}
-        {!loading && jobs.length > 0 && (
+        {/* Users Table */}
+        {!loading && users.length > 0 && (
           <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
             <table className="w-full text-left text-sm">
               <thead className="border-b border-slate-200 bg-slate-50">
                 <tr>
-                  <th className="px-4 py-3 font-medium text-slate-600">Title</th>
-                  <th className="px-4 py-3 font-medium text-slate-600">Department</th>
-                  <th className="px-4 py-3 font-medium text-slate-600">Location</th>
-                  <th className="px-4 py-3 font-medium text-slate-600">Type</th>
+                  <th className="px-4 py-3 font-medium text-slate-600">Username</th>
+                  <th className="px-4 py-3 font-medium text-slate-600">Name</th>
+                  <th className="px-4 py-3 font-medium text-slate-600">Role</th>
                   <th className="px-4 py-3 font-medium text-slate-600">Status</th>
-                  <th className="px-4 py-3 font-medium text-slate-600">Order</th>
                   <th className="px-4 py-3 font-medium text-slate-600">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {jobs.map((job) => (
-                  <tr key={job.id} className="hover:bg-slate-50/50">
+                {users.map((user) => (
+                  <tr key={user.id} className="hover:bg-slate-50/50">
                     <td className="px-4 py-3">
-                      <span className="font-medium text-slate-900">{job.title}</span>
+                      <span className="font-medium text-slate-900">{user.username}</span>
                     </td>
-                    <td className="px-4 py-3 text-slate-600">{job.department || '-'}</td>
-                    <td className="px-4 py-3 text-slate-600">{job.location || '-'}</td>
+                    <td className="px-4 py-3 text-slate-600">{user.name || '-'}</td>
                     <td className="px-4 py-3">
-                      <span className="inline-flex rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600">
-                        {job.employment_type || '-'}
+                      <span
+                        className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${
+                          user.role === 'admin'
+                            ? 'bg-purple-100 text-purple-700'
+                            : 'bg-blue-100 text-blue-700'
+                        }`}
+                      >
+                        {user.role}
                       </span>
                     </td>
                     <td className="px-4 py-3">
                       <span
                         className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${
-                          job.is_active
+                          user.is_active
                             ? 'bg-green-100 text-green-700'
                             : 'bg-slate-100 text-slate-500'
                         }`}
                       >
-                        {job.is_active ? 'Active' : 'Draft'}
+                        {user.is_active ? 'Active' : 'Inactive'}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-slate-600">{job.sort_order ?? '-'}</td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
                         <Link
-                          to={`/admin/jobs/edit/${job.id}`}
+                          to={`/admin/users/edit/${user.id}`}
                           className="rounded bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700 transition hover:bg-slate-200"
                         >
                           Edit
                         </Link>
                         <button
-                          onClick={() => handleDelete(job.id, job.title)}
+                          onClick={() => handleDelete(user.id, user.username)}
                           className="rounded bg-red-50 px-2.5 py-1 text-xs font-medium text-red-600 transition hover:bg-red-100"
                         >
                           Delete

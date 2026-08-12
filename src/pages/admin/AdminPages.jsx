@@ -9,8 +9,14 @@ export default function AdminPages() {
   const navigate = useNavigate()
 
   const adminClient = getAdminClient()
+  const adminRole = sessionStorage.getItem('admin_role')
 
   useEffect(() => {
+    // Role-based access: editors cannot access pages
+    if (adminRole === 'editor') {
+      navigate('/admin/blog')
+      return
+    }
     if (!adminClient) {
       navigate('/admin')
       return
@@ -50,6 +56,8 @@ export default function AdminPages() {
 
   function handleLogout() {
     sessionStorage.removeItem('admin_service_key')
+    sessionStorage.removeItem('admin_role')
+    sessionStorage.removeItem('admin_name')
     navigate('/admin')
   }
 
@@ -87,6 +95,14 @@ export default function AdminPages() {
             >
               Jobs
             </Link>
+            {adminRole === 'admin' && (
+              <Link
+                to="/admin/users"
+                className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100"
+              >
+                Users
+              </Link>
+            )}
             <Link
               to="/admin/pages/new"
               className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"

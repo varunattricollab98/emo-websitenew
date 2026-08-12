@@ -50,8 +50,12 @@ export default function AdminBlog() {
 
   function handleLogout() {
     sessionStorage.removeItem('admin_service_key')
+    sessionStorage.removeItem('admin_role')
+    sessionStorage.removeItem('admin_name')
     navigate('/admin')
   }
+
+  const adminRole = sessionStorage.getItem('admin_role')
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -60,24 +64,38 @@ export default function AdminBlog() {
         <div className="mb-6 flex items-center justify-between">
           <h1 className="text-2xl font-bold text-slate-900">Blog Posts</h1>
           <div className="flex items-center gap-3">
-            <Link
-              to="/admin/articles"
-              className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100"
-            >
-              Articles
-            </Link>
-            <Link
-              to="/admin/jobs"
-              className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100"
-            >
-              Jobs
-            </Link>
-            <Link
-              to="/admin/pages"
-              className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100"
-            >
-              Pages
-            </Link>
+            {adminRole !== 'editor' && (
+              <Link
+                to="/admin/articles"
+                className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100"
+              >
+                Articles
+              </Link>
+            )}
+            {adminRole !== 'editor' && (
+              <Link
+                to="/admin/jobs"
+                className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100"
+              >
+                Jobs
+              </Link>
+            )}
+            {adminRole !== 'editor' && (
+              <Link
+                to="/admin/pages"
+                className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100"
+              >
+                Pages
+              </Link>
+            )}
+            {adminRole === 'admin' && (
+              <Link
+                to="/admin/users"
+                className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100"
+              >
+                Users
+              </Link>
+            )}
             <Link
               to="/admin/blog/new"
               className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
