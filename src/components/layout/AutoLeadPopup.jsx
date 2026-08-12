@@ -31,7 +31,7 @@ const MIN_TIME_ON_PAGE_MS = 3000
 
 // Pages built around their own form. Interrupting someone mid-form with the
 // same request is counterproductive, so the popup stays out of the way.
-const SUPPRESSED_PATHS = ['/contact', '/list-your-space']
+const SUPPRESSED_PATHS = ['/contact', '/list-your-space', '/careers']
 
 /** sessionStorage throws in some privacy modes, so every access is guarded. */
 function alreadyShown() {
