@@ -30,7 +30,7 @@ import { useJobOpenings } from '../hooks/useJobOpenings'
 import { useMeta } from '../hooks/useMeta'
 import { markdownToBlocks } from '../utils/markdownToBlocks'
 
-const DEFAULT_APPLY_EMAIL = 'careers@easemyoffice.in'
+const DEFAULT_APPLY_EMAIL = 'contact@easemyoffice.in'
 
 // Brand copy, not data. These are stable so they live in code.
 const perks = [
@@ -503,37 +503,6 @@ export default function Careers() {
         </div>
       </section>
 
-      {/* Why join */}
-      <section className="section-padding bg-white">
-        <div className="container-custom">
-          <SectionHeading
-            eyebrow="Why EaseMyOffice"
-            title="A place to do your best work"
-            accent="best work"
-            subtitle="We are a small team with a large footprint, which means your work is visible and it matters."
-          />
-          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {perks.map((p, i) => (
-              <Reveal key={p.title} delay={(i % 3) * 0.07}>
-                <div className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-primary-100/70 bg-white p-7 shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/30 hover:shadow-card-hover">
-                  <span className="relative inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-gradient text-white shadow-card ring-1 ring-white/30 transition-transform duration-300 group-hover:scale-105">
-                    <p.icon className="h-7 w-7" />
-                  </span>
-                  <h3 className="relative mt-5 text-base font-bold text-navy-dark">{p.title}</h3>
-                  <p className="relative mt-2 flex-1 text-sm leading-relaxed text-slate-600">
-                    {p.desc}
-                  </p>
-                  <span className="relative mt-5 h-1 w-8 rounded-full bg-emerald-400/50 transition-all duration-300 group-hover:w-16" />
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Stats */}
-      <ClientsStrip />
-
       {/* Open roles */}
       <section id="openings" className="section-padding scroll-mt-24 bg-surface-light">
         <div className="container-custom">
@@ -611,6 +580,37 @@ export default function Careers() {
           </div>
         </div>
       </section>
+
+      {/* Why join */}
+      <section className="section-padding bg-white">
+        <div className="container-custom">
+          <SectionHeading
+            eyebrow="Why EaseMyOffice"
+            title="A place to do your best work"
+            accent="best work"
+            subtitle="We are a small team with a large footprint, which means your work is visible and it matters."
+          />
+          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {perks.map((p, i) => (
+              <Reveal key={p.title} delay={(i % 3) * 0.07}>
+                <div className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-primary-100/70 bg-white p-7 shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/30 hover:shadow-card-hover">
+                  <span className="relative inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-gradient text-white shadow-card ring-1 ring-white/30 transition-transform duration-300 group-hover:scale-105">
+                    <p.icon className="h-7 w-7" />
+                  </span>
+                  <h3 className="relative mt-5 text-base font-bold text-navy-dark">{p.title}</h3>
+                  <p className="relative mt-2 flex-1 text-sm leading-relaxed text-slate-600">
+                    {p.desc}
+                  </p>
+                  <span className="relative mt-5 h-1 w-8 rounded-full bg-emerald-400/50 transition-all duration-300 group-hover:w-16" />
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Stats */}
+      <ClientsStrip />
 
       {/* Closing CTA */}
       <section className="section-padding bg-white">
