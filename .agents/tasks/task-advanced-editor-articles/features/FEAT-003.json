@@ -1,0 +1,25 @@
+{
+  "id": "FEAT-003",
+  "type": "feat",
+  "description": "Replace the raw service key login with a username/password form and add quick-action buttons for creating new city/coworking/service articles in the admin panel.",
+  "status": "in_progress",
+  "steps": [
+    "Rewrite AdminLogin.jsx with username + password form that validates against env vars (VITE_ADMIN_USERNAME / VITE_ADMIN_PASSWORD) with defaults admin / emo@2026. On success, check VITE_ADMIN_SERVICE_KEY env var; if set store in sessionStorage and redirect, otherwise show secondary service key input.",
+    "Update .env.example to include VITE_ADMIN_USERNAME, VITE_ADMIN_PASSWORD, and VITE_ADMIN_SERVICE_KEY with explanatory comments.",
+    "Add quick-action buttons to AdminArticles.jsx for Add City Article, Add Coworking Article, Add Service Article that link to /admin/articles/new?type=city etc.",
+    "In AdminArticleEditor.jsx, read the ?type query param on mount and pre-fill page_type from it."
+  ],
+  "acceptance_criteria": [
+    "npm run build completes successfully with exit code 0",
+    "AdminLogin shows a username/password form instead of a single key input",
+    "After login, if VITE_ADMIN_SERVICE_KEY is set, user goes straight to /admin/blog",
+    "If VITE_ADMIN_SERVICE_KEY is not set, user sees a secondary service key prompt",
+    "AdminArticles page has quick-action buttons for each page type",
+    "AdminArticleEditor reads ?type query param and pre-fills page_type"
+  ],
+  "verification": [
+    "Run: export PATH=/root/.nvm/versions/node/v22.23.2/bin:$PATH && cd /projects/sandbox/emo-websitenew && npm run build"
+  ],
+  "blocked_reason": null,
+  "findings": null
+}

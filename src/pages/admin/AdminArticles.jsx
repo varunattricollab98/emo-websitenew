@@ -87,6 +87,29 @@ export default function AdminArticles() {
           </div>
         </div>
 
+        {/* Quick-Action Buttons */}
+        <div className="mb-4 flex flex-wrap items-center gap-2">
+          <span className="text-sm font-medium text-slate-600">Quick Add:</span>
+          <Link
+            to="/admin/articles/new?type=city"
+            className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-sm font-medium text-emerald-700 transition hover:bg-emerald-100"
+          >
+            + City Article
+          </Link>
+          <Link
+            to="/admin/articles/new?type=coworking"
+            className="rounded-lg border border-purple-200 bg-purple-50 px-3 py-1.5 text-sm font-medium text-purple-700 transition hover:bg-purple-100"
+          >
+            + Coworking Article
+          </Link>
+          <Link
+            to="/admin/articles/new?type=service"
+            className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-1.5 text-sm font-medium text-amber-700 transition hover:bg-amber-100"
+          >
+            + Service Article
+          </Link>
+        </div>
+
         {/* Filter */}
         <div className="mb-4 flex items-center gap-2">
           <span className="text-sm font-medium text-slate-600">Filter:</span>
