@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { getAdminClient } from '../../lib/supabaseAdmin'
 import { markdownToBlocks } from '../../utils/markdownToBlocks'
 import ArticleBlocks from '../../components/ui/ArticleBlocks'
@@ -25,10 +25,17 @@ const EMPTY_ARTICLE = {
 
 export default function AdminArticleEditor() {
   const { id } = useParams()
+  const [searchParams] = useSearchParams()
   const isEditing = Boolean(id)
   const navigate = useNavigate()
 
-  const [form, setForm] = useState({ ...EMPTY_ARTICLE })
+  // Pre-fill page_type from ?type query param (e.g. /admin/articles/new?type=city)
+  const initialType = searchParams.get('type')
+  const initialForm = initialType && PAGE_TYPES.includes(initialType)
+    ? { ...EMPTY_ARTICLE, page_type: initialType }
+    : { ...EMPTY_ARTICLE }
+
+  const [form, setForm] = useState(initialForm)
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
