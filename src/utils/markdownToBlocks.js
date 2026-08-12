@@ -6,21 +6,27 @@
  *
  * Supported Markdown:
  *   # Heading        → { h: "Heading" }         (H2)
- *   ## Subheading    → { sub: "Subheading" }     (H3)
- *   ### Subheading   → { sub: "Subheading" }     (H3)
- *   Normal text      → "paragraph"               (paragraph)
- *   * item           → { bullets: [...] }        (bullet list)
- *   - item           → { bullets: [...] }        (bullet list)
- *   > quote text     → { quote: "text" }         (quote block)
+ *   ## Heading       → { h: "Heading" }         (H2)
+ *   ### Subheading   → { sub: "Subheading" }    (H3)
+ *   Normal text      → "paragraph"              (paragraph)
+ *   * item           → { bullets: [...] }       (bullet list)
+ *   - item           → { bullets: [...] }       (bullet list)
+ *   > quote text     → { quote: "text" }        (quote block)
  *   ---              → (ignored, section divider)
  *   **bold text**    → preserved as-is (rendered in JSX if needed)
+ *   ~~strikethrough~~→ preserved as-is (rendered in JSX if needed)
+ *   `inline code`   → preserved as-is (rendered in JSX if needed)
+ *
+ * Note: TipTap with levels [2, 3] emits ## for H2 and ### for H3.
+ * Both # and ## map to { h } (H2) for backward compatibility with
+ * existing content that uses single # for headings.
  *
  * Usage in Supabase:
  *   - Set content_format = 'markdown' in the blog_articles row
  *   - Write the content field as a plain text string (not JSON array)
  *
  * Example Supabase content (as text):
- *   "# Why Virtual Office?\n\nA virtual office provides...\n\n* GST ready\n* Mail handling\n\n> Best decision ever!"
+ *   "## Why Virtual Office?\n\nA virtual office provides...\n\n* GST ready\n* Mail handling\n\n> Best decision ever!"
  */
 export function markdownToBlocks(markdown) {
   if (!markdown || typeof markdown !== 'string') return []
@@ -62,21 +68,21 @@ export function markdownToBlocks(markdown) {
       continue
     }
 
-    // H2 heading: # Heading
-    if (/^#{1}\s+(.+)$/.test(trimmed)) {
+    // H3 subheading: ### Subheading (must check before H2 since ### also starts with ##)
+    if (/^#{3}\s+(.+)$/.test(trimmed)) {
       flushBullets()
       flushParagraph()
-      const match = trimmed.match(/^#{1}\s+(.+)$/)
-      blocks.push({ h: match[1].trim() })
+      const match = trimmed.match(/^#{3}\s+(.+)$/)
+      blocks.push({ sub: match[1].trim() })
       continue
     }
 
-    // H3 subheading: ## or ### Subheading
-    if (/^#{2,3}\s+(.+)$/.test(trimmed)) {
+    // H2 heading: # or ## Heading (both map to H2 for backward compat)
+    if (/^#{1,2}\s+(.+)$/.test(trimmed)) {
       flushBullets()
       flushParagraph()
-      const match = trimmed.match(/^#{2,3}\s+(.+)$/)
-      blocks.push({ sub: match[1].trim() })
+      const match = trimmed.match(/^#{1,2}\s+(.+)$/)
+      blocks.push({ h: match[1].trim() })
       continue
     }
 

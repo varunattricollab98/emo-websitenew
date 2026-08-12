@@ -68,6 +68,20 @@ function Toolbar({ editor }) {
       >
         <em>I</em>
       </ToolbarBtn>
+      <ToolbarBtn
+        onClick={() => editor.chain().focus().toggleStrike().run()}
+        active={editor.isActive('strike')}
+        title="Strikethrough"
+      >
+        <s>S</s>
+      </ToolbarBtn>
+      <ToolbarBtn
+        onClick={() => editor.chain().focus().toggleCode().run()}
+        active={editor.isActive('code')}
+        title="Inline Code"
+      >
+        &lt;/&gt;
+      </ToolbarBtn>
 
       <Sep />
 
@@ -115,6 +129,13 @@ function Toolbar({ editor }) {
       >
         &ldquo; Quote
       </ToolbarBtn>
+      <ToolbarBtn
+        onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+        active={editor.isActive('codeBlock')}
+        title="Code Block"
+      >
+        Code
+      </ToolbarBtn>
       <ToolbarBtn onClick={insertTable} active={editor.isActive('table')} title="Insert Table (3x3)">
         Table
       </ToolbarBtn>
@@ -141,6 +162,7 @@ export default function RichMarkdownEditor({ value, onChange, placeholder }) {
   const isInternalChange = useRef(false)
 
   const editor = useEditor({
+    immediatelyRender: false,
     extensions: [
       StarterKit.configure({
         heading: { levels: [2, 3] },

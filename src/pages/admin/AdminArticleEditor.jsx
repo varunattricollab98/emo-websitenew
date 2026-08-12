@@ -85,6 +85,16 @@ export default function AdminArticleEditor() {
       return
     }
 
+    // Validate slug fields based on page_type
+    if ((form.page_type === 'city' || form.page_type === 'coworking') && !form.city_slug.trim()) {
+      setError('City Slug is required for city/coworking page types.')
+      return
+    }
+    if (form.page_type === 'service' && !form.service_slug.trim()) {
+      setError('Service Slug is required for service page type.')
+      return
+    }
+
     setSaving(true)
     setError('')
 
