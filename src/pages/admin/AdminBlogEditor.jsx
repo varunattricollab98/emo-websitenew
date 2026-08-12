@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { getAdminClient } from '../../lib/supabaseAdmin'
 import { markdownToBlocks } from '../../utils/markdownToBlocks'
 import ArticleBlocks from '../../components/ui/ArticleBlocks'
+import RichMarkdownEditor from '../../components/admin/RichMarkdownEditor'
 
 const CATEGORIES = [
   'Virtual Office',
@@ -374,14 +375,12 @@ export default function AdminBlogEditor() {
             {/* Content */}
             <div>
               <label className="mb-1 block text-sm font-medium text-slate-700">
-                Content (Markdown)
+                Content (Rich Editor)
               </label>
-              <textarea
+              <RichMarkdownEditor
                 value={form.content}
-                onChange={(e) => updateField('content', e.target.value)}
-                rows={20}
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 font-mono text-sm leading-relaxed focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                placeholder={`# Section Heading\n\nWrite your content here using Markdown...\n\n* Bullet point 1\n* Bullet point 2\n\n> A quote block`}
+                onChange={(md) => updateField('content', md)}
+                placeholder="Start writing your content... Use the toolbar above for formatting."
               />
             </div>
           </div>
