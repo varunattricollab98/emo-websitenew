@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Phone, Mail, MapPin, Linkedin, Twitter, Facebook, Instagram } from 'lucide-react'
+import { Phone, Mail, MapPin, Linkedin, Facebook, Instagram } from 'lucide-react'
 import { footerCities } from '../../data/cities'
 
 const company = [
@@ -50,14 +50,20 @@ export default function Footer() {
               compliance. 200+ premium addresses across 28 states.
             </p>
             <div className="mt-5 flex gap-3">
-              {[Linkedin, Twitter, Facebook, Instagram].map((Icon, i) => (
+              {[
+                { icon: Linkedin, href: 'https://www.linkedin.com/company/easemyoffice/', label: 'LinkedIn' },
+                { icon: Facebook, href: 'https://www.facebook.com/easemyoffice/', label: 'Facebook' },
+                { icon: Instagram, href: 'https://www.instagram.com/easemyoffice/', label: 'Instagram' },
+              ].map((s) => (
                 <a
-                  key={i}
-                  href="#"
+                  key={s.label}
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-white/5 text-slate-300 transition-colors hover:bg-primary hover:text-white"
-                  aria-label="social link"
+                  aria-label={s.label}
                 >
-                  <Icon className="h-4 w-4" />
+                  <s.icon className="h-4 w-4" />
                 </a>
               ))}
             </div>
