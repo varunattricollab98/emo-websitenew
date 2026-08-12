@@ -63,9 +63,9 @@ const services = [
     meta: 'Expert-assisted',
     to: '/contact',
     chip: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-    // Person using calculator with financial documents/spreadsheets, tax/GST filing
+    // GST Registration certificate with calculator and documents
     image:
-      'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=800&q=80',
+      'https://oijtkvkyefqfwuycibcv.supabase.co/storage/v1/object/public/website-assets/ChatGPT%20Image%20Aug%2012,%202026,%2008_52_07%20PM.png',
   },
   {
     icon: Landmark,
@@ -74,9 +74,9 @@ const services = [
     meta: 'Pvt Ltd · LLP · OPC',
     to: '/contact',
     chip: 'linear-gradient(135deg, #fbbf24 0%, #d97706 100%)',
-    // Person signing official documents with pen, paperwork, registration, incorporation
+    // Company registration stamp with documents
     image:
-      'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=800&q=80',
+      'https://oijtkvkyefqfwuycibcv.supabase.co/storage/v1/object/public/website-assets/ChatGPT%20Image%20Aug%2012,%202026,%2008_44_15%20PM.png',
   },
   {
     icon: BadgeCheck,
