@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { getAdminClient } from '../../lib/supabaseAdmin'
+import AdminNav from '../../components/admin/AdminNav'
 
 export default function AdminBlog() {
   const [posts, setPosts] = useState([])
@@ -48,67 +49,20 @@ export default function AdminBlog() {
     }
   }
 
-  function handleLogout() {
-    sessionStorage.removeItem('admin_service_key')
-    sessionStorage.removeItem('admin_role')
-    sessionStorage.removeItem('admin_name')
-    navigate('/admin')
-  }
-
-  const adminRole = sessionStorage.getItem('admin_role')
-
   return (
     <div className="min-h-screen bg-slate-50">
       <div className="mx-auto max-w-5xl px-4 py-8">
-        {/* Header */}
+        <AdminNav />
+
+        {/* Page header */}
         <div className="mb-6 flex items-center justify-between">
           <h1 className="text-2xl font-bold text-slate-900">Blog Posts</h1>
-          <div className="flex items-center gap-3">
-            {adminRole !== 'editor' && (
-              <Link
-                to="/admin/articles"
-                className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100"
-              >
-                Articles
-              </Link>
-            )}
-            {adminRole !== 'editor' && (
-              <Link
-                to="/admin/jobs"
-                className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100"
-              >
-                Jobs
-              </Link>
-            )}
-            {adminRole !== 'editor' && (
-              <Link
-                to="/admin/pages"
-                className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100"
-              >
-                Pages
-              </Link>
-            )}
-            {adminRole === 'admin' && (
-              <Link
-                to="/admin/users"
-                className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100"
-              >
-                Users
-              </Link>
-            )}
-            <Link
-              to="/admin/blog/new"
-              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
-            >
-              + New Post
-            </Link>
-            <button
-              onClick={handleLogout}
-              className="rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-600 transition hover:bg-slate-100"
-            >
-              Logout
-            </button>
-          </div>
+          <Link
+            to="/admin/blog/new"
+            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
+          >
+            + New Post
+          </Link>
         </div>
 
         {/* Error */}

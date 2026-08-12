@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { getAdminClient } from '../../lib/supabaseAdmin'
+import AdminNav from '../../components/admin/AdminNav'
 
 export default function AdminJobs() {
   const [jobs, setJobs] = useState([])
@@ -54,59 +55,20 @@ export default function AdminJobs() {
     }
   }
 
-  function handleLogout() {
-    sessionStorage.removeItem('admin_service_key')
-    sessionStorage.removeItem('admin_role')
-    sessionStorage.removeItem('admin_name')
-    navigate('/admin')
-  }
-
   return (
     <div className="min-h-screen bg-slate-50">
       <div className="mx-auto max-w-6xl px-4 py-8">
-        {/* Header */}
+        <AdminNav />
+
+        {/* Page header */}
         <div className="mb-6 flex items-center justify-between">
           <h1 className="text-2xl font-bold text-slate-900">Jobs</h1>
-          <div className="flex items-center gap-3">
-            <Link
-              to="/admin/blog"
-              className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100"
-            >
-              Blog Posts
-            </Link>
-            <Link
-              to="/admin/articles"
-              className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100"
-            >
-              Articles
-            </Link>
-            <Link
-              to="/admin/pages"
-              className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100"
-            >
-              Pages
-            </Link>
-            {adminRole === 'admin' && (
-              <Link
-                to="/admin/users"
-                className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100"
-              >
-                Users
-              </Link>
-            )}
-            <Link
-              to="/admin/jobs/new"
-              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
-            >
-              + New Job
-            </Link>
-            <button
-              onClick={handleLogout}
-              className="rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-600 transition hover:bg-slate-100"
-            >
-              Logout
-            </button>
-          </div>
+          <Link
+            to="/admin/jobs/new"
+            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
+          >
+            + New Job
+          </Link>
         </div>
 
         {/* Error */}
