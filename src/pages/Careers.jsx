@@ -15,6 +15,9 @@ import {
   Mail,
   ChevronDown,
   Building2,
+  Send,
+  CheckCircle2,
+  FileText,
 } from 'lucide-react'
 import SectionHeading from '../components/ui/SectionHeading'
 import Reveal from '../components/ui/Reveal'
@@ -62,6 +65,266 @@ const perks = [
     desc: 'Low ego, high trust, and offsites that people actually look forward to.',
   },
 ]
+
+const CAREER_EMAIL = 'contact@easemyoffice.in'
+const WEB3FORMS_KEY = '24c2a048-dac6-4a5a-8956-2b36139f22fc'
+
+const educationOptions = [
+  { value: '', label: 'Select your educational status' },
+  { value: 'Graduated', label: 'Graduated' },
+  { value: 'Post Graduated', label: 'Post Graduated' },
+  { value: 'Undergraduate', label: 'Undergraduate' },
+  { value: 'Other', label: 'Other' },
+]
+
+/** Career application form with Web3Forms integration. */
+function CareerApplicationForm() {
+  const [form, setForm] = useState({
+    firstName: '',
+    lastName: '',
+    phone: '',
+    email: '',
+    education: '',
+    experience: '',
+  })
+  const [cvFile, setCvFile] = useState(null)
+  const [submitting, setSubmitting] = useState(false)
+  const [submitted, setSubmitted] = useState(false)
+  const [error, setError] = useState('')
+
+  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value })
+
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0]
+    if (file) setCvFile(file)
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    if (submitting) return
+    setSubmitting(true)
+    setError('')
+
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_KEY,
+          subject: `Career Application | ${form.firstName} ${form.lastName}`,
+          from_name: 'EaseMyOffice Careers',
+          to: CAREER_EMAIL,
+          'First Name': form.firstName,
+          'Last Name': form.lastName,
+          'Contact Number': form.phone,
+          'Email Id': form.email,
+          'Educational Status': form.education,
+          Experience: form.experience,
+          'CV Attached': cvFile ? `Candidate will email CV (${cvFile.name})` : 'Not provided',
+          source: 'careers-page',
+        }),
+      })
+      const data = await res.json()
+      if (data.success) {
+        setSubmitted(true)
+      } else {
+        setError('Something went wrong. Please try again or email us directly.')
+      }
+    } catch {
+      setError('Network error. Please try again or email us directly.')
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  if (submitted) {
+    return (
+      <div className="relative overflow-hidden rounded-3xl border border-primary-100 bg-white p-10 shadow-card">
+        <span className="pointer-events-none absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-gold via-gold-dark to-gold" />
+        <div className="flex flex-col items-center justify-center py-8 text-center">
+          <CheckCircle2 className="h-16 w-16 text-accent-emerald" />
+          <h3 className="mt-4 text-2xl font-bold text-navy-dark">Application received!</h3>
+          <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-slate-600">
+            Thank you for your interest. Our team will review your profile and get back to you.
+          </p>
+          {cvFile && (
+            <div className="mt-6 rounded-2xl border border-primary-100 bg-surface-light p-5 text-center">
+              <FileText className="mx-auto h-8 w-8 text-primary" />
+              <p className="mt-2 text-sm font-semibold text-navy-dark">
+                Please email your CV to complete your application
+              </p>
+              <a
+                href={`mailto:${CAREER_EMAIL}?subject=${encodeURIComponent(
+                  `CV - ${form.firstName} ${form.lastName}`
+                )}&body=${encodeURIComponent(
+                  `Hi,\n\nPlease find my CV attached.\n\nName: ${form.firstName} ${form.lastName}\nPhone: ${form.phone}\nEmail: ${form.email}\n\nThank you.`
+                )}`}
+                className="btn-base mt-4 bg-primary-gradient px-6 py-3 text-sm text-white shadow-card transition-all hover:shadow-glow hover:brightness-110"
+              >
+                <Mail className="h-4 w-4" />
+                Email CV to {CAREER_EMAIL}
+              </a>
+            </div>
+          )}
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="relative overflow-hidden rounded-3xl border border-primary-100 bg-white p-8 shadow-card-hover">
+      <span className="pointer-events-none absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-gold via-gold-dark to-gold" />
+      <form onSubmit={handleSubmit} className="space-y-5">
+        <h3 className="text-xl font-bold text-navy-dark">Career Application Form</h3>
+        <p className="text-sm text-slate-600">
+          Fill in your details and we will reach out if there is a match.
+        </p>
+
+        <div className="grid gap-5 sm:grid-cols-2">
+          <div>
+            <label className="mb-1.5 block text-sm font-semibold text-navy-dark">
+              First Name <span className="text-red-400">*</span>
+            </label>
+            <input
+              type="text"
+              name="firstName"
+              value={form.firstName}
+              onChange={handleChange}
+              required
+              placeholder="Enter your first name"
+              className="w-full rounded-xl border border-primary-200 bg-white px-4 py-3 text-sm text-navy-dark outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
+            />
+          </div>
+          <div>
+            <label className="mb-1.5 block text-sm font-semibold text-navy-dark">
+              Last Name <span className="text-red-400">*</span>
+            </label>
+            <input
+              type="text"
+              name="lastName"
+              value={form.lastName}
+              onChange={handleChange}
+              required
+              placeholder="Enter your last name"
+              className="w-full rounded-xl border border-primary-200 bg-white px-4 py-3 text-sm text-navy-dark outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
+            />
+          </div>
+        </div>
+
+        <div className="grid gap-5 sm:grid-cols-2">
+          <div>
+            <label className="mb-1.5 block text-sm font-semibold text-navy-dark">
+              Contact Number <span className="text-red-400">*</span>
+            </label>
+            <input
+              type="tel"
+              name="phone"
+              value={form.phone}
+              onChange={handleChange}
+              required
+              placeholder="Enter your phone number"
+              className="w-full rounded-xl border border-primary-200 bg-white px-4 py-3 text-sm text-navy-dark outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
+            />
+          </div>
+          <div>
+            <label className="mb-1.5 block text-sm font-semibold text-navy-dark">
+              Email Id <span className="text-red-400">*</span>
+            </label>
+            <input
+              type="email"
+              name="email"
+              value={form.email}
+              onChange={handleChange}
+              required
+              placeholder="Enter your email address"
+              className="w-full rounded-xl border border-primary-200 bg-white px-4 py-3 text-sm text-navy-dark outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
+            />
+          </div>
+        </div>
+
+        <div className="grid gap-5 sm:grid-cols-2">
+          <div>
+            <label className="mb-1.5 block text-sm font-semibold text-navy-dark">
+              Educational Status <span className="text-red-400">*</span>
+            </label>
+            <select
+              name="education"
+              value={form.education}
+              onChange={handleChange}
+              required
+              className="w-full rounded-xl border border-primary-200 bg-white px-4 py-3 text-sm text-navy-dark outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
+            >
+              {educationOptions.map((opt) => (
+                <option key={opt.value} value={opt.value} disabled={!opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="mb-1.5 block text-sm font-semibold text-navy-dark">
+              Experience <span className="text-red-400">*</span>
+            </label>
+            <input
+              type="text"
+              name="experience"
+              value={form.experience}
+              onChange={handleChange}
+              required
+              placeholder="e.g. 2 years, 6 months"
+              className="w-full rounded-xl border border-primary-200 bg-white px-4 py-3 text-sm text-navy-dark outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className="mb-1.5 block text-sm font-semibold text-navy-dark">
+            Attach CV <span className="text-xs font-normal text-slate-400">(PDF or DOC)</span>
+          </label>
+          <div className="relative rounded-xl border border-dashed border-primary-200 bg-surface-light p-4 text-center transition-colors hover:border-primary/50">
+            <input
+              type="file"
+              accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+              onChange={handleFileChange}
+              className="absolute inset-0 cursor-pointer opacity-0"
+            />
+            <FileText className="mx-auto h-8 w-8 text-primary/60" />
+            {cvFile ? (
+              <p className="mt-2 text-sm font-semibold text-navy-dark">{cvFile.name}</p>
+            ) : (
+              <p className="mt-2 text-sm text-slate-500">
+                Click to browse or drag your file here
+              </p>
+            )}
+            <p className="mt-1 text-xs text-slate-400">PDF, DOC up to 5 MB</p>
+          </div>
+          <p className="mt-2 text-xs text-slate-500">
+            After submitting, you will be prompted to email your CV to{' '}
+            <span className="font-semibold text-primary">{CAREER_EMAIL}</span>
+          </p>
+        </div>
+
+        {error && (
+          <p className="rounded-xl bg-red-50 px-4 py-2.5 text-center text-sm font-medium text-red-600">
+            {error}
+          </p>
+        )}
+
+        <button
+          type="submit"
+          disabled={submitting}
+          className="btn-base w-full bg-primary-gradient px-6 py-3.5 text-white shadow-card hover:shadow-glow disabled:cursor-not-allowed disabled:opacity-70"
+        >
+          {submitting ? 'Submitting...' : 'Submit Application'}
+          {!submitting && <Send className="h-4 w-4" />}
+        </button>
+      </form>
+    </div>
+  )
+}
 
 /** One expandable role card. */
 function JobCard({ job, isOpen, onToggle }) {
@@ -322,21 +585,29 @@ export default function Careers() {
                     No open roles right now
                   </h3>
                   <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-slate-600">
-                    We are not actively hiring at the moment, but we always read speculative
-                    applications. Send us your CV and tell us what you would want to own.
+                    We are not actively hiring at the moment, but we always welcome speculative
+                    applications. Fill out the form below and tell us what you would want to own.
                   </p>
-                  <a
-                    href={`mailto:${DEFAULT_APPLY_EMAIL}?subject=${encodeURIComponent(
-                      'Speculative application'
-                    )}`}
-                    className="btn-base mt-7 bg-primary-gradient px-7 py-3.5 text-sm text-white shadow-card transition-all hover:shadow-glow hover:brightness-110"
-                  >
-                    <Mail className="h-4 w-4" />
-                    Send your CV
-                  </a>
                 </div>
               </Reveal>
             )}
+          </div>
+        </div>
+      </section>
+
+      {/* Application Form */}
+      <section id="apply" className="section-padding scroll-mt-24 bg-white">
+        <div className="container-custom">
+          <SectionHeading
+            eyebrow="Apply Now"
+            title="Submit your application"
+            accent="application"
+            subtitle="Fill in your details below. We will review your profile and get back to you."
+          />
+          <div className="mx-auto mt-12 max-w-2xl">
+            <Reveal>
+              <CareerApplicationForm />
+            </Reveal>
           </div>
         </div>
       </section>
