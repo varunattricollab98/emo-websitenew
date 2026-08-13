@@ -24,6 +24,7 @@ async function sendEmailNotification(payload) {
       },
       body: JSON.stringify({
         access_key: WEB3FORMS_KEY,
+        to: 'contact@easemyoffice.in',
         subject: `New Lead, ${payload.interest || 'General Enquiry'} | ${payload.city || 'India'}`,
         from_name: 'EaseMyOffice Website',
         name: payload.name,
