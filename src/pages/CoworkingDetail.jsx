@@ -159,7 +159,7 @@ export default function CoworkingDetail() {
   const plans = [
     {
       name: 'Hot Desk',
-      price: round100(sp.price * 0.55),
+      price: Math.max(4499, round100(sp.price * 0.55)),
       unit: '/seat/mo',
       icon: Armchair,
       note: 'Flexible open-desk access, sit anywhere, any day.',
