@@ -53,6 +53,7 @@ const AdminJobs = lazy(() => import('./pages/admin/AdminJobs'))
 const AdminJobEditor = lazy(() => import('./pages/admin/AdminJobEditor'))
 const AdminCoworking = lazy(() => import('./pages/admin/AdminCoworking'))
 const AdminCoworkingEditor = lazy(() => import('./pages/admin/AdminCoworkingEditor'))
+const AdminLeads = lazy(() => import('./pages/admin/AdminLeads'))
 const AdminPages = lazy(() => import('./pages/admin/AdminPages'))
 const AdminPageEditor = lazy(() => import('./pages/admin/AdminPageEditor'))
 const AdminUsers = lazy(() => import('./pages/admin/AdminUsers'))
@@ -90,6 +91,7 @@ export default function App() {
             <Route path="/admin/coworking" element={<AdminCoworking />} />
             <Route path="/admin/coworking/new" element={<AdminCoworkingEditor />} />
             <Route path="/admin/coworking/edit/:id" element={<AdminCoworkingEditor />} />
+            <Route path="/admin/leads" element={<AdminLeads />} />
             <Route path="/admin/pages" element={<AdminPages />} />
             <Route path="/admin/pages/new" element={<AdminPageEditor />} />
             <Route path="/admin/pages/edit/:slug" element={<AdminPageEditor />} />
