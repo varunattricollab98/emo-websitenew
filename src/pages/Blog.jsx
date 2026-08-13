@@ -273,7 +273,7 @@ export default function Blog() {
                         </div>
                       )}
                       {post.category && (
-                        <span className="absolute left-3 top-3 inline-flex items-center rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-primary shadow-sm">
+                        <span className="absolute right-3 top-3 inline-flex items-center rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-primary shadow-sm">
                           {post.category}
                         </span>
                       )}
