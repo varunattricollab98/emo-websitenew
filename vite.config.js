@@ -5,8 +5,9 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   build: {
-    target: 'es2019',
+    target: 'esnext',
     cssCodeSplit: true,
+    minify: 'esbuild',
     // route + vendor code-splitting keeps the initial JS payload small
     rollupOptions: {
       output: {
