@@ -27,7 +27,8 @@ import BlogArticleSection from '../components/ui/BlogArticleSection'
 import SchemaScript from '../components/seo/SchemaScript'
 import { webPageSchema, breadcrumbSchema, faqSchema } from '../components/seo/schemas'
 import { getCoworkingSpaceBySlug, slugifyCoworking } from '../data/coworkingSpaces'
-import { voCities, spaceStats } from '../data/spaces'
+import { voCities, spaceStats, slugifySpace, cityAliases } from '../data/spaces'
+import { useSupabaseSpaces } from '../context/SpacesContext'
 import { coworkingArticle } from '../data/blogArticles'
 import { useBlogArticle } from '../hooks/useBlogArticle'
 import { useMeta } from '../hooks/useMeta'
@@ -67,8 +68,38 @@ export default function CoworkingDetail() {
 
   // Hook must be called unconditionally, before any early return
   const [activeImg, setActiveImg] = useState(null)
+  const { rows: supabaseRows } = useSupabaseSpaces()
 
-  const sp = getCoworkingSpaceBySlug(city, space)
+  // Try static data first, then fall back to Supabase spaces
+  let sp = getCoworkingSpaceBySlug(city, space)
+
+  if (!sp && supabaseRows.length > 0) {
+    const aliases = cityAliases[city] || []
+    const row = supabaseRows.find((r) => {
+      const rowCitySlug = slugifySpace(r.address_city)
+      const cityMatch = rowCitySlug === city || aliases.includes(rowCitySlug)
+      const cardName = r.space_name || `${r.address_area || 'Business'} Hub`
+      return cityMatch && slugifyCoworking(cardName) === space
+    })
+    if (row) {
+      const tags = (row.property_feature || '')
+        .split('|')
+        .map((s) => s.trim())
+        .filter(Boolean)
+        .slice(0, 4)
+      sp = {
+        name: row.space_name || `${row.address_area || 'Business'} Hub`,
+        locality: row.address_area || '',
+        price: Math.round((row.pricing_monthly || 799) * 5),
+        dayPass: Math.round((row.pricing_monthly || 799) * 0.6),
+        seats: '4-100 seats',
+        rating: Number(row.rating) || 4.7,
+        tags: tags.length ? tags : ['24x7 access', 'WiFi', 'Meeting rooms'],
+        image: row.featured_image || '',
+        popular: row.is_trending || false,
+      }
+    }
+  }
   const cityName = voCities.find((c) => c.slug === city)?.name || toTitle(city)
   const region = voCities.find((c) => c.slug === city)?.state || 'India'
   const dbArticle = useBlogArticle({ pageType: 'coworking', citySlug: city, areaSlug: space })
