@@ -29,17 +29,33 @@ const sortOptions = [
 const cityNameBySlug = Object.fromEntries(voCities.map((c) => [c.slug, c.name]))
 
 // Transform a Supabase space row into a coworking card shape.
+// Deterministic variation per space so coworking prices look natural, not uniform.
+// Uses a simple hash of the area name to shift the multiplier between 4x and 6.5x.
+function coworkingPriceMultiplier(areaName) {
+  let h = 5381
+  for (let i = 0; i < (areaName || '').length; i++) {
+    h = ((h << 5) + h + areaName.charCodeAt(i)) >>> 0
+  }
+  // desk multiplier: 4.0 to 6.5 (so ₹799 base → ₹3,196 to ₹5,194)
+  const deskMult = 4.0 + ((h % 25) / 10)
+  // day pass: 55% to 80% of monthly
+  const dayMult = 0.55 + ((h >> 8) % 25) / 100
+  return { deskMult, dayMult }
+}
+
 function transformToCoworkingCard(row) {
   const tags = (row.property_feature || '')
     .split('|')
     .map((s) => s.trim())
     .filter(Boolean)
     .slice(0, 4)
+  const { deskMult, dayMult } = coworkingPriceMultiplier(row.address_area || row.space_name || '')
+  const monthly = row.pricing_monthly || 799
   return {
     name: row.space_name || `${row.address_area || 'Business'} Hub`,
     locality: row.address_area || '',
-    price: Math.round((row.pricing_monthly || 799) * 5),
-    dayPass: Math.round((row.pricing_monthly || 799) * 0.6),
+    price: Math.round((monthly * deskMult) / 100) * 100,
+    dayPass: Math.round((monthly * dayMult) / 50) * 50,
     seats: '4-100 seats',
     rating: Number(row.rating) || 4.7,
     tags: tags.length ? tags : ['24x7 access', 'WiFi', 'Meeting rooms'],
