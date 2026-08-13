@@ -190,7 +190,7 @@ export default function Blog() {
                   key={`skeleton-${i}`}
                   className="overflow-hidden rounded-2xl border border-primary-100/60 bg-white shadow-card"
                 >
-                  <div className="h-44 animate-pulse bg-primary-100/70" />
+                  <div className="h-52 animate-pulse bg-primary-100/70" />
                   <div className="p-5">
                     <div className="h-3 w-20 animate-pulse rounded bg-primary-50" />
                     <div className="mt-3 h-4 w-3/4 animate-pulse rounded bg-slate-200" />
@@ -260,12 +260,12 @@ export default function Blog() {
                     to={`/blog/${post.slug}`}
                     className="group flex h-full flex-col overflow-hidden rounded-2xl border border-primary-100/60 bg-white shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover"
                   >
-                    <div className="relative h-44 overflow-hidden">
+                    <div className="relative h-52 overflow-hidden">
                       {post.cover_image ? (
                         <SmartImage
                           src={post.cover_image}
                           alt={post.title}
-                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
                         />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center bg-primary-gradient">
