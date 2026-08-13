@@ -4,6 +4,7 @@ const NAV_LINKS = [
   { label: 'Blog Posts', path: '/admin/blog' },
   { label: 'Articles', path: '/admin/articles', adminOnly: true },
   { label: 'Jobs', path: '/admin/jobs', adminOnly: true },
+  { label: 'Coworking', path: '/admin/coworking', adminOnly: true },
   { label: 'Pages', path: '/admin/pages', adminOnly: true },
   { label: 'Users', path: '/admin/users', adminOnly: true },
 ]

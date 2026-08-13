@@ -1,0 +1,24 @@
+{
+  "id": "FEAT-002",
+  "type": "feat",
+  "description": "Add admin panel CRUD for coworking spaces: listing page and editor page, with routes in App.jsx and link in AdminNav.",
+  "status": "completed",
+  "steps": [
+    "Create src/pages/admin/AdminCoworking.jsx following the pattern in src/pages/admin/AdminJobs.jsx. It should: use getAdminClient() from src/lib/supabaseAdmin.js, fetch all coworking_spaces ordered by sort_order, display a table with columns: Name, City, Locality, Dedicated Desk price, Day Pass price, Status (Active/Draft), Sort Order, Actions (Edit/Delete). Include a '+ New Space' link to /admin/coworking/new. Use AdminNav component. Include role-based access check (editors cannot access).",
+    "Create src/pages/admin/AdminCoworkingEditor.jsx following the pattern in src/pages/admin/AdminJobEditor.jsx. It should: handle both create (/admin/coworking/new) and edit (/admin/coworking/edit/:id) modes. Form fields: name (text, required), city_slug (text, required), city_name (text), locality (text), state (text), full_address (text), pricing_hot_desk (number), pricing_dedicated_desk (number), pricing_private_cabin (number), pricing_day_pass (number), seats (text), rating (number step 0.1), tags (text, pipe-separated), amenities (text, pipe-separated), featured_image (text/URL), gallery (textarea, pipe-separated URLs), description (textarea), is_popular (checkbox), is_active (checkbox), sort_order (number). Save uses upsert/update via adminClient. After save, navigate to /admin/coworking.",
+    "Modify src/components/admin/AdminNav.jsx: Add { label: 'Coworking', path: '/admin/coworking', adminOnly: true } to the NAV_LINKS array (place it after 'Jobs').",
+    "Modify src/App.jsx: Add lazy imports for AdminCoworking and AdminCoworkingEditor. Add routes: /admin/coworking, /admin/coworking/new, /admin/coworking/edit/:id (following the pattern of AdminJobs routes)."
+  ],
+  "acceptance_criteria": [
+    "src/pages/admin/AdminCoworking.jsx exists and lists coworking spaces from Supabase",
+    "src/pages/admin/AdminCoworkingEditor.jsx exists with all pricing fields and handles create/edit",
+    "AdminNav shows 'Coworking' link for admin role users",
+    "App.jsx has routes for /admin/coworking, /admin/coworking/new, /admin/coworking/edit/:id",
+    "npm run build passes successfully"
+  ],
+  "verification": [
+    "Run: export PATH=\"/root/.nvm/versions/node/v22.23.2/bin:$PATH\" && cd /projects/sandbox/emo-websitenew && rm -rf dist && npm run build"
+  ],
+  "blocked_reason": null,
+  "findings": "Build passes with 398 static pages. AdminCoworking and AdminCoworkingEditor created following the AdminJobs pattern. Routes and nav link added successfully."
+}

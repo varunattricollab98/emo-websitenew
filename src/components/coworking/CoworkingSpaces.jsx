@@ -19,6 +19,7 @@ import { coworkingCities as staticCoworkingCities, getCoworkingSpaces, slugifyCo
 import { voCities, cityMatches, slugifySpace } from '../../data/spaces'
 import { resolvePincode } from '../../data/pincodes'
 import { useSupabaseSpaces } from '../../context/SpacesContext'
+import { useCoworkingSpaces } from '../../hooks/useCoworkingSpaces'
 
 const sortOptions = [
   { v: 'featured', l: 'Featured' },
@@ -76,13 +77,44 @@ export default function CoworkingSpaces() {
   const [cityInput, setCityInput] = useState(cityNameBySlug[initialSlug] || 'Bengaluru')
   const [cityOpen, setCityOpen] = useState(false)
 
-  // Supabase spaces data
+  // Supabase spaces data (generic spaces table - fallback)
   const { rows: supabaseRows, loaded: supabaseLoaded } = useSupabaseSpaces()
 
-  // Determine if we have usable Supabase data
-  const useSupabase = supabaseLoaded && supabaseRows.length > 0
+  // Dedicated coworking_spaces table (preferred source)
+  const { spaces: coworkingRows, loaded: coworkingLoaded } = useCoworkingSpaces()
 
-  // Transform Supabase rows into coworking cards grouped by city slug
+  // Determine which data source to use:
+  // 1. Dedicated coworking_spaces table (preferred)
+  // 2. Generic spaces table (fallback)
+  // 3. Static data (final fallback)
+  const useCoworkingTable = coworkingLoaded && coworkingRows.length > 0
+  const useSupabase = !useCoworkingTable && supabaseLoaded && supabaseRows.length > 0
+
+  // Transform coworking_spaces rows into card shape grouped by city slug
+  const coworkingByCity = useMemo(() => {
+    if (!useCoworkingTable) return {}
+    const grouped = {}
+    for (const row of coworkingRows) {
+      const citySlug = row.city_slug
+      if (!grouped[citySlug]) grouped[citySlug] = []
+      grouped[citySlug].push({
+        name: row.name,
+        locality: row.locality || '',
+        price: row.pricing_dedicated_desk || 0,
+        dayPass: row.pricing_day_pass || 0,
+        seats: row.seats || '4-100 seats',
+        rating: Number(row.rating) || 4.7,
+        tags: (row.tags || '').split('|').map((s) => s.trim()).filter(Boolean),
+        image: row.featured_image || '',
+        popular: row.is_popular || false,
+        citySlug: row.city_slug,
+        cityName: row.city_name || '',
+      })
+    }
+    return grouped
+  }, [useCoworkingTable, coworkingRows])
+
+  // Transform Supabase rows into coworking cards grouped by city slug (fallback)
   const supabaseByCity = useMemo(() => {
     if (!useSupabase) return {}
     const grouped = {}
@@ -94,15 +126,24 @@ export default function CoworkingSpaces() {
     return grouped
   }, [useSupabase, supabaseRows])
 
-  // Derive coworkingCities dynamically from Supabase data, or fall back to static
+  // Derive coworkingCities dynamically from data, or fall back to static
   const coworkingCities = useMemo(() => {
-    if (!useSupabase) return staticCoworkingCities
-    const slugs = Object.keys(supabaseByCity)
-    return slugs.map((slug) => {
-      const voCity = voCities.find((c) => c.slug === slug)
-      return { slug, name: voCity ? voCity.name : supabaseByCity[slug][0]?.cityName || slug }
-    })
-  }, [useSupabase, supabaseByCity])
+    if (useCoworkingTable) {
+      const slugs = Object.keys(coworkingByCity)
+      return slugs.map((slug) => {
+        const voCity = voCities.find((c) => c.slug === slug)
+        return { slug, name: voCity ? voCity.name : coworkingByCity[slug][0]?.cityName || slug }
+      })
+    }
+    if (useSupabase) {
+      const slugs = Object.keys(supabaseByCity)
+      return slugs.map((slug) => {
+        const voCity = voCities.find((c) => c.slug === slug)
+        return { slug, name: voCity ? voCity.name : supabaseByCity[slug][0]?.cityName || slug }
+      })
+    }
+    return staticCoworkingCities
+  }, [useCoworkingTable, coworkingByCity, useSupabase, supabaseByCity])
 
   const isAll = active === 'all'
   const activeName = isAll ? '' : cityNameBySlug[active] || 'Bengaluru'
@@ -135,7 +176,17 @@ export default function CoworkingSpaces() {
   const spaces = useMemo(() => {
     let list
     if (isAll) {
-      if (useSupabase) {
+      if (useCoworkingTable) {
+        // Round-robin interleave across cities from coworking_spaces
+        const perCity = coworkingCities.map((c) =>
+          (coworkingByCity[c.slug] || []).map((sp) => ({ ...sp, cityName: sp.cityName || c.name, citySlug: c.slug }))
+        )
+        list = []
+        for (let i = 0; perCity.some((l) => l[i]); i++) {
+          perCity.forEach((l) => l[i] && list.push(l[i]))
+        }
+        list = list.slice(0, 12)
+      } else if (useSupabase) {
         // Round-robin interleave across cities from Supabase data
         const perCity = coworkingCities.map((c) =>
           (supabaseByCity[c.slug] || []).map((sp) => ({ ...sp, cityName: sp.cityName || c.name, citySlug: c.slug }))
@@ -157,7 +208,9 @@ export default function CoworkingSpaces() {
         list = list.slice(0, 12)
       }
     } else {
-      if (useSupabase && supabaseByCity[active]?.length) {
+      if (useCoworkingTable && coworkingByCity[active]?.length) {
+        list = coworkingByCity[active].map((sp) => ({ ...sp, cityName: sp.cityName || activeName, citySlug: active }))
+      } else if (useSupabase && supabaseByCity[active]?.length) {
         list = supabaseByCity[active].map((sp) => ({ ...sp, cityName: sp.cityName || activeName, citySlug: active }))
       } else {
         list = getCoworkingSpaces(active).map((sp) => ({ ...sp, cityName: activeName, citySlug: active }))
@@ -166,7 +219,7 @@ export default function CoworkingSpaces() {
     if (sort === 'low') list = [...list].sort((a, b) => a.price - b.price)
     else if (sort === 'high') list = [...list].sort((a, b) => b.price - a.price)
     return list
-  }, [active, sort, isAll, activeName, useSupabase, supabaseByCity, coworkingCities])
+  }, [active, sort, isAll, activeName, useCoworkingTable, coworkingByCity, useSupabase, supabaseByCity, coworkingCities])
 
   const selectCity = (slug, name) => {
     setActive(slug)

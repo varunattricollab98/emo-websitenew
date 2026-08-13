@@ -1,0 +1,43 @@
+{
+  "project_type": "React 18 SPA with Vite 5, Tailwind CSS, Framer Motion, Supabase, React Router 6",
+  "language": "JavaScript/JSX",
+  "build_system": "npm + Vite 5, prebuild runs scripts/make-og-image.mjs, postbuild runs scripts/prerender.mjs",
+  "test_framework": "No test framework - verification is build success (npm run build produces ~398 pages)",
+  "build_command": "export PATH=\"/root/.nvm/versions/node/v22.23.2/bin:$PATH\" && cd /projects/sandbox/emo-websitenew && rm -rf dist && npm run build",
+  "test_command": "N/A - project has no test suite, build success is the verification",
+  "verification_instructions": "Run build command. It must pass and produce dist/ with pages. Also run seed script to verify Supabase connectivity.",
+  "snapshot_or_generated_files": "dist/ is built output (gitignored). src/data/spaceDetails.generated.js is a generated file from CSV import.",
+  "setup_instructions": "export PATH=\"/root/.nvm/versions/node/v22.23.2/bin:$PATH\" && cd /projects/sandbox/emo-websitenew && npm install (already done)",
+  "environment_constraints": "OPEN_INTERNET - full network access. Do NOT install @tiptap packages. Node v22.23.2 at /root/.nvm/versions/node/v22.23.2/bin.",
+  "contribution_requirements": "Branch: feat/full-website. After changes, merge to main and push both.",
+  "key_patterns": {
+    "hooks": "Custom hooks in src/hooks/ (e.g. useJobOpenings.js) fetch from Supabase with anon key, return {data, loaded}",
+    "admin_pages": "Admin pages in src/pages/admin/ use getAdminClient() from src/lib/supabaseAdmin.js (service key from sessionStorage). Pattern: AdminXxx.jsx (list) + AdminXxxEditor.jsx (create/edit). They include AdminNav component.",
+    "admin_nav": "src/components/admin/AdminNav.jsx has NAV_LINKS array with {label, path, adminOnly} objects",
+    "supabase_client": "src/lib/supabase.js exports {supabase, isSupabaseConfigured} with hardcoded fallback keys",
+    "admin_client": "src/lib/supabaseAdmin.js exports getAdminClient() using service key from sessionStorage",
+    "routes": "src/App.jsx has lazy imports, admin routes outside SiteLayout (no navbar/footer), public inside SiteLayout",
+    "schema_files": "SQL schema files in supabase/ directory follow pattern: table_name_schema.sql with RLS policies",
+    "seed_scripts": "scripts/ directory has .mjs files that use ES modules and access Supabase directly with service key"
+  },
+  "relevant_files": [
+    "src/components/coworking/CoworkingSpaces.jsx",
+    "src/pages/CoworkingDetail.jsx",
+    "src/pages/Coworking.jsx",
+    "src/data/coworkingSpaces.js",
+    "src/hooks/useJobOpenings.js",
+    "src/pages/admin/AdminJobs.jsx",
+    "src/pages/admin/AdminJobEditor.jsx",
+    "src/components/admin/AdminNav.jsx",
+    "src/App.jsx",
+    "src/lib/supabase.js",
+    "src/lib/supabaseAdmin.js",
+    "src/context/SpacesContext.jsx",
+    "supabase/job_openings_schema.sql",
+    "scripts/import-spaces.mjs"
+  ],
+  "directory_structure": "src/components/ (UI + layout + admin), src/pages/ (route pages + admin/), src/hooks/ (data fetching), src/data/ (static data), src/lib/ (supabase clients), src/context/ (React context providers), scripts/ (CLI tools), supabase/ (SQL schemas)",
+  "supabase_url": "https://oijtkvkyefqfwuycibcv.supabase.co",
+  "supabase_anon_key": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9panRrdmt5ZWZxZnd1eWNpYmN2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5NjUwODksImV4cCI6MjEwMDU0MTA4OX0.wzNvJ2nRN4appxtLFhinIy4aEQ-qT9LpqngWhzfPgrw",
+  "supabase_service_key": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9panRrdmt5ZWZxZnd1eWNpYmN2Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NDk2NTA4OSwiZXhwIjoyMTAwNTQxMDg5fQ.amcfRunjXq4PfGJJOCFS1FUEFaw3T7nZDK3yGYeZTJ4"
+}

@@ -29,6 +29,7 @@ import { webPageSchema, breadcrumbSchema, faqSchema } from '../components/seo/sc
 import { getCoworkingSpaceBySlug, slugifyCoworking } from '../data/coworkingSpaces'
 import { voCities, spaceStats, slugifySpace, cityAliases } from '../data/spaces'
 import { useSupabaseSpaces } from '../context/SpacesContext'
+import { useCoworkingSpaces } from '../hooks/useCoworkingSpaces'
 import { coworkingArticle } from '../data/blogArticles'
 import { useBlogArticle } from '../hooks/useBlogArticle'
 import { useMeta } from '../hooks/useMeta'
@@ -69,10 +70,54 @@ export default function CoworkingDetail() {
   // Hook must be called unconditionally, before any early return
   const [activeImg, setActiveImg] = useState(null)
   const { rows: supabaseRows } = useSupabaseSpaces()
+  const { spaces: coworkingRows } = useCoworkingSpaces()
 
-  // Try static data first, then fall back to Supabase spaces
-  let sp = getCoworkingSpaceBySlug(city, space)
+  // Priority 1: Look up from dedicated coworking_spaces table
+  let sp = null
+  let spGallery = null
+  let spAmenities = null
+  let spDescription = null
 
+  if (coworkingRows.length > 0) {
+    const match = coworkingRows.find(
+      (r) => r.city_slug === city && slugifyCoworking(r.name) === space
+    )
+    if (match) {
+      const tags = (match.tags || '')
+        .split('|')
+        .map((s) => s.trim())
+        .filter(Boolean)
+      spGallery = (match.gallery || '')
+        .split('|')
+        .map((s) => s.trim())
+        .filter((s) => s.startsWith('http'))
+      spAmenities = (match.amenities || '')
+        .split('|')
+        .map((s) => s.trim())
+        .filter(Boolean)
+      spDescription = match.description || ''
+      sp = {
+        name: match.name,
+        locality: match.locality || '',
+        price: match.pricing_dedicated_desk || 0,
+        dayPass: match.pricing_day_pass || 0,
+        hotDesk: match.pricing_hot_desk || 0,
+        privateCabin: match.pricing_private_cabin || 0,
+        seats: match.seats || '4-100 seats',
+        rating: Number(match.rating) || 4.7,
+        tags: tags.length ? tags : ['24x7 access', 'WiFi', 'Meeting rooms'],
+        image: match.featured_image || '',
+        popular: match.is_popular || false,
+      }
+    }
+  }
+
+  // Priority 2: Try static data
+  if (!sp) {
+    sp = getCoworkingSpaceBySlug(city, space)
+  }
+
+  // Priority 3: Fall back to Supabase spaces table
   if (!sp && supabaseRows.length > 0) {
     const aliases = cityAliases[city] || []
     const row = supabaseRows.find((r) => {
@@ -135,12 +180,17 @@ export default function CoworkingDetail() {
   }
 
   const shownImg = activeImg || sp.image || DEFAULT_GALLERY[0]
-  const thumbs = [...new Set([sp.image, ...DEFAULT_GALLERY].filter(Boolean))]
+  const thumbs = [...new Set([
+    sp.image,
+    ...(spGallery && spGallery.length > 0 ? spGallery : DEFAULT_GALLERY),
+  ].filter(Boolean))]
   const stats = spaceStats(`cowork-${city}-${space}`)
   const reviewCount = 40 + (stats.monthly % 120)
 
-  // amenities = curated tags + base set (deduped)
-  const amenities = [...new Set([...(sp.tags || []), ...BASE_AMENITIES])]
+  // amenities = from coworking_spaces if available, else curated tags + base set (deduped)
+  const amenities = spAmenities && spAmenities.length > 0
+    ? [...new Set([...spAmenities, ...BASE_AMENITIES])]
+    : [...new Set([...(sp.tags || []), ...BASE_AMENITIES])]
 
   // map location, uses the locality + city address
   const fullAddress = `${sp.locality}, ${cityName}, ${region}`
@@ -159,7 +209,7 @@ export default function CoworkingDetail() {
   const plans = [
     {
       name: 'Hot Desk',
-      price: Math.max(4499, round100(sp.price * 0.55)),
+      price: sp.hotDesk || Math.max(4499, round100(sp.price * 0.55)),
       unit: '/seat/mo',
       icon: Armchair,
       note: 'Flexible open-desk access, sit anywhere, any day.',
@@ -174,7 +224,7 @@ export default function CoworkingDetail() {
     },
     {
       name: 'Private Cabin',
-      price: round100(sp.price * 1.7),
+      price: sp.privateCabin || round100(sp.price * 1.7),
       unit: '/seat/mo',
       icon: DoorClosed,
       note: 'A lockable private office for your team.',
@@ -380,9 +430,9 @@ export default function CoworkingDetail() {
             </div>
 
             <p className="mt-4 leading-relaxed text-slate-600">
-              {sp.name} is a move-in-ready coworking space in {sp.locality}, {cityName}, designed for
+              {spDescription || `${sp.name} is a move-in-ready coworking space in ${sp.locality}, ${cityName}, designed for
               focused work with premium amenities, flexible plans and a vibrant community. No lock-in,
-              no brokerage.
+              no brokerage.`}
             </p>
 
             {/* quick tags */}
