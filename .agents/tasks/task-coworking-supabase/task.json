@@ -1,0 +1,7 @@
+{
+  "task_id": "task-coworking-supabase",
+  "task_description": "Create a dedicated Supabase coworking_spaces table with pricing fields, seed it from existing spaces data, connect CoworkingSpaces and CoworkingDetail pages to read from it, and add admin panel CRUD pages for managing coworking listings.",
+  "status": "in_progress",
+  "feature_order": ["FEAT-001", "FEAT-002"],
+  "blocked_reason": null
+}
