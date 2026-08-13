@@ -87,11 +87,18 @@ export default function CoworkingDetail() {
         .map((s) => s.trim())
         .filter(Boolean)
         .slice(0, 4)
+      // Deterministic price variation per area
+      const area = row.address_area || row.space_name || ''
+      let h = 5381
+      for (let i = 0; i < area.length; i++) h = ((h << 5) + h + area.charCodeAt(i)) >>> 0
+      const deskMult = 4.0 + ((h % 25) / 10)
+      const dayMult = 0.55 + ((h >> 8) % 25) / 100
+      const monthly = row.pricing_monthly || 799
       sp = {
         name: row.space_name || `${row.address_area || 'Business'} Hub`,
         locality: row.address_area || '',
-        price: Math.round((row.pricing_monthly || 799) * 5),
-        dayPass: Math.round((row.pricing_monthly || 799) * 0.6),
+        price: Math.round((monthly * deskMult) / 100) * 100,
+        dayPass: Math.round((monthly * dayMult) / 50) * 50,
         seats: '4-100 seats',
         rating: Number(row.rating) || 4.7,
         tags: tags.length ? tags : ['24x7 access', 'WiFi', 'Meeting rooms'],
