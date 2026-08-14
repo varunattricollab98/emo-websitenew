@@ -43,7 +43,7 @@ const offerings = [
     icon: DoorClosed,
     title: 'Private Cabins',
     desc: 'Lockable private offices for teams of 2 to 20, fully furnished and move-in ready.',
-    price: 'From ₹14,999/mo',
+    price: 'From ₹9,999/mo',
     grad: 'linear-gradient(135deg, #fbbf24 0%, #d97706 100%)',
     features: ['Fully furnished cabin', 'Team privacy & security', 'Meeting room credits'],
     popular: true,
