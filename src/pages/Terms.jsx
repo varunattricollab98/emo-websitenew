@@ -101,8 +101,8 @@ export default function Terms() {
   if (loading) {
     return (
       <LegalLayout
-        eyebrow="Terms & Conditions"
-        title="Terms & Conditions"
+        eyebrow="Terms of Service"
+        title="Terms of Service"
         subtitle="Please read these terms carefully before using EaseMyOffice services."
         updated="July 19, 2024"
         sections={[]}
@@ -114,8 +114,8 @@ export default function Terms() {
     const blocks = markdownToBlocks(dbContent)
     return (
       <LegalLayout
-        eyebrow="Terms & Conditions"
-        title="Terms & Conditions"
+        eyebrow="Terms of Service"
+        title="Terms of Service"
         subtitle="Please read these terms carefully before using EaseMyOffice services."
         updated="July 19, 2024"
         sections={[]}
@@ -127,8 +127,8 @@ export default function Terms() {
 
   return (
     <LegalLayout
-      eyebrow="Terms & Conditions"
-      title="Terms & Conditions"
+      eyebrow="Terms of Service"
+      title="Terms of Service"
       subtitle="Please read these terms carefully before using EaseMyOffice services."
       updated="July 19, 2024"
       sections={sections}

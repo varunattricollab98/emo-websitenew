@@ -647,7 +647,7 @@ export default function Careers() {
                   {DEFAULT_APPLY_EMAIL}
                 </a>
                 <a
-                  href="/about"
+                  href="/about-us"
                   className="btn-base border-2 border-white/40 bg-transparent px-8 py-4 text-base text-white transition-colors hover:bg-white/10"
                 >
                   About EaseMyOffice

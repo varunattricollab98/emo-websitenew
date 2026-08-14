@@ -3,7 +3,7 @@ import { Phone, Mail, MapPin, Linkedin, Facebook, Instagram } from 'lucide-react
 import { footerCities } from '../../data/cities'
 
 const company = [
-  { label: 'About Us', to: '/about' },
+  { label: 'About Us', to: '/about-us' },
   { label: 'Contact', to: '/contact' },
   { label: 'Careers', to: '/careers' },
   { label: 'Blog', to: '/blog' },
@@ -128,7 +128,7 @@ export default function Footer() {
               Privacy Policy
             </Link>
             <Link to="/terms" className="hover:text-primary-300">
-              Terms
+              Terms of Service
             </Link>
             <Link to="/refund-policy" className="hover:text-primary-300">
               Refund Policy

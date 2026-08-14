@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import { LeadModalProvider } from './context/LeadModalContext'
 import { BookingModalProvider } from './context/BookingModalContext'
 import { SpacesProvider } from './context/SpacesContext'
@@ -138,7 +138,8 @@ function SiteLayout() {
           <Route path="/meeting-rooms" element={<MeetingRooms />} />
           <Route path="/ca-services" element={<CAServices />} />
           <Route path="/pricing" element={<Pricing />} />
-          <Route path="/about" element={<About />} />
+          <Route path="/about-us" element={<About />} />
+          <Route path="/about" element={<Navigate to="/about-us" replace />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/list-your-space" element={<ListYourSpace />} />
           <Route path="/careers" element={<Careers />} />
