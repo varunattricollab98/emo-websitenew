@@ -51,7 +51,7 @@ const reasons = [
   },
   {
     icon: Star,
-    showGoogleIcon: true,
+    emoji: '⭐',
     title: 'Highest Rated 4.9 on Google',
     desc: 'Highest rated by customers on Google with a 4.9-star rating, trusted by founders, D2C sellers and enterprises across India.',
     chip: 'linear-gradient(135deg, #fbbf24 0%, #d97706 100%)',
@@ -201,42 +201,39 @@ export default function WhyChooseHome() {
                   <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/90 to-transparent" />
 
                   <div className="relative flex items-center justify-between">
-                    <span
-                      className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-white shadow-sm ring-1 ring-primary-100/60 transition-transform duration-300 group-hover:scale-110"
-                    >
-                      {r.showGoogleIcon ? (
-                        <GoogleG className="h-6 w-6" />
-                      ) : r.emoji ? (
-                        <span className="text-xl">{r.emoji}</span>
-                      ) : (
-                        <r.icon className="h-6 w-6 text-navy-dark" />
-                      )}
-                    </span>
+                    {r.showGoogle ? (
+                      <div className="flex items-center gap-2.5">
+                        <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-white shadow-sm ring-1 ring-primary-100/60 transition-transform duration-300 group-hover:scale-110">
+                          <GoogleG className="h-6 w-6" />
+                        </span>
+                        <div className="flex items-center gap-1">
+                          {[0, 1, 2, 3].map((n) => (
+                            <Star key={n} className="h-4 w-4 fill-gold text-gold" />
+                          ))}
+                          <span className="relative h-4 w-4">
+                            <Star className="absolute inset-0 h-4 w-4 text-slate-200" />
+                            <span className="absolute inset-0 overflow-hidden" style={{ width: '90%' }}>
+                              <Star className="h-4 w-4 fill-gold text-gold" />
+                            </span>
+                          </span>
+                          <span className="ml-1 text-sm font-bold text-navy-dark">4.9</span>
+                        </div>
+                      </div>
+                    ) : (
+                      <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-white shadow-sm ring-1 ring-primary-100/60 transition-transform duration-300 group-hover:scale-110">
+                        {r.emoji ? (
+                          <span className="text-xl">{r.emoji}</span>
+                        ) : (
+                          <r.icon className="h-6 w-6 text-navy-dark" />
+                        )}
+                      </span>
+                    )}
                     <span className="font-mono text-sm font-semibold text-slate-300">
                       {String(i + 1).padStart(2, '0')}
                     </span>
                   </div>
                   <h3 className="relative mt-5 text-base font-bold text-navy-dark">{r.title}</h3>
                   <p className="relative mt-2 text-sm leading-relaxed text-slate-600">{r.desc}</p>
-                  {/* Google logo + star rating for rating card */}
-                  {r.showGoogle && (
-                    <div className="relative mt-4 flex items-center gap-2.5">
-                      <GoogleG className="h-6 w-6" />
-                      <div className="flex items-center gap-0.5">
-                        {[0, 1, 2, 3].map((n) => (
-                          <Star key={n} className="h-4 w-4 fill-gold text-gold" />
-                        ))}
-                        {/* 5th star — 90% filled */}
-                        <span className="relative h-4 w-4">
-                          <Star className="absolute inset-0 h-4 w-4 text-slate-200" />
-                          <span className="absolute inset-0 overflow-hidden" style={{ width: '90%' }}>
-                            <Star className="h-4 w-4 fill-gold text-gold" />
-                          </span>
-                        </span>
-                      </div>
-                      <span className="text-xs font-bold text-navy-dark">4.9</span>
-                    </div>
-                  )}
                 </div>
               </Reveal>
             ))}
