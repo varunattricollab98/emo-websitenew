@@ -272,6 +272,7 @@ export default function Coworking() {
       <section className="section-padding relative overflow-hidden bg-surface-light">
         <div className="pointer-events-none absolute inset-0 tech-dots opacity-40 [mask-image:radial-gradient(ellipse_70%_60%_at_50%_30%,#000,transparent)]" />
         <div className="pointer-events-none absolute -right-24 top-1/4 h-72 w-72 rounded-full bg-primary-300/15 blur-3xl" />
+        <div className="pointer-events-none absolute -left-16 bottom-1/4 h-56 w-56 rounded-full bg-gold/10 blur-3xl" />
         <div className="container-custom relative">
           <SectionHeading
             eyebrow="Amenities"
@@ -282,19 +283,30 @@ export default function Coworking() {
           <div className="mt-12 grid grid-cols-2 gap-5 sm:grid-cols-4">
             {amenities.map((a, i) => (
               <Reveal key={a.label} delay={(i % 4) * 0.06}>
-                <div className="group relative flex h-full flex-col items-center gap-4 rounded-2xl border border-primary-100/70 bg-white p-7 text-center shadow-soft transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/30 hover:shadow-card-hover">
-                  {/* Soft glow on hover */}
-                  <div className="pointer-events-none absolute -inset-1 rounded-2xl opacity-0 blur-xl transition-opacity duration-300 group-hover:opacity-100" style={{ background: a.grad.replace('135deg', '180deg').replace('100%)', '100%) , transparent 70%)') }} />
+                <div className="group relative flex h-full flex-col items-center gap-4 overflow-hidden rounded-2xl border border-primary-100/70 bg-white p-7 text-center shadow-soft transition-all duration-300 hover:-translate-y-2 hover:border-transparent hover:shadow-card-hover">
+                  {/* Top accent shimmer line */}
+                  <span className="pointer-events-none absolute inset-x-0 top-0 h-1 opacity-0 transition-opacity duration-300 group-hover:opacity-100" style={{ background: a.grad }} />
+                  {/* Background glow on hover */}
+                  <div className="pointer-events-none absolute -inset-1 rounded-2xl opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-30" style={{ background: a.grad }} />
+                  {/* Decorative corner dots */}
+                  <span className="pointer-events-none absolute right-3 top-3 h-2 w-2 rounded-full opacity-0 transition-opacity duration-300 group-hover:opacity-60" style={{ background: a.grad.includes('#f59e0b') ? '#f59e0b' : a.grad.includes('#3c82c2') ? '#3c82c2' : a.grad.includes('#10b981') ? '#10b981' : a.grad.includes('#8b5cf6') ? '#8b5cf6' : a.grad.includes('#ef4444') ? '#ef4444' : a.grad.includes('#06b6d4') ? '#06b6d4' : a.grad.includes('#f97316') ? '#f97316' : '#ec4899' }} />
+                  {/* Icon */}
                   <span
-                    className="relative inline-flex h-14 w-14 items-center justify-center rounded-2xl text-white shadow-card ring-1 ring-white/30 transition-transform duration-300 group-hover:scale-110"
+                    className="relative inline-flex h-14 w-14 items-center justify-center rounded-2xl text-white shadow-card ring-1 ring-white/30 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg"
                     style={{ background: a.grad }}
                   >
                     <a.icon className="h-6 w-6" />
                   </span>
+                  {/* Text */}
                   <div className="relative">
                     <span className="block text-sm font-bold text-navy-dark">{a.label}</span>
-                    <span className="mt-1 block text-xs leading-snug text-slate-500">{a.desc}</span>
+                    <span className="mt-1.5 block text-xs leading-snug text-slate-500">{a.desc}</span>
                   </div>
+                  {/* Included badge */}
+                  <span className="relative mt-auto inline-flex items-center gap-1 rounded-full bg-accent-green/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-accent-emerald">
+                    <Check className="h-3 w-3" strokeWidth={3} />
+                    Included
+                  </span>
                 </div>
               </Reveal>
             ))}
