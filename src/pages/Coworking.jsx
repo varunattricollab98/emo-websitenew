@@ -59,14 +59,14 @@ const offerings = [
 ]
 
 const amenities = [
-  { icon: Wifi, label: 'High-speed Wi-Fi' },
-  { icon: Coffee, label: 'Unlimited coffee & tea' },
-  { icon: Printer, label: 'Print & scan' },
-  { icon: Presentation, label: 'Meeting rooms' },
-  { icon: ShieldCheck, label: '24x7 security' },
-  { icon: Clock, label: 'Round-the-clock access' },
-  { icon: ParkingSquare, label: 'Parking' },
-  { icon: Users, label: 'Community events' },
+  { icon: Wifi, label: 'High-speed Wi-Fi', desc: '100+ Mbps fibre with backup connectivity', grad: 'linear-gradient(135deg, #3c82c2 0%, #11417c 100%)' },
+  { icon: Coffee, label: 'Unlimited coffee & tea', desc: 'Freshly brewed, all day, every day', grad: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)' },
+  { icon: Printer, label: 'Print & scan', desc: 'High-speed multi-function printers', grad: 'linear-gradient(135deg, #10b981 0%, #059669 100%)' },
+  { icon: Presentation, label: 'Meeting rooms', desc: 'Book by the hour with AV setup', grad: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)' },
+  { icon: ShieldCheck, label: '24×7 security', desc: 'CCTV, biometric & security staff', grad: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)' },
+  { icon: Clock, label: 'Round-the-clock access', desc: 'Work on your own schedule', grad: 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)' },
+  { icon: ParkingSquare, label: 'Parking', desc: 'Dedicated car & two-wheeler slots', grad: 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)' },
+  { icon: Users, label: 'Community events', desc: 'Networking, workshops & socials', grad: 'linear-gradient(135deg, #ec4899 0%, #db2777 100%)' },
 ]
 
 const whyUs = [
@@ -269,22 +269,32 @@ export default function Coworking() {
       </section>
 
       {/* Amenities */}
-      <section className="section-padding bg-surface-light">
-        <div className="container-custom">
+      <section className="section-padding relative overflow-hidden bg-surface-light">
+        <div className="pointer-events-none absolute inset-0 tech-dots opacity-40 [mask-image:radial-gradient(ellipse_70%_60%_at_50%_30%,#000,transparent)]" />
+        <div className="pointer-events-none absolute -right-24 top-1/4 h-72 w-72 rounded-full bg-primary-300/15 blur-3xl" />
+        <div className="container-custom relative">
           <SectionHeading
             eyebrow="Amenities"
             title="Premium Amenities, Included"
             accent="Included"
             subtitle="Everything you need to do your best work, taken care of."
           />
-          <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <div className="mt-12 grid grid-cols-2 gap-5 sm:grid-cols-4">
             {amenities.map((a, i) => (
-              <Reveal key={a.label} delay={(i % 4) * 0.05}>
-                <div className="group flex flex-col items-center gap-3 rounded-2xl border border-primary-100/70 bg-white p-6 text-center shadow-soft transition-all hover:-translate-y-1 hover:shadow-card">
-                  <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary-50 text-primary transition-colors group-hover:bg-primary-gradient group-hover:text-white">
+              <Reveal key={a.label} delay={(i % 4) * 0.06}>
+                <div className="group relative flex h-full flex-col items-center gap-4 rounded-2xl border border-primary-100/70 bg-white p-7 text-center shadow-soft transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/30 hover:shadow-card-hover">
+                  {/* Soft glow on hover */}
+                  <div className="pointer-events-none absolute -inset-1 rounded-2xl opacity-0 blur-xl transition-opacity duration-300 group-hover:opacity-100" style={{ background: a.grad.replace('135deg', '180deg').replace('100%)', '100%) , transparent 70%)') }} />
+                  <span
+                    className="relative inline-flex h-14 w-14 items-center justify-center rounded-2xl text-white shadow-card ring-1 ring-white/30 transition-transform duration-300 group-hover:scale-110"
+                    style={{ background: a.grad }}
+                  >
                     <a.icon className="h-6 w-6" />
                   </span>
-                  <span className="text-sm font-semibold text-navy-dark">{a.label}</span>
+                  <div className="relative">
+                    <span className="block text-sm font-bold text-navy-dark">{a.label}</span>
+                    <span className="mt-1 block text-xs leading-snug text-slate-500">{a.desc}</span>
+                  </div>
                 </div>
               </Reveal>
             ))}
