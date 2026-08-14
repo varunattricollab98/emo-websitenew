@@ -12,7 +12,16 @@ export default class ErrorBoundary extends Component {
     this.state = { hasError: false }
   }
 
-  static getDerivedStateFromError() {
+  static getDerivedStateFromError(error) {
+    // For chunk load failures, don't show error UI — we reload silently
+    if (
+      error?.message?.includes('Failed to fetch dynamically imported module') ||
+      error?.message?.includes('Loading chunk') ||
+      error?.message?.includes('Loading CSS chunk') ||
+      error?.name === 'ChunkLoadError'
+    ) {
+      return { hasError: false }
+    }
     return { hasError: true }
   }
 
