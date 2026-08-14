@@ -72,7 +72,7 @@ export default function KycDocs() {
           subtitle="Pick your entity type to see exactly what's needed. We prepare the rent agreement, NOC and utility bill for you."
         />
 
-        {/* entity tabs with glow */}
+        {/* entity tabs */}
         <div className="mx-auto mt-10 flex max-w-xl flex-wrap justify-center gap-3">
           {entities.map((e) => {
             const isActive = e.key === active
@@ -83,27 +83,13 @@ export default function KycDocs() {
                 onClick={() => setActive(e.key)}
                 className={`group relative inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-bold transition-all duration-300 ${
                   isActive
-                    ? 'text-white shadow-lg'
-                    : 'border border-primary-100 bg-white text-navy hover:border-transparent hover:shadow-md'
+                    ? 'text-white shadow-md'
+                    : 'border border-primary-100 bg-white text-navy hover:border-primary/40 hover:shadow-sm'
                 }`}
                 style={isActive ? { background: e.grad } : undefined}
               >
-                {/* Hover glow for inactive tabs */}
-                {!isActive && (
-                  <span
-                    className="pointer-events-none absolute inset-0 rounded-full opacity-0 blur-md transition-opacity duration-300 group-hover:opacity-40"
-                    style={{ background: e.grad }}
-                  />
-                )}
-                {/* Active glow ring */}
-                {isActive && (
-                  <span
-                    className="pointer-events-none absolute -inset-1 rounded-full opacity-40 blur-lg"
-                    style={{ background: e.grad }}
-                  />
-                )}
-                <e.icon className="relative h-4 w-4" />
-                <span className="relative">{e.label}</span>
+                <e.icon className="h-4 w-4" />
+                <span>{e.label}</span>
               </button>
             )
           })}
