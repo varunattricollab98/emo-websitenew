@@ -1,5 +1,7 @@
 import { Check, ArrowRight, Crown } from 'lucide-react'
 import Button from './Button'
+import { useContext } from 'react'
+import { LeadModalContext } from '../../context/LeadModalContext'
 
 export default function PlanCard({ plan, onCta }) {
   const {
@@ -15,6 +17,21 @@ export default function PlanCard({ plan, onCta }) {
     grad,
   } = plan
   const gradient = grad || 'linear-gradient(135deg, #3c82c2 0%, #11417c 100%)'
+
+  // If the CTA points to /contact, intercept and open lead modal with plan name prefilled
+  const ctx = useContext(LeadModalContext)
+  const openLeadModal = ctx?.openLeadModal
+  const shouldOpenModal = (to === '/contact' || to === '#book-form') && !onCta && openLeadModal
+
+  const handleCtaClick = () => {
+    if (shouldOpenModal) {
+      openLeadModal({
+        title: name,
+        subtitle: 'Share your details and our team will call you back within one business day.',
+        service: name,
+      })
+    }
+  }
 
   return (
     <div
@@ -77,7 +94,7 @@ export default function PlanCard({ plan, onCta }) {
       </ul>
 
       <Button
-        {...(onCta ? { onClick: onCta, type: 'button' } : { to })}
+        {...(onCta ? { onClick: onCta, type: 'button' } : shouldOpenModal ? { onClick: handleCtaClick, type: 'button' } : { to })}
         variant={popular ? 'gold' : 'primary'}
         className="relative mt-8 w-full"
       >
