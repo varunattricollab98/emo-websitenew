@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "prebuild": "node scripts/make-og-image.mjs",
+    "prebuild": "echo 'og-image.png already set'",
     "build": "vite build && node scripts/prerender.mjs",
     "preview": "vite preview",
     "import:spaces": "node scripts/import-spaces.mjs",
