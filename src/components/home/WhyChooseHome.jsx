@@ -37,8 +37,8 @@ const reasons = [
   },
   {
     icon: Star,
-    title: 'Rated 4.9/5 by 5,000+ Businesses',
-    desc: 'Trusted by founders, D2C sellers and enterprises across India, with a 4.9-star Google rating.',
+    title: 'Highest Rated 4.9 on Google',
+    desc: 'Highest rated by customers on Google with a 4.9-star rating, trusted by founders, D2C sellers and enterprises across India.',
     chip: 'linear-gradient(135deg, #fbbf24 0%, #d97706 100%)',
     glow: 'rgba(245,158,11,0.38)',
   },
