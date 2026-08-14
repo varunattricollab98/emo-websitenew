@@ -113,7 +113,7 @@ export default function Navbar() {
                   transition={{ duration: 0.2, ease: 'easeOut' }}
                   className="absolute left-1/2 top-full z-50 w-[520px] -translate-x-1/2 pt-3"
                 >
-                  <div className="overflow-hidden rounded-2xl border border-primary-100/80 bg-white/98 p-5 shadow-xl backdrop-blur-sm ring-1 ring-black/[0.03]">
+                  <div className="overflow-hidden rounded-2xl border border-primary-100/80 bg-white p-5 shadow-xl ring-1 ring-black/[0.03]">
                     <div className="grid grid-cols-2 gap-1.5">
                       {solutions.map((s) => (
                         <Link
