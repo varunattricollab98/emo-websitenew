@@ -21,12 +21,12 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-const SITE = 'https://emo-websitenew.emo-crm.workers.dev'
+const SITE = 'https://v3.easemyoffice.in'
 
-// Default social share card, first match wins. og-image.jpg is checked first so
-// a designer-supplied file can override the generated PNG without a code change.
-// The logo is a last resort so previews are never broken.
+// Default social share card — use Supabase-hosted logo for reliable previews.
+// WhatsApp, Facebook, LinkedIn all support webp from CDN URLs.
 const IMAGE_CANDIDATES = ['/og-image.jpg', '/og-image.png', '/emo-logo-full.webp']
+const SUPABASE_LOGO = 'https://oijtkvkyefqfwuycibcv.supabase.co/storage/v1/object/public/website-assets/EaseMyOffice-Logo-2.webp'
 
 const MIME = { '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp' }
 
@@ -147,11 +147,14 @@ async function main() {
 
   const cityBySlug = Object.fromEntries(voCities.map((c) => [c.slug, c]))
 
-  // Keep the default index.html pointing at a real image too.
-  template = setMeta(template, 'property', 'og:image', SITE + DEFAULT_IMAGE)
-  template = setMeta(template, 'property', 'og:image:secure_url', SITE + DEFAULT_IMAGE)
-  template = setMeta(template, 'name', 'twitter:image', SITE + DEFAULT_IMAGE)
-  template = setMeta(template, 'property', 'og:image:type', DEFAULT_IMAGE_TYPE)
+  // Keep the default index.html pointing at the Supabase-hosted logo for
+  // reliable social previews (WhatsApp, Facebook, LinkedIn).
+  const socialImage = isLogoFallback ? SUPABASE_LOGO : SITE + DEFAULT_IMAGE
+  const socialImageType = isLogoFallback ? 'image/webp' : DEFAULT_IMAGE_TYPE
+  template = setMeta(template, 'property', 'og:image', socialImage)
+  template = setMeta(template, 'property', 'og:image:secure_url', socialImage)
+  template = setMeta(template, 'name', 'twitter:image', socialImage)
+  template = setMeta(template, 'property', 'og:image:type', socialImageType)
   if (isLogoFallback) {
     // The logo isn't 1200x630, so don't claim dimensions we don't have.
     template = removeMeta(template, 'property', 'og:image:width')
