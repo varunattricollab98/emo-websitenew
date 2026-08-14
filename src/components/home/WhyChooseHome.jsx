@@ -68,7 +68,7 @@ const reasons = [
   },
   {
     icon: Headset,
-    emoji: '🎧',
+    emoji: '👩‍💻',
     title: 'Dedicated After-Sales Support',
     desc: 'A real relationship manager stays with you well beyond setup, for renewals, KYC and any authority query.',
     chip: 'linear-gradient(135deg, #22d3ee 0%, #0891b2 100%)',
