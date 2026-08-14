@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { createPortal } from 'react-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import {
@@ -16,6 +16,31 @@ import LocationSelect from './LocationSelect'
 import { saveLead } from '../../lib/leads'
 
 const emptyForm = { name: '', phone: '', email: '', interest: '', city: '', message: '' }
+
+// ─── Prefilled sub-options by service category ─────────────────────────────
+// When the modal opens for one of these service categories, quick-select chips
+// appear so the client can pick a specific sub-type without typing. They can
+// still edit, clear, or type a custom value in the text field.
+const SERVICE_PREFILL_OPTIONS = [
+  {
+    // Matches: "Company Registration", "Business Registration", "Private Limited", "LLP", "OPC", etc.
+    match: /company\s*reg|business\s*reg|private\s*limited|llp|opc|partnership|proprietorship|incorporation/i,
+    label: 'Company Registration',
+    options: ['Private Limited / OPC', 'Partnership / LLP', 'Proprietorship'],
+  },
+  {
+    // Matches: "GST", "GSTIN", "GST Registration", "APOB", "Place of Business"
+    match: /gst|gstin|place\s*of\s*business|apob/i,
+    label: 'GST',
+    options: ['Primary Place of Business', 'Additional Place of Business', 'Address Change'],
+  },
+  {
+    // Matches: "Mailing Address", "Mailing", "Correspondence", "Mail Handling"
+    match: /mailing|correspondence|mail\s*handling|seo\s*purpose/i,
+    label: 'Mailing Address',
+    options: ['Correspondence Address', 'SEO Purpose'],
+  },
+]
 
 export default function LeadModal({ open, config = {}, onClose }) {
   const [form, setForm] = useState(emptyForm)
@@ -53,6 +78,13 @@ export default function LeadModal({ open, config = {}, onClose }) {
       document.body.style.overflow = prev
     }
   }, [open, onClose])
+
+  // Detect whether the current service/interest matches a prefill category
+  const prefillGroup = useMemo(() => {
+    const test = service || form.interest
+    if (!test) return null
+    return SERVICE_PREFILL_OPTIONS.find((g) => g.match.test(test)) || null
+  }, [service, form.interest])
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }))
   const handleSubmit = async (e) => {
@@ -177,15 +209,54 @@ export default function LeadModal({ open, config = {}, onClose }) {
                     </div>
                   </div>
 
-                  <div className="relative">
-                    <FileText className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                    <input
-                      value={form.interest}
-                      onChange={set('interest')}
-                      placeholder="Service / plan you're interested in"
-                      aria-label="Interested in"
-                      className={inputClass}
-                    />
+                  <div>
+                    <div className="relative">
+                      <FileText className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                      <input
+                        value={form.interest}
+                        onChange={set('interest')}
+                        placeholder="Service / plan you're interested in"
+                        aria-label="Interested in"
+                        className={inputClass}
+                      />
+                    </div>
+
+                    {/* Quick-select prefilled options */}
+                    {prefillGroup && (
+                      <div className="mt-2.5 flex flex-wrap gap-2">
+                        {prefillGroup.options.map((opt) => {
+                          const isSelected = form.interest === opt
+                          return (
+                            <button
+                              key={opt}
+                              type="button"
+                              onClick={() =>
+                                setForm((f) => ({
+                                  ...f,
+                                  interest: f.interest === opt ? '' : opt,
+                                }))
+                              }
+                              className={`inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-semibold transition-all ${
+                                isSelected
+                                  ? 'border-primary bg-primary-50 text-primary shadow-sm'
+                                  : 'border-primary-100 bg-surface-light text-slate-600 hover:border-primary/40 hover:bg-white hover:text-navy-dark'
+                              }`}
+                            >
+                              <span
+                                className={`inline-flex h-3.5 w-3.5 flex-none items-center justify-center rounded-full text-[9px] ${
+                                  isSelected
+                                    ? 'bg-primary text-white'
+                                    : 'border border-slate-300 bg-white'
+                                }`}
+                              >
+                                {isSelected && '✓'}
+                              </span>
+                              {opt}
+                            </button>
+                          )
+                        })}
+                      </div>
+                    )}
                   </div>
 
                   <div>
