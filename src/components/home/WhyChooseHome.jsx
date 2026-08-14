@@ -35,6 +35,7 @@ const included = [
 const reasons = [
   {
     icon: IndianRupee,
+    emoji: '₹',
     title: 'Lowest Price, Zero Hidden Costs',
     desc: 'Transparent, all-inclusive pricing from ₹699/mo. The price you see is the price you pay, no surprise add-ons at checkout.',
     chip: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
@@ -42,6 +43,7 @@ const reasons = [
   },
   {
     icon: BadgeCheck,
+    emoji: '✅',
     title: '98.7% Document Approval Rate',
     desc: 'GST & company registration papers cleared the first time, one of the highest first-attempt approval rates in the industry.',
     chip: 'linear-gradient(135deg, #3c82c2 0%, #11417c 100%)',
@@ -49,6 +51,7 @@ const reasons = [
   },
   {
     icon: Star,
+    emoji: '⭐',
     title: 'Highest Rated 4.9 on Google',
     desc: 'Highest rated by customers on Google with a 4.9-star rating, trusted by founders, D2C sellers and enterprises across India.',
     chip: 'linear-gradient(135deg, #fbbf24 0%, #d97706 100%)',
@@ -57,6 +60,7 @@ const reasons = [
   },
   {
     icon: MapPin,
+    emoji: '📍',
     title: 'Real, Verified Premium Addresses',
     desc: 'Every address is a genuine, physically verified commercial premise, purpose-built for virtual office & GST use.',
     chip: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)',
@@ -64,6 +68,7 @@ const reasons = [
   },
   {
     icon: Headset,
+    emoji: '🎧',
     title: 'Dedicated After-Sales Support',
     desc: 'A real relationship manager stays with you well beyond setup, for renewals, KYC and any authority query.',
     chip: 'linear-gradient(135deg, #22d3ee 0%, #0891b2 100%)',
@@ -71,6 +76,7 @@ const reasons = [
   },
   {
     icon: ShieldCheck,
+    emoji: '🛡️',
     title: 'Refund Assurance',
     desc: '100% refund if your GST gets rejected, so you can get started with complete confidence and zero risk.',
     chip: 'linear-gradient(135deg, #38bdf8 0%, #2c679e 100%)',
@@ -189,26 +195,6 @@ export default function WhyChooseHome() {
                     className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full opacity-50 blur-2xl transition-opacity duration-300 group-hover:opacity-80"
                     style={{ background: r.glow }}
                   />
-                  {/* OG decorative elements — subtle geometric accents */}
-                  <div className="pointer-events-none absolute bottom-4 right-4 opacity-[0.04] transition-opacity group-hover:opacity-[0.08]">
-                    <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
-                      <circle cx="40" cy="40" r="38" stroke="currentColor" strokeWidth="1.5" className="text-navy-dark" />
-                      <circle cx="40" cy="40" r="26" stroke="currentColor" strokeWidth="1" className="text-navy-dark" />
-                      <circle cx="40" cy="40" r="14" stroke="currentColor" strokeWidth="0.75" className="text-navy-dark" />
-                    </svg>
-                  </div>
-                  <div className="pointer-events-none absolute -bottom-3 -left-3 opacity-[0.03]">
-                    <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
-                      <rect x="5" y="5" width="50" height="50" rx="8" stroke="currentColor" strokeWidth="1.5" className="text-navy-dark" />
-                      <rect x="15" y="15" width="30" height="30" rx="4" stroke="currentColor" strokeWidth="1" className="text-navy-dark" />
-                    </svg>
-                  </div>
-                  {/* Top-right subtle dots */}
-                  <div className="pointer-events-none absolute right-12 top-3 flex gap-1 opacity-[0.08]">
-                    <span className="h-1 w-1 rounded-full bg-current text-navy-dark" />
-                    <span className="h-1 w-1 rounded-full bg-current text-navy-dark" />
-                    <span className="h-1 w-1 rounded-full bg-current text-navy-dark" />
-                  </div>
                   {/* crystal glossy sheen */}
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/70 via-white/10 to-transparent" />
                   {/* bright top edge */}
@@ -219,7 +205,11 @@ export default function WhyChooseHome() {
                       className="inline-flex h-12 w-12 items-center justify-center rounded-xl text-white shadow-card ring-1 ring-white/40 transition-transform duration-300 group-hover:scale-110"
                       style={{ background: r.chip }}
                     >
-                      <r.icon className="h-6 w-6" />
+                      {r.emoji ? (
+                        <span className="text-xl">{r.emoji}</span>
+                      ) : (
+                        <r.icon className="h-6 w-6" />
+                      )}
                     </span>
                     <span className="font-mono text-sm font-semibold text-slate-300">
                       {String(i + 1).padStart(2, '0')}
