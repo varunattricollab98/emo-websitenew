@@ -276,7 +276,7 @@ async function main() {
         'Transparent, all-inclusive pricing with no hidden charges. Compare virtual office, GST registration and company registration plans.',
     },
     {
-      path: 'about',
+      path: 'about-us',
       title: 'About EaseMyOffice, Trusted by 5,000+ Indian Businesses',
       description:
         'EaseMyOffice helps businesses across India get compliant business addresses, coworking spaces and end-to-end compliance support.',

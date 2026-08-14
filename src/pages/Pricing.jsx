@@ -5,6 +5,7 @@ import Reveal from '../components/ui/Reveal'
 import FaqAccordion from '../components/ui/FaqAccordion'
 import CTABand from '../components/ui/CTABand'
 import Button from '../components/ui/Button'
+import { useLeadModal } from '../context/LeadModalContext'
 import { faqs } from '../data/faqs'
 
 const plans = [
