@@ -5,19 +5,19 @@ import StepsFlow from '../ui/StepsFlow'
 // exact same treatment. This file is now just the homepage's copy.
 const steps = [
   {
-    icon: MapPinned,
+    emoji: '📍',
     title: 'Choose Location & Plan',
     desc: 'Pick your city and the plan that matches your requirement.',
     chip: '250+ locations',
   },
   {
-    icon: FileText,
+    emoji: '📄',
     title: 'Submit KYC Documents',
     desc: 'Upload your KYC online and our team verifies everything for you.',
     chip: '100% online',
   },
   {
-    icon: KeyRound,
+    emoji: '🔑',
     title: 'Get Your Ready-to-Use Address',
     desc: 'Receive your compliant address & documents in just 2–3 days.',
     chip: 'Ready in 2–3 days',

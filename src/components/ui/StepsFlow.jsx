@@ -120,10 +120,14 @@ export default function StepsFlow({
                       style={{ background: glow, opacity: 0.6 }}
                     />
                     <span
-                      className="relative inline-flex h-20 w-20 items-center justify-center rounded-2xl text-white ring-4 ring-white shadow-card-hover transition-transform duration-300 group-hover:scale-110"
-                      style={{ background: grad }}
+                      className="relative inline-flex h-20 w-20 items-center justify-center rounded-2xl bg-white text-white ring-4 ring-white shadow-card-hover transition-transform duration-300 group-hover:scale-110"
+                      style={!s.emoji ? { background: grad } : undefined}
                     >
-                      {Icon ? <Icon className="h-9 w-9" /> : null}
+                      {s.emoji ? (
+                        <span className="text-4xl">{s.emoji}</span>
+                      ) : Icon ? (
+                        <Icon className="h-9 w-9" />
+                      ) : null}
                     </span>
                     <span
                       className="absolute -right-3 -top-3 inline-flex h-9 w-9 items-center justify-center rounded-full text-white shadow-card ring-[3px] ring-white"
