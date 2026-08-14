@@ -12,6 +12,7 @@ import {
   Clock,
   ShieldCheck,
 } from 'lucide-react'
+import { useLeadModal } from '../../context/LeadModalContext'
 
 const trustPoints = [
   { icon: BadgeCheck, label: '98.7% document approval rate' },
@@ -21,6 +22,7 @@ const trustPoints = [
 ]
 
 export default function BookYourSpace() {
+  const { openLeadModal } = useLeadModal()
   const [submitted, setSubmitted] = useState(false)
   const [form, setForm] = useState({ name: '', phone: '', city: '' })
 
@@ -111,13 +113,19 @@ export default function BookYourSpace() {
               </ul>
 
               <div className="mt-8 flex flex-wrap gap-4">
-                <a
-                  href="#book-form"
+                <button
+                  type="button"
+                  onClick={() =>
+                    openLeadModal({
+                      title: 'Book Your Space',
+                      subtitle: 'Share a few details and our experts will call you back with your address ready in 2–3 days.',
+                    })
+                  }
                   className="btn-base bg-gradient-to-r from-gold to-gold-dark px-8 py-4 text-base text-white shadow-card transition-all hover:shadow-gold-glow hover:brightness-105"
                 >
                   Book Your Space
                   <ArrowRight className="h-5 w-5" />
-                </a>
+                </button>
                 <a
                   href="tel:8882735038"
                   className="btn-base border-2 border-white/40 px-8 py-4 text-base text-white transition-colors hover:bg-white/10"
