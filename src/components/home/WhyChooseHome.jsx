@@ -51,7 +51,7 @@ const reasons = [
   },
   {
     icon: Star,
-    emoji: '⭐',
+    showGoogleIcon: true,
     title: 'Highest Rated 4.9 on Google',
     desc: 'Highest rated by customers on Google with a 4.9-star rating, trusted by founders, D2C sellers and enterprises across India.',
     chip: 'linear-gradient(135deg, #fbbf24 0%, #d97706 100%)',
@@ -204,7 +204,9 @@ export default function WhyChooseHome() {
                     <span
                       className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-white shadow-sm ring-1 ring-primary-100/60 transition-transform duration-300 group-hover:scale-110"
                     >
-                      {r.emoji ? (
+                      {r.showGoogleIcon ? (
+                        <GoogleG className="h-6 w-6" />
+                      ) : r.emoji ? (
                         <span className="text-xl">{r.emoji}</span>
                       ) : (
                         <r.icon className="h-6 w-6 text-navy-dark" />
@@ -216,10 +218,23 @@ export default function WhyChooseHome() {
                   </div>
                   <h3 className="relative mt-5 text-base font-bold text-navy-dark">{r.title}</h3>
                   <p className="relative mt-2 text-sm leading-relaxed text-slate-600">{r.desc}</p>
-                  {/* Google logo for rating card */}
+                  {/* Google logo + star rating for rating card */}
                   {r.showGoogle && (
-                    <div className="absolute bottom-5 right-5 opacity-80 transition-opacity group-hover:opacity-100">
-                      <GoogleG className="h-8 w-8" />
+                    <div className="relative mt-4 flex items-center gap-2.5">
+                      <GoogleG className="h-6 w-6" />
+                      <div className="flex items-center gap-0.5">
+                        {[0, 1, 2, 3].map((n) => (
+                          <Star key={n} className="h-4 w-4 fill-gold text-gold" />
+                        ))}
+                        {/* 5th star — 90% filled */}
+                        <span className="relative h-4 w-4">
+                          <Star className="absolute inset-0 h-4 w-4 text-slate-200" />
+                          <span className="absolute inset-0 overflow-hidden" style={{ width: '90%' }}>
+                            <Star className="h-4 w-4 fill-gold text-gold" />
+                          </span>
+                        </span>
+                      </div>
+                      <span className="text-xs font-bold text-navy-dark">4.9</span>
                     </div>
                   )}
                 </div>
