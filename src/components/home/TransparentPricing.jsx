@@ -22,7 +22,7 @@ const plans = [
       'Free temporary signage board',
     ],
     cta: 'Get Started',
-    to: '/pricing',
+    to: '/contact',
   },
   {
     name: 'GST Registration',
@@ -43,7 +43,7 @@ const plans = [
     ],
     popular: true,
     cta: 'Get Started',
-    to: '/pricing',
+    to: '/contact',
   },
   {
     name: 'Mailing Address',
@@ -61,7 +61,7 @@ const plans = [
       'Dedicated support',
     ],
     cta: 'Get Started',
-    to: '/pricing',
+    to: '/contact',
   },
 ]
 
