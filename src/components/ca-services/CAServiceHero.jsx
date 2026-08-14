@@ -252,9 +252,19 @@ export default function CAServiceHero({ query, setQuery, cat, setCat }) {
                 {!query && (
                   <div className="mt-3 flex flex-wrap gap-2">
                     {(() => {
-                      let chips = caServices
-                      if (cat) chips = chips.filter((s) => s.cat === cat)
-                      return chips.slice(0, 3).map((s) => (
+                      let chips
+                      if (cat) {
+                        // Category selected — show first 3 from that category
+                        chips = caServices.filter((s) => s.cat === cat).slice(0, 3)
+                      } else {
+                        // "All services" — show a mix from each category
+                        chips = [
+                          caServices.find((s) => s.name === 'GST Return Filing'),
+                          caServices.find((s) => s.name === 'Private Limited Company Registration'),
+                          caServices.find((s) => s.name === 'Trade License'),
+                        ].filter(Boolean)
+                      }
+                      return chips.map((s) => (
                         <button
                           key={s.name}
                           type="button"
