@@ -189,6 +189,26 @@ export default function WhyChooseHome() {
                     className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full opacity-50 blur-2xl transition-opacity duration-300 group-hover:opacity-80"
                     style={{ background: r.glow }}
                   />
+                  {/* OG decorative elements — subtle geometric accents */}
+                  <div className="pointer-events-none absolute bottom-4 right-4 opacity-[0.04] transition-opacity group-hover:opacity-[0.08]">
+                    <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+                      <circle cx="40" cy="40" r="38" stroke="currentColor" strokeWidth="1.5" className="text-navy-dark" />
+                      <circle cx="40" cy="40" r="26" stroke="currentColor" strokeWidth="1" className="text-navy-dark" />
+                      <circle cx="40" cy="40" r="14" stroke="currentColor" strokeWidth="0.75" className="text-navy-dark" />
+                    </svg>
+                  </div>
+                  <div className="pointer-events-none absolute -bottom-3 -left-3 opacity-[0.03]">
+                    <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+                      <rect x="5" y="5" width="50" height="50" rx="8" stroke="currentColor" strokeWidth="1.5" className="text-navy-dark" />
+                      <rect x="15" y="15" width="30" height="30" rx="4" stroke="currentColor" strokeWidth="1" className="text-navy-dark" />
+                    </svg>
+                  </div>
+                  {/* Top-right subtle dots */}
+                  <div className="pointer-events-none absolute right-12 top-3 flex gap-1 opacity-[0.08]">
+                    <span className="h-1 w-1 rounded-full bg-current text-navy-dark" />
+                    <span className="h-1 w-1 rounded-full bg-current text-navy-dark" />
+                    <span className="h-1 w-1 rounded-full bg-current text-navy-dark" />
+                  </div>
                   {/* crystal glossy sheen */}
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/70 via-white/10 to-transparent" />
                   {/* bright top edge */}
