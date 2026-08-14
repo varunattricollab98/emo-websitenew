@@ -2,13 +2,8 @@ import {
   Users,
   DoorClosed,
   Armchair,
-  Wifi,
-  Coffee,
-  Printer,
   ShieldCheck,
   Clock,
-  ParkingSquare,
-  Presentation,
   ArrowRight,
   Check,
   MapPin,
@@ -59,14 +54,14 @@ const offerings = [
 ]
 
 const amenities = [
-  { icon: Wifi, label: 'High-speed Wi-Fi', desc: '100+ Mbps fibre with backup connectivity', grad: 'linear-gradient(135deg, #3c82c2 0%, #11417c 100%)' },
-  { icon: Coffee, label: 'Unlimited coffee & tea', desc: 'Freshly brewed, all day, every day', grad: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)' },
-  { icon: Printer, label: 'Print & scan', desc: 'High-speed multi-function printers', grad: 'linear-gradient(135deg, #10b981 0%, #059669 100%)' },
-  { icon: Presentation, label: 'Meeting rooms', desc: 'Book by the hour with AV setup', grad: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)' },
-  { icon: ShieldCheck, label: '24×7 security', desc: 'CCTV, biometric & security staff', grad: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)' },
-  { icon: Clock, label: 'Round-the-clock access', desc: 'Work on your own schedule', grad: 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)' },
-  { icon: ParkingSquare, label: 'Parking', desc: 'Dedicated car & two-wheeler slots', grad: 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)' },
-  { icon: Users, label: 'Community events', desc: 'Networking, workshops & socials', grad: 'linear-gradient(135deg, #ec4899 0%, #db2777 100%)' },
+  { emoji: '📶', label: 'High-speed Wi-Fi', desc: '100+ Mbps fibre with backup connectivity', grad: 'linear-gradient(135deg, #3c82c2 0%, #11417c 100%)' },
+  { emoji: '☕', label: 'Unlimited coffee & tea', desc: 'Freshly brewed, all day, every day', grad: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)' },
+  { emoji: '🖨️', label: 'Print & scan', desc: 'High-speed multi-function printers', grad: 'linear-gradient(135deg, #10b981 0%, #059669 100%)' },
+  { emoji: '🎥', label: 'Meeting rooms', desc: 'Book by the hour with AV setup', grad: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)' },
+  { emoji: '🔒', label: '24×7 security', desc: 'CCTV, biometric & security staff', grad: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)' },
+  { emoji: '🕐', label: 'Round-the-clock access', desc: 'Work on your own schedule', grad: 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)' },
+  { emoji: '🅿️', label: 'Parking', desc: 'Dedicated car & two-wheeler slots', grad: 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)' },
+  { emoji: '🤝', label: 'Community events', desc: 'Networking, workshops & socials', grad: 'linear-gradient(135deg, #ec4899 0%, #db2777 100%)' },
 ]
 
 const whyUs = [
@@ -292,10 +287,9 @@ export default function Coworking() {
                   <span className="pointer-events-none absolute right-3 top-3 h-2 w-2 rounded-full opacity-0 transition-opacity duration-300 group-hover:opacity-60" style={{ background: a.grad.includes('#f59e0b') ? '#f59e0b' : a.grad.includes('#3c82c2') ? '#3c82c2' : a.grad.includes('#10b981') ? '#10b981' : a.grad.includes('#8b5cf6') ? '#8b5cf6' : a.grad.includes('#ef4444') ? '#ef4444' : a.grad.includes('#06b6d4') ? '#06b6d4' : a.grad.includes('#f97316') ? '#f97316' : '#ec4899' }} />
                   {/* Icon */}
                   <span
-                    className="relative inline-flex h-14 w-14 items-center justify-center rounded-2xl text-white shadow-card ring-1 ring-white/30 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg"
-                    style={{ background: a.grad }}
+                    className="relative inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-card ring-1 ring-primary-100/60 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:ring-primary/30"
                   >
-                    <a.icon className="h-6 w-6" />
+                    <span className="text-3xl">{a.emoji}</span>
                   </span>
                   {/* Text */}
                   <div className="relative">
