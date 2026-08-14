@@ -14,6 +14,7 @@ import { useLeadModal } from '../../context/LeadModalContext'
 const needs = [
   {
     icon: FileCheck2,
+    emoji: '📋',
     title: 'For GST Registration',
     desc: 'Secure your GSTIN with a fully verified address, notarised rent agreement, NOC and utility bill accepted the first time.',
     tag: 'Proprietors · Firms · GSTIN',
@@ -25,6 +26,7 @@ const needs = [
   },
   {
     icon: Landmark,
+    emoji: '🏛️',
     title: 'For New Company Registration',
     desc: 'Incorporate your Pvt Ltd, LLP or OPC with an MCA-accepted registered office, no need to rent a physical office.',
     tag: 'Pvt Ltd · LLP · OPC',
@@ -36,6 +38,7 @@ const needs = [
   },
   {
     icon: ShoppingBag,
+    emoji: '🛒',
     title: 'For E-commerce Sellers',
     desc: 'Amazon, Flipkart & Meesho need a valid GST address in every state. Get APOB addresses so your seller account stays compliant.',
     tag: 'APOB · Multi-state GST',
@@ -47,6 +50,7 @@ const needs = [
   },
   {
     icon: MapPinned,
+    emoji: '🗺️',
     title: 'For Companies Expanding to New States',
     desc: 'Entering a new state? Get a local GST address without a lease, deposit or any long-term commitment.',
     tag: 'Multi-state · No lease',
@@ -58,6 +62,7 @@ const needs = [
   },
   {
     icon: Briefcase,
+    emoji: '💼',
     title: 'For Freelancers & Consultants',
     desc: 'Keep your home address private with a commercial-area business address that clients and banks instantly trust.',
     tag: 'Privacy · Professional image',
@@ -69,6 +74,7 @@ const needs = [
   },
   {
     icon: Rocket,
+    emoji: '🚀',
     title: 'For Startups & Founders',
     desc: 'Need an address before opening a bank account or filing GST? Get one in the right city, without an expensive lease.',
     tag: 'Investor-ready credibility',
@@ -130,10 +136,9 @@ export default function ChooseByRequirement() {
 
                 <div className="relative flex items-start justify-between">
                   <span
-                    className="inline-flex h-14 w-14 items-center justify-center rounded-2xl text-white shadow-card ring-1 ring-white/40 transition-transform duration-300 group-hover:scale-110"
-                    style={{ background: n.grad }}
+                    className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-primary-100/60 transition-transform duration-300 group-hover:scale-110"
                   >
-                    <n.icon className="h-7 w-7" />
+                    <span className="text-2xl">{n.emoji}</span>
                   </span>
                   <span
                     className="rounded-full px-3 py-1 text-[11px] font-bold"
