@@ -157,14 +157,14 @@ export default function ServicesProvided() {
                   <div className="absolute inset-0 bg-gradient-to-t from-navy-dark/35 to-transparent" />
                   {/* colour-accent icon chip */}
                   <span
-                    className="absolute left-3 top-3 inline-flex h-11 w-11 items-center justify-center rounded-xl text-white shadow-card ring-1 ring-white/40"
+                    className="absolute right-3 top-3 inline-flex h-11 w-11 items-center justify-center rounded-xl text-white shadow-card ring-1 ring-white/40"
                     style={{ background: s.chip }}
                   >
                     <s.icon className="h-5 w-5" />
                   </span>
                   {/* flagship badge */}
                   {s.flagship && (
-                    <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-gold px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-white shadow-gold-glow">
+                    <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-gold px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-white shadow-gold-glow">
                       <Sparkles className="h-3.5 w-3.5" />
                       Flagship
                     </span>
