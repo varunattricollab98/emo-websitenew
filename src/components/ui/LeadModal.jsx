@@ -38,7 +38,7 @@ const SERVICE_PREFILL_OPTIONS = [
     // Matches: "Mailing Address", "Mailing", "Correspondence", "Mail Handling"
     match: /mailing|correspondence|mail\s*handling|seo\s*purpose/i,
     label: 'Mailing Address',
-    options: ['Correspondence Address', 'SEO Purpose'],
+    options: ['Correspondence Address', 'SEO Purpose', 'Google Listing'],
   },
 ]
 
