@@ -248,23 +248,27 @@ export default function CAServiceHero({ query, setQuery, cat, setCat }) {
                   )}
                 </div>
 
-                {/* Quick suggested options */}
+                {/* Quick suggested options — dynamic based on selected category */}
                 {!query && (
                   <div className="mt-3 flex flex-wrap gap-2">
-                    {['GST Registration', 'Private Limited Company Registration', 'Income Tax Return, Individual (ITR)'].map((svc) => (
-                      <button
-                        key={svc}
-                        type="button"
-                        onClick={() => {
-                          setQuery(svc)
-                          setOpen(false)
-                        }}
-                        className="inline-flex items-center gap-1.5 rounded-full border border-primary-100 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 shadow-soft transition-all hover:border-primary/40 hover:bg-primary-50 hover:text-primary"
-                      >
-                        <span className="h-1.5 w-1.5 rounded-full bg-gold" />
-                        {svc.length > 25 ? svc.slice(0, 25) + '…' : svc}
-                      </button>
-                    ))}
+                    {(() => {
+                      let chips = caServices
+                      if (cat) chips = chips.filter((s) => s.cat === cat)
+                      return chips.slice(0, 3).map((s) => (
+                        <button
+                          key={s.name}
+                          type="button"
+                          onClick={() => {
+                            setQuery(s.name)
+                            setOpen(false)
+                          }}
+                          className="inline-flex items-center gap-1.5 rounded-full border border-primary-100 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 shadow-soft transition-all hover:border-primary/40 hover:bg-primary-50 hover:text-primary"
+                        >
+                          <span className="h-1.5 w-1.5 rounded-full" style={{ background: catMap[s.cat]?.accent || '#d97706' }} />
+                          {s.name.length > 28 ? s.name.slice(0, 28) + '…' : s.name}
+                        </button>
+                      ))
+                    })()}
                   </div>
                 )}
               </div>
