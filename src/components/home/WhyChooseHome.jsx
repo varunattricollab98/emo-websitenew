@@ -202,13 +202,12 @@ export default function WhyChooseHome() {
 
                   <div className="relative flex items-center justify-between">
                     <span
-                      className="inline-flex h-12 w-12 items-center justify-center rounded-xl text-white shadow-card ring-1 ring-white/40 transition-transform duration-300 group-hover:scale-110"
-                      style={{ background: r.chip }}
+                      className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-white shadow-sm ring-1 ring-primary-100/60 transition-transform duration-300 group-hover:scale-110"
                     >
                       {r.emoji ? (
                         <span className="text-xl">{r.emoji}</span>
                       ) : (
-                        <r.icon className="h-6 w-6" />
+                        <r.icon className="h-6 w-6 text-navy-dark" />
                       )}
                     </span>
                     <span className="font-mono text-sm font-semibold text-slate-300">
