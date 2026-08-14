@@ -27,7 +27,12 @@ export default function BookYourSpace() {
   const handleChange = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }))
   const handleSubmit = (e) => {
     e.preventDefault()
+    saveLead({ name: form.name, phone: form.phone, city: form.city, source: 'choose-by-requirement' })
     setSubmitted(true)
+    setTimeout(() => {
+      setSubmitted(false)
+      setForm({ name: '', phone: '', city: '' })
+    }, 5000)
   }
 
   const inputClass =
