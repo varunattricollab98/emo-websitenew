@@ -55,13 +55,15 @@ export default function CitySpaceCounts() {
                 <div className="absolute inset-0 bg-gradient-to-t from-navy-dark via-navy-dark/45 to-navy-dark/10" />
                 <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/15" />
 
-                {/* top icons */}
-                <span className="absolute left-3 top-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white/15 text-white ring-1 ring-white/25 backdrop-blur">
-                  <MapPin className="h-5 w-5" />
-                </span>
-                <span className="absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/15 text-white ring-1 ring-white/25 backdrop-blur transition-colors group-hover:bg-white group-hover:text-primary">
-                  <ArrowUpRight className="h-4 w-4" />
-                </span>
+                {/* top icons — right side */}
+                <div className="absolute right-3 top-3 flex items-center gap-2">
+                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-white ring-1 ring-white/25 backdrop-blur-sm">
+                    <MapPin className="h-3.5 w-3.5" />
+                  </span>
+                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-white ring-1 ring-white/25 backdrop-blur-sm transition-colors group-hover:bg-white group-hover:text-primary">
+                    <ArrowUpRight className="h-3.5 w-3.5" />
+                  </span>
+                </div>
 
                 {/* content */}
                 <div className="relative p-5 text-white">
