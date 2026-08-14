@@ -7,14 +7,22 @@ import { cityUrl } from '../../data/spaces'
 import { cities } from '../../data/cities'
 
 const cityImg = {
-  delhi: 'https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format&fit=crop&w=800&q=80', // India Gate
-  mumbai: 'https://images.unsplash.com/photo-1529253355930-ddbe423a2ac7?auto=format&fit=crop&w=800&q=80', // Gateway of India
-  bangalore: 'https://images.unsplash.com/photo-1596176530529-78163a4f7af2?auto=format&fit=crop&w=800&q=80', // Bangalore Vidhana Soudha / cityscape
-  gurgaon: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80', // Modern glass corporate towers
-  hyderabad: 'https://images.unsplash.com/photo-1572638319789-5a3d3a275a2c?auto=format&fit=crop&w=800&q=80', // Charminar Hyderabad
-  chennai: 'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=800&q=80', // Chennai Marina / temple
-  pune: 'https://images.unsplash.com/photo-1570168007204-dfb528c6958f?auto=format&fit=crop&w=800&q=80', // Shaniwar Wada / Pune cityscape
-  noida: 'https://images.unsplash.com/photo-1545127398-14699f92334b?auto=format&fit=crop&w=800&q=80', // Modern office towers / skyline
+  // Delhi — India Gate (verified ✓ 200 OK)
+  delhi: 'https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format&fit=crop&w=800&q=80',
+  // Mumbai — Gateway of India (verified ✓ 200 OK)
+  mumbai: 'https://images.unsplash.com/photo-1529253355930-ddbe423a2ac7?auto=format&fit=crop&w=800&q=80',
+  // Bangalore — City skyline (verified ✓ 200 OK)
+  bangalore: 'https://images.unsplash.com/photo-1595658658481-d53d3f999875?auto=format&fit=crop&w=800&q=80',
+  // Gurgaon — Modern glass corporate towers (verified ✓ 200 OK)
+  gurgaon: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80',
+  // Hyderabad — Charminar / heritage architecture (verified ✓ 200 OK)
+  hyderabad: 'https://images.unsplash.com/photo-1614082242765-7c98ca0f3df3?auto=format&fit=crop&w=800&q=80',
+  // Chennai — Kapaleeshwarar Temple gopuram (verified ✓ 200 OK)
+  chennai: 'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=800&q=80',
+  // Pune — Cityscape / architecture (verified ✓ 200 OK)
+  pune: 'https://images.unsplash.com/photo-1562979314-bee7453e911c?auto=format&fit=crop&w=800&q=80',
+  // Noida — Modern high-rise towers / skyline (verified ✓ 200 OK)
+  noida: 'https://images.unsplash.com/photo-1449157291145-7efd050a4d0e?auto=format&fit=crop&w=800&q=80',
 }
 const fallbackImg =
   'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=800&q=80'
