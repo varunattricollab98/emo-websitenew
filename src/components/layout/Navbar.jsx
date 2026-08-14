@@ -107,33 +107,35 @@ export default function Navbar() {
             <AnimatePresence>
               {megaOpen && (
                 <motion.div
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 12 }}
-                  transition={{ duration: 0.2 }}
-                  className="absolute left-1/2 top-full z-50 w-[560px] -translate-x-1/2 pt-4"
+                  initial={{ opacity: 0, y: 8, scale: 0.98 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 8, scale: 0.98 }}
+                  transition={{ duration: 0.2, ease: 'easeOut' }}
+                  className="absolute left-1/2 top-full z-50 w-[520px] -translate-x-1/2 pt-3"
                 >
-                  <div className="grid grid-cols-2 gap-2 rounded-2xl border border-primary-100 bg-white p-4 shadow-card-hover">
-                    {solutions.map((s) => (
-                      <Link
-                        key={s.to}
-                        to={s.to}
-                        className="group flex gap-3 rounded-xl p-3 transition-colors hover:bg-primary-50"
-                      >
-                        <span className="mt-0.5 inline-flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-primary-gradient text-white">
-                          <s.icon className="h-5 w-5" />
-                        </span>
-                        <span>
-                          <span className="flex items-center gap-1 font-semibold text-navy-dark group-hover:text-primary">
-                            {s.title}
-                            <ArrowRight className="h-3.5 w-3.5 opacity-0 -translate-x-1 transition-all group-hover:opacity-100 group-hover:translate-x-0" />
+                  <div className="overflow-hidden rounded-2xl border border-primary-100/80 bg-white/98 p-5 shadow-xl backdrop-blur-sm ring-1 ring-black/[0.03]">
+                    <div className="grid grid-cols-2 gap-1.5">
+                      {solutions.map((s) => (
+                        <Link
+                          key={s.to}
+                          to={s.to}
+                          className="group flex gap-3 rounded-xl px-3.5 py-3.5 transition-all duration-200 hover:bg-surface-light"
+                        >
+                          <span className="mt-0.5 inline-flex h-10 w-10 flex-none items-center justify-center rounded-xl bg-primary-50 text-primary transition-colors group-hover:bg-primary-gradient group-hover:text-white">
+                            <s.icon className="h-5 w-5" />
                           </span>
-                          <span className="mt-0.5 block text-xs leading-snug text-slate-500">
-                            {s.desc}
+                          <span>
+                            <span className="flex items-center gap-1 text-sm font-semibold text-navy-dark group-hover:text-primary">
+                              {s.title}
+                              <ArrowRight className="h-3.5 w-3.5 opacity-0 -translate-x-1 transition-all group-hover:opacity-100 group-hover:translate-x-0" />
+                            </span>
+                            <span className="mt-0.5 block text-[12px] leading-snug text-slate-500">
+                              {s.desc}
+                            </span>
                           </span>
-                        </span>
-                      </Link>
-                    ))}
+                        </Link>
+                      ))}
+                    </div>
                   </div>
                 </motion.div>
               )}
