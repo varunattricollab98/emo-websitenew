@@ -50,7 +50,7 @@ const needs = [
   },
   {
     icon: MapPinned,
-    emoji: '🗺️',
+    emoji: '📌',
     title: 'For Companies Expanding to New States',
     desc: 'Entering a new state? Get a local GST address without a lease, deposit or any long-term commitment.',
     tag: 'Multi-state · No lease',
