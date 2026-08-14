@@ -23,6 +23,7 @@ import SubPageHero from '../components/ui/SubPageHero'
 import SectionHeading from '../components/ui/SectionHeading'
 import Reveal from '../components/ui/Reveal'
 import Button from '../components/ui/Button'
+import { useLeadModal } from '../context/LeadModalContext'
 import Counter from '../components/ui/Counter'
 import CTABand from '../components/ui/CTABand'
 import FaqAccordion from '../components/ui/FaqAccordion'
@@ -118,6 +119,7 @@ const faqs = [
 ]
 
 export default function Coworking() {
+  const { openLeadModal } = useLeadModal()
   return (
     <>
       <SubPageHero
@@ -218,7 +220,13 @@ export default function Coworking() {
                     ))}
                   </ul>
                   <Button
-                    to="/contact"
+                    onClick={() =>
+                      openLeadModal({
+                        title: o.title,
+                        subtitle: 'Share your details and our team will help you find the right workspace.',
+                        service: o.title,
+                      })
+                    }
                     variant={o.popular ? 'gold' : 'primary'}
                     className="mt-7 w-full"
                   >
