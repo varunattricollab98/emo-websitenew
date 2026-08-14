@@ -9,20 +9,20 @@ import { cities } from '../../data/cities'
 const cityImg = {
   // Delhi — India Gate (verified ✓ 200 OK)
   delhi: 'https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format&fit=crop&w=800&q=80',
-  // Mumbai — Gateway of India (verified ✓ 200 OK)
-  mumbai: 'https://images.unsplash.com/photo-1529253355930-ddbe423a2ac7?auto=format&fit=crop&w=800&q=80',
-  // Bangalore — City skyline (verified ✓ 200 OK)
-  bangalore: 'https://images.unsplash.com/photo-1595658658481-d53d3f999875?auto=format&fit=crop&w=800&q=80',
-  // Gurgaon — Modern glass corporate towers (verified ✓ 200 OK)
-  gurgaon: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80',
-  // Hyderabad — Charminar / heritage architecture (verified ✓ 200 OK)
-  hyderabad: 'https://images.unsplash.com/photo-1614082242765-7c98ca0f3df3?auto=format&fit=crop&w=800&q=80',
+  // Mumbai — from Supabase
+  mumbai: 'https://oijtkvkyefqfwuycibcv.supabase.co/storage/v1/object/public/website-assets/Mumbai.png',
+  // Bangalore — from Supabase
+  bangalore: 'https://oijtkvkyefqfwuycibcv.supabase.co/storage/v1/object/public/website-assets/Bangalore.png',
+  // Gurgaon — from Supabase
+  gurgaon: 'https://oijtkvkyefqfwuycibcv.supabase.co/storage/v1/object/public/website-assets/Gurgaon.png',
+  // Hyderabad — from Supabase
+  hyderabad: 'https://oijtkvkyefqfwuycibcv.supabase.co/storage/v1/object/public/website-assets/Hyderabad%20Featured%20.png',
   // Chennai — Kapaleeshwarar Temple gopuram (verified ✓ 200 OK)
   chennai: 'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=800&q=80',
-  // Pune — Cityscape / architecture (verified ✓ 200 OK)
-  pune: 'https://images.unsplash.com/photo-1562979314-bee7453e911c?auto=format&fit=crop&w=800&q=80',
-  // Noida — Modern high-rise towers / skyline (verified ✓ 200 OK)
-  noida: 'https://images.unsplash.com/photo-1449157291145-7efd050a4d0e?auto=format&fit=crop&w=800&q=80',
+  // Pune — from Supabase
+  pune: 'https://oijtkvkyefqfwuycibcv.supabase.co/storage/v1/object/public/website-assets/Pune1.png',
+  // Noida — from Supabase
+  noida: 'https://oijtkvkyefqfwuycibcv.supabase.co/storage/v1/object/public/website-assets/NOIDA%201.png',
 }
 const fallbackImg =
   'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=800&q=80'
@@ -44,12 +44,12 @@ export default function CitySpaceCounts() {
             <Reveal key={c.slug} delay={(i % 4) * 0.05}>
               <Link
                 to={cityUrl(c.slug)}
-                className="group relative flex h-56 flex-col justify-end overflow-hidden rounded-2xl shadow-card ring-1 ring-navy-dark/10 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover"
+                className="group relative flex aspect-[4/3] flex-col justify-end overflow-hidden rounded-2xl shadow-card ring-1 ring-navy-dark/10 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover"
               >
                 <SmartImage
                   src={cityImg[c.slug] || fallbackImg}
                   alt={`${c.name} skyline`}
-                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-110"
                 />
                 {/* cinematic overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-navy-dark via-navy-dark/45 to-navy-dark/10" />
