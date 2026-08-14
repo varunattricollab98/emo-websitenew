@@ -10,6 +10,7 @@ const plans = [
     period: '/mo',
     desc: 'MCA-accepted registered office address for company incorporation.',
     icon: Landmark,
+    emoji: '🏛️',
     grad: 'linear-gradient(135deg, #3c82c2 0%, #11417c 100%)',
     features: [
       'MCA-accepted registered address',
@@ -30,6 +31,7 @@ const plans = [
     period: '/mo',
     desc: 'Everything you need for a smooth, first-attempt GST registration.',
     icon: FileCheck2,
+    emoji: '📋',
     grad: 'linear-gradient(135deg, #fbbf24 0%, #d97706 100%)',
     features: [
       'Notarised rent agreement',
@@ -51,6 +53,7 @@ const plans = [
     period: '/mo',
     desc: 'A professional business address for mail & courier handling.',
     icon: Mail,
+    emoji: '✉️',
     grad: 'linear-gradient(135deg, #22d3ee 0%, #0891b2 100%)',
     features: [
       'Prime business mailing address',

@@ -58,12 +58,15 @@ export default function PlanCard({ plan, onCta }) {
 
       {/* header */}
       <div className="relative flex items-center gap-3">
-        {Icon && (
+        {(Icon || plan.emoji) && (
           <span
-            className="inline-flex h-12 w-12 flex-none items-center justify-center rounded-xl text-white shadow-card ring-1 ring-white/40"
-            style={{ background: gradient }}
+            className="inline-flex h-12 w-12 flex-none items-center justify-center rounded-xl bg-white shadow-sm ring-1 ring-primary-100/60"
           >
-            <Icon className="h-6 w-6" />
+            {plan.emoji ? (
+              <span className="text-2xl">{plan.emoji}</span>
+            ) : (
+              <Icon className="h-6 w-6 text-navy-dark" />
+            )}
           </span>
         )}
         <h3 className="text-xl font-bold text-navy-dark">{name}</h3>
