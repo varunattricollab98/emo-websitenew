@@ -8,6 +8,8 @@ export default defineConfig({
     target: 'esnext',
     cssCodeSplit: true,
     minify: 'esbuild',
+    // Compress output further
+    cssMinify: true,
     // route + vendor code-splitting keeps the initial JS payload small
     rollupOptions: {
       output: {
@@ -24,5 +26,11 @@ export default defineConfig({
       },
     },
     chunkSizeWarningLimit: 900,
+    // Generate source maps only in dev
+    sourcemap: false,
+  },
+  // Optimize dependency pre-bundling
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'react-router-dom', 'framer-motion'],
   },
 })
