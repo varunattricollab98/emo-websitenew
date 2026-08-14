@@ -14,23 +14,23 @@ export function SpacesProvider({ children }) {
       setLoaded(true)
       return
     }
-    console.log('[SpacesContext] Fetching spaces from Supabase...')
-    supabase
-      .from('spaces')
-      .select('*')
-      // Treat NULL as active, only explicitly deactivated rows are hidden.
-      .or('is_active.is.null,is_active.eq.true')
-      .order('rating', { ascending: false })
-      .limit(500)
-      .then(({ data, error }) => {
-        if (error) {
-          console.error('[SpacesContext] Error:', error.message)
-        } else {
-          console.log('[SpacesContext] Loaded', (data||[]).length, 'spaces from Supabase')
-        }
-        setRows(data || [])
-        setLoaded(true)
-      })
+    // Defer the fetch slightly so it doesn't compete with critical renders
+    const timer = setTimeout(() => {
+      supabase
+        .from('spaces')
+        .select('*')
+        .or('is_active.is.null,is_active.eq.true')
+        .order('rating', { ascending: false })
+        .limit(500)
+        .then(({ data, error }) => {
+          if (error) {
+            console.error('[SpacesContext] Error:', error.message)
+          }
+          setRows(data || [])
+          setLoaded(true)
+        })
+    }, 100)
+    return () => clearTimeout(timer)
   }, [])
 
   return (
