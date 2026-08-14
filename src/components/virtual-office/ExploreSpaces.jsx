@@ -642,13 +642,13 @@ export default function ExploreSpaces() {
                             <span className="text-xs font-medium text-slate-400">/mo</span>
                           </p>
                         </div>
-                        <a
-                          href="#book-form"
+                        <Link
+                          to={spaceUrl(sp.citySlug, slugifySpace(sp.name))}
                           className="btn-base bg-primary-50 px-3.5 py-2 text-xs font-semibold text-primary-700 hover:bg-primary-100"
                         >
-                          Enquire
+                          Explore
                           <ArrowRight className="h-3.5 w-3.5" />
-                        </a>
+                        </Link>
                       </div>
                     </div>
                   </div>
