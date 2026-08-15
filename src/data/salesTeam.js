@@ -7,10 +7,10 @@
 
 import { supabase, isSupabaseConfigured } from '../lib/supabase'
 
-// Fallback number if Supabase isn't ready yet
-const FALLBACK = '918882735038'
+// Fallback numbers if Supabase isn't ready yet
+const FALLBACK_NUMBERS = ['918882735038', '919319035455']
 
-let _numbers = [FALLBACK]
+let _numbers = [...FALLBACK_NUMBERS]
 let _fetched = false
 
 // Fetch sales numbers from Supabase on app load
