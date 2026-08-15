@@ -22,12 +22,12 @@ import { useLeadModal } from '../../context/LeadModalContext'
 const SESSION_KEY = 'emo:auto-lead-shown'
 
 // Fraction of the scrollable height that counts as "read enough to ask".
-const SCROLL_FRACTION = 0.45
+const SCROLL_FRACTION = 0.38
 
 // A visitor who lands and immediately flicks the wheel has not read anything,
 // and browsers can restore a scroll position on reload. Wait this long before
 // either trigger is allowed to fire.
-const MIN_TIME_ON_PAGE_MS = 8000
+const MIN_TIME_ON_PAGE_MS = 6000
 
 // Pages built around their own form. Interrupting someone mid-form with the
 // same request is counterproductive, so the popup stays out of the way.
