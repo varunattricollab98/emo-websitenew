@@ -67,6 +67,9 @@ export default function AutoLeadPopup() {
 
     const tooEarly = () => Date.now() - mountedAt < MIN_TIME_ON_PAGE_MS
 
+    // Exit intent can fire sooner — user may try to leave after just 2 seconds
+    const tooEarlyForExit = () => Date.now() - mountedAt < 2000
+
     // Another dialog (booking, gallery) locks body scroll while it is open.
     // Stacking a second modal on top of it would trap the visitor.
     const anotherModalOpen = () => document.body.style.overflow === 'hidden'
@@ -76,7 +79,9 @@ export default function AutoLeadPopup() {
     // dialog already open) must leave the listeners in place so a later
     // scroll or exit still counts.
     const trigger = (source) => {
-      if (firedRef.current || tooEarly() || anotherModalOpen()) return false
+      if (firedRef.current || anotherModalOpen()) return false
+      // Exit intent has a shorter minimum time than scroll
+      if (source === 'exit-intent' ? tooEarlyForExit() : tooEarly()) return false
       firedRef.current = true
       markShown()
       openLeadModal({
@@ -105,8 +110,16 @@ export default function AutoLeadPopup() {
     // and clientY <= 0 narrows that to the top edge, where the browser chrome
     // is. Leaving sideways or downward is not treated as exit intent.
     const onMouseOut = (e) => {
-      if (e.clientY > 5) return
-      if (e.relatedTarget && e.relatedTarget.nodeName !== 'HTML') return
+      // For mouseleave on documentElement, clientY may not be reliable
+      // so we check the event type — mouseleave always means cursor left
+      if (e.type === 'mouseleave') {
+        trigger('exit-intent')
+        if (firedRef.current) cleanup()
+        return
+      }
+      // For mouseout, check if cursor went to top edge
+      if (e.clientY > 10) return
+      if (e.relatedTarget && e.relatedTarget !== document.documentElement) return
       if (trigger('exit-intent')) cleanup()
     }
 
