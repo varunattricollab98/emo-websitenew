@@ -122,7 +122,7 @@ export default function ServicesProvided() {
           {trustBadges.map((b) => (
             <span
               key={b.label}
-              className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full border border-primary-100/80 bg-white px-4 py-2.5 text-sm font-semibold text-navy shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-card"
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-primary-100/80 bg-white px-3.5 py-2.5 text-xs sm:text-sm font-semibold text-navy shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-card"
             >
               <b.icon className="h-4 w-4 flex-none text-primary" />
               {b.label}
