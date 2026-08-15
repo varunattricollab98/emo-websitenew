@@ -22,7 +22,7 @@ const locations = [
     businesses: '3,800+',
     price: '1,199',
     image:
-      'https://images.unsplash.com/photo-1529253355930-ddbe423a2ac7?auto=format&fit=crop&w=800&q=80',
+      'https://oijtkvkyefqfwuycibcv.supabase.co/storage/v1/object/public/website-assets/Mumbai.png',
   },
   {
     name: 'Bangalore',
@@ -31,7 +31,7 @@ const locations = [
     businesses: '3,100+',
     price: '999',
     image:
-      'https://images.unsplash.com/photo-1596176530529-78163a4f7af2?auto=format&fit=crop&w=800&q=80',
+      'https://oijtkvkyefqfwuycibcv.supabase.co/storage/v1/object/public/website-assets/Bangalore.png',
   },
   {
     name: 'Gurgaon',
@@ -101,7 +101,7 @@ export default function LovedLocations() {
                 <SmartImage
                   src={c.image}
                   alt={`${c.name} business address`}
-                  className="absolute inset-0 h-full w-full object-cover brightness-95 saturate-[1.15] transition-transform duration-500 group-hover:scale-110"
+                  className="absolute inset-0 h-full w-full object-cover object-center brightness-95 saturate-[1.15] transition-transform duration-500 group-hover:scale-110"
                 />
                 {/* cinematic gradient overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-navy-dark/90 via-navy-dark/30 to-transparent" />
