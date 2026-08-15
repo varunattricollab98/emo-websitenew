@@ -8,7 +8,7 @@
 import { supabase, isSupabaseConfigured } from '../lib/supabase'
 
 // Fallback numbers if Supabase isn't ready yet
-const FALLBACK_NUMBERS = ['918882735038', '919319035455']
+const FALLBACK_NUMBERS = ['918505806981', '919559556968', '919319035455', '918795603616']
 
 let _numbers = [...FALLBACK_NUMBERS]
 let _fetched = false
@@ -28,11 +28,14 @@ if (isSupabaseConfigured && supabase) {
 }
 
 /**
- * Returns a random WhatsApp number from the sales team.
+ * Returns the next WhatsApp number from the sales team (sequential rotation).
+ * Each click goes to the next number in order — ensures equal distribution.
  */
+let _rotationIndex = 0
 export function getRandomSalesWhatsApp() {
-  const idx = Math.floor(Math.random() * _numbers.length)
-  return _numbers[idx]
+  const num = _numbers[_rotationIndex % _numbers.length]
+  _rotationIndex++
+  return num
 }
 
 /**
