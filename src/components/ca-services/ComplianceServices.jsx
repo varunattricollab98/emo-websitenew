@@ -1,30 +1,30 @@
 import { motion } from 'framer-motion'
-import { FileCheck2, Landmark, IndianRupee, ShieldCheck, ArrowRight } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import SectionHeading from '../ui/SectionHeading'
 import { useLeadModal } from '../../context/LeadModalContext'
 
 const services = [
   {
-    icon: FileCheck2,
+    emoji: '📋',
     title: 'GST Registration',
     desc: 'End-to-end GST registration with document prep, filing and ARN tracking.',
     price: '1,499',
   },
   {
-    icon: Landmark,
+    emoji: '🏛️',
     title: 'Company Registration',
     desc: 'Private Limited, LLP or OPC incorporation, DIN, DSC, MOA/AOA and PAN included.',
     price: '6,999',
     popular: true,
   },
   {
-    icon: IndianRupee,
+    emoji: '₹',
     title: 'Income Tax E-Filing',
     desc: 'Accurate ITR filing for individuals and businesses by qualified professionals.',
     price: '999',
   },
   {
-    icon: ShieldCheck,
+    emoji: '™️',
     title: 'Trademark Registration',
     desc: 'Protect your brand with class search, application and objection handling.',
     price: '5,999',
@@ -73,8 +73,8 @@ export default function ComplianceServices() {
                   </span>
                 )}
 
-                <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary-gradient text-white shadow-card ring-1 ring-white/30">
-                  <s.icon className="h-6 w-6" />
+                <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-white shadow-sm ring-1 ring-primary-100/60">
+                  <span className="text-2xl">{s.emoji}</span>
                 </span>
 
                 <h3 className="mt-4 text-base font-bold text-navy-dark">{s.title}</h3>
