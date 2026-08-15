@@ -40,7 +40,7 @@ const locations = [
     businesses: '2,400+',
     price: '999',
     image:
-      'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80',
+      'https://oijtkvkyefqfwuycibcv.supabase.co/storage/v1/object/public/website-assets/Gurgaon.png',
   },
   {
     name: 'Hyderabad',
