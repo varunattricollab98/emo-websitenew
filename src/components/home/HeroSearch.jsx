@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { resolveCity, resolveState } from '../../utils/resolveCity'
-import { voCities, slugifySpace, cityUrl, spaceUrl, slugifyState, cityAliases } from '../../data/spaces'
+import { voCities, slugifySpace, cityUrl, spaceUrl, slugifyState, cityAliases, getAllStates } from '../../data/spaces'
 import { getSupabaseSpaces, onLoad } from '../../lib/spacesStore'
 import {
   MapPin,
@@ -66,6 +66,10 @@ export default function HeroSearch() {
           items.push({ type: 'city', label: aliasName, displayLabel: c.name, sub: c.state, slug: c.slug })
         }
       })
+    })
+    // 2. States (Haryana, Punjab, Karnataka, etc.)
+    getAllStates().forEach((s) => {
+      items.push({ type: 'state', label: s.name, sub: 'STATE', slug: s.slug })
     })
     // 2. Spaces / areas from Supabase
     const dbSpaces = getSupabaseSpaces()
@@ -173,6 +177,8 @@ export default function HeroSearch() {
     // Auto-navigate for convenience
     if (item.type === 'city') {
       navigate(cityUrl(item.slug))
+    } else if (item.type === 'state') {
+      navigate(`/virtual-office/${item.slug}`)
     } else if (item.type === 'space' && item.citySlug) {
       navigate(spaceUrl(item.citySlug, item.slug))
     }
@@ -329,12 +335,12 @@ export default function HeroSearch() {
                         <span className="font-semibold">{item.label}</span>
                         {item.sub && (
                           <span className="ml-2 text-xs text-slate-400">
-                            {item.type === 'city' ? item.sub : `in ${item.sub}`}
+                            {item.type === 'state' ? '' : item.type === 'city' ? item.sub : `in ${item.sub}`}
                           </span>
                         )}
                       </div>
                       <span className="ml-auto flex-none rounded-full bg-primary-50 px-2 py-0.5 text-[10px] font-bold uppercase text-primary/70">
-                        {item.type === 'city' ? 'City' : 'Area'}
+                        {item.type === 'state' ? 'State' : item.type === 'city' ? 'City' : 'Area'}
                       </span>
                     </button>
                   ))}
