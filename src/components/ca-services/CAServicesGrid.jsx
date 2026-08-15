@@ -65,9 +65,10 @@ export default function CAServicesGrid({ query = '', cat = '' }) {
                   <div className="group flex h-full flex-col rounded-2xl border border-primary-100/60 bg-white p-6 shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover">
                     <div className="flex items-center justify-between">
                       <span
-                        className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-white shadow-sm ring-1 ring-primary-100/60"
+                        className="inline-flex h-11 w-11 items-center justify-center rounded-xl text-white shadow-card ring-1 ring-white/40"
+                        style={{ background: c?.grad }}
                       >
-                        <span className="text-xl">{catEmoji[s.cat] || '📋'}</span>
+                        <FileCheck2 className="h-5 w-5" />
                       </span>
                       {s.popular && (
                         <span className="rounded-full bg-gradient-to-r from-gold to-gold-dark px-2.5 py-1 text-[10px] font-bold text-white shadow-gold-glow">
