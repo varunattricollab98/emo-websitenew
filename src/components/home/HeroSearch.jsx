@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { resolveCity, resolveState } from '../../utils/resolveCity'
-import { voCities, slugifySpace, cityUrl, spaceUrl, slugifyState } from '../../data/spaces'
+import { voCities, slugifySpace, cityUrl, spaceUrl, slugifyState, cityAliases } from '../../data/spaces'
 import { getSupabaseSpaces, onLoad } from '../../lib/spacesStore'
 import {
   MapPin,
@@ -55,9 +55,17 @@ export default function HeroSearch() {
   // ── Build a searchable suggestions list from all available sources ─────
   const allSuggestions = useMemo(() => {
     const items = []
-    // 1. Cities
+    // 1. Cities (include aliases so "Bangalore" matches "Bengaluru" etc.)
     voCities.forEach((c) => {
       items.push({ type: 'city', label: c.name, sub: c.state, slug: c.slug })
+      // Also add common aliases as searchable entries pointing to same city
+      const aliases = cityAliases[c.slug] || []
+      aliases.forEach((alias) => {
+        const aliasName = alias.charAt(0).toUpperCase() + alias.slice(1)
+        if (aliasName.toLowerCase() !== c.name.toLowerCase()) {
+          items.push({ type: 'city', label: aliasName, displayLabel: c.name, sub: c.state, slug: c.slug })
+        }
+      })
     })
     // 2. Spaces / areas from Supabase
     const dbSpaces = getSupabaseSpaces()
@@ -128,7 +136,7 @@ export default function HeroSearch() {
     for (const item of allSuggestions) {
       const score = fuzzyMatch(q, item.label)
       if (score >= 0) {
-        const key = `${item.type}-${item.label.toLowerCase()}`
+        const key = `${item.type}-${item.slug}`
         if (!seen.has(key)) {
           seen.add(key)
           scored.push({ ...item, score })
@@ -159,7 +167,7 @@ export default function HeroSearch() {
   }
 
   const selectSuggestion = (item) => {
-    setLocation(item.label)
+    setLocation(item.displayLabel || item.label)
     setShowSuggestions(false)
     setActiveIdx(-1)
     // Auto-navigate for convenience
