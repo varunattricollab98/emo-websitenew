@@ -31,10 +31,10 @@ const serviceRoutes = {
 const popularCities = ['Delhi', 'Mumbai', 'Bangalore', 'Gurgaon', 'Hyderabad', 'Pune']
 
 const trustRow = [
-  { icon: Star, label: '4.9/5 Google' },
-  { icon: Building2, label: '5,000+ businesses' },
-  { icon: MapPin, label: '250+ locations' },
-  { icon: ShieldCheck, label: '28 states' },
+  { emoji: '⭐', label: '4.9/5 Google' },
+  { emoji: '🏢', label: '5,000+ businesses' },
+  { emoji: '📍', label: '250+ locations' },
+  { emoji: '🇮🇳', label: '28 states' },
 ]
 
 export default function HeroSearch() {
@@ -397,7 +397,7 @@ export default function HeroSearch() {
         >
           {trustRow.map((t) => (
             <div key={t.label} className="flex items-center gap-2">
-              <t.icon className="h-5 w-5 text-primary" />
+              <span className="text-base">{t.emoji}</span>
               <span className="text-sm font-semibold text-navy-dark">{t.label}</span>
             </div>
           ))}
