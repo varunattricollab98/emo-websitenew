@@ -161,7 +161,7 @@ export default function WhyChooseHome() {
       <div className="container-custom relative">
         {/* ===== executive split header ===== */}
         <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
-          <div>
+          <div className="text-center lg:text-left">
             <span className="inline-flex items-center gap-3 rounded-full border border-primary-200 bg-gradient-to-r from-primary-50 via-white to-primary-50 px-9 py-2.5 text-base font-bold uppercase tracking-[0.18em] text-primary shadow-soft ring-1 ring-primary-100/60">
               <span className="relative flex h-3 w-3">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary/50" />
@@ -174,7 +174,7 @@ export default function WhyChooseHome() {
               <span className="gradient-text">EaseMyOffice</span>
             </h2>
           </div>
-          <p className="max-w-md text-base leading-relaxed text-slate-500 lg:pb-2">
+          <p className="max-w-md text-center text-base leading-relaxed text-slate-500 lg:pb-2 lg:text-left mx-auto lg:mx-0">
             Trusted by founders, sellers and enterprises for compliant addresses and hassle-free
             setup, built on transparency, speed and genuine after-sales care.
           </p>
