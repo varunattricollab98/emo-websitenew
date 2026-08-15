@@ -33,7 +33,7 @@ const services = [
     meta: 'From ₹799/mo',
     to: '/virtual-office',
     chip: 'linear-gradient(135deg, #3c82c2 0%, #11417c 100%)',
-    image: 'https://easemyoffice.in/wp-content/uploads/2024/09/Millenia-Business-Park-Chennai.webp',
+    image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80',
     flagship: true,
   },
   {
@@ -43,7 +43,7 @@ const services = [
     meta: 'Flexible plans',
     to: '/coworking',
     chip: 'linear-gradient(135deg, #22d3ee 0%, #0891b2 100%)',
-    image: 'https://easemyoffice.in/wp-content/uploads/2024/09/coworking-1024x576-1.webp',
+    image: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=800&q=80',
   },
   {
     icon: CalendarClock,
