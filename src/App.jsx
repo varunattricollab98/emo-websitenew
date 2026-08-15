@@ -4,7 +4,6 @@ import { LeadModalProvider } from './context/LeadModalContext'
 import { BookingModalProvider } from './context/BookingModalContext'
 import { SpacesProvider } from './context/SpacesContext'
 import Navbar from './components/layout/Navbar'
-import MessageBar from './components/layout/MessageBar'
 import Footer from './components/layout/Footer'
 import WhatsAppButton from './components/layout/WhatsAppButton'
 import ScrollToTop from './components/layout/ScrollToTop'
@@ -118,7 +117,6 @@ function SiteLayout() {
       {/* Opens the lead modal at 25% scroll depth or on exit intent */}
       <AutoLeadPopup />
       <SchemaScript schemas={[organizationSchema(), webSiteSchema()]} />
-      <MessageBar />
       <Navbar />
       {/* min-w-0: as a column flex item, main's width would otherwise be
           floored at its min-content size, so any non-wrapping row inside
