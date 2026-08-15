@@ -1,12 +1,12 @@
 import { useState, useMemo, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { ChevronDown, ArrowRight, Clock, FileCheck2, Sparkles } from 'lucide-react'
+import { ChevronDown, ArrowRight, Clock, FileCheck2, Sparkles, Landmark, Award } from 'lucide-react'
 import { caServices, caCategories } from '../../data/caServices'
 import { useLeadModal } from '../../context/LeadModalContext'
 
 const VISIBLE = 8
 const catMap = Object.fromEntries(caCategories.map((c) => [c.key, c]))
-const catEmoji = { gst: '📋', registration: '🏛️', licenses: '📜' }
+const catIcon = { gst: FileCheck2, registration: Landmark, licenses: Award }
 
 export default function CAServicesGrid({ query = '', cat = '' }) {
   const { openLeadModal } = useLeadModal()
@@ -68,7 +68,7 @@ export default function CAServicesGrid({ query = '', cat = '' }) {
                         className="inline-flex h-11 w-11 items-center justify-center rounded-xl text-white shadow-card ring-1 ring-white/40"
                         style={{ background: c?.grad }}
                       >
-                        <FileCheck2 className="h-5 w-5" />
+                        {(() => { const Icon = catIcon[s.cat] || FileCheck2; return <Icon className="h-5 w-5" /> })()}
                       </span>
                       {s.popular && (
                         <span className="rounded-full bg-gradient-to-r from-gold to-gold-dark px-2.5 py-1 text-[10px] font-bold text-white shadow-gold-glow">
