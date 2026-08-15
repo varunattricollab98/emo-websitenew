@@ -22,12 +22,12 @@ import { useLeadModal } from '../../context/LeadModalContext'
 const SESSION_KEY = 'emo:auto-lead-shown'
 
 // Fraction of the scrollable height that counts as "read enough to ask".
-const SCROLL_FRACTION = 0.25
+const SCROLL_FRACTION = 0.45
 
 // A visitor who lands and immediately flicks the wheel has not read anything,
 // and browsers can restore a scroll position on reload. Wait this long before
 // either trigger is allowed to fire.
-const MIN_TIME_ON_PAGE_MS = 3000
+const MIN_TIME_ON_PAGE_MS = 8000
 
 // Pages built around their own form. Interrupting someone mid-form with the
 // same request is counterproductive, so the popup stays out of the way.
@@ -105,7 +105,8 @@ export default function AutoLeadPopup() {
     // and clientY <= 0 narrows that to the top edge, where the browser chrome
     // is. Leaving sideways or downward is not treated as exit intent.
     const onMouseOut = (e) => {
-      if (e.relatedTarget || e.clientY > 0) return
+      if (e.clientY > 5) return
+      if (e.relatedTarget && e.relatedTarget.nodeName !== 'HTML') return
       if (trigger('exit-intent')) cleanup()
     }
 
@@ -115,6 +116,7 @@ export default function AutoLeadPopup() {
       clearTimeout(settleTimer)
       window.removeEventListener('scroll', onScroll)
       document.removeEventListener('mouseout', onMouseOut)
+      document.documentElement.removeEventListener('mouseleave', onMouseOut)
     }
 
     window.addEventListener('scroll', onScroll, { passive: true })
@@ -123,7 +125,10 @@ export default function AutoLeadPopup() {
     // matching on pointer:fine keeps the listener off phones entirely.
     const hasCursor =
       typeof window.matchMedia === 'function' && window.matchMedia('(pointer: fine)').matches
-    if (hasCursor) document.addEventListener('mouseout', onMouseOut)
+    if (hasCursor) {
+      document.addEventListener('mouseout', onMouseOut)
+      document.documentElement.addEventListener('mouseleave', onMouseOut)
+    }
 
     // Run once on mount so a page already scrolled past 25% still qualifies.
     onScroll()
