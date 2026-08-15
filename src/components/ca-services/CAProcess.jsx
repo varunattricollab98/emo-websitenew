@@ -1,25 +1,24 @@
-import { MessageSquare, FileUp, ClipboardCheck, PartyPopper } from 'lucide-react'
 import SectionHeading from '../ui/SectionHeading'
 import Reveal from '../ui/Reveal'
 
 const steps = [
   {
-    icon: MessageSquare,
+    emoji: '💬',
     title: 'Share your requirement',
     desc: 'Tell us what you need, a registration, a filing or full monthly compliance.',
   },
   {
-    icon: FileUp,
+    emoji: '📤',
     title: 'Upload documents online',
     desc: 'Submit your KYC and papers digitally. Your manager checks everything upfront.',
   },
   {
-    icon: ClipboardCheck,
+    emoji: '✅',
     title: 'We prepare & file',
     desc: 'Qualified professionals prepare, review and file with the concerned department.',
   },
   {
-    icon: PartyPopper,
+    emoji: '🎉',
     title: 'Get your certificate',
     desc: 'Receive your registration or acknowledgement, plus reminders for what comes next.',
   },
@@ -41,8 +40,8 @@ export default function CAProcess() {
           {steps.map((s, i) => (
             <Reveal key={s.title} delay={i * 0.1}>
               <div className="relative text-center">
-                <span className="relative mx-auto inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-gradient text-white shadow-card ring-4 ring-white">
-                  <s.icon className="h-6 w-6" />
+                <span className="relative mx-auto inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-primary-100/60 ring-4 ring-white">
+                  <span className="text-2xl">{s.emoji}</span>
                   <span className="absolute -right-1 -top-1 inline-flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-r from-gold to-gold-dark text-[11px] font-bold text-white shadow-gold-glow">
                     {i + 1}
                   </span>
