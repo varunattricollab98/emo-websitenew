@@ -148,11 +148,11 @@ export default function ServicesProvided() {
                 }`}
               >
                 {/* image header */}
-                <div className="relative h-44 overflow-hidden">
+                <div className="relative h-48 sm:h-44 overflow-hidden">
                   <SmartImage
                     src={s.image}
                     alt={s.title}
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-navy-dark/35 to-transparent" />
                   {/* colour-accent icon chip */}
