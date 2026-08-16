@@ -13,6 +13,9 @@ const FALLBACK_NUMBERS = ['918505806981', '919559556968', '919319035455', '91879
 let _numbers = [...FALLBACK_NUMBERS]
 let _fetched = false
 
+// Numbers to EXCLUDE from WhatsApp (helpline-only, not for chat)
+const EXCLUDED_NUMBERS = ['918882735038', '8882735038']
+
 // Fetch sales numbers from Supabase on app load
 if (isSupabaseConfigured && supabase) {
   supabase
@@ -21,8 +24,11 @@ if (isSupabaseConfigured && supabase) {
     .eq('is_active', true)
     .then(({ data }) => {
       if (data && data.length > 0) {
-        _numbers = data.map((r) => r.phone)
-        _fetched = true
+        const filtered = data.map((r) => r.phone).filter((p) => !EXCLUDED_NUMBERS.includes(p))
+        if (filtered.length > 0) {
+          _numbers = filtered
+          _fetched = true
+        }
       }
     })
 }
