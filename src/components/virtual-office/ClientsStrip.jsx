@@ -71,7 +71,7 @@ export default function ClientsStrip() {
           </motion.div>
 
           {/* Right — 2x2 stat cards */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-5">
             {stats.map((s, i) => (
               <motion.div
                 key={s.label}
@@ -79,39 +79,39 @@ export default function ClientsStrip() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-60px' }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="group relative overflow-hidden rounded-2xl border border-primary-100/70 bg-white p-6 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover"
+                className="group relative overflow-hidden rounded-2xl border border-primary-100/70 bg-white p-7 shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover"
               >
-                {/* Colored accent line on top */}
+                {/* Colored accent line on top — thicker & more visible */}
                 <span
-                  className="pointer-events-none absolute inset-x-0 top-0 h-1 rounded-t-2xl"
+                  className="pointer-events-none absolute inset-x-0 top-0 h-[3px]"
                   style={{ background: s.accent }}
                 />
 
-                {/* Icon */}
+                {/* Icon — white icon on colored rounded square */}
                 <span
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-xl text-white"
+                  className="inline-flex h-12 w-12 items-center justify-center rounded-xl text-white shadow-md"
                   style={{ background: s.accent }}
                 >
-                  <s.icon className="h-5 w-5" />
+                  <s.icon className="h-6 w-6" />
                 </span>
 
-                {/* Number */}
-                <p className="mt-4 text-3xl font-extrabold text-navy-dark sm:text-4xl">
+                {/* Number — large & bold */}
+                <p className="mt-5 text-4xl font-extrabold tracking-tight text-navy-dark sm:text-5xl">
                   <Counter to={s.value} decimals={s.decimals || 0} />
-                  <span style={{ color: s.accent }}>{s.suffix}</span>
+                  <span className="font-bold" style={{ color: s.accent }}>{s.suffix}</span>
                 </p>
 
-                {/* Label */}
-                <p className="mt-1 text-sm font-bold text-navy-dark">{s.label}</p>
-                <p className="mt-0.5 text-xs text-slate-500">{s.sub}</p>
+                {/* Label & sub */}
+                <p className="mt-2 text-base font-bold text-navy-dark">{s.label}</p>
+                <p className="mt-0.5 text-sm text-slate-500">{s.sub}</p>
 
                 {/* Google rating stars for rating card */}
                 {s.rating && (
-                  <div className="mt-2 flex items-center gap-2">
-                    <GoogleG className="h-4 w-4" />
+                  <div className="mt-3 flex items-center gap-2">
+                    <GoogleG className="h-5 w-5" />
                     <div className="flex gap-0.5">
                       {[0, 1, 2, 3, 4].map((n) => (
-                        <Star key={n} className="h-3 w-3 fill-gold text-gold" />
+                        <Star key={n} className="h-3.5 w-3.5 fill-gold text-gold" />
                       ))}
                     </div>
                   </div>
