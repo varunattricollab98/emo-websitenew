@@ -150,12 +150,12 @@ export default function WhyVirtualOffice() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: (i % 5) * 0.05 }}
-              className="group flex h-full flex-col rounded-2xl border border-white/10 bg-white/[0.06] p-5 backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:border-white/25 hover:bg-white/[0.1]"
+              className="group flex h-full flex-col rounded-2xl border border-white/10 bg-white/[0.06] p-5 backdrop-blur transition-all duration-300 hover:-translate-y-2 hover:border-gold/40 hover:bg-white/[0.12] hover:shadow-[0_8px_32px_rgba(245,158,11,0.15)]"
             >
-              <span className="inline-flex h-11 w-11 flex-none items-center justify-center rounded-xl bg-gold/15 text-gold ring-1 ring-gold/25 transition-transform duration-300 group-hover:scale-110">
+              <span className="inline-flex h-11 w-11 flex-none items-center justify-center rounded-xl bg-gold/15 text-gold ring-1 ring-gold/25 transition-all duration-300 group-hover:scale-110 group-hover:bg-gold/25 group-hover:shadow-[0_0_20px_rgba(245,158,11,0.3)]">
                 <b.icon className="h-5 w-5" />
               </span>
-              <h3 className="mt-4 text-sm font-bold text-white">{b.title}</h3>
+              <h3 className="mt-4 text-sm font-bold text-white transition-colors group-hover:text-gold-light">{b.title}</h3>
               <p className="mt-1.5 text-xs leading-relaxed text-blue-100/70">{b.desc}</p>
             </motion.div>
           ))}
