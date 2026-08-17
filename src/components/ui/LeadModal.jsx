@@ -86,6 +86,12 @@ export default function LeadModal({ open, config = {}, onClose }) {
     return SERVICE_PREFILL_OPTIONS.find((g) => g.match.test(test)) || null
   }, [service, form.interest])
 
+  // Always show all options as quick-picks when no specific category is matched
+  const allQuickPicks = useMemo(() => {
+    if (prefillGroup) return null // specific category matched, show those instead
+    return SERVICE_PREFILL_OPTIONS.flatMap((g) => g.options.slice(0, 2))
+  }, [prefillGroup])
+
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }))
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -222,9 +228,9 @@ export default function LeadModal({ open, config = {}, onClose }) {
                     </div>
 
                     {/* Quick-select prefilled options */}
-                    {prefillGroup && (
+                    {(prefillGroup || allQuickPicks) && (
                       <div className="mt-2.5 flex flex-wrap gap-2">
-                        {prefillGroup.options.map((opt) => {
+                        {(prefillGroup ? prefillGroup.options : allQuickPicks).map((opt) => {
                           const isSelected = form.interest === opt
                           return (
                             <button
