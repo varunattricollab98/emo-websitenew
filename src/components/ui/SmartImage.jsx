@@ -1,35 +1,45 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 
 /**
- * Renders an image with a graceful fallback and subtle visual enhancement.
- * If the image fails to load, the <img> is hidden so the parent's gradient
- * background shows through, ensuring nothing ever looks broken.
+ * Renders an image with:
+ * - Graceful fallback (hides on error)
+ * - Blur-up loading animation (fades in from blurred placeholder)
+ * - Subtle visual enhancement (brightness/contrast/saturation)
+ * - Native lazy loading + async decoding
  *
- * Enhancement: applies a subtle CSS filter to boost brightness, contrast,
- * and saturation, making space photos look more vivid and professional
- * without altering the source files.
- *
- * Pass `enhance={false}` to disable the filter for decorative/bg images.
+ * Pass `enhance={false}` to disable the CSS filter for decorative/bg images.
  */
 export default function SmartImage({ src, alt = '', className = '', enhance = true, style, ...props }) {
   const [failed, setFailed] = useState(false)
+  const [loaded, setLoaded] = useState(false)
+  const imgRef = useRef(null)
+
+  // Check if image was already cached (loaded before React hydrated)
+  useEffect(() => {
+    if (imgRef.current && imgRef.current.complete && imgRef.current.naturalWidth > 0) {
+      setLoaded(true)
+    }
+  }, [])
+
   if (failed) return null
 
-  // Subtle enhancement: slightly brighter, punchier contrast, warmer saturation
-  const enhanceFilter = enhance
+  // Subtle enhancement filter
+  const enhanceStyle = enhance
     ? { filter: 'brightness(1.05) contrast(1.08) saturate(1.12)', ...style }
     : style
 
   return (
     <img
+      ref={imgRef}
       src={src}
       alt={alt}
       loading="lazy"
       decoding="async"
       referrerPolicy="no-referrer"
+      onLoad={() => setLoaded(true)}
       onError={() => setFailed(true)}
-      className={className}
-      style={enhanceFilter}
+      className={`${className} transition-all duration-500 ${loaded ? 'opacity-100 blur-0 scale-100' : 'opacity-0 blur-sm scale-[1.02]'}`}
+      style={enhanceStyle}
       {...props}
     />
   )
