@@ -33,7 +33,7 @@ const services = [
     meta: 'From ₹799/mo',
     to: '/virtual-office',
     chip: 'linear-gradient(135deg, #3c82c2 0%, #11417c 100%)',
-    image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80',
+    image: 'https://oijtkvkyefqfwuycibcv.supabase.co/storage/v1/object/public/website-assets/Virtual%20office%20.png',
     flagship: true,
   },
   {
