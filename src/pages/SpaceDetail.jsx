@@ -624,19 +624,41 @@ export default function SpaceDetail() {
       <section className="section-padding bg-surface-light">
         <div className="container-custom">
           <SectionHeading eyebrow="Amenities" title={`What's Available Here`} accent="Available" />
-          {/* Amenity names come from the DB/CSV, so one column on phones */}
-          <div className="mx-auto mt-12 grid max-w-4xl grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
-            {amenities.map((a) => (
-              <div
-                key={a}
-                className="flex items-center gap-3 rounded-2xl border border-primary-100/70 bg-white px-4 py-3 shadow-soft"
-              >
-                <span className="inline-flex h-7 w-7 flex-none items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 text-white">
-                  <Check className="h-4 w-4" strokeWidth={3} />
-                </span>
-                <span className="min-w-0 break-words text-sm font-semibold text-navy-dark">{a}</span>
-              </div>
-            ))}
+
+          {/* Documents Included — priority items */}
+          <div className="mx-auto mt-10 max-w-4xl">
+            <p className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-400">📄 Documents Included</p>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-4">
+              {['Rent Agreement', 'NOC (No Objection Certificate)', 'Electricity Bill', 'Supporting Documents'].map((d) => (
+                <div
+                  key={d}
+                  className="flex items-center gap-3 rounded-2xl border border-gold/30 bg-gradient-to-r from-gold/5 to-transparent px-4 py-3 shadow-soft"
+                >
+                  <span className="inline-flex h-7 w-7 flex-none items-center justify-center rounded-full bg-gradient-to-br from-gold to-gold-dark text-white">
+                    <Check className="h-4 w-4" strokeWidth={3} />
+                  </span>
+                  <span className="min-w-0 break-words text-sm font-bold text-navy-dark">{d}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Regular amenities */}
+          <div className="mx-auto mt-6 max-w-4xl">
+            <p className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-400">🏢 Office Amenities</p>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
+              {amenities.map((a) => (
+                <div
+                  key={a}
+                  className="flex items-center gap-3 rounded-2xl border border-primary-100/70 bg-white px-4 py-3 shadow-soft"
+                >
+                  <span className="inline-flex h-7 w-7 flex-none items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 text-white">
+                    <Check className="h-4 w-4" strokeWidth={3} />
+                  </span>
+                  <span className="min-w-0 break-words text-sm font-semibold text-navy-dark">{a}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
