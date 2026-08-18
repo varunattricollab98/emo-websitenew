@@ -208,7 +208,8 @@ export default function LeadModal({ open, config = {}, onClose }) {
                         value={form.email}
                         onChange={set('email')}
                         type="email"
-                        placeholder="Email (optional)"
+                        required
+                        placeholder="Email"
                         aria-label="Email"
                         className={inputClass}
                       />

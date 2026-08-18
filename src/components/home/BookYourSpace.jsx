@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import {
   Phone,
+  Mail,
   ArrowRight,
   CheckCircle2,
   Check,
@@ -24,16 +25,16 @@ const trustPoints = [
 export default function BookYourSpace() {
   const { openLeadModal } = useLeadModal()
   const [submitted, setSubmitted] = useState(false)
-  const [form, setForm] = useState({ name: '', phone: '', city: '' })
+  const [form, setForm] = useState({ name: '', phone: '', email: '', city: '' })
 
   const handleChange = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }))
   const handleSubmit = (e) => {
     e.preventDefault()
-    saveLead({ name: form.name, phone: form.phone, city: form.city, source: 'choose-by-requirement' })
+    saveLead({ name: form.name, phone: form.phone, email: form.email, city: form.city, source: 'choose-by-requirement' })
     setSubmitted(true)
     setTimeout(() => {
       setSubmitted(false)
-      setForm({ name: '', phone: '', city: '' })
+      setForm({ name: '', phone: '', email: '', city: '' })
     }, 5000)
   }
 
@@ -192,6 +193,20 @@ export default function BookYourSpace() {
                       required
                       placeholder="Phone number"
                       aria-label="Phone number"
+                      className={inputClass}
+                    />
+                  </div>
+                  <div className="relative">
+                    <Mail className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      value={form.email}
+                      onChange={handleChange}
+                      required
+                      placeholder="Email"
+                      aria-label="Email"
                       className={inputClass}
                     />
                   </div>
