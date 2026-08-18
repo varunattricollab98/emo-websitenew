@@ -10,19 +10,19 @@ const cityImg = {
   // Delhi — India Gate (verified ✓ 200 OK)
   delhi: 'https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format&fit=crop&w=800&q=80',
   // Mumbai — from Supabase
-  mumbai: 'https://oijtkvkyefqfwuycibcv.supabase.co/storage/v1/object/public/website-assets/Mumbai.png',
+  mumbai: '/cities/mumbai.webp',
   // Bangalore — from Supabase
-  bangalore: 'https://oijtkvkyefqfwuycibcv.supabase.co/storage/v1/object/public/website-assets/Bangalore.png',
+  bangalore: '/cities/bangalore.webp',
   // Gurgaon — from Supabase
-  gurgaon: 'https://oijtkvkyefqfwuycibcv.supabase.co/storage/v1/object/public/website-assets/Gurgaon.png',
+  gurgaon: '/cities/gurgaon.webp',
   // Hyderabad — from Supabase
-  hyderabad: 'https://oijtkvkyefqfwuycibcv.supabase.co/storage/v1/object/public/website-assets/Hyderabad%20Featured%20.png',
+  hyderabad: '/cities/hyderabad.webp',
   // Chennai — Kapaleeshwarar Temple gopuram (verified ✓ 200 OK)
   chennai: 'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=800&q=80',
   // Pune — from Supabase
-  pune: 'https://oijtkvkyefqfwuycibcv.supabase.co/storage/v1/object/public/website-assets/Pune1.png',
+  pune: '/cities/pune.webp',
   // Noida — from Supabase
-  noida: 'https://oijtkvkyefqfwuycibcv.supabase.co/storage/v1/object/public/website-assets/NOIDA%201.png',
+  noida: '/cities/noida.webp',
 }
 const fallbackImg =
   'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=800&q=80'

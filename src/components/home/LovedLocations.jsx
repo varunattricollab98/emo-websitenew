@@ -22,7 +22,7 @@ const locations = [
     businesses: '3,800+',
     price: '1,199',
     image:
-      'https://oijtkvkyefqfwuycibcv.supabase.co/storage/v1/object/public/website-assets/Mumbai.png',
+      '/cities/mumbai.webp',
   },
   {
     name: 'Bangalore',
@@ -31,7 +31,7 @@ const locations = [
     businesses: '3,100+',
     price: '999',
     image:
-      'https://oijtkvkyefqfwuycibcv.supabase.co/storage/v1/object/public/website-assets/Bangalore.png',
+      '/cities/bangalore.webp',
   },
   {
     name: 'Gurgaon',
@@ -40,7 +40,7 @@ const locations = [
     businesses: '2,400+',
     price: '999',
     image:
-      'https://oijtkvkyefqfwuycibcv.supabase.co/storage/v1/object/public/website-assets/Gurgaon.png',
+      '/cities/gurgaon.webp',
   },
   {
     name: 'Hyderabad',
