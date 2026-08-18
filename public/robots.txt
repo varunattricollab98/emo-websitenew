@@ -1,0 +1,16 @@
+User-agent: *
+Allow: /
+
+# Explicitly allow favicon & assets so Google can render the site icon
+Allow: /favicon.png
+Allow: /favicon-*.png
+Allow: /apple-touch-icon.png
+Allow: /cities/
+Allow: /logos/
+Allow: /assets/
+
+# Admin area is private
+Disallow: /admin
+Disallow: /admin/
+
+Sitemap: https://easemyoffice.in/sitemap.xml
