@@ -1,13 +1,16 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { Search, Plus, Pencil, Trash2, Building2 } from 'lucide-react'
 import { getAdminClient } from '../../lib/supabaseAdmin'
 import AdminNav from '../../components/admin/AdminNav'
+import AdminTableSkeleton from '../../components/admin/AdminTableSkeleton'
 import { sessionCan } from '../../lib/adminSession'
 
 export default function AdminCoworking() {
   const [spaces, setSpaces] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [search, setSearch] = useState('')
   const navigate = useNavigate()
 
   const adminClient = getAdminClient()
@@ -50,22 +53,66 @@ export default function AdminCoworking() {
     }
   }
 
+  const filtered = spaces.filter((s) => {
+    if (!search.trim()) return true
+    const q = search.toLowerCase()
+    return (
+      (s.name || '').toLowerCase().includes(q) ||
+      (s.city_name || '').toLowerCase().includes(q) ||
+      (s.locality || '').toLowerCase().includes(q)
+    )
+  })
+
+  const activeCount = spaces.filter((s) => s.is_active).length
+
   return (
     <div className="min-h-screen bg-slate-50">
-      <div className="mx-auto max-w-6xl px-4 py-8">
+      <div className="mx-auto max-w-7xl px-4 py-8">
         <AdminNav />
 
         {/* Page header */}
         <div className="mb-6 flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-slate-900">Coworking Spaces</h1>
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900">Coworking Spaces</h1>
+            <p className="mt-1 text-sm text-slate-500">Manage coworking listings, pricing and amenities.</p>
+          </div>
           {sessionCan('coworking.create') && (
             <Link
               to="/admin/coworking/new"
-              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
+              className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700"
             >
-              + New Space
+              <Plus className="h-4 w-4" />
+              New Space
             </Link>
           )}
+        </div>
+
+        {/* Stats */}
+        {!loading && (
+          <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
+            <div className="rounded-xl border border-slate-200/80 bg-white p-4 shadow-sm">
+              <p className="text-sm font-medium text-slate-500">Total Spaces</p>
+              <p className="mt-1 text-2xl font-bold text-slate-900">{spaces.length}</p>
+            </div>
+            <div className="rounded-xl border border-slate-200/80 bg-white p-4 shadow-sm">
+              <p className="text-sm font-medium text-slate-500">Active</p>
+              <p className="mt-1 text-2xl font-bold text-emerald-600">{activeCount}</p>
+            </div>
+          </div>
+        )}
+
+        {/* Search bar */}
+        <div className="mb-4">
+          <div className="relative max-w-md">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search by name, city, locality..."
+              className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm shadow-sm transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+            />
+          </div>
         </div>
 
         {/* Error */}
@@ -75,86 +122,110 @@ export default function AdminCoworking() {
           </div>
         )}
 
-        {/* Loading */}
-        {loading && (
-          <div className="py-12 text-center text-slate-500">Loading coworking spaces...</div>
-        )}
+        {/* Loading skeleton */}
+        {loading && <AdminTableSkeleton rows={5} cols={5} />}
 
         {/* Empty state */}
         {!loading && spaces.length === 0 && (
-          <div className="py-12 text-center text-slate-500">
-            No coworking spaces yet.{' '}
-            <Link to="/admin/coworking/new" className="text-blue-600 underline">
-              Create your first space
+          <div className="flex flex-col items-center justify-center py-16">
+            <div className="rounded-full bg-slate-100 p-4 mb-4">
+              <Building2 className="h-8 w-8 text-slate-400" />
+            </div>
+            <h3 className="text-lg font-semibold text-slate-700">No coworking spaces yet</h3>
+            <p className="mt-1 text-sm text-slate-500">Create your first coworking space to get started.</p>
+            <Link
+              to="/admin/coworking/new"
+              className="mt-4 inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700"
+            >
+              <Plus className="h-4 w-4" />
+              Create Space
             </Link>
           </div>
         )}
 
         {/* Spaces Table */}
-        {!loading && spaces.length > 0 && (
-          <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
-            <table className="w-full text-left text-sm">
-              <thead className="border-b border-slate-200 bg-slate-50">
-                <tr>
-                  <th className="px-4 py-3 font-medium text-slate-600">Name</th>
-                  <th className="px-4 py-3 font-medium text-slate-600">City</th>
-                  <th className="px-4 py-3 font-medium text-slate-600">Locality</th>
-                  <th className="px-4 py-3 font-medium text-slate-600">Dedicated Desk</th>
-                  <th className="px-4 py-3 font-medium text-slate-600">Day Pass</th>
-                  <th className="px-4 py-3 font-medium text-slate-600">Status</th>
-                  <th className="px-4 py-3 font-medium text-slate-600">Order</th>
-                  <th className="px-4 py-3 font-medium text-slate-600">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {spaces.map((space) => (
-                  <tr key={space.id} className="hover:bg-slate-50/50">
-                    <td className="px-4 py-3">
-                      <span className="font-medium text-slate-900">{space.name}</span>
-                    </td>
-                    <td className="px-4 py-3 text-slate-600">{space.city_name || '-'}</td>
-                    <td className="px-4 py-3 text-slate-600">{space.locality || '-'}</td>
-                    <td className="px-4 py-3 text-slate-600">
-                      {space.pricing_dedicated_desk ? `₹${space.pricing_dedicated_desk}` : '-'}
-                    </td>
-                    <td className="px-4 py-3 text-slate-600">
-                      {space.pricing_day_pass ? `₹${space.pricing_day_pass}` : '-'}
-                    </td>
-                    <td className="px-4 py-3">
-                      <span
-                        className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${
-                          space.is_active
-                            ? 'bg-green-100 text-green-700'
-                            : 'bg-slate-100 text-slate-500'
-                        }`}
-                      >
-                        {space.is_active ? 'Active' : 'Draft'}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-slate-600">{space.sort_order ?? '-'}</td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-2">
-                        <Link
-                          to={`/admin/coworking/edit/${space.id}`}
-                          className="rounded bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700 transition hover:bg-slate-200"
-                        >
-                          Edit
-                        </Link>
-                        {sessionCan('coworking.delete') && (
-                          <button
-                            onClick={() => handleDelete(space.id, space.name)}
-                            className="rounded bg-red-50 px-2.5 py-1 text-xs font-medium text-red-600 transition hover:bg-red-100"
-                          >
-                            Delete
-                          </button>
-                        )}
-                      </div>
-                    </td>
+        {!loading && filtered.length > 0 && (
+          <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead className="border-b border-slate-100 bg-slate-50/50">
+                  <tr>
+                    <th className="px-5 py-3.5 font-semibold text-slate-600">Name</th>
+                    <th className="px-5 py-3.5 font-semibold text-slate-600">City</th>
+                    <th className="px-5 py-3.5 font-semibold text-slate-600">Locality</th>
+                    <th className="px-5 py-3.5 font-semibold text-slate-600">Dedicated Desk</th>
+                    <th className="px-5 py-3.5 font-semibold text-slate-600">Day Pass</th>
+                    <th className="px-5 py-3.5 font-semibold text-slate-600">Status</th>
+                    <th className="px-5 py-3.5 font-semibold text-slate-600">Order</th>
+                    <th className="px-5 py-3.5 font-semibold text-slate-600">Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {filtered.map((space) => (
+                    <tr key={space.id} className="transition hover:bg-slate-50/80">
+                      <td className="px-5 py-3.5">
+                        <span className="font-medium text-slate-900">{space.name}</span>
+                      </td>
+                      <td className="px-5 py-3.5 text-slate-600">{space.city_name || '-'}</td>
+                      <td className="px-5 py-3.5 text-slate-600">{space.locality || '-'}</td>
+                      <td className="px-5 py-3.5">
+                        {space.pricing_dedicated_desk ? (
+                          <span className="font-medium text-slate-900">₹{Number(space.pricing_dedicated_desk).toLocaleString('en-IN')}</span>
+                        ) : (
+                          <span className="text-slate-400">-</span>
+                        )}
+                      </td>
+                      <td className="px-5 py-3.5">
+                        {space.pricing_day_pass ? (
+                          <span className="font-medium text-slate-900">₹{Number(space.pricing_day_pass).toLocaleString('en-IN')}</span>
+                        ) : (
+                          <span className="text-slate-400">-</span>
+                        )}
+                      </td>
+                      <td className="px-5 py-3.5">
+                        <span
+                          className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${
+                            space.is_active
+                              ? 'bg-emerald-50 text-emerald-700'
+                              : 'bg-slate-100 text-slate-500'
+                          }`}
+                        >
+                          <span className={`h-1.5 w-1.5 rounded-full ${space.is_active ? 'bg-emerald-500' : 'bg-slate-400'}`} />
+                          {space.is_active ? 'Active' : 'Draft'}
+                        </span>
+                      </td>
+                      <td className="px-5 py-3.5 text-slate-600">{space.sort_order ?? '-'}</td>
+                      <td className="px-5 py-3.5">
+                        <div className="flex items-center gap-2">
+                          <Link
+                            to={`/admin/coworking/edit/${space.id}`}
+                            className="inline-flex items-center gap-1.5 rounded-lg bg-slate-100 px-2.5 py-1.5 text-xs font-medium text-slate-700 transition hover:bg-slate-200"
+                          >
+                            <Pencil className="h-3.5 w-3.5" />
+                            Edit
+                          </Link>
+                          {sessionCan('coworking.delete') && (
+                            <button
+                              onClick={() => handleDelete(space.id, space.name)}
+                              className="inline-flex items-center gap-1.5 rounded-lg bg-red-50 px-2.5 py-1.5 text-xs font-medium text-red-600 transition hover:bg-red-100"
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                              Delete
+                            </button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
+        )}
+
+        {/* No results from search */}
+        {!loading && spaces.length > 0 && filtered.length === 0 && (
+          <div className="py-12 text-center text-slate-500">No spaces match your search.</div>
         )}
       </div>
     </div>

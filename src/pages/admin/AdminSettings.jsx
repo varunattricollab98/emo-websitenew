@@ -119,7 +119,14 @@ export default function AdminSettings() {
       <div className="min-h-screen bg-slate-50">
         <div className="mx-auto max-w-4xl px-4 py-8">
           <AdminNav />
-          <div className="py-12 text-center text-slate-500">Loading settings…</div>
+          <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="flex items-center gap-4 border-b border-slate-100 px-6 py-4 last:border-b-0">
+                <div className="h-4 w-32 animate-pulse rounded bg-slate-200" />
+                <div className="h-4 w-24 animate-pulse rounded bg-slate-200" />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     )
