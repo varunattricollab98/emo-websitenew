@@ -1,89 +1,151 @@
 import { createClient } from '@supabase/supabase-js'
 
+/**
+ * Admin Supabase client.
+ *
+ * IMPORTANT CHANGE: this used to build a client from a service_role key held in
+ * sessionStorage. Supabase now refuses elevated keys in the browser
+ * ("Forbidden use of secret API key in browser"), and that design was never
+ * safe anyway — it gave the browser unrestricted database access.
+ *
+ * Now the admin panel signs in as a real Supabase Auth user. This client uses
+ * the same browser-safe publishable key as the public site; authority comes
+ * from the signed-in user's JWT and is enforced by RLS policies in the
+ * database (see supabase/admin_auth_migration.sql).
+ *
+ * A separate client instance (with its own storageKey) is used so the admin
+ * session is kept isolated from the public site's anonymous client.
+ */
+
 const SUPABASE_URL =
   import.meta.env.VITE_SUPABASE_URL || 'https://oijtkvkyefqfwuycibcv.supabase.co'
 
+const PUBLISHABLE_KEY = 'sb_publishable_w7-240CdmLJ_xZy5Fg11Fg__ZI-wPO1'
+
+const SUPABASE_PUBLIC_KEY =
+  import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
+  import.meta.env.VITE_SUPABASE_ANON_KEY ||
+  PUBLISHABLE_KEY
+
+/** Singleton — Supabase Auth needs one client instance to own the session. */
+export const adminAuth = createClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: true, // needed for the password-recovery callback link
+    storageKey: 'emo-admin-auth',
+    flowType: 'pkce',
+  },
+})
+
 /**
- * Creates a Supabase client authenticated with an elevated key
- * (new-style `sb_secret_…` or a legacy service_role JWT).
- * This bypasses RLS so the admin panel can read/write every table.
- * The key is stored in sessionStorage after the admin logs in.
+ * The client every admin page uses for queries.
+ *
+ * Returns the authenticated client, or null when nobody is signed in — the
+ * existing `if (!client) navigate('/admin')` guards keep working unchanged.
+ *
+ * Note this is now synchronous-but-optimistic: it returns the client whenever a
+ * session exists in storage. Actual authority is checked by the database on
+ * every request, so a stale session simply gets empty results rather than
+ * leaking anything.
  */
 export function getAdminClient() {
-  const serviceKey = sessionStorage.getItem('admin_service_key')
-  if (!serviceKey) return null
+  if (typeof window === 'undefined') return null
+  try {
+    // Supabase stores the session under `${storageKey}` in localStorage.
+    const raw = window.localStorage.getItem('emo-admin-auth')
+    if (!raw) return null
+  } catch {
+    return null
+  }
+  return adminAuth
+}
 
-  return createClient(SUPABASE_URL, serviceKey, {
-    auth: { persistSession: false },
-  })
+/** Resolve the current Auth session (async — reads/refreshes the token). */
+export async function getAdminSession() {
+  const { data, error } = await adminAuth.auth.getSession()
+  if (error) return null
+  return data?.session ?? null
 }
 
 /**
- * Verifies a key is genuinely elevated (secret / service_role), not just valid.
- *
- * We probe `admin_users`, which has an RLS policy allowing ONLY the service
- * role. That distinguishes the three cases we care about:
- *
- *   - request errors           → key is wrong, revoked or disabled
- *   - succeeds but 0 rows      → it's a publishable/anon key (RLS filtered it)
- *   - succeeds with rows       → genuinely elevated ✓
- *
- * The old version probed `blog_posts`, which is publicly readable — so a
- * publishable key passed validation and then silently failed on every write.
- *
- * @returns {Promise<{ valid: boolean, reason?: string }>}
+ * Load the signed-in user's admin profile (role + permissions).
+ * Returns null when the auth user has no active admin_users row — i.e. they
+ * authenticated successfully but are not an admin.
  */
-export async function validateServiceKey(key) {
-  const trimmed = (key || '').trim()
-  if (!trimmed) return { valid: false, reason: 'Please enter a key.' }
+export async function fetchAdminProfile() {
+  const session = await getAdminSession()
+  if (!session?.user) return null
 
+  const { data, error } = await adminAuth
+    .from('admin_users')
+    .select('id, username, email, name, role, permissions, is_active')
+    .eq('auth_user_id', session.user.id)
+    .eq('is_active', true)
+    .maybeSingle()
+
+  if (error || !data) return null
+  return { ...data, authUserId: session.user.id, authEmail: session.user.email }
+}
+
+export async function adminSignOut() {
   try {
-    const client = createClient(SUPABASE_URL, trimmed, {
-      auth: { persistSession: false },
-    })
-
-    // NOTE: do not use `head: true` here — it discards the response body, which
-    // means Supabase's actual error message ("Legacy API keys are disabled",
-    // "Invalid API key", …) is lost and we can only show a useless blank error.
-    const { data, error } = await client.from('admin_users').select('id').limit(1)
-
-    if (error) {
-      const msg = error.message || ''
-
-      if (/legacy api keys are disabled/i.test(msg)) {
-        return {
-          valid: false,
-          reason:
-            'This is an old service_role key and legacy keys are disabled on this project. Create a new secret key in Supabase → API Keys → Secret keys.',
-        }
-      }
-      if (/invalid api key|jwt|unauthorized|401/i.test(msg)) {
-        return {
-          valid: false,
-          reason: 'That key was rejected by Supabase. Check you copied it fully.',
-        }
-      }
-      if (/relation|does not exist|42P01/i.test(msg)) {
-        // Table missing — can't prove elevation, but the key itself reached the
-        // API. Let it through so a fresh project can still be bootstrapped.
-        return { valid: true }
-      }
-      return { valid: false, reason: msg }
-    }
-
-    if (!data || data.length === 0) {
-      return {
-        valid: false,
-        reason:
-          'That looks like a publishable key. The admin panel needs a secret key (sb_secret_…) from Supabase → API Keys → Secret keys.',
-      }
-    }
-
-    return { valid: true }
-  } catch (err) {
-    return {
-      valid: false,
-      reason: err?.message || 'Could not reach Supabase. Check your connection.',
-    }
+    await adminAuth.auth.signOut()
+  } catch {
+    /* ignore — we clear local state regardless */
   }
+}
+
+/**
+ * Create a Supabase Auth account for a new admin.
+ *
+ * `auth.admin.inviteUserByEmail()` needs a secret key, which the browser is not
+ * allowed to hold — so we sign the new user up instead. That is done through a
+ * THROWAWAY client with `persistSession: false`, otherwise supabase-js would
+ * swap the current admin's session for the new user's and effectively log the
+ * admin out mid-action.
+ *
+ * A database trigger (link_auth_user_to_admin_profile) attaches the new auth
+ * user to the matching admin_users row by email.
+ *
+ * @returns {Promise<{ ok: boolean, needsConfirmation?: boolean, error?: string }>}
+ */
+export async function createAuthUser(email, password) {
+  const throwaway = createClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY, {
+    auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
+  })
+
+  const { data, error } = await throwaway.auth.signUp({
+    email: email.trim(),
+    password,
+  })
+
+  if (error) {
+    const msg = error.message || ''
+    if (/already registered|already exists/i.test(msg)) {
+      return {
+        ok: true,
+        alreadyExisted: true,
+      }
+    }
+    if (/signups not allowed|disabled/i.test(msg)) {
+      return {
+        ok: false,
+        error:
+          'Email signups are disabled for this project. Enable them in Supabase → Authentication → Sign In / Providers, or create the user manually in Authentication → Users.',
+      }
+    }
+    return { ok: false, error: msg }
+  }
+
+  // No session returned → Supabase is set to require email confirmation.
+  return { ok: true, needsConfirmation: !data?.session }
+}
+
+/** Email a password-reset link to an existing admin. */
+export async function sendPasswordReset(email) {
+  const { error } = await adminAuth.auth.resetPasswordForEmail(email, {
+    redirectTo: `${window.location.origin}/admin/reset-password`,
+  })
+  return error ? { ok: false, error: error.message } : { ok: true }
 }

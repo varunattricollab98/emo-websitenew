@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams, Link } from 'react-router-dom'
-import { ArrowLeft, Info, ShieldCheck } from 'lucide-react'
+import { ArrowLeft, Info, ShieldCheck, AlertTriangle } from 'lucide-react'
 import { useAdminSession } from '../../components/admin/useAdminSession'
+import { createAuthUser } from '../../lib/supabaseAdmin'
 import {
   PERMISSION_SECTIONS,
   ACTION_LABELS,
@@ -10,7 +11,7 @@ import {
   permissionsForRole,
   parsePermissions,
 } from '../../lib/permissions'
-import { createPasswordFields, validatePasswordStrength } from '../../lib/adminPassword'
+import { validatePasswordStrength } from '../../lib/adminPassword'
 import { logAudit } from '../../lib/adminSession'
 
 export default function AdminUserEditor() {
@@ -28,6 +29,7 @@ export default function AdminUserEditor() {
     is_active: true,
   })
   const [permissions, setPermissions] = useState(() => permissionsForRole('editor'))
+  const [authLinked, setAuthLinked] = useState(false)
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
@@ -40,7 +42,7 @@ export default function AdminUserEditor() {
       setLoading(true)
       const { data, error: err } = await client
         .from('admin_users')
-        .select('id, username, email, name, role, permissions, is_active')
+        .select('id, username, email, name, role, permissions, is_active, auth_user_id')
         .eq('id', id)
         .limit(1)
         .single()
@@ -52,12 +54,13 @@ export default function AdminUserEditor() {
         setForm({
           username: data.username || '',
           email: data.email || '',
-          password: '', // never load the stored hash
+          password: '',
           name: data.name || '',
           role: data.role || 'editor',
           is_active: data.is_active ?? true,
         })
         setPermissions(parsePermissions(data.permissions, data.role))
+        setAuthLinked(Boolean(data.auth_user_id))
       }
       setLoading(false)
     }
@@ -68,9 +71,8 @@ export default function AdminUserEditor() {
   }, [client, id, isEdit])
 
   const isFullAccess = permissions.includes('*')
-  const editingSelf = isEdit && session?.username === form.username
+  const editingSelf = isEdit && session?.id === id
 
-  /** Switching role replaces the checkbox selection with that role's preset. */
   function handleRoleChange(role) {
     setForm((f) => ({ ...f, role }))
     setPermissions(permissionsForRole(role))
@@ -78,16 +80,13 @@ export default function AdminUserEditor() {
 
   function togglePermission(key) {
     setPermissions((prev) => {
-      // Leaving full-access mode: expand "*" into the role's concrete list first
       if (prev.includes('*')) {
         const expanded = permissionsForRole(form.role).filter((p) => p !== '*')
         return expanded.includes(key)
           ? expanded.filter((p) => p !== key)
           : [...expanded, key]
       }
-      return prev.includes(key)
-        ? prev.filter((p) => p !== key)
-        : [...prev, key]
+      return prev.includes(key) ? prev.filter((p) => p !== key) : [...prev, key]
     })
   }
 
@@ -107,15 +106,16 @@ export default function AdminUserEditor() {
     e.preventDefault()
     setError('')
 
-    if (!form.username.trim()) {
-      setError('Username is required.')
+    const email = form.email.trim()
+    if (!email) {
+      setError('Email is required — it is the login identifier.')
       return
     }
     if (!isEdit && !form.password.trim()) {
-      setError('Password is required for new users.')
+      setError('Set an initial password so the account can sign in.')
       return
     }
-    if (form.password.trim()) {
+    if (!isEdit) {
       const strengthError = validatePasswordStrength(form.password.trim())
       if (strengthError) {
         setError(strengthError)
@@ -126,7 +126,6 @@ export default function AdminUserEditor() {
       setError('Select at least one permission, or choose a role preset.')
       return
     }
-    // Don't let an admin strip their own admin rights and lock themselves out.
     if (editingSelf && form.role !== 'admin' && session?.role === 'admin') {
       const confirmed = window.confirm(
         'You are removing your own administrator role. You may lose access to this section. Continue?'
@@ -137,44 +136,69 @@ export default function AdminUserEditor() {
     setSaving(true)
 
     const payload = {
-      username: form.username.trim(),
-      email: form.email.trim() || null,
+      // username is kept as a display/legacy field; email is what logs in
+      username: form.username.trim() || email.split('@')[0],
+      email,
       name: form.name.trim() || null,
       role: form.role,
       is_active: form.is_active,
       permissions,
     }
 
-    if (form.password.trim()) {
-      try {
-        Object.assign(payload, await createPasswordFields(form.password.trim()))
-      } catch {
+    // ── Create: make the Auth account first, then the profile row ──
+    if (!isEdit) {
+      const authRes = await createAuthUser(email, form.password.trim())
+      if (!authRes.ok) {
         setSaving(false)
-        setError('Could not hash the password. Make sure you are on HTTPS.')
+        setError(authRes.error)
         return
       }
-    }
 
-    const result = isEdit
-      ? await client.from('admin_users').update(payload).eq('id', id)
-      : await client.from('admin_users').insert(payload)
+      const { error: insertError } = await client.from('admin_users').insert(payload)
+      if (insertError) {
+        setSaving(false)
+        const msg = insertError.message || ''
+        setError(
+          /duplicate|unique/i.test(msg)
+            ? 'That username or email already has an admin profile.'
+            : 'Save failed: ' + msg
+        )
+        return
+      }
 
-    if (result.error) {
-      const msg = result.error.message || ''
-      setError(
-        msg.includes('duplicate') || msg.includes('unique')
-          ? 'That username or email is already taken.'
-          : 'Save failed: ' + msg
-      )
-      setSaving(false)
+      await logAudit(client, 'user.create', `${email} (${payload.role})`)
+
+      if (authRes.needsConfirmation) {
+        alert(
+          `Account created.\n\n${email} must click the confirmation link Supabase just emailed them before they can sign in.`
+        )
+      } else if (authRes.alreadyExisted) {
+        alert(
+          `Profile created and linked to the existing Supabase Auth login for ${email}.\n\nTheir existing password still applies — use "Email reset" if they need a new one.`
+        )
+      }
+      navigate('/admin/users')
       return
     }
 
-    await logAudit(
-      client,
-      isEdit ? 'user.update' : 'user.create',
-      `${payload.username} (${payload.role})`
-    )
+    // ── Edit: profile only. Passwords are changed via the reset email. ──
+    const { error: updateError } = await client
+      .from('admin_users')
+      .update(payload)
+      .eq('id', id)
+
+    if (updateError) {
+      setSaving(false)
+      const msg = updateError.message || ''
+      setError(
+        /duplicate|unique/i.test(msg)
+          ? 'That username or email is already taken.'
+          : 'Save failed: ' + msg
+      )
+      return
+    }
+
+    await logAudit(client, 'user.update', `${email} (${payload.role})`)
     navigate('/admin/users')
   }
 
@@ -192,7 +216,6 @@ export default function AdminUserEditor() {
   return (
     <div className="min-h-screen bg-slate-50">
       <div className="mx-auto max-w-4xl px-4 py-8">
-        {/* header */}
         <div className="mb-6 flex items-center justify-between rounded-xl border border-slate-200 bg-white px-5 py-3">
           <Link
             to="/admin/users"
@@ -222,6 +245,18 @@ export default function AdminUserEditor() {
           </div>
         )}
 
+        {isEdit && !authLinked && (
+          <div className="mb-4 flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
+            <AlertTriangle className="mt-0.5 h-4 w-4 flex-none" />
+            <span>
+              No Supabase Auth login exists for this email yet, so this person
+              cannot sign in. Create it in{' '}
+              <strong>Supabase → Authentication → Users → Add user</strong> with the
+              same email address — it links automatically.
+            </span>
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* ── Account details ── */}
           <div className="rounded-xl border border-slate-200 bg-white p-6">
@@ -231,16 +266,19 @@ export default function AdminUserEditor() {
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
                 <label className="mb-1 block text-sm font-medium text-slate-700">
-                  Username <span className="text-red-500">*</span>
+                  Email <span className="text-red-500">*</span>
                 </label>
                 <input
-                  type="text"
-                  value={form.username}
-                  onChange={(e) => setForm((f) => ({ ...f, username: e.target.value }))}
+                  type="email"
+                  value={form.email}
+                  onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
                   className={inputClass}
-                  placeholder="e.g. kishan"
+                  placeholder="name@easemyoffice.in"
                   autoComplete="off"
                 />
+                <p className="mt-1 text-xs text-slate-400">
+                  This is what they sign in with.
+                </p>
               </div>
               <div>
                 <label className="mb-1 block text-sm font-medium text-slate-700">
@@ -256,39 +294,52 @@ export default function AdminUserEditor() {
               </div>
               <div>
                 <label className="mb-1 block text-sm font-medium text-slate-700">
-                  Email
+                  Display username
                 </label>
                 <input
-                  type="email"
-                  value={form.email}
-                  onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+                  type="text"
+                  value={form.username}
+                  onChange={(e) => setForm((f) => ({ ...f, username: e.target.value }))}
                   className={inputClass}
-                  placeholder="name@easemyoffice.in"
+                  placeholder="auto-filled from email"
                 />
                 <p className="mt-1 text-xs text-slate-400">
-                  Used to match password reset requests.
+                  Shown in the audit log. Optional.
                 </p>
               </div>
-              <div>
-                <label className="mb-1 block text-sm font-medium text-slate-700">
-                  Password{' '}
-                  {isEdit ? (
-                    <span className="text-xs font-normal text-slate-400">
-                      (leave blank to keep current)
-                    </span>
-                  ) : (
-                    <span className="text-red-500">*</span>
-                  )}
-                </label>
-                <input
-                  type="password"
-                  value={form.password}
-                  onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
-                  className={inputClass}
-                  placeholder={isEdit ? '••••••••' : 'Min 8 chars, 1 letter, 1 number'}
-                  autoComplete="new-password"
-                />
-              </div>
+              {!isEdit ? (
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-slate-700">
+                    Initial password <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="password"
+                    value={form.password}
+                    onChange={(e) =>
+                      setForm((f) => ({ ...f, password: e.target.value }))
+                    }
+                    className={inputClass}
+                    placeholder="Min 8 chars, 1 letter, 1 number"
+                    autoComplete="new-password"
+                  />
+                  <p className="mt-1 text-xs text-slate-400">
+                    Share it with them and ask them to change it.
+                  </p>
+                </div>
+              ) : (
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-slate-700">
+                    Password
+                  </label>
+                  <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-500">
+                    Managed by Supabase Auth
+                  </div>
+                  <p className="mt-1 text-xs text-slate-400">
+                    Use <strong>Email reset</strong> on the users list to send a
+                    reset link.
+                  </p>
+                </div>
+              )}
             </div>
 
             <label className="mt-4 flex cursor-pointer items-center gap-2">
@@ -334,9 +385,7 @@ export default function AdminUserEditor() {
                       >
                         {preset.label}
                       </span>
-                      {selected && (
-                        <ShieldCheck className="h-4 w-4 text-blue-600" />
-                      )}
+                      {selected && <ShieldCheck className="h-4 w-4 text-blue-600" />}
                     </span>
                     <span className="mt-2 block text-xs leading-relaxed text-slate-500">
                       {preset.description}
@@ -353,7 +402,8 @@ export default function AdminUserEditor() {
               Permissions
             </h2>
             <p className="mb-4 text-xs text-slate-400">
-              Tick exactly what this user may do in each section.
+              Enforced by the database — a user cannot exceed these even by
+              tampering with the browser.
             </p>
 
             {isFullAccess && (
@@ -372,8 +422,7 @@ export default function AdminUserEditor() {
                 const keys = section.actions.map((a) => `${section.key}.${a}`)
                 const allOn =
                   isFullAccess || keys.every((k) => permissions.includes(k))
-                const someOn =
-                  !allOn && keys.some((k) => permissions.includes(k))
+                const someOn = !allOn && keys.some((k) => permissions.includes(k))
 
                 return (
                   <div
@@ -439,7 +488,6 @@ export default function AdminUserEditor() {
             </p>
           </div>
 
-          {/* actions */}
           <div className="flex items-center gap-3">
             <button
               type="submit"

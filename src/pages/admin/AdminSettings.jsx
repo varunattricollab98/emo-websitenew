@@ -147,6 +147,10 @@ export default function AdminSettings() {
                 <code className="rounded bg-white px-1.5 py-0.5">
                   supabase/admin_rbac_migration.sql
                 </code>{' '}
+                and{' '}
+                <code className="rounded bg-white px-1.5 py-0.5">
+                  supabase/admin_auth_migration.sql
+                </code>{' '}
                 in the Supabase SQL editor to enable these settings. Defaults are
                 being used until then.
               </p>
@@ -199,8 +203,9 @@ export default function AdminSettings() {
                   Admin login is {form.login_enabled ? 'enabled' : 'disabled'}
                 </span>
                 <span className="mt-1 block text-xs text-slate-500">
-                  Turn this off to block all admin sign-ins (existing sessions
-                  stay active until they expire). Useful during maintenance.
+                  Blocks sign-ins for everyone except full administrators, so you
+                  can never lock yourself out. Existing sessions stay active until
+                  they expire. Useful during maintenance.
                 </span>
               </span>
             </label>

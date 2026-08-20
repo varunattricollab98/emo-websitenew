@@ -1,93 +1,60 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
-import { KeyRound, Copy, Check, Trash2, Pencil, Clock } from 'lucide-react'
+import { KeyRound, Trash2, Pencil, AlertTriangle, CheckCircle2 } from 'lucide-react'
 import AdminNav from '../../components/admin/AdminNav'
 import { useAdminSession } from '../../components/admin/useAdminSession'
+import { sendPasswordReset } from '../../lib/supabaseAdmin'
 import { ROLE_PRESETS, parsePermissions } from '../../lib/permissions'
-import { generateResetToken } from '../../lib/adminPassword'
 import { logAudit } from '../../lib/adminSession'
-
-const RESET_LINK_VALID_HOURS = 24
 
 export default function AdminUsers() {
   const { client, session, can } = useAdminSession()
   const [users, setUsers] = useState([])
-  const [requests, setRequests] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [resetLink, setResetLink] = useState(null) // { username, url }
-  const [copied, setCopied] = useState(false)
+  const [flash, setFlash] = useState('')
 
-  const fetchAll = useCallback(async () => {
+  const fetchUsers = useCallback(async () => {
     if (!client) return
     setLoading(true)
 
     const { data, error: err } = await client
       .from('admin_users')
       .select(
-        'id, username, email, name, role, permissions, is_active, created_at, last_login_at, locked_until'
+        'id, username, email, name, role, permissions, is_active, created_at, last_login_at, auth_user_id'
       )
       .order('created_at', { ascending: true })
 
     if (err) setError(err.message)
     else setUsers(data || [])
-
-    // Pending password-reset requests (table may not exist on older DBs)
-    try {
-      const { data: reqs } = await client
-        .from('password_reset_requests')
-        .select('id, identifier, created_at')
-        .eq('status', 'pending')
-        .order('created_at', { ascending: false })
-      setRequests(reqs || [])
-    } catch {
-      setRequests([])
-    }
-
     setLoading(false)
   }, [client])
 
   useEffect(() => {
-    fetchAll()
-  }, [fetchAll])
+    fetchUsers()
+  }, [fetchUsers])
 
-  /** Generate a single-use reset link the admin can share manually. */
-  async function handleGenerateReset(user) {
-    const token = generateResetToken()
-    const expires = new Date(
-      Date.now() + RESET_LINK_VALID_HOURS * 3600 * 1000
-    ).toISOString()
-
-    const { error: err } = await client
-      .from('admin_users')
-      .update({ reset_token: token, reset_expires_at: expires })
-      .eq('id', user.id)
-
-    if (err) {
-      alert('Could not create reset link: ' + err.message)
-      return
-    }
-
-    const url = `${window.location.origin}/admin/reset-password?token=${token}`
-    setResetLink({ username: user.username, url })
-    setCopied(false)
-    await logAudit(client, 'user.reset_link', `Generated for ${user.username}`)
+  function showFlash(msg) {
+    setFlash(msg)
+    setTimeout(() => setFlash(''), 5000)
   }
 
-  async function handleResolveRequest(id) {
-    await client
-      .from('password_reset_requests')
-      .update({
-        status: 'handled',
-        handled_by: session?.username || null,
-        handled_at: new Date().toISOString(),
-      })
-      .eq('id', id)
-    setRequests((prev) => prev.filter((r) => r.id !== id))
+  async function handleSendReset(user) {
+    if (!user.email) {
+      alert('This user has no email address, so a reset link cannot be sent.')
+      return
+    }
+    const res = await sendPasswordReset(user.email)
+    if (!res.ok) {
+      alert('Could not send reset email: ' + res.error)
+      return
+    }
+    showFlash(`Password reset link emailed to ${user.email}.`)
+    await logAudit(client, 'user.reset_email', user.email)
   }
 
   async function handleDelete(id, username) {
-    if (session?.username && username === session.username) {
+    if (session?.id === id) {
       alert('You cannot delete your own account.')
       return
     }
@@ -99,7 +66,12 @@ export default function AdminUsers() {
       return
     }
 
-    if (!window.confirm(`Delete user "${username}"? This cannot be undone.`)) return
+    if (
+      !window.confirm(
+        `Delete "${username}"?\n\nThis removes their admin access immediately. Their Supabase Auth login is not deleted — remove it in Authentication → Users if you want it gone too.`
+      )
+    )
+      return
 
     const { error: err } = await client.from('admin_users').delete().eq('id', id)
     if (err) {
@@ -111,7 +83,7 @@ export default function AdminUsers() {
   }
 
   async function handleToggleActive(user) {
-    if (session?.username === user.username && user.is_active) {
+    if (session?.id === user.id && user.is_active) {
       alert('You cannot deactivate your own account.')
       return
     }
@@ -134,19 +106,9 @@ export default function AdminUsers() {
     )
   }
 
-  async function handleUnlock(user) {
-    await client
-      .from('admin_users')
-      .update({ locked_until: null, failed_attempts: 0 })
-      .eq('id', user.id)
-    setUsers((prev) =>
-      prev.map((u) => (u.id === user.id ? { ...u, locked_until: null } : u))
-    )
-    await logAudit(client, 'user.unlock', user.username)
-  }
-
   const canEdit = can('users.edit')
   const canDelete = can('users.delete')
+  const unlinked = users.filter((u) => !u.auth_user_id)
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -170,72 +132,29 @@ export default function AdminUsers() {
           )}
         </div>
 
-        {/* Reset link banner */}
-        {resetLink && (
-          <div className="mb-4 rounded-xl border border-amber-200 bg-amber-50 p-4">
-            <div className="flex items-start justify-between gap-4">
-              <div className="min-w-0">
-                <p className="text-sm font-semibold text-amber-900">
-                  Reset link for {resetLink.username}
-                </p>
-                <p className="mt-1 text-xs text-amber-700">
-                  Valid for {RESET_LINK_VALID_HOURS} hours, single use. Share it
-                  directly with the user — it is not emailed automatically.
-                </p>
-                <code className="mt-2 block truncate rounded bg-white px-2 py-1.5 text-xs text-slate-600">
-                  {resetLink.url}
-                </code>
-              </div>
-              <div className="flex flex-none items-center gap-2">
-                <button
-                  onClick={() => {
-                    navigator.clipboard?.writeText(resetLink.url)
-                    setCopied(true)
-                  }}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-amber-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-amber-700"
-                >
-                  {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
-                  {copied ? 'Copied' : 'Copy'}
-                </button>
-                <button
-                  onClick={() => setResetLink(null)}
-                  className="rounded-lg border border-amber-300 px-3 py-2 text-xs text-amber-800 transition hover:bg-amber-100"
-                >
-                  Close
-                </button>
-              </div>
-            </div>
+        {flash && (
+          <div className="mb-4 flex items-start gap-2 rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">
+            <CheckCircle2 className="mt-0.5 h-4 w-4 flex-none" />
+            <span>{flash}</span>
           </div>
         )}
 
-        {/* Pending reset requests */}
-        {requests.length > 0 && (
-          <div className="mb-4 rounded-xl border border-blue-200 bg-blue-50 p-4">
-            <p className="mb-2 text-sm font-semibold text-blue-900">
-              {requests.length} pending password reset request
-              {requests.length === 1 ? '' : 's'}
-            </p>
-            <ul className="space-y-2">
-              {requests.map((r) => (
-                <li
-                  key={r.id}
-                  className="flex items-center justify-between gap-3 rounded-lg bg-white px-3 py-2"
-                >
-                  <span className="text-sm text-slate-700">
-                    <span className="font-semibold">{r.identifier}</span>
-                    <span className="ml-2 text-xs text-slate-400">
-                      {new Date(r.created_at).toLocaleString()}
-                    </span>
-                  </span>
-                  <button
-                    onClick={() => handleResolveRequest(r.id)}
-                    className="rounded bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600 transition hover:bg-slate-200"
-                  >
-                    Mark handled
-                  </button>
-                </li>
-              ))}
-            </ul>
+        {unlinked.length > 0 && (
+          <div className="mb-4 flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+            <AlertTriangle className="mt-0.5 h-4 w-4 flex-none" />
+            <div>
+              <p className="font-semibold">
+                {unlinked.length} account{unlinked.length === 1 ? '' : 's'} cannot sign
+                in yet
+              </p>
+              <p className="mt-1 text-xs">
+                {unlinked.map((u) => u.email || u.username).join(', ')} — no Supabase
+                Auth login exists for {unlinked.length === 1 ? 'this email' : 'these emails'}.
+                Create {unlinked.length === 1 ? 'it' : 'them'} in{' '}
+                <strong>Supabase → Authentication → Users → Add user</strong> using the
+                same email, and the link happens automatically.
+              </p>
+            </div>
           </div>
         )}
 
@@ -276,15 +195,14 @@ export default function AdminUsers() {
                   const perms = parsePermissions(user.permissions, user.role)
                   const isFull = perms.includes('*')
                   const preset = ROLE_PRESETS[user.role]
-                  const isLocked =
-                    user.locked_until && new Date(user.locked_until) > new Date()
-                  const isSelf = session?.username === user.username
+                  const isSelf = session?.id === user.id
+                  const canLogIn = Boolean(user.auth_user_id)
 
                   return (
                     <tr key={user.id} className="hover:bg-slate-50/50">
                       <td className="px-4 py-3">
                         <span className="font-medium text-slate-900">
-                          {user.username}
+                          {user.name || user.username}
                         </span>
                         {isSelf && (
                           <span className="ml-2 rounded bg-blue-50 px-1.5 py-0.5 text-[10px] font-bold uppercase text-blue-600">
@@ -292,8 +210,9 @@ export default function AdminUsers() {
                           </span>
                         )}
                         <span className="block text-xs text-slate-500">
-                          {user.name || '—'}
-                          {user.email ? ` · ${user.email}` : ''}
+                          {user.email || (
+                            <span className="text-amber-600">no email set</span>
+                          )}
                         </span>
                       </td>
                       <td className="px-4 py-3">
@@ -315,10 +234,10 @@ export default function AdminUsers() {
                         )}
                       </td>
                       <td className="px-4 py-3">
-                        {isLocked ? (
+                        {!canLogIn ? (
                           <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700">
-                            <Clock className="h-3 w-3" />
-                            Locked
+                            <AlertTriangle className="h-3 w-3" />
+                            No login
                           </span>
                         ) : (
                           <span
@@ -348,22 +267,14 @@ export default function AdminUsers() {
                               Edit
                             </Link>
                           )}
-                          {canEdit && (
+                          {canEdit && user.email && (
                             <button
-                              onClick={() => handleGenerateReset(user)}
-                              title="Generate a password reset link"
+                              onClick={() => handleSendReset(user)}
+                              title="Email a password reset link"
                               className="inline-flex items-center gap-1 rounded bg-amber-50 px-2.5 py-1 text-xs font-medium text-amber-700 transition hover:bg-amber-100"
                             >
                               <KeyRound className="h-3 w-3" />
-                              Reset
-                            </button>
-                          )}
-                          {canEdit && isLocked && (
-                            <button
-                              onClick={() => handleUnlock(user)}
-                              className="rounded bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700 transition hover:bg-emerald-100"
-                            >
-                              Unlock
+                              Email reset
                             </button>
                           )}
                           {canEdit && !isSelf && (

@@ -1,53 +1,112 @@
-import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getAdminClient } from '../../lib/supabaseAdmin'
+import {
+  adminAuth,
+  fetchAdminProfile,
+  adminSignOut,
+} from '../../lib/supabaseAdmin'
 import {
   readSession,
+  setCachedProfile,
   clearSession,
   isSessionExpired,
 } from '../../lib/adminSession'
 import { hasPermission, hasAnyPermission } from '../../lib/permissions'
 
 /**
- * The hook every admin page uses instead of poking sessionStorage directly.
+ * The hook every admin page uses.
  *
  * Returns:
- *   session  — { role, permissions, name, username, userId } or null
- *   client   — service_role Supabase client (null when not logged in)
+ *   session  — { id, username, email, name, role, permissions } or null
+ *   client   — authenticated Supabase client (null when signed out)
  *   can(p)   — permission check
  *   canAny([p]) — true if any permission matches
- *   logout() — clears the session and returns to /admin
- *   ready    — false until the expiry check has run
+ *   logout() — signs out of Supabase Auth and returns to /admin
+ *   ready    — false until the session has been resolved
+ *
+ * Authority is enforced by RLS in the database; these checks only shape the UI.
  */
 export function useAdminSession() {
   const navigate = useNavigate()
   const [session, setSession] = useState(() => readSession())
   const [ready, setReady] = useState(false)
 
-  const logout = useCallback(() => {
+  const logout = useCallback(async () => {
+    await adminSignOut()
     clearSession()
     setSession(null)
     navigate('/admin')
   }, [navigate])
 
-  // Expire stale sessions on mount and whenever the tab regains focus.
   useEffect(() => {
-    function check() {
+    let cancelled = false
+
+    async function resolve() {
+      // Custom idle timeout on top of Supabase's token expiry
       if (readSession() && isSessionExpired()) {
+        await adminSignOut()
         clearSession()
-        setSession(null)
-        navigate('/admin?expired=1')
+        if (!cancelled) {
+          setSession(null)
+          setReady(true)
+          navigate('/admin?expired=1')
+        }
         return
       }
-      setSession(readSession())
+
+      const { data } = await adminAuth.auth.getSession()
+      if (cancelled) return
+
+      if (!data?.session) {
+        clearSession()
+        setSession(null)
+        setReady(true)
+        return
+      }
+
+      // Signed in — make sure we have the profile (role + permissions).
+      let profile = readSession()
+      if (!profile) {
+        const fetched = await fetchAdminProfile()
+        if (cancelled) return
+        if (fetched) {
+          setCachedProfile(fetched)
+          profile = readSession()
+        } else {
+          // Authenticated with Supabase but not an admin — sign out so they
+          // aren't left in a half-logged-in state.
+          await adminSignOut()
+          clearSession()
+          if (!cancelled) {
+            setSession(null)
+            setReady(true)
+            navigate('/admin?notadmin=1')
+          }
+          return
+        }
+      }
+
+      setSession(profile)
       setReady(true)
     }
-    check()
-    window.addEventListener('focus', check)
-    return () => window.removeEventListener('focus', check)
+
+    resolve()
+
+    // React to sign-out / token refresh in other tabs
+    const { data: sub } = adminAuth.auth.onAuthStateChange((event) => {
+      if (event === 'SIGNED_OUT') {
+        clearSession()
+        setSession(null)
+      }
+    })
+
+    return () => {
+      cancelled = true
+      sub?.subscription?.unsubscribe()
+    }
   }, [navigate])
 
-  const client = useMemo(() => getAdminClient(), [session?.serviceKey])
+  const client = session ? adminAuth : null
 
   const can = useCallback(
     (permission) => hasPermission(session?.permissions, permission),

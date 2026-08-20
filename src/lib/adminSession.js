@@ -1,93 +1,103 @@
 /**
- * Single source of truth for the admin session.
+ * Admin session state.
  *
- * The session lives in sessionStorage (cleared when the tab closes):
- *   admin_service_key  — Supabase service_role JWT, also the "logged in" flag
- *   admin_role         — role name (admin | manager | editor | viewer)
- *   admin_permissions  — JSON array of permission keys
- *   admin_name         — display name
- *   admin_username     — username, used for audit logging
- *   admin_user_id      — admin_users.id
- *   admin_login_at     — epoch ms, used for the idle/session timeout
- *   admin_timeout_min  — session timeout from admin_settings
+ * The authoritative session is Supabase Auth's (managed by the client in
+ * supabaseAdmin.js). The role + permissions come from the `admin_users` table.
  *
- * NOTE ON SECURITY: because the browser holds the service_role key, these
- * client-side checks are a UX guardrail, not a security boundary. Anyone who
- * can open devtools can edit sessionStorage. Treat admin access itself as the
- * trust boundary and only hand the panel to people you trust.
+ * We keep a small cache of the profile so UI code can check permissions
+ * synchronously (to hide buttons, filter nav links, etc.). That cache is a
+ * CONVENIENCE ONLY — every read and write is independently enforced by RLS
+ * policies in the database, so tampering with it just means the UI shows a
+ * control that the database then refuses. That is the key difference from the
+ * old design, where sessionStorage *was* the security boundary.
  */
 
 import { parsePermissions, hasPermission, hasAnyPermission } from './permissions'
 
-const KEYS = [
-  'admin_service_key',
-  'admin_role',
-  'admin_permissions',
-  'admin_name',
-  'admin_username',
-  'admin_user_id',
-  'admin_login_at',
-  'admin_timeout_min',
-]
+const CACHE_KEY = 'emo_admin_profile'
+const LOGIN_AT_KEY = 'emo_admin_login_at'
+const TIMEOUT_KEY = 'emo_admin_timeout_min'
 
 const DEFAULT_TIMEOUT_MIN = 480 // 8 hours
 
-/** Persist a successful login. */
-export function saveSession({
-  serviceKey,
-  role,
-  permissions,
-  name,
-  username,
-  userId,
-  timeoutMinutes,
-}) {
-  sessionStorage.setItem('admin_service_key', serviceKey)
-  sessionStorage.setItem('admin_role', role || 'viewer')
-  sessionStorage.setItem('admin_permissions', JSON.stringify(permissions ?? []))
-  sessionStorage.setItem('admin_name', name || '')
-  sessionStorage.setItem('admin_username', username || '')
-  sessionStorage.setItem('admin_user_id', userId || '')
-  sessionStorage.setItem('admin_login_at', String(Date.now()))
-  sessionStorage.setItem(
-    'admin_timeout_min',
-    String(timeoutMinutes || DEFAULT_TIMEOUT_MIN)
-  )
-}
+let memoryProfile = null
 
-export function clearSession() {
-  KEYS.forEach((k) => sessionStorage.removeItem(k))
-}
-
-/** True when the session is older than the configured timeout. */
-export function isSessionExpired() {
-  const loginAt = Number(sessionStorage.getItem('admin_login_at') || 0)
-  if (!loginAt) return false // legacy session without a timestamp — let it through
-  const timeoutMin =
-    Number(sessionStorage.getItem('admin_timeout_min')) || DEFAULT_TIMEOUT_MIN
-  return Date.now() - loginAt > timeoutMin * 60 * 1000
-}
-
-/** Read the current session synchronously. */
-export function readSession() {
-  const serviceKey = sessionStorage.getItem('admin_service_key')
-  if (!serviceKey) return null
-
-  const role = sessionStorage.getItem('admin_role') || 'viewer'
-  return {
-    serviceKey,
-    role,
-    permissions: parsePermissions(
-      sessionStorage.getItem('admin_permissions'),
-      role
-    ),
-    name: sessionStorage.getItem('admin_name') || 'Admin',
-    username: sessionStorage.getItem('admin_username') || '',
-    userId: sessionStorage.getItem('admin_user_id') || '',
+/** Cache the profile after login / refresh. */
+export function setCachedProfile(profile, timeoutMinutes) {
+  memoryProfile = profile || null
+  try {
+    if (profile) {
+      sessionStorage.setItem(CACHE_KEY, JSON.stringify(profile))
+      if (!sessionStorage.getItem(LOGIN_AT_KEY)) {
+        sessionStorage.setItem(LOGIN_AT_KEY, String(Date.now()))
+      }
+      if (timeoutMinutes) {
+        sessionStorage.setItem(TIMEOUT_KEY, String(timeoutMinutes))
+      }
+    } else {
+      sessionStorage.removeItem(CACHE_KEY)
+    }
+  } catch {
+    /* private-mode storage — memory cache still works */
   }
 }
 
-/** Permission check against the live session. */
+export function clearSession() {
+  memoryProfile = null
+  try {
+    sessionStorage.removeItem(CACHE_KEY)
+    sessionStorage.removeItem(LOGIN_AT_KEY)
+    sessionStorage.removeItem(TIMEOUT_KEY)
+  } catch {
+    /* ignore */
+  }
+}
+
+/**
+ * Read the cached admin profile synchronously.
+ * Returns null when nobody is signed in.
+ */
+export function readSession() {
+  if (memoryProfile) return normalise(memoryProfile)
+  try {
+    const raw = sessionStorage.getItem(CACHE_KEY)
+    if (!raw) return null
+    memoryProfile = JSON.parse(raw)
+    return normalise(memoryProfile)
+  } catch {
+    return null
+  }
+}
+
+function normalise(profile) {
+  return {
+    id: profile.id,
+    username: profile.username || profile.email || '',
+    email: profile.email || profile.authEmail || '',
+    name: profile.name || profile.username || 'Admin',
+    role: profile.role || 'viewer',
+    permissions: parsePermissions(profile.permissions, profile.role),
+    authUserId: profile.authUserId,
+  }
+}
+
+/**
+ * Optional idle timeout on top of Supabase's own token expiry, driven by the
+ * `session_timeout_minutes` setting in admin_settings.
+ */
+export function isSessionExpired() {
+  try {
+    const loginAt = Number(sessionStorage.getItem(LOGIN_AT_KEY) || 0)
+    if (!loginAt) return false
+    const timeoutMin =
+      Number(sessionStorage.getItem(TIMEOUT_KEY)) || DEFAULT_TIMEOUT_MIN
+    return Date.now() - loginAt > timeoutMin * 60 * 1000
+  } catch {
+    return false
+  }
+}
+
+/** Synchronous permission check against the cached profile. */
 export function sessionCan(permission) {
   const session = readSession()
   if (!session) return false
@@ -101,14 +111,15 @@ export function sessionCanAny(permissionList) {
 }
 
 /**
- * Best-effort audit trail. Never throws — if the table is missing or the
- * insert fails we just skip it rather than breaking the action.
+ * Best-effort audit trail. Never throws — if the insert is refused we skip it
+ * rather than breaking the action the user was performing.
  */
 export async function logAudit(client, action, detail) {
   if (!client) return
   try {
+    const session = readSession()
     await client.from('admin_audit_log').insert({
-      username: sessionStorage.getItem('admin_username') || null,
+      username: session?.username || session?.email || null,
       action,
       detail: detail ? String(detail).slice(0, 500) : null,
     })
