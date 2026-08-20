@@ -408,7 +408,7 @@ BEGIN
 END;
 $$;
 
--- spaces (public virtual-office listings) — let admins read everything
+-- spaces (public virtual-office listings) — full admin CRUD
 DO $$
 BEGIN
   IF EXISTS (
@@ -416,7 +416,16 @@ BEGIN
      WHERE table_schema = 'public' AND table_name = 'spaces'
   ) THEN
     EXECUTE 'DROP POLICY IF EXISTS "admin read spaces" ON public.spaces';
-    EXECUTE 'CREATE POLICY "admin read spaces" ON public.spaces FOR SELECT TO authenticated USING (public.is_admin_user())';
+    EXECUTE 'CREATE POLICY "admin read spaces" ON public.spaces FOR SELECT TO authenticated USING (public.admin_can(''spaces.view''))';
+
+    EXECUTE 'DROP POLICY IF EXISTS "admin insert spaces" ON public.spaces';
+    EXECUTE 'CREATE POLICY "admin insert spaces" ON public.spaces FOR INSERT TO authenticated WITH CHECK (public.admin_can(''spaces.create''))';
+
+    EXECUTE 'DROP POLICY IF EXISTS "admin update spaces" ON public.spaces';
+    EXECUTE 'CREATE POLICY "admin update spaces" ON public.spaces FOR UPDATE TO authenticated USING (public.admin_can(''spaces.edit'')) WITH CHECK (public.admin_can(''spaces.edit''))';
+
+    EXECUTE 'DROP POLICY IF EXISTS "admin delete spaces" ON public.spaces';
+    EXECUTE 'CREATE POLICY "admin delete spaces" ON public.spaces FOR DELETE TO authenticated USING (public.admin_can(''spaces.delete''))';
   END IF;
 END;
 $$;

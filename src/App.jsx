@@ -54,6 +54,8 @@ const AdminJobs = lazy(() => import('./pages/admin/AdminJobs'))
 const AdminJobEditor = lazy(() => import('./pages/admin/AdminJobEditor'))
 const AdminCoworking = lazy(() => import('./pages/admin/AdminCoworking'))
 const AdminCoworkingEditor = lazy(() => import('./pages/admin/AdminCoworkingEditor'))
+const AdminSpaces = lazy(() => import('./pages/admin/AdminSpaces'))
+const AdminSpaceEditor = lazy(() => import('./pages/admin/AdminSpaceEditor'))
 const AdminLeads = lazy(() => import('./pages/admin/AdminLeads'))
 const AdminPages = lazy(() => import('./pages/admin/AdminPages'))
 const AdminPageEditor = lazy(() => import('./pages/admin/AdminPageEditor'))
@@ -144,6 +146,19 @@ export default function App() {
             <Route
               path="/admin/coworking/edit/:id"
               element={<RequirePermission permission="coworking.edit"><AdminCoworkingEditor /></RequirePermission>}
+            />
+
+            <Route
+              path="/admin/spaces"
+              element={<RequirePermission permission="spaces.view"><AdminSpaces /></RequirePermission>}
+            />
+            <Route
+              path="/admin/spaces/new"
+              element={<RequirePermission permission="spaces.create"><AdminSpaceEditor /></RequirePermission>}
+            />
+            <Route
+              path="/admin/spaces/edit/:id"
+              element={<RequirePermission permission="spaces.edit"><AdminSpaceEditor /></RequirePermission>}
             />
 
             <Route

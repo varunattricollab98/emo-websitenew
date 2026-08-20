@@ -1,0 +1,7 @@
+{
+  "task_id": "task-admin-spaces-crud-modernize",
+  "task_description": "Add Virtual Office Listings CRUD (spaces table) to the admin panel and modernize the entire admin panel UI to look like a professional SaaS dashboard",
+  "status": "in_progress",
+  "feature_order": ["FEAT-001", "FEAT-002"],
+  "blocked_reason": null
+}

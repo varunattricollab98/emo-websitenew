@@ -1,0 +1,34 @@
+{
+  "id": "FEAT-002",
+  "type": "feat",
+  "description": "Modernize the entire admin panel UI to look like a professional SaaS dashboard. Transform the basic tables and nav into a polished, modern design with better spacing, shadows, icons, search capabilities, loading skeletons, and improved visual hierarchy.",
+  "status": "pending",
+  "steps": [
+    "Redesign src/components/admin/AdminNav.jsx into a modern sidebar-style navigation OR a much-improved top nav. Add lucide-react icons next to each nav link (e.g. Users, FileText, Briefcase, Building2, Newspaper, LayoutDashboard, MapPin for spaces). Improve the user info section with avatar placeholder. Add a gradient or branded header area. Make it responsive with a mobile hamburger menu.",
+    "Modernize src/pages/admin/AdminLeads.jsx: Add a search bar to filter leads by name/phone/email. Add summary stats cards at the top (total leads, today's leads, etc.). Improve table with better row styling, hover effects, clickable phone/email. Add loading skeleton instead of plain text. Add proper empty state with an illustration/icon.",
+    "Modernize src/pages/admin/AdminBlog.jsx: Add search/filter bar. Improve table layout with thumbnail preview column if available. Better status badges with dot indicators. Add post count summary. Loading skeleton animation. Better action buttons with icons (Pencil for edit, Trash2 for delete).",
+    "Modernize src/pages/admin/AdminArticles.jsx: Improve the filter tabs with pill-style buttons. Better table with content preview. Improved status indicators. Loading skeleton.",
+    "Modernize src/pages/admin/AdminCoworking.jsx: Add search by name/city. Pricing columns with formatted currency. Better status badges. Loading skeleton. Icon-enhanced action buttons.",
+    "Modernize src/pages/admin/AdminJobs.jsx: Add search. Employment type badges with colors. Better status indicators. Loading skeleton. Action buttons with icons.",
+    "Modernize src/pages/admin/AdminPages.jsx: Better slug display. Content length as progress-bar style indicator. Improved date formatting. Loading skeleton.",
+    "Modernize src/pages/admin/AdminUsers.jsx: The user page is already somewhat styled, but improve consistency with the new design system - ensure it matches the other pages' modern look.",
+    "Modernize src/pages/admin/AdminSettings.jsx: Already well-styled, ensure consistency with the new design language. Minor tweaks to match the overall modern aesthetic if needed.",
+    "Ensure the new AdminSpaces.jsx page (created in FEAT-001) also uses the modern design - if it was created with the old style, update it to match. Should have search, loading skeleton, modern table, icon action buttons.",
+    "Create a shared loading skeleton component or pattern that all admin pages can use consistently (can be inline in each page or a small shared component at src/components/admin/AdminTableSkeleton.jsx)."
+  ],
+  "acceptance_criteria": [
+    "AdminNav has icons for each section and looks like a modern SaaS dashboard navigation",
+    "All list pages (Leads, Blog, Articles, Coworking, Jobs, Pages, Spaces, Users) have search/filter capability",
+    "All list pages have loading skeleton animations instead of plain 'Loading...' text",
+    "All list pages have proper empty states with icons",
+    "Action buttons have lucide-react icons (Pencil, Trash2, Plus, etc.)",
+    "Status badges are consistent across all pages with dot indicators",
+    "Tables have improved hover states, better spacing, and modern card-style containers",
+    "npx vite build passes without errors"
+  ],
+  "verification": [
+    "Run: export PATH=\"/root/.nvm/versions/node/v22.23.2/bin:$PATH\" && npx vite build"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

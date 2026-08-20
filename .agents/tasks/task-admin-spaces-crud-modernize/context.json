@@ -1,0 +1,33 @@
+{
+  "project_type": "React 18 SPA with Vite + Tailwind CSS + Supabase (RLS-enforced admin panel)",
+  "language": "JavaScript (JSX)",
+  "build_system": "Vite 5 with npm scripts. Build command includes prerender step (node scripts/prerender.mjs).",
+  "test_framework": "No test framework. Verification is via vite build passing.",
+  "build_command": "export PATH=\"/root/.nvm/versions/node/v22.23.2/bin:$PATH\" && npx vite build",
+  "test_command": "No test runner. Use vite build as primary verification.",
+  "verification_instructions": "Run npx vite build and confirm it completes without errors.",
+  "snapshot_or_generated_files": null,
+  "setup_instructions": "Node v22 is pre-installed. node_modules already present.",
+  "environment_constraints": "Open internet access. No Docker needed. Supabase is remote (not local).",
+  "contribution_requirements": "Build must pass. Branch is feat/full-website.",
+  "key_patterns": "Admin pages: useState/useEffect pattern with getAdminClient(), sessionCan() for permission gating, AdminNav component at top. Editor pages: useParams for id, form state with EMPTY_ template object, handleSave with insert/update. Permissions: PERMISSION_SECTIONS array in src/lib/permissions.js auto-renders nav links. Routes: lazy imports in App.jsx wrapped with RequirePermission component. Tailwind styling: slate-50 bg, rounded-xl borders, blue-600 primary buttons, divide-y tables. Lucide React icons available.",
+  "relevant_files": [
+    "src/App.jsx",
+    "src/lib/permissions.js",
+    "src/lib/adminSession.js",
+    "src/lib/supabaseAdmin.js",
+    "src/components/admin/AdminNav.jsx",
+    "src/components/admin/useAdminSession.js",
+    "src/pages/admin/AdminCoworking.jsx",
+    "src/pages/admin/AdminCoworkingEditor.jsx",
+    "src/pages/admin/AdminBlog.jsx",
+    "src/pages/admin/AdminLeads.jsx",
+    "src/pages/admin/AdminArticles.jsx",
+    "src/pages/admin/AdminJobs.jsx",
+    "src/pages/admin/AdminPages.jsx",
+    "src/pages/admin/AdminUsers.jsx",
+    "src/pages/admin/AdminSettings.jsx",
+    "supabase/admin_setup_all_in_one.sql"
+  ],
+  "directory_structure": "src/pages/admin/ - all admin page components. src/components/admin/ - shared admin components (AdminNav, RequirePermission, useAdminSession). src/lib/ - utility modules (permissions, adminSession, supabaseAdmin). supabase/ - SQL migration scripts."
+}

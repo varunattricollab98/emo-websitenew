@@ -1,0 +1,26 @@
+{
+  "id": "FEAT-001",
+  "type": "feat",
+  "description": "Add Virtual Office Listings (spaces table) CRUD to the admin panel - list page, editor page, permissions, routes, and RLS policies",
+  "status": "in_progress",
+  "steps": [
+    "Add a new 'spaces' permission section in src/lib/permissions.js PERMISSION_SECTIONS array (key: 'spaces', label: 'Virtual Offices', path: '/admin/spaces', actions: ['view', 'create', 'edit', 'delete']). Also add 'spaces.*' permissions to the 'manager' and 'editor' role presets as appropriate (manager gets full CRUD, editor gets view/create/edit).",
+    "Create src/pages/admin/AdminSpaces.jsx - list page for the 'spaces' table. Follow the pattern from AdminCoworking.jsx. Query columns: id, space_name, address_area, address_city, address_state, pricing_monthly, featured_image, is_active, rating, badge, property_type. Show a table with columns: Name, Area, City, State, Monthly Price, Type, Status, Actions (Edit/Delete). Include search/filter by city. Use getAdminClient(), sessionCan('spaces.create') for the new button, sessionCan('spaces.delete') for delete.",
+    "Create src/pages/admin/AdminSpaceEditor.jsx - create/edit form for the 'spaces' table. Follow the pattern from AdminCoworkingEditor.jsx. Fields to include: space_name (required), address_area, address_city, address_state, full_address, listing_address, pricing_monthly (number), pricing_gst (number), pricing_br (number), pricing_ma (number), featured_image (URL), space_images (textarea, pipe or JSON array of URLs), property_feature (textarea), description (textarea), overview (textarea), highlights (textarea), rating (number 0-5), badge (text), processing_time (text), property_type (text), map_query (text), map_location (text), is_active (checkbox). Use useParams() for :id to determine edit vs create mode.",
+    "Add lazy imports and routes in src/App.jsx for AdminSpaces and AdminSpaceEditor. Routes: /admin/spaces (view), /admin/spaces/new (create), /admin/spaces/edit/:id (edit). Wrap each in <RequirePermission permission='spaces.view/create/edit'>.",
+    "Add RLS policies for the 'spaces' table in supabase/admin_setup_all_in_one.sql. Add INSERT, UPDATE, DELETE policies using admin_can('spaces.create'), admin_can('spaces.edit'), admin_can('spaces.delete'). Also update the existing SELECT policy to use admin_can('spaces.view') instead of is_admin_user(). Add after the existing 'admin read spaces' block in section 8. Keep the existing anon read policy untouched."
+  ],
+  "acceptance_criteria": [
+    "src/lib/permissions.js has a 'spaces' section with view/create/edit/delete actions",
+    "src/pages/admin/AdminSpaces.jsx exists and lists spaces from the 'spaces' table",
+    "src/pages/admin/AdminSpaceEditor.jsx exists and handles create/edit for spaces",
+    "src/App.jsx has lazy imports and routes for both new pages wrapped in RequirePermission",
+    "supabase/admin_setup_all_in_one.sql has INSERT, UPDATE, DELETE RLS policies for spaces",
+    "npx vite build passes without errors"
+  ],
+  "verification": [
+    "Run: export PATH=\"/root/.nvm/versions/node/v22.23.2/bin:$PATH\" && npx vite build"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}
