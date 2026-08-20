@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 
-const SITE = 'https://v3.easemyoffice.in'
+const SITE = 'https://www.easemyoffice.in'
 
 /**
  * Keeps <title>, meta description, canonical and the Open Graph / Twitter tags

@@ -21,7 +21,7 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-const SITE = 'https://v3.easemyoffice.in'
+const SITE = 'https://www.easemyoffice.in'
 
 // Default social share card — use Supabase-hosted logo for reliable previews.
 // WhatsApp, Facebook, LinkedIn all support webp from CDN URLs.

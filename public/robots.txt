@@ -13,4 +13,4 @@ Allow: /assets/
 Disallow: /admin
 Disallow: /admin/
 
-Sitemap: https://easemyoffice.in/sitemap.xml
+Sitemap: https://www.easemyoffice.in/sitemap.xml

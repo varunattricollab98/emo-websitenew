@@ -5,7 +5,7 @@
  * Used with <SchemaScript schemas={[...]} /> component.
  */
 
-const SITE_URL = 'https://v3.easemyoffice.in'
+const SITE_URL = 'https://www.easemyoffice.in'
 const LOGO_URL = 'https://oijtkvkyefqfwuycibcv.supabase.co/storage/v1/object/public/website-assets/EaseMyOffice-Logo-2.webp'
 const PHONE = '+91-8882735038'
 const EMAIL = 'contact@easemyoffice.in'
