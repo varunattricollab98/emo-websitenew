@@ -118,10 +118,10 @@ function PricingCard({ plan }) {
       <div className="relative mt-5 flex items-end gap-1">
         <span className="mb-1 text-2xl font-bold text-navy-dark">₹</span>
         <span className="text-5xl font-extrabold leading-none text-navy-dark">{plan.price}</span>
-        <span className="mb-1.5 text-sm font-medium text-slate-400">/year</span>
+        <span className="mb-1.5 text-sm font-medium text-slate-400">/month</span>
       </div>
       <p className="relative mt-1.5 text-xs font-medium text-slate-400">
-        Billed annually · No hidden charges
+        Billed monthly · No hidden charges
       </p>
 
       <ul className="relative mt-6 flex-1 space-y-3">
@@ -138,7 +138,7 @@ function PricingCard({ plan }) {
       <Button
         onClick={() =>
           openLeadModal({
-            title: `${plan.name}, ₹${plan.price}/year`,
+            title: `${plan.name}, ₹${plan.price}/month`,
             subtitle: 'Share your details and we will get you set up quickly.',
             service: plan.name,
           })
@@ -158,8 +158,8 @@ export default function Pricing() {
     <>
       <SubPageHero
         eyebrow="Pricing"
-        title="Simple, Transparent Annual Pricing"
-        accent="Annual Pricing"
+        title="Simple, Transparent Monthly Pricing"
+        accent="Monthly Pricing"
         subtitle="No hidden fees. No lock-in. Pick a plan and get your business address ready in days."
         chips={['No hidden fees', '2–3 day setup', 'Cancel anytime']}
         visual={
@@ -173,7 +173,7 @@ export default function Pricing() {
               <div className="mt-1 flex items-end gap-1">
                 <span className="mb-1 text-2xl font-bold text-navy-dark">₹</span>
                 <span className="text-5xl font-extrabold leading-none text-navy-dark">699</span>
-                <span className="mb-1.5 text-sm font-medium text-slate-400">/year</span>
+                <span className="mb-1.5 text-sm font-medium text-slate-400">/month</span>
               </div>
               <p className="mt-2 text-sm text-slate-500">
                 Everything you need to launch, address, documentation and a dedicated manager.

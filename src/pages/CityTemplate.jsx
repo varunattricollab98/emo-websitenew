@@ -227,7 +227,7 @@ export default function CityTemplate() {
               <div className="mt-6 grid grid-cols-2 gap-3">
                 {[
                   { k: `${addresses}+`, v: 'Verified addresses' },
-                  { k: `₹${(basePrice - 200).toLocaleString('en-IN')}`, v: 'Starting / year' },
+                  { k: `₹${(basePrice - 200).toLocaleString('en-IN')}`, v: 'Starting / month' },
                   { k: '98.7%', v: 'Approval rate' },
                   { k: '2–3 days', v: 'Activation' },
                 ].map((s) => (
@@ -473,10 +473,10 @@ export default function CityTemplate() {
                   <div className="mt-5 flex items-end gap-1">
                     <span className="mb-1 text-2xl font-bold text-navy-dark">₹</span>
                     <span className="text-5xl font-extrabold leading-none text-navy-dark">{p.price}</span>
-                    <span className="mb-1.5 text-sm font-medium text-slate-400">/year</span>
+                    <span className="mb-1.5 text-sm font-medium text-slate-400">/month</span>
                   </div>
                   <p className="mt-1.5 text-xs font-medium text-slate-400">
-                    Billed annually · No hidden charges
+                    Billed monthly · No hidden charges
                   </p>
                   <ul className="mt-6 flex-1 space-y-3">
                     {p.features.map((f) => (

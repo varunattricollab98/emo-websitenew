@@ -391,7 +391,7 @@ export default function SpaceDetail() {
                       </span>
                     </div>
                     <p className="mt-1.5 text-[11px] font-medium text-slate-400">
-                      *Billed annually · Payment on yearly basis
+                      *Billed monthly · No hidden charges
                     </p>
                   </div>
                 )
@@ -744,7 +744,7 @@ export default function SpaceDetail() {
                     <span className="text-4xl font-extrabold leading-none text-navy-dark">
                       {Number(p.price).toLocaleString('en-IN')}
                     </span>
-                    <span className="mb-1 text-sm text-slate-400">/year</span>
+                    <span className="mb-1 text-sm text-slate-400">/month</span>
                   </div>
                   <Button
                     onClick={book}
