@@ -11,6 +11,7 @@ export default function AdminPages() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [search, setSearch] = useState('')
+  const [selectedIds, setSelectedIds] = useState([])
   const navigate = useNavigate()
 
   const adminClient = getAdminClient()
@@ -50,6 +51,24 @@ export default function AdminPages() {
       alert('Delete failed: ' + err.message)
     } else {
       setPages((prev) => prev.filter((p) => p.id !== id))
+      setSelectedIds((prev) => prev.filter((sid) => sid !== id))
+    }
+  }
+
+  async function handleBulkDelete() {
+    if (selectedIds.length === 0) return
+    if (!window.confirm(`Delete ${selectedIds.length} selected page(s)? This cannot be undone.`)) return
+
+    const { error: err } = await adminClient
+      .from('site_pages')
+      .delete()
+      .in('id', selectedIds)
+
+    if (err) {
+      alert('Bulk delete failed: ' + err.message)
+    } else {
+      setPages((prev) => prev.filter((p) => !selectedIds.includes(p.id)))
+      setSelectedIds([])
     }
   }
 
@@ -70,6 +89,23 @@ export default function AdminPages() {
       (p.slug || '').toLowerCase().includes(q)
     )
   })
+
+  const allSelected = filtered.length > 0 && filtered.every((p) => selectedIds.includes(p.id))
+
+  function toggleSelectAll() {
+    if (allSelected) {
+      setSelectedIds((prev) => prev.filter((id) => !filtered.some((p) => p.id === id)))
+    } else {
+      const newIds = filtered.map((p) => p.id)
+      setSelectedIds((prev) => [...new Set([...prev, ...newIds])])
+    }
+  }
+
+  function toggleSelect(id) {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((sid) => sid !== id) : [...prev, id]
+    )
+  }
 
   const activeCount = pages.filter((p) => p.is_active).length
 
@@ -151,6 +187,28 @@ export default function AdminPages() {
           </div>
         )}
 
+        {/* Bulk action bar */}
+        {selectedIds.length > 0 && sessionCan('pages.delete') && (
+          <div className="mb-4 flex items-center gap-3 rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 shadow-sm">
+            <span className="text-sm font-medium text-blue-800">
+              {selectedIds.length} selected
+            </span>
+            <button
+              onClick={handleBulkDelete}
+              className="inline-flex items-center gap-1.5 rounded-lg bg-red-600 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-red-700"
+            >
+              <Trash2 className="h-3.5 w-3.5" />
+              Delete Selected
+            </button>
+            <button
+              onClick={() => setSelectedIds([])}
+              className="ml-auto text-xs font-medium text-blue-600 hover:text-blue-800"
+            >
+              Clear selection
+            </button>
+          </div>
+        )}
+
         {/* Pages Table */}
         {!loading && filtered.length > 0 && (
           <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm">
@@ -158,6 +216,15 @@ export default function AdminPages() {
               <table className="w-full text-left text-sm">
                 <thead className="border-b border-slate-100 bg-slate-50/50">
                   <tr>
+                    <th className="w-10 px-3 py-3.5">
+                      <input
+                        type="checkbox"
+                        checked={allSelected}
+                        onChange={toggleSelectAll}
+                        className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                      />
+                    </th>
+                    <th className="w-12 px-3 py-3.5 font-semibold text-slate-600">#</th>
                     <th className="px-5 py-3.5 font-semibold text-slate-600">Title</th>
                     <th className="px-5 py-3.5 font-semibold text-slate-600">Slug</th>
                     <th className="px-5 py-3.5 font-semibold text-slate-600">Content</th>
@@ -167,8 +234,17 @@ export default function AdminPages() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                  {filtered.map((page) => (
+                  {filtered.map((page, index) => (
                     <tr key={page.id} className="transition hover:bg-slate-50/80">
+                      <td className="w-10 px-3 py-3.5">
+                        <input
+                          type="checkbox"
+                          checked={selectedIds.includes(page.id)}
+                          onChange={() => toggleSelect(page.id)}
+                          className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                        />
+                      </td>
+                      <td className="w-12 px-3 py-3.5 text-slate-500 font-medium">{index + 1}</td>
                       <td className="px-5 py-3.5">
                         <span className="font-medium text-slate-900">
                           {page.title || '(untitled)'}

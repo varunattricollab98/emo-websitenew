@@ -18,6 +18,7 @@ export default function AdminJobs() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [search, setSearch] = useState('')
+  const [selectedIds, setSelectedIds] = useState([])
   const navigate = useNavigate()
 
   const adminClient = getAdminClient()
@@ -57,6 +58,24 @@ export default function AdminJobs() {
       alert('Delete failed: ' + err.message)
     } else {
       setJobs((prev) => prev.filter((j) => j.id !== id))
+      setSelectedIds((prev) => prev.filter((sid) => sid !== id))
+    }
+  }
+
+  async function handleBulkDelete() {
+    if (selectedIds.length === 0) return
+    if (!window.confirm(`Delete ${selectedIds.length} selected job(s)? This cannot be undone.`)) return
+
+    const { error: err } = await adminClient
+      .from('job_openings')
+      .delete()
+      .in('id', selectedIds)
+
+    if (err) {
+      alert('Bulk delete failed: ' + err.message)
+    } else {
+      setJobs((prev) => prev.filter((j) => !selectedIds.includes(j.id)))
+      setSelectedIds([])
     }
   }
 
@@ -69,6 +88,23 @@ export default function AdminJobs() {
       (j.location || '').toLowerCase().includes(q)
     )
   })
+
+  const allSelected = filtered.length > 0 && filtered.every((j) => selectedIds.includes(j.id))
+
+  function toggleSelectAll() {
+    if (allSelected) {
+      setSelectedIds((prev) => prev.filter((id) => !filtered.some((j) => j.id === id)))
+    } else {
+      const newIds = filtered.map((j) => j.id)
+      setSelectedIds((prev) => [...new Set([...prev, ...newIds])])
+    }
+  }
+
+  function toggleSelect(id) {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((sid) => sid !== id) : [...prev, id]
+    )
+  }
 
   const activeCount = jobs.filter((j) => j.is_active).length
 
@@ -150,6 +186,28 @@ export default function AdminJobs() {
           </div>
         )}
 
+        {/* Bulk action bar */}
+        {selectedIds.length > 0 && sessionCan('jobs.delete') && (
+          <div className="mb-4 flex items-center gap-3 rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 shadow-sm">
+            <span className="text-sm font-medium text-blue-800">
+              {selectedIds.length} selected
+            </span>
+            <button
+              onClick={handleBulkDelete}
+              className="inline-flex items-center gap-1.5 rounded-lg bg-red-600 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-red-700"
+            >
+              <Trash2 className="h-3.5 w-3.5" />
+              Delete Selected
+            </button>
+            <button
+              onClick={() => setSelectedIds([])}
+              className="ml-auto text-xs font-medium text-blue-600 hover:text-blue-800"
+            >
+              Clear selection
+            </button>
+          </div>
+        )}
+
         {/* Jobs Table */}
         {!loading && filtered.length > 0 && (
           <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm">
@@ -157,6 +215,15 @@ export default function AdminJobs() {
               <table className="w-full text-left text-sm">
                 <thead className="border-b border-slate-100 bg-slate-50/50">
                   <tr>
+                    <th className="w-10 px-3 py-3.5">
+                      <input
+                        type="checkbox"
+                        checked={allSelected}
+                        onChange={toggleSelectAll}
+                        className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                      />
+                    </th>
+                    <th className="w-12 px-3 py-3.5 font-semibold text-slate-600">#</th>
                     <th className="px-5 py-3.5 font-semibold text-slate-600">Title</th>
                     <th className="px-5 py-3.5 font-semibold text-slate-600">Department</th>
                     <th className="px-5 py-3.5 font-semibold text-slate-600">Location</th>
@@ -167,10 +234,19 @@ export default function AdminJobs() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                  {filtered.map((job) => {
+                  {filtered.map((job, index) => {
                     const typeBadge = TYPE_BADGES[job.employment_type] || 'bg-slate-100 text-slate-600'
                     return (
                       <tr key={job.id} className="transition hover:bg-slate-50/80">
+                        <td className="w-10 px-3 py-3.5">
+                          <input
+                            type="checkbox"
+                            checked={selectedIds.includes(job.id)}
+                            onChange={() => toggleSelect(job.id)}
+                            className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                          />
+                        </td>
+                        <td className="w-12 px-3 py-3.5 text-slate-500 font-medium">{index + 1}</td>
                         <td className="px-5 py-3.5">
                           <span className="font-medium text-slate-900">{job.title}</span>
                         </td>

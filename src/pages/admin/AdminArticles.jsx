@@ -14,6 +14,7 @@ export default function AdminArticles() {
   const [error, setError] = useState('')
   const [filter, setFilter] = useState('All')
   const [search, setSearch] = useState('')
+  const [selectedIds, setSelectedIds] = useState([])
   const navigate = useNavigate()
 
   const adminClient = getAdminClient()
@@ -53,6 +54,24 @@ export default function AdminArticles() {
       alert('Delete failed: ' + err.message)
     } else {
       setArticles((prev) => prev.filter((a) => a.id !== id))
+      setSelectedIds((prev) => prev.filter((sid) => sid !== id))
+    }
+  }
+
+  async function handleBulkDelete() {
+    if (selectedIds.length === 0) return
+    if (!window.confirm(`Delete ${selectedIds.length} selected article(s)? This cannot be undone.`)) return
+
+    const { error: err } = await adminClient
+      .from('blog_articles')
+      .delete()
+      .in('id', selectedIds)
+
+    if (err) {
+      alert('Bulk delete failed: ' + err.message)
+    } else {
+      setArticles((prev) => prev.filter((a) => !selectedIds.includes(a.id)))
+      setSelectedIds([])
     }
   }
 
@@ -67,6 +86,23 @@ export default function AdminArticles() {
       (a.service_slug || '').toLowerCase().includes(q)
     )
   })
+
+  const allSelected = filteredArticles.length > 0 && filteredArticles.every((a) => selectedIds.includes(a.id))
+
+  function toggleSelectAll() {
+    if (allSelected) {
+      setSelectedIds((prev) => prev.filter((id) => !filteredArticles.some((a) => a.id === id)))
+    } else {
+      const newIds = filteredArticles.map((a) => a.id)
+      setSelectedIds((prev) => [...new Set([...prev, ...newIds])])
+    }
+  }
+
+  function toggleSelect(id) {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((sid) => sid !== id) : [...prev, id]
+    )
+  }
 
   const activeCount = articles.filter((a) => a.is_active).length
 
@@ -189,6 +225,28 @@ export default function AdminArticles() {
           </div>
         )}
 
+        {/* Bulk action bar */}
+        {selectedIds.length > 0 && sessionCan('articles.delete') && (
+          <div className="mb-4 flex items-center gap-3 rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 shadow-sm">
+            <span className="text-sm font-medium text-blue-800">
+              {selectedIds.length} selected
+            </span>
+            <button
+              onClick={handleBulkDelete}
+              className="inline-flex items-center gap-1.5 rounded-lg bg-red-600 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-red-700"
+            >
+              <Trash2 className="h-3.5 w-3.5" />
+              Delete Selected
+            </button>
+            <button
+              onClick={() => setSelectedIds([])}
+              className="ml-auto text-xs font-medium text-blue-600 hover:text-blue-800"
+            >
+              Clear selection
+            </button>
+          </div>
+        )}
+
         {/* Articles Table */}
         {!loading && filteredArticles.length > 0 && (
           <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm">
@@ -196,6 +254,15 @@ export default function AdminArticles() {
               <table className="w-full text-left text-sm">
                 <thead className="border-b border-slate-100 bg-slate-50/50">
                   <tr>
+                    <th className="w-10 px-3 py-3.5">
+                      <input
+                        type="checkbox"
+                        checked={allSelected}
+                        onChange={toggleSelectAll}
+                        className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                      />
+                    </th>
+                    <th className="w-12 px-3 py-3.5 font-semibold text-slate-600">#</th>
                     <th className="px-5 py-3.5 font-semibold text-slate-600">Title</th>
                     <th className="px-5 py-3.5 font-semibold text-slate-600">Type</th>
                     <th className="px-5 py-3.5 font-semibold text-slate-600">Slug</th>
@@ -206,8 +273,17 @@ export default function AdminArticles() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                  {filteredArticles.map((article) => (
+                  {filteredArticles.map((article, index) => (
                     <tr key={article.id} className="transition hover:bg-slate-50/80">
+                      <td className="w-10 px-3 py-3.5">
+                        <input
+                          type="checkbox"
+                          checked={selectedIds.includes(article.id)}
+                          onChange={() => toggleSelect(article.id)}
+                          className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                        />
+                      </td>
+                      <td className="w-12 px-3 py-3.5 text-slate-500 font-medium">{index + 1}</td>
                       <td className="px-5 py-3.5">
                         <span className="font-medium text-slate-900">
                           {article.title || '(untitled)'}
