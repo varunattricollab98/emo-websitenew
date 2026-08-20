@@ -8,6 +8,7 @@ const logos = [
   { name: 'Third Wave Coffee', src: '/logos/thirdwavecoffee.png' },
   { name: 'Rosier Foods', src: 'https://www.rosierfoods.com/cdn/shop/files/black-logo-01_1.png?v=1750171672&width=300' },
   { name: 'Fitelo', src: '/logos/fitelo.svg' },
+  { name: 'Sleepy Cat', src: 'https://oijtkvkyefqfwuycibcv.supabase.co/storage/v1/object/public/website-assets/Sleepy%20Cat%20.png' },
   { name: 'EarthtronEV', src: '/logos/earthtronev.webp' },
   { name: 'Omnicuris', src: '/logos/omnicuris.png' },
   { name: 'IndiaMART', src: '/logos/indiamart.png' },
