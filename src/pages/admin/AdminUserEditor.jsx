@@ -145,61 +145,68 @@ export default function AdminUserEditor() {
       permissions,
     }
 
-    // ── Create: make the Auth account first, then the profile row ──
-    if (!isEdit) {
-      const authRes = await createAuthUser(email, form.password.trim())
-      if (!authRes.ok) {
-        setSaving(false)
-        setError(authRes.error)
+    try {
+      // ── Create: make the Auth account first, then the profile row ──
+      if (!isEdit) {
+        const authRes = await createAuthUser(email, form.password.trim())
+        if (!authRes.ok) {
+          setSaving(false)
+          setError(authRes.error || 'Failed to create auth account. Please try again.')
+          return
+        }
+
+        const { error: insertError } = await client.from('admin_users').insert(payload)
+        if (insertError) {
+          setSaving(false)
+          const msg = insertError.message || ''
+          setError(
+            /duplicate|unique/i.test(msg)
+              ? 'That username or email already has an admin profile.'
+              : 'Save failed: ' + msg
+          )
+          return
+        }
+
+        await logAudit(client, 'user.create', `${email} (${payload.role})`)
+
+        if (authRes.needsConfirmation) {
+          alert(
+            `Account created.\n\n${email} must click the confirmation link Supabase just emailed them before they can sign in.`
+          )
+        } else if (authRes.alreadyExisted) {
+          alert(
+            `Profile created and linked to the existing Supabase Auth login for ${email}.\n\nTheir existing password still applies — use "Email reset" if they need a new one.`
+          )
+        }
+        navigate('/admin/users')
         return
       }
 
-      const { error: insertError } = await client.from('admin_users').insert(payload)
-      if (insertError) {
+      // ── Edit: profile only. Passwords are changed via the reset email. ──
+      const { error: updateError } = await client
+        .from('admin_users')
+        .update(payload)
+        .eq('id', id)
+
+      if (updateError) {
         setSaving(false)
-        const msg = insertError.message || ''
+        const msg = updateError.message || ''
         setError(
           /duplicate|unique/i.test(msg)
-            ? 'That username or email already has an admin profile.'
+            ? 'That username or email is already taken.'
             : 'Save failed: ' + msg
         )
         return
       }
 
-      await logAudit(client, 'user.create', `${email} (${payload.role})`)
-
-      if (authRes.needsConfirmation) {
-        alert(
-          `Account created.\n\n${email} must click the confirmation link Supabase just emailed them before they can sign in.`
-        )
-      } else if (authRes.alreadyExisted) {
-        alert(
-          `Profile created and linked to the existing Supabase Auth login for ${email}.\n\nTheir existing password still applies — use "Email reset" if they need a new one.`
-        )
-      }
+      await logAudit(client, 'user.update', `${email} (${payload.role})`)
       navigate('/admin/users')
-      return
-    }
-
-    // ── Edit: profile only. Passwords are changed via the reset email. ──
-    const { error: updateError } = await client
-      .from('admin_users')
-      .update(payload)
-      .eq('id', id)
-
-    if (updateError) {
+    } catch (err) {
+      console.error('[AdminUserEditor] Save error:', err)
+      setError(err?.message || 'An unexpected error occurred. Please try again.')
+    } finally {
       setSaving(false)
-      const msg = updateError.message || ''
-      setError(
-        /duplicate|unique/i.test(msg)
-          ? 'That username or email is already taken.'
-          : 'Save failed: ' + msg
-      )
-      return
     }
-
-    await logAudit(client, 'user.update', `${email} (${payload.role})`)
-    navigate('/admin/users')
   }
 
   if (loading) {
