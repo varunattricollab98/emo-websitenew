@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { getAdminClient } from '../../lib/supabaseAdmin'
 import AdminNav from '../../components/admin/AdminNav'
+import { sessionCan } from '../../lib/adminSession'
 
 export default function AdminPages() {
   const [pages, setPages] = useState([])
@@ -10,14 +11,8 @@ export default function AdminPages() {
   const navigate = useNavigate()
 
   const adminClient = getAdminClient()
-  const adminRole = sessionStorage.getItem('admin_role')
 
   useEffect(() => {
-    // Role-based access: editors cannot access pages
-    if (adminRole === 'editor') {
-      navigate('/admin/blog')
-      return
-    }
     if (!adminClient) {
       navigate('/admin')
       return
@@ -72,12 +67,14 @@ export default function AdminPages() {
         {/* Page header */}
         <div className="mb-6 flex items-center justify-between">
           <h1 className="text-2xl font-bold text-slate-900">Pages</h1>
-          <Link
-            to="/admin/pages/new"
-            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
-          >
-            + New Page
-          </Link>
+          {sessionCan('pages.create') && (
+            <Link
+              to="/admin/pages/new"
+              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
+            >
+              + New Page
+            </Link>
+          )}
         </div>
 
         {/* Error */}
@@ -150,12 +147,14 @@ export default function AdminPages() {
                         >
                           Edit
                         </Link>
-                        <button
-                          onClick={() => handleDelete(page.id, page.title)}
-                          className="rounded bg-red-50 px-2.5 py-1 text-xs font-medium text-red-600 transition hover:bg-red-100"
-                        >
-                          Delete
-                        </button>
+                        {sessionCan('pages.delete') && (
+                          <button
+                            onClick={() => handleDelete(page.id, page.title)}
+                            className="rounded bg-red-50 px-2.5 py-1 text-xs font-medium text-red-600 transition hover:bg-red-100"
+                          >
+                            Delete
+                          </button>
+                        )}
                       </div>
                     </td>
                   </tr>

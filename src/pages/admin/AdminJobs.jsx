@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { getAdminClient } from '../../lib/supabaseAdmin'
 import AdminNav from '../../components/admin/AdminNav'
+import { sessionCan } from '../../lib/adminSession'
 
 export default function AdminJobs() {
   const [jobs, setJobs] = useState([])
@@ -10,14 +11,8 @@ export default function AdminJobs() {
   const navigate = useNavigate()
 
   const adminClient = getAdminClient()
-  const adminRole = sessionStorage.getItem('admin_role')
 
   useEffect(() => {
-    // Role-based access: editors cannot access jobs
-    if (adminRole === 'editor') {
-      navigate('/admin/blog')
-      return
-    }
     if (!adminClient) {
       navigate('/admin')
       return
@@ -63,12 +58,14 @@ export default function AdminJobs() {
         {/* Page header */}
         <div className="mb-6 flex items-center justify-between">
           <h1 className="text-2xl font-bold text-slate-900">Jobs</h1>
-          <Link
-            to="/admin/jobs/new"
-            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
-          >
-            + New Job
-          </Link>
+          {sessionCan('jobs.create') && (
+            <Link
+              to="/admin/jobs/new"
+              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
+            >
+              + New Job
+            </Link>
+          )}
         </div>
 
         {/* Error */}
@@ -141,12 +138,14 @@ export default function AdminJobs() {
                         >
                           Edit
                         </Link>
-                        <button
-                          onClick={() => handleDelete(job.id, job.title)}
-                          className="rounded bg-red-50 px-2.5 py-1 text-xs font-medium text-red-600 transition hover:bg-red-100"
-                        >
-                          Delete
-                        </button>
+                        {sessionCan('jobs.delete') && (
+                          <button
+                            onClick={() => handleDelete(job.id, job.title)}
+                            className="rounded bg-red-50 px-2.5 py-1 text-xs font-medium text-red-600 transition hover:bg-red-100"
+                          >
+                            Delete
+                          </button>
+                        )}
                       </div>
                     </td>
                   </tr>

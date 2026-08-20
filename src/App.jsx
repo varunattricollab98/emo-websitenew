@@ -9,6 +9,7 @@ import WhatsAppButton from './components/layout/WhatsAppButton'
 import ScrollToTop from './components/layout/ScrollToTop'
 import AutoLeadPopup from './components/layout/AutoLeadPopup'
 import ErrorBoundary from './components/layout/ErrorBoundary'
+import RequirePermission from './components/admin/RequirePermission'
 import SchemaScript from './components/seo/SchemaScript'
 import { organizationSchema, webSiteSchema } from './components/seo/schemas'
 
@@ -58,6 +59,9 @@ const AdminPages = lazy(() => import('./pages/admin/AdminPages'))
 const AdminPageEditor = lazy(() => import('./pages/admin/AdminPageEditor'))
 const AdminUsers = lazy(() => import('./pages/admin/AdminUsers'))
 const AdminUserEditor = lazy(() => import('./pages/admin/AdminUserEditor'))
+const AdminSettings = lazy(() => import('./pages/admin/AdminSettings'))
+const AdminForgotPassword = lazy(() => import('./pages/admin/AdminForgotPassword'))
+const AdminResetPassword = lazy(() => import('./pages/admin/AdminResetPassword'))
 
 // Lightweight fallback while a route chunk loads (no layout shift).
 function RouteFallback() {
@@ -77,27 +81,101 @@ export default function App() {
         <ErrorBoundary>
         <Suspense fallback={<RouteFallback />}>
           <Routes>
-            {/* Admin routes (no navbar/footer, internal-only) */}
+            {/* Admin routes (no navbar/footer, internal-only).
+                Every page except the three public auth screens is wrapped in
+                <RequirePermission> so an unauthenticated or under-privileged
+                user never sees the page body. */}
             <Route path="/admin" element={<AdminLogin />} />
-            <Route path="/admin/blog" element={<AdminBlog />} />
-            <Route path="/admin/blog/new" element={<AdminBlogEditor />} />
-            <Route path="/admin/blog/edit/:slug" element={<AdminBlogEditor />} />
-            <Route path="/admin/articles" element={<AdminArticles />} />
-            <Route path="/admin/articles/new" element={<AdminArticleEditor />} />
-            <Route path="/admin/articles/edit/:id" element={<AdminArticleEditor />} />
-            <Route path="/admin/jobs" element={<AdminJobs />} />
-            <Route path="/admin/jobs/new" element={<AdminJobEditor />} />
-            <Route path="/admin/jobs/edit/:id" element={<AdminJobEditor />} />
-            <Route path="/admin/coworking" element={<AdminCoworking />} />
-            <Route path="/admin/coworking/new" element={<AdminCoworkingEditor />} />
-            <Route path="/admin/coworking/edit/:id" element={<AdminCoworkingEditor />} />
-            <Route path="/admin/leads" element={<AdminLeads />} />
-            <Route path="/admin/pages" element={<AdminPages />} />
-            <Route path="/admin/pages/new" element={<AdminPageEditor />} />
-            <Route path="/admin/pages/edit/:slug" element={<AdminPageEditor />} />
-            <Route path="/admin/users" element={<AdminUsers />} />
-            <Route path="/admin/users/new" element={<AdminUserEditor />} />
-            <Route path="/admin/users/edit/:id" element={<AdminUserEditor />} />
+            <Route path="/admin/forgot-password" element={<AdminForgotPassword />} />
+            <Route path="/admin/reset-password" element={<AdminResetPassword />} />
+
+            <Route
+              path="/admin/leads"
+              element={<RequirePermission permission="leads.view"><AdminLeads /></RequirePermission>}
+            />
+
+            <Route
+              path="/admin/blog"
+              element={<RequirePermission permission="blog.view"><AdminBlog /></RequirePermission>}
+            />
+            <Route
+              path="/admin/blog/new"
+              element={<RequirePermission permission="blog.create"><AdminBlogEditor /></RequirePermission>}
+            />
+            <Route
+              path="/admin/blog/edit/:slug"
+              element={<RequirePermission permission="blog.edit"><AdminBlogEditor /></RequirePermission>}
+            />
+
+            <Route
+              path="/admin/articles"
+              element={<RequirePermission permission="articles.view"><AdminArticles /></RequirePermission>}
+            />
+            <Route
+              path="/admin/articles/new"
+              element={<RequirePermission permission="articles.create"><AdminArticleEditor /></RequirePermission>}
+            />
+            <Route
+              path="/admin/articles/edit/:id"
+              element={<RequirePermission permission="articles.edit"><AdminArticleEditor /></RequirePermission>}
+            />
+
+            <Route
+              path="/admin/jobs"
+              element={<RequirePermission permission="jobs.view"><AdminJobs /></RequirePermission>}
+            />
+            <Route
+              path="/admin/jobs/new"
+              element={<RequirePermission permission="jobs.create"><AdminJobEditor /></RequirePermission>}
+            />
+            <Route
+              path="/admin/jobs/edit/:id"
+              element={<RequirePermission permission="jobs.edit"><AdminJobEditor /></RequirePermission>}
+            />
+
+            <Route
+              path="/admin/coworking"
+              element={<RequirePermission permission="coworking.view"><AdminCoworking /></RequirePermission>}
+            />
+            <Route
+              path="/admin/coworking/new"
+              element={<RequirePermission permission="coworking.create"><AdminCoworkingEditor /></RequirePermission>}
+            />
+            <Route
+              path="/admin/coworking/edit/:id"
+              element={<RequirePermission permission="coworking.edit"><AdminCoworkingEditor /></RequirePermission>}
+            />
+
+            <Route
+              path="/admin/pages"
+              element={<RequirePermission permission="pages.view"><AdminPages /></RequirePermission>}
+            />
+            <Route
+              path="/admin/pages/new"
+              element={<RequirePermission permission="pages.create"><AdminPageEditor /></RequirePermission>}
+            />
+            <Route
+              path="/admin/pages/edit/:slug"
+              element={<RequirePermission permission="pages.edit"><AdminPageEditor /></RequirePermission>}
+            />
+
+            <Route
+              path="/admin/users"
+              element={<RequirePermission permission="users.view"><AdminUsers /></RequirePermission>}
+            />
+            <Route
+              path="/admin/users/new"
+              element={<RequirePermission permission="users.create"><AdminUserEditor /></RequirePermission>}
+            />
+            <Route
+              path="/admin/users/edit/:id"
+              element={<RequirePermission permission="users.edit"><AdminUserEditor /></RequirePermission>}
+            />
+
+            <Route
+              path="/admin/settings"
+              element={<RequirePermission permission="settings.view"><AdminSettings /></RequirePermission>}
+            />
 
             {/* Public site routes with full layout */}
             <Route path="*" element={<SiteLayout />} />

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { getAdminClient } from '../../lib/supabaseAdmin'
 import AdminNav from '../../components/admin/AdminNav'
+import { sessionCan } from '../../lib/adminSession'
 
 export default function AdminCoworking() {
   const [spaces, setSpaces] = useState([])
@@ -10,14 +11,8 @@ export default function AdminCoworking() {
   const navigate = useNavigate()
 
   const adminClient = getAdminClient()
-  const adminRole = sessionStorage.getItem('admin_role')
 
   useEffect(() => {
-    // Role-based access: editors cannot access coworking
-    if (adminRole === 'editor') {
-      navigate('/admin/blog')
-      return
-    }
     if (!adminClient) {
       navigate('/admin')
       return
@@ -63,12 +58,14 @@ export default function AdminCoworking() {
         {/* Page header */}
         <div className="mb-6 flex items-center justify-between">
           <h1 className="text-2xl font-bold text-slate-900">Coworking Spaces</h1>
-          <Link
-            to="/admin/coworking/new"
-            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
-          >
-            + New Space
-          </Link>
+          {sessionCan('coworking.create') && (
+            <Link
+              to="/admin/coworking/new"
+              className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
+            >
+              + New Space
+            </Link>
+          )}
         </div>
 
         {/* Error */}
@@ -143,12 +140,14 @@ export default function AdminCoworking() {
                         >
                           Edit
                         </Link>
-                        <button
-                          onClick={() => handleDelete(space.id, space.name)}
-                          className="rounded bg-red-50 px-2.5 py-1 text-xs font-medium text-red-600 transition hover:bg-red-100"
-                        >
-                          Delete
-                        </button>
+                        {sessionCan('coworking.delete') && (
+                          <button
+                            onClick={() => handleDelete(space.id, space.name)}
+                            className="rounded bg-red-50 px-2.5 py-1 text-xs font-medium text-red-600 transition hover:bg-red-100"
+                          >
+                            Delete
+                          </button>
+                        )}
                       </div>
                     </td>
                   </tr>

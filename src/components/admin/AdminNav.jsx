@@ -1,35 +1,27 @@
-import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
+import { LogOut, Settings } from 'lucide-react'
+import { useAdminSession } from './useAdminSession'
+import { PERMISSION_SECTIONS, ROLE_PRESETS } from '../../lib/permissions'
 
-const NAV_LINKS = [
-  { label: 'Blog Posts', path: '/admin/blog' },
-  { label: 'Articles', path: '/admin/articles', adminOnly: true },
-  { label: 'Jobs', path: '/admin/jobs', adminOnly: true },
-  { label: 'Coworking', path: '/admin/coworking', adminOnly: true },
-  { label: 'Pages', path: '/admin/pages', adminOnly: true },
-  { label: 'Users', path: '/admin/users', adminOnly: true },
-]
-
+/**
+ * Admin navigation. Links are derived from the permission catalogue, so a user
+ * only ever sees the sections they can actually open — no hardcoded role flags.
+ */
 export default function AdminNav() {
-  const navigate = useNavigate()
   const location = useLocation()
-  const adminRole = sessionStorage.getItem('admin_role')
-  const adminName = sessionStorage.getItem('admin_name') || 'Admin'
+  const { session, can, logout } = useAdminSession()
 
-  function handleLogout() {
-    sessionStorage.removeItem('admin_service_key')
-    sessionStorage.removeItem('admin_role')
-    sessionStorage.removeItem('admin_name')
-    sessionStorage.removeItem('admin_username')
-    navigate('/admin')
-  }
-
-  const visibleLinks = NAV_LINKS.filter(
-    (link) => !link.adminOnly || adminRole === 'admin'
+  // Settings gets its own icon button on the right, so keep it out of the row.
+  const visibleLinks = PERMISSION_SECTIONS.filter(
+    (section) => section.key !== 'settings' && can(`${section.key}.view`)
   )
 
+  const preset = ROLE_PRESETS[session?.role]
+  const isSettingsActive = location.pathname.startsWith('/admin/settings')
+
   return (
-    <div className="mb-6 flex items-center justify-between rounded-xl border border-slate-200 bg-white px-5 py-3">
-      <div className="flex items-center gap-1">
+    <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-5 py-3">
+      <div className="flex flex-wrap items-center gap-1">
         {visibleLinks.map((link) => {
           const isActive = location.pathname.startsWith(link.path)
           return (
@@ -47,12 +39,40 @@ export default function AdminNav() {
           )
         })}
       </div>
+
       <div className="flex items-center gap-3">
-        <span className="text-sm text-slate-500">{adminName}</span>
+        <div className="text-right">
+          <span className="block text-sm font-medium text-slate-700">
+            {session?.name || 'Admin'}
+          </span>
+          {preset && (
+            <span
+              className={`inline-flex rounded-full px-1.5 py-0.5 text-[10px] font-bold uppercase ${preset.badge}`}
+            >
+              {preset.label}
+            </span>
+          )}
+        </div>
+
+        {can('settings.view') && (
+          <Link
+            to="/admin/settings"
+            title="Settings"
+            className={`inline-flex h-9 w-9 items-center justify-center rounded-lg transition ${
+              isSettingsActive
+                ? 'bg-blue-600 text-white'
+                : 'border border-slate-300 text-slate-600 hover:bg-slate-100'
+            }`}
+          >
+            <Settings className="h-4 w-4" />
+          </Link>
+        )}
+
         <button
-          onClick={handleLogout}
-          className="rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-600 transition hover:bg-slate-100"
+          onClick={logout}
+          className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-600 transition hover:bg-slate-100"
         >
+          <LogOut className="h-4 w-4" />
           Logout
         </button>
       </div>
