@@ -148,7 +148,7 @@ async function main() {
   const SUPABASE_ANON =
     process.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
     process.env.VITE_SUPABASE_ANON_KEY ||
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9panRrdmt5ZWZxZnd1eWNpYmN2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5NjUwODksImV4cCI6MjEwMDU0MTA4OX0.wzNvJ2nRN4appxtLFhinIy4aEQ-qT9LpqngWhzfPgrw'
+    'sb_publishable_w7-240CdmLJ_xZy5Fg11Fg__ZI-wPO1'
 
   const cityBySlug = Object.fromEntries(voCities.map((c) => [c.slug, c]))
 
