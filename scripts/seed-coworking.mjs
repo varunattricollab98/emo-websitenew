@@ -19,10 +19,22 @@
 
 import { createClient } from '@supabase/supabase-js'
 
-const SUPABASE_URL = 'https://oijtkvkyefqfwuycibcv.supabase.co'
-const SUPABASE_SERVICE_KEY =
-  process.env.SUPABASE_SERVICE_KEY ||
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9panRrdmt5ZWZxZnd1eWNpYmN2Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NDk2NTA4OSwiZXhwIjoyMTAwNTQxMDg5fQ.amcfRunjXq4PfGJJOCFS1FUEFaw3T7nZDK3yGYeZTJ4'
+const SUPABASE_URL =
+  process.env.VITE_SUPABASE_URL || 'https://oijtkvkyefqfwuycibcv.supabase.co'
+
+// NEVER hardcode the service_role key — it bypasses RLS and grants full
+// database access. Provide it via the environment when running this script:
+//   SUPABASE_SERVICE_KEY=xxx node scripts/seed-coworking.mjs
+const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY
+if (!SUPABASE_SERVICE_KEY) {
+  console.error(
+    '\n✗ SUPABASE_SERVICE_KEY is not set.\n\n' +
+      '  Get it from Supabase Dashboard → Settings → API → service_role,\n' +
+      '  then run:\n\n' +
+      '    SUPABASE_SERVICE_KEY=your_key node scripts/seed-coworking.mjs\n'
+  )
+  process.exit(1)
+}
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY, {
   auth: { persistSession: false },
