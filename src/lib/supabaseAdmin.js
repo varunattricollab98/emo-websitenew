@@ -11,7 +11,7 @@ import { createClient } from '@supabase/supabase-js'
  * Now the admin panel signs in as a real Supabase Auth user. This client uses
  * the same browser-safe publishable key as the public site; authority comes
  * from the signed-in user's JWT and is enforced by RLS policies in the
- * database (see supabase/admin_auth_migration.sql).
+ * database (see supabase/admin_setup_all_in_one.sql).
  *
  * A separate client instance (with its own storageKey) is used so the admin
  * session is kept isolated from the public site's anonymous client.

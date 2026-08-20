@@ -145,11 +145,7 @@ export default function AdminSettings() {
               <p className="mt-1 text-xs">
                 Run{' '}
                 <code className="rounded bg-white px-1.5 py-0.5">
-                  supabase/admin_rbac_migration.sql
-                </code>{' '}
-                and{' '}
-                <code className="rounded bg-white px-1.5 py-0.5">
-                  supabase/admin_auth_migration.sql
+                  supabase/admin_setup_all_in_one.sql
                 </code>{' '}
                 in the Supabase SQL editor to enable these settings. Defaults are
                 being used until then.

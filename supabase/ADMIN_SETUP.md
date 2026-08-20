@@ -8,27 +8,29 @@ Follow these steps once, in order.
 
 ---
 
-## 1. Run the two migrations
+## 1. Run the migration
 
-Supabase Dashboard → **SQL Editor** → paste the file contents (not the filename)
-→ **Run**.
+Supabase Dashboard → **SQL Editor** → **New query** → paste the *contents* of
+`supabase/admin_setup_all_in_one.sql` (not the filename) → **Run**.
 
-| Order | File | What it does |
-| --- | --- | --- |
-| 1st | `supabase/admin_rbac_migration.sql` | Adds roles, permissions, settings and the audit log |
-| 2nd | `supabase/admin_auth_migration.sql` | Wires `admin_users` to Supabase Auth and installs every RLS policy |
+That one file does everything: roles, permissions, settings, audit log, the
+`admin_users` → Supabase Auth link, and every RLS policy. It is safe to re-run.
 
-Both are safe to re-run.
+It ends with two verification queries. The first must return two rows —
+`admin_can` and `is_admin_user`. The second lists your admin profiles;
+`can_log_in` will be `false` until you finish step 3.
 
-Check it worked:
+<details>
+<summary>Note on the older two-file sequence</summary>
 
-```sql
-select routine_name
-  from information_schema.routines
- where routine_name in ('admin_can', 'is_admin_user');
-```
+`admin_rbac_migration.sql` + `admin_auth_migration.sql` (in that order) are kept
+for history and produce the same end state. The first one builds a custom
+password-reset system — a `password_reset_requests` table, two SECURITY DEFINER
+token functions and `reset_token` columns — that the second one then deletes,
+because Supabase Auth sends real reset emails. The all-in-one file just skips
+that dead code. Running the old pair afterwards is harmless either way.
 
-You should get two rows.
+</details>
 
 ---
 
@@ -135,7 +137,7 @@ Links expire after an hour and work once.
 | *"Email not confirmed"* | Either confirm the user in **Authentication → Users**, or turn off **Confirm email** (step 2b). |
 | Reset email never arrives | Check spam. Supabase's built-in SMTP is rate-limited to a few emails per hour — for regular use add your own SMTP under **Project Settings → Auth → SMTP**. |
 | Reset link opens but says invalid | The redirect URL from step 2a is missing, or the link was already used. |
-| Panel loads but every list is empty | The migrations haven't been run, so no policy grants you access. Re-check step 1. |
+| Panel loads but every list is empty | The migration hasn't been run, so no policy grants you access. Re-check step 1. |
 | Locked out entirely | Set your role back with SQL: `update admin_users set role='admin', permissions='["*"]'::jsonb, is_active=true where email='you@…';` |
 
 ---
