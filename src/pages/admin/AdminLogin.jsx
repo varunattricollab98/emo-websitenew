@@ -258,7 +258,7 @@ export default function AdminLogin() {
     }
 
     setLoading(true)
-    const valid = await validateServiceKey(ENV_SERVICE_KEY)
+    const { valid } = await validateServiceKey(ENV_SERVICE_KEY)
     if (!valid) {
       setLoading(false)
       setStep('serviceKey')
@@ -282,10 +282,10 @@ export default function AdminLogin() {
     setLoading(true)
     setError('')
 
-    const valid = await validateServiceKey(key)
+    const { valid, reason } = await validateServiceKey(key)
     if (!valid) {
       setLoading(false)
-      setError('Invalid service key. Please check and try again.')
+      setError(reason || 'Invalid service key. Please check and try again.')
       return
     }
 
