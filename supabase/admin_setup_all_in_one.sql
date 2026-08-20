@@ -195,6 +195,63 @@ UPDATE admin_users a
  WHERE lower(a.email) = lower(u.email)
    AND a.auth_user_id IS NULL;
 
+-- ...and the mirror image: link a NEW profile to an auth account that already
+-- exists. Both directions are needed because the two objects can be created in
+-- either order:
+--
+--   Dashboard → Authentication → Users   : auth user second → trigger above
+--   Admin panel → Users & Access → New   : auth user FIRST, profile second
+--
+-- The panel calls createAuthUser() and only then inserts the profile, so at
+-- auth-insert time there is no profile to match. Without this trigger every
+-- panel-created admin is left with auth_user_id NULL — showing "No login" and
+-- unable to sign in until someone links the row by hand.
+
+CREATE OR REPLACE FUNCTION public.link_admin_profile_to_auth_user()
+RETURNS trigger
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+BEGIN
+  IF new.auth_user_id IS NULL AND new.email IS NOT NULL THEN
+    SELECT u.id
+      INTO new.auth_user_id
+      FROM auth.users u
+     WHERE lower(u.email) = lower(new.email)
+     LIMIT 1;
+  END IF;
+
+  -- Reaching this trigger means an authenticated admin holding users.create
+  -- inserted the profile — RLS enforces that — so the address has been vouched
+  -- for by someone who already has access. Confirm it, so the new admin can
+  -- sign in with their initial password instead of chasing a confirmation
+  -- email (Supabase's built-in SMTP is rate-limited and those links expire).
+  --
+  -- Deliberately NOT done in the auth.users trigger. That path can be reached
+  -- by a stranger calling signUp() with an admin email that has no login yet,
+  -- and email confirmation is precisely what stops them claiming the profile.
+  IF new.auth_user_id IS NOT NULL THEN
+    BEGIN
+      UPDATE auth.users
+         SET email_confirmed_at = now()
+       WHERE id = new.auth_user_id
+         AND email_confirmed_at IS NULL;
+    EXCEPTION
+      WHEN insufficient_privilege THEN
+        NULL;  -- fall back to Supabase's normal confirmation email
+    END;
+  END IF;
+
+  RETURN new;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS admin_users_link_auth ON admin_users;
+CREATE TRIGGER admin_users_link_auth
+  BEFORE INSERT OR UPDATE OF email ON admin_users
+  FOR EACH ROW EXECUTE FUNCTION public.link_admin_profile_to_auth_user();
+
 
 -- ---------------------------------------------------------------------------
 -- 6. The permission check — the heart of the whole system

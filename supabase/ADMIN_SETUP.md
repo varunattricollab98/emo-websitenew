@@ -47,15 +47,23 @@ that dead code. Running the old pair afterwards is harmless either way.
 
 Without this, password-reset emails will refuse to redirect back.
 
-### b. Turn off email confirmation (recommended for an internal panel)
+### b. Email confirmation — leave it ON
 
 **Authentication → Sign In / Providers → Email**
 
-- **Confirm email:** OFF
+- **Enable email provider:** ON *(required — this is what makes email + password
+  sign-in work)*
+- **Confirm email:** leave it **ON**
 
-With it on, every new admin has to click a confirmation link before their first
-sign-in. For a small internal team that is just friction — you are creating the
-accounts yourself.
+You do not need to disable it. Admins created from the panel are confirmed
+automatically by the `admin_users_link_auth` trigger, on the grounds that an
+existing admin with `users.create` vouched for the address.
+
+Keeping it ON matters for security. Signups have to stay enabled so the panel
+can create accounts, which means anyone could call `signUp()` with an admin
+email that has no login yet. Email confirmation is what stops them claiming that
+profile — they cannot confirm an inbox they do not control. That is also why the
+auto-confirm lives on the `admin_users` trigger and not the `auth.users` one.
 
 > Leaving **Enable email provider** ON is required. Signups being enabled is what
 > lets the panel create new admin accounts for you.
@@ -133,7 +141,7 @@ Links expire after an hour and work once.
 | Symptom | Cause & fix |
 | --- | --- |
 | *"That account is not set up for admin access"* | The Auth user exists but has no matching `admin_users` row, or `is_active = false`. Check the emails match exactly. |
-| **"No login"** badge in the users list | No Auth account for that email yet — create it in **Authentication → Users**. |
+| **"No login"** badge in the users list | No Auth account for that email yet — create it in **Authentication → Users**. If the profile was made from the panel, the `admin_users_link_auth` trigger is missing; re-run the migration. |
 | *"Email not confirmed"* | Either confirm the user in **Authentication → Users**, or turn off **Confirm email** (step 2b). |
 | Reset email never arrives | Check spam. Supabase's built-in SMTP is rate-limited to a few emails per hour — for regular use add your own SMTP under **Project Settings → Auth → SMTP**. |
 | Reset link opens but says invalid | The redirect URL from step 2a is missing, or the link was already used. |
