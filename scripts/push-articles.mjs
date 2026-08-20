@@ -44,9 +44,14 @@ const SQL_DIR = join(ROOT, 'supabase')
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL || 'https://oijtkvkyefqfwuycibcv.supabase.co'
 // Read-only key, used for --status and the post-push verification read.
 const ANON_KEY =
+  process.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
   process.env.VITE_SUPABASE_ANON_KEY ||
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9panRrdmt5ZWZxZnd1eWNpYmN2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5NjUwODksImV4cCI6MjEwMDU0MTA4OX0.wzNvJ2nRN4appxtLFhinIy4aEQ-qT9LpqngWhzfPgrw'
-const SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY
+// Write key. Accepts the new secret key (sb_secret_…) or a legacy service_role JWT.
+const SERVICE_KEY =
+  process.env.SUPABASE_SECRET_KEY ||
+  process.env.SUPABASE_SERVICE_KEY ||
+  process.env.SUPABASE_SERVICE_ROLE_KEY
 
 const args = process.argv.slice(2)
 const has = (f) => args.includes(f)

@@ -141,8 +141,13 @@ async function main() {
     '../src/data/coworkingSpaces.js'
   )
 
-  const SUPABASE_URL = 'https://oijtkvkyefqfwuycibcv.supabase.co'
+  const SUPABASE_URL =
+    process.env.VITE_SUPABASE_URL || 'https://oijtkvkyefqfwuycibcv.supabase.co'
+  // Browser-safe read key. Prefers the new publishable key, falls back to the
+  // legacy anon JWT so existing builds keep working.
   const SUPABASE_ANON =
+    process.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
+    process.env.VITE_SUPABASE_ANON_KEY ||
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9panRrdmt5ZWZxZnd1eWNpYmN2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5NjUwODksImV4cCI6MjEwMDU0MTA4OX0.wzNvJ2nRN4appxtLFhinIy4aEQ-qT9LpqngWhzfPgrw'
 
   const cityBySlug = Object.fromEntries(voCities.map((c) => [c.slug, c]))
