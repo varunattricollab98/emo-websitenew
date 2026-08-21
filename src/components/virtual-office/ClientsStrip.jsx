@@ -34,7 +34,7 @@ export default function ClientsStrip() {
   return (
     <section className="section-padding bg-surface-light">
       <div className="container-custom">
-        <div className="grid items-center gap-12 lg:grid-cols-[1fr_1.4fr]">
+        <div className="grid items-center gap-14 lg:grid-cols-[1fr_1.5fr] lg:gap-20">
           {/* Left — Bold heading */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -42,36 +42,36 @@ export default function ClientsStrip() {
             viewport={{ once: true, margin: '-60px' }}
             transition={{ duration: 0.6 }}
           >
-            <span className="inline-flex items-center gap-2 rounded-full border border-primary-200 bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-primary shadow-soft">
-              <span className="relative flex h-2 w-2">
+            <span className="inline-flex items-center gap-2 rounded-full border border-primary-200 bg-white px-5 py-2 text-sm font-bold uppercase tracking-wider text-primary shadow-soft">
+              <span className="relative flex h-2.5 w-2.5">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary/50" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
+                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-primary" />
               </span>
               Our Impact
             </span>
-            <h2 className="mt-5 text-3xl font-extrabold leading-[1.2] tracking-tight text-navy-dark sm:text-4xl">
+            <h2 className="mt-6 text-4xl font-extrabold leading-[1.15] tracking-tight text-navy-dark sm:text-5xl lg:text-[3.5rem]">
               Numbers That{' '}
               <span className="gradient-text">Speak</span>
             </h2>
-            <p className="mt-4 max-w-sm text-base leading-relaxed text-slate-600">
+            <p className="mt-5 max-w-md text-lg leading-relaxed text-slate-600">
               Trusted by thousands of founders, sellers and enterprises across India for compliant addresses and hassle-free business setup.
             </p>
-            <div className="mt-6 flex items-center gap-3">
-              <GoogleG className="h-7 w-7" />
+            <div className="mt-8 flex items-center gap-4">
+              <GoogleG className="h-9 w-9" />
               <div>
                 <div className="flex items-center gap-1">
                   {[0, 1, 2, 3, 4].map((n) => (
-                    <Star key={n} className="h-4 w-4 fill-gold text-gold" />
+                    <Star key={n} className="h-5 w-5 fill-gold text-gold" />
                   ))}
-                  <span className="ml-1.5 text-sm font-bold text-navy-dark">4.9</span>
+                  <span className="ml-2 text-lg font-bold text-navy-dark">4.9</span>
                 </div>
-                <p className="text-xs text-slate-500">Rated on Google by customers</p>
+                <p className="text-sm text-slate-500">Rated on Google by customers</p>
               </div>
             </div>
           </motion.div>
 
           {/* Right — 2x2 stat cards */}
-          <div className="grid grid-cols-2 gap-5">
+          <div className="grid grid-cols-2 gap-6">
             {stats.map((s, i) => (
               <motion.div
                 key={s.label}
@@ -79,39 +79,39 @@ export default function ClientsStrip() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-60px' }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="group relative overflow-hidden rounded-2xl border border-primary-100/70 bg-white p-7 shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover"
+                className="group relative overflow-hidden rounded-2xl border border-primary-100/70 bg-white p-8 shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover sm:p-9"
               >
-                {/* Colored accent line on top — thicker & more visible */}
+                {/* Colored accent line on top */}
                 <span
-                  className="pointer-events-none absolute inset-x-0 top-0 h-[3px]"
+                  className="pointer-events-none absolute inset-x-0 top-0 h-1"
                   style={{ background: s.accent }}
                 />
 
                 {/* Icon — white icon on colored rounded square */}
                 <span
-                  className="inline-flex h-12 w-12 items-center justify-center rounded-xl text-white shadow-md"
+                  className="inline-flex h-14 w-14 items-center justify-center rounded-xl text-white shadow-md"
                   style={{ background: s.accent }}
                 >
-                  <s.icon className="h-6 w-6" />
+                  <s.icon className="h-7 w-7" />
                 </span>
 
                 {/* Number — large & bold */}
-                <p className="mt-5 text-4xl font-extrabold tracking-tight text-navy-dark sm:text-5xl">
+                <p className="mt-5 text-5xl font-extrabold tracking-tight text-navy-dark sm:text-6xl">
                   <Counter to={s.value} decimals={s.decimals || 0} />
                   <span className="font-bold" style={{ color: s.accent }}>{s.suffix}</span>
                 </p>
 
                 {/* Label & sub */}
-                <p className="mt-2 text-base font-bold text-navy-dark">{s.label}</p>
-                <p className="mt-0.5 text-sm text-slate-500">{s.sub}</p>
+                <p className="mt-3 text-lg font-bold text-navy-dark">{s.label}</p>
+                <p className="mt-1 text-sm text-slate-500">{s.sub}</p>
 
                 {/* Google rating stars for rating card */}
                 {s.rating && (
-                  <div className="mt-3 flex items-center gap-2">
-                    <GoogleG className="h-5 w-5" />
+                  <div className="mt-4 flex items-center gap-2">
+                    <GoogleG className="h-6 w-6" />
                     <div className="flex gap-0.5">
                       {[0, 1, 2, 3, 4].map((n) => (
-                        <Star key={n} className="h-3.5 w-3.5 fill-gold text-gold" />
+                        <Star key={n} className="h-4 w-4 fill-gold text-gold" />
                       ))}
                     </div>
                   </div>
