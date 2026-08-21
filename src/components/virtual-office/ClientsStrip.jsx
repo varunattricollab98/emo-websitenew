@@ -32,7 +32,7 @@ const stats = [
 
 export default function ClientsStrip() {
   return (
-    <section className="section-padding bg-surface-light">
+    <section className="pb-20 pt-10 lg:pb-28 lg:pt-14 bg-surface-light">
       <div className="container-custom">
         <div className="grid items-center gap-14 lg:grid-cols-[1fr_1.5fr] lg:gap-20">
           {/* Left — Bold heading */}
