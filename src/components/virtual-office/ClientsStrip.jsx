@@ -42,10 +42,10 @@ export default function ClientsStrip() {
             viewport={{ once: true, margin: '-60px' }}
             transition={{ duration: 0.6 }}
           >
-            <span className="inline-flex items-center gap-2 rounded-full border border-primary-200 bg-white px-5 py-2 text-sm font-bold uppercase tracking-wider text-primary shadow-soft">
+            <span className="inline-flex items-center gap-2.5 rounded-full border border-primary-100 bg-white/80 px-6 py-2.5 text-sm font-bold uppercase tracking-widest text-navy-dark shadow-soft backdrop-blur-sm">
               <span className="relative flex h-2.5 w-2.5">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary/50" />
-                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-primary" />
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-navy-dark/40" />
+                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-navy-dark" />
               </span>
               Our Impact
             </span>
