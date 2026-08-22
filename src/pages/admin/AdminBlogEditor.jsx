@@ -4,6 +4,7 @@ import { getAdminClient } from '../../lib/supabaseAdmin'
 import { markdownToBlocks } from '../../utils/markdownToBlocks'
 import ArticleBlocks from '../../components/ui/ArticleBlocks'
 import RichMarkdownEditor from '../../components/admin/RichMarkdownEditor'
+import ImageUploadButton from '../../components/admin/ImageUploadButton'
 
 const CATEGORIES = [
   'Virtual Office',
@@ -294,6 +295,10 @@ export default function AdminBlogEditor() {
                 onChange={(e) => updateField('cover_image', e.target.value)}
                 className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 placeholder="https://images.unsplash.com/..."
+              />
+              <ImageUploadButton
+                folder="blog"
+                onUpload={(url) => updateField('cover_image', url)}
               />
               {form.cover_image && (
                 <img

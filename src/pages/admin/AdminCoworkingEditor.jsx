@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getAdminClient } from '../../lib/supabaseAdmin'
+import ImageUploadButton from '../../components/admin/ImageUploadButton'
 
 const EMPTY_SPACE = {
   name: '',
@@ -379,6 +380,10 @@ export default function AdminCoworkingEditor() {
               onChange={(e) => updateField('featured_image', e.target.value)}
               className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
               placeholder="https://..."
+            />
+            <ImageUploadButton
+              folder="coworking"
+              onUpload={(url) => updateField('featured_image', url)}
             />
           </div>
 
