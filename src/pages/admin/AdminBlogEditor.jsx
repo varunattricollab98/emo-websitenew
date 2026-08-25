@@ -22,6 +22,7 @@ function slugify(text) {
     .replace(/[^\w\s-]/g, '')
     .replace(/[\s_]+/g, '-')
     .replace(/^-+|-+$/g, '')
+    .replace(/^\/+|\/+$/g, '')
 }
 
 const EMPTY_POST = {
@@ -118,8 +119,12 @@ export default function AdminBlogEditor() {
     setSaving(true)
     setError('')
 
+    // Sanitize slug — strip leading/trailing slashes and whitespace
+    const cleanSlug = form.slug.replace(/^\/+|\/+$/g, '').trim()
+
     const payload = {
       ...form,
+      slug: cleanSlug,
       is_active: publish ? true : form.is_active,
       published_at: publish ? new Date().toISOString() : (form.is_active ? new Date().toISOString() : null),
       updated_at: new Date().toISOString(),
