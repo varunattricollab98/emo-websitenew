@@ -37,6 +37,7 @@ const EMPTY_POST = {
   is_active: false,
   meta_title: '',
   meta_description: '',
+  focus_keyphrase: '',
   author: 'EMO Team',
 }
 
@@ -69,11 +70,13 @@ export default function AdminBlogEditor() {
       .from('blog_posts')
       .select('*')
       .eq('slug', slug)
-      .single()
+      .maybeSingle()
 
     if (err) {
-      setError('Post not found: ' + err.message)
-    } else if (data) {
+      setError('Failed to load post: ' + err.message)
+    } else if (!data) {
+      setError('Post not found.')
+    } else {
       setForm({
         title: data.title || '',
         slug: data.slug || '',
@@ -87,6 +90,7 @@ export default function AdminBlogEditor() {
         is_active: data.is_active || false,
         meta_title: data.meta_title || '',
         meta_description: data.meta_description || '',
+        focus_keyphrase: data.focus_keyphrase || '',
         author: data.author || 'EMO Team',
       })
       setSlugManual(true) // Don't auto-generate slug for existing posts
@@ -372,6 +376,18 @@ export default function AdminBlogEditor() {
                     rows={2}
                     className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                     placeholder="SEO description (defaults to excerpt)"
+                  />
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs font-medium text-slate-600">
+                    Focus Keyphrase
+                  </label>
+                  <input
+                    type="text"
+                    value={form.focus_keyphrase}
+                    onChange={(e) => updateField('focus_keyphrase', e.target.value)}
+                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                    placeholder="Primary keyword or phrase for SEO"
                   />
                 </div>
               </div>
