@@ -2,17 +2,17 @@ import { Check } from 'lucide-react'
 
 /**
  * Renders inline Markdown emphasis and links inside a plain string.
- * Supports:
- *   - **bold text**           → <strong>
+ * Supports (and nests correctly):
  *   - [link text](url)       → <a href="url">
+ *   - **bold text**           → <strong>
  *   - ~~strikethrough~~      → <s>
  *   - `inline code`          → <code>
  */
 function inline(text) {
   if (typeof text !== 'string') return text
 
-  // Combined regex: links, bold, strikethrough, inline code
-  const pattern = /(\[([^\]]+)\]\(([^)]+)\))|(\*\*([^*]+)\*\*)|(~~([^~]+)~~)|(`([^`]+)`)/g
+  // Process in order of priority: code (literal, no nesting), then links, bold, strikethrough
+  const pattern = /(`([^`]+)`)|(\[([^\]]+)\]\(([^)]+)\))|(\*\*(.+?)\*\*)|(~~(.+?)~~)/g
 
   const parts = []
   let lastIndex = 0
@@ -25,35 +25,37 @@ function inline(text) {
     }
 
     if (match[1]) {
-      // Link: [text](url)
+      // Inline code: `text` (no nesting inside)
+      parts.push(
+        <code key={match.index} className="rounded bg-slate-100 px-1.5 py-0.5 text-sm font-mono text-navy-dark">
+          {match[2]}
+        </code>
+      )
+    } else if (match[3]) {
+      // Link: [text](url) — recurse into link text for bold etc
+      const linkContent = inline(match[4])
       parts.push(
         <a
           key={match.index}
-          href={match[3]}
+          href={match[5]}
           className="font-medium text-primary underline decoration-primary/30 underline-offset-2 transition hover:decoration-primary"
-          target={match[3].startsWith('http') ? '_blank' : undefined}
-          rel={match[3].startsWith('http') ? 'noopener noreferrer' : undefined}
+          target={match[5].startsWith('http') ? '_blank' : undefined}
+          rel={match[5].startsWith('http') ? 'noopener noreferrer' : undefined}
         >
-          {match[2]}
+          {linkContent}
         </a>
       )
-    } else if (match[4]) {
-      // Bold: **text**
+    } else if (match[6]) {
+      // Bold: **text** — recurse into bold content for links etc
+      const boldContent = inline(match[7])
       parts.push(
         <strong key={match.index} className="font-bold text-navy-dark">
-          {match[5]}
+          {boldContent}
         </strong>
       )
-    } else if (match[6]) {
-      // Strikethrough: ~~text~~
-      parts.push(<s key={match.index}>{match[7]}</s>)
     } else if (match[8]) {
-      // Inline code: `text`
-      parts.push(
-        <code key={match.index} className="rounded bg-slate-100 px-1.5 py-0.5 text-sm font-mono text-navy-dark">
-          {match[9]}
-        </code>
-      )
+      // Strikethrough: ~~text~~
+      parts.push(<s key={match.index}>{inline(match[9])}</s>)
     }
 
     lastIndex = match.index + match[0].length
@@ -64,7 +66,6 @@ function inline(text) {
     parts.push(text.slice(lastIndex))
   }
 
-  // If no matches found, return original text
   return parts.length > 0 ? parts : text
 }
 
