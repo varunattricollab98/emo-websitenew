@@ -1,23 +1,71 @@
 import { Check } from 'lucide-react'
 
 /**
- * Renders inline Markdown emphasis inside a plain string.
- * Only **bold** is supported, which is all the blog copy uses. Anything else is
- * left untouched so unexpected syntax never breaks the page.
+ * Renders inline Markdown emphasis and links inside a plain string.
+ * Supports:
+ *   - **bold text**           → <strong>
+ *   - [link text](url)       → <a href="url">
+ *   - ~~strikethrough~~      → <s>
+ *   - `inline code`          → <code>
  */
 function inline(text) {
-  if (typeof text !== 'string' || !text.includes('**')) return text
-  // Split on **...** and re-wrap the captured groups in <strong>.
-  return text.split(/(\*\*[^*]+\*\*)/g).map((part, i) => {
-    const m = part.match(/^\*\*([^*]+)\*\*$/)
-    return m ? (
-      <strong key={i} className="font-bold text-navy-dark">
-        {m[1]}
-      </strong>
-    ) : (
-      part
-    )
-  })
+  if (typeof text !== 'string') return text
+
+  // Combined regex: links, bold, strikethrough, inline code
+  const pattern = /(\[([^\]]+)\]\(([^)]+)\))|(\*\*([^*]+)\*\*)|(~~([^~]+)~~)|(`([^`]+)`)/g
+
+  const parts = []
+  let lastIndex = 0
+  let match
+
+  while ((match = pattern.exec(text)) !== null) {
+    // Push text before this match
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index))
+    }
+
+    if (match[1]) {
+      // Link: [text](url)
+      parts.push(
+        <a
+          key={match.index}
+          href={match[3]}
+          className="font-medium text-primary underline decoration-primary/30 underline-offset-2 transition hover:decoration-primary"
+          target={match[3].startsWith('http') ? '_blank' : undefined}
+          rel={match[3].startsWith('http') ? 'noopener noreferrer' : undefined}
+        >
+          {match[2]}
+        </a>
+      )
+    } else if (match[4]) {
+      // Bold: **text**
+      parts.push(
+        <strong key={match.index} className="font-bold text-navy-dark">
+          {match[5]}
+        </strong>
+      )
+    } else if (match[6]) {
+      // Strikethrough: ~~text~~
+      parts.push(<s key={match.index}>{match[7]}</s>)
+    } else if (match[8]) {
+      // Inline code: `text`
+      parts.push(
+        <code key={match.index} className="rounded bg-slate-100 px-1.5 py-0.5 text-sm font-mono text-navy-dark">
+          {match[9]}
+        </code>
+      )
+    }
+
+    lastIndex = match.index + match[0].length
+  }
+
+  // Push remaining text
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex))
+  }
+
+  // If no matches found, return original text
+  return parts.length > 0 ? parts : text
 }
 
 /**
