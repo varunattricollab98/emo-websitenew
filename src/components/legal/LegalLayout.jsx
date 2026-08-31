@@ -2,6 +2,21 @@ import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { ScrollText, Mail, Phone, MapPin, ArrowRight, Check } from 'lucide-react'
 
+/** Render **bold** markdown inside a plain paragraph string. */
+function renderInline(text) {
+  if (typeof text !== 'string' || !text.includes('**')) return text
+  return text.split(/(\*\*[^*]+\*\*)/g).map((part, i) => {
+    const m = part.match(/^\*\*([^*]+)\*\*$/)
+    return m ? (
+      <strong key={i} className="font-bold text-navy-dark">
+        {m[1]}
+      </strong>
+    ) : (
+      part
+    )
+  })
+}
+
 /**
  * Shared premium layout for legal pages (Privacy, Terms, Refund).
  * `sections` = [{ h, body?: string[], list?: string[] }]
@@ -56,7 +71,7 @@ export default function LegalLayout({ eyebrow = 'Legal', title, subtitle, update
               <div className="mt-3 space-y-3 pl-[1.125rem]">
                 {sec.body?.map((p, j) => (
                   <p key={j} className="leading-relaxed text-slate-600">
-                    {p}
+                    {renderInline(p)}
                   </p>
                 ))}
                 {sec.list && (
